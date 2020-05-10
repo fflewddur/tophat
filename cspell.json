@@ -1,0 +1,20 @@
+{
+    "version": "0.1",
+    "language": "en",
+    "words": [
+        "gicon",
+        "glibtop",
+        "hbox",
+        "kulesza",
+        "libgtop",
+        "Mainloop",
+        "ncpu",
+        "netlist",
+        "netload",
+        "sysinfo",
+        "vbox"
+    ],
+    "enableFiletypes": [
+        "!yaml"
+    ]
+}
