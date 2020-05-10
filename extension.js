@@ -43,10 +43,6 @@ var TopHatIndicator = class TopHatIndicator extends PanelMenu.Button {
         let hbox = new St.BoxLayout();
         this.add_child(hbox);
 
-        for (i = 0; i < 10; i++) {
-            log('test');
-        }
-
         // CPU
         let gicon = Gio.icon_new_for_string(`${Me.path}/icons/cpu.svg`);
         let icon = new St.Icon({ gicon, icon_size: 24 });
