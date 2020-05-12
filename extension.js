@@ -45,7 +45,6 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
         let hbox = new St.BoxLayout();
         this.add_child(hbox);
 
-        // CPU
         let gicon = Gio.icon_new_for_string(`${Me.path}/icons/cpu.svg`);
         let icon = new St.Icon({ gicon, icon_size: 24 });
         hbox.add_child(icon);
@@ -81,7 +80,6 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
     }
 
     refresh() {
-        // CPU
         GTop.glibtop_get_cpu(this.cpu);
         let userDelta = this.cpu.user - this.cpuPrev.user;
         let sysDelta = this.cpu.sys - this.cpuPrev.sys;
@@ -114,7 +112,6 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
         let hbox = new St.BoxLayout();
         this.add_child(hbox);
 
-        // Memory
         let gicon = Gio.icon_new_for_string(`${Me.path}/icons/mem.svg`);
         let icon = new St.Icon({ gicon, icon_size: 24 });
         hbox.add_child(icon);
@@ -143,7 +140,6 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
     }
 
     refresh() {
-        // Memory
         GTop.glibtop_get_mem(this.mem);
         let memTotal = this.mem.total / 1024 / 1024;
         let memUsed = this.mem.user / 1024 / 1024;
@@ -170,7 +166,6 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
         let hbox = new St.BoxLayout();
         this.add_child(hbox);
 
-        // Network
         let gicon = Gio.icon_new_for_string(`${Me.path}/icons/net.svg`);
         let icon = new St.Icon({ gicon, icon_size: 24 });
         hbox.add_child(icon);
@@ -220,7 +215,6 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
     }
 
     refresh() {
-        // Network
         let bytesIn = 0;
         let bytesOut = 0;
         let time = GLib.get_monotonic_time();
@@ -257,12 +251,16 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
 // Convert a number of bytes to a more logical human-readable string
 // (e.g., 1024 -> 1 KB)
 function bytesToHumanString(bytes) {
-    if (bytes < 1000)
+    if (bytes < 1000) {
         return `${bytes} B`;
-    else if (bytes < 1024 * 1024)
-        return `${(bytes / 1024).toFixed(1)} KB`;
-    else
+    } else if (bytes < 1024 * 1024) {
+        let kb = bytes / 1024;
+        if (kb < 1.0)
+            return `0${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / 1024).toFixed(0)} KB`;
+    } else {
         return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+    }
 }
 
 // Compatibility with gnome-shell >= 3.32
