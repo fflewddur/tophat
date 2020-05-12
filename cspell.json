@@ -12,6 +12,7 @@
         "netlist",
         "netload",
         "sysinfo",
+        "tophat",
         "vbox"
     ],
     "enableFiletypes": [

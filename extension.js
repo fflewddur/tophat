@@ -34,11 +34,13 @@ const Config = imports.misc.config;
 const SHELL_MINOR = parseInt(Config.PACKAGE_VERSION.split('.')[1]);
 
 // Time between resource updates, in milliseconds
-const UPDATE_INTERVAL = 1000;
+const UPDATE_INTERVAL_CPU = 1000;
+const UPDATE_INTERVAL_MEM = 2000;
+const UPDATE_INTERVAL_NET = 2000;
 
-var TopHatIndicator = class TopHatIndicator extends PanelMenu.Button {
+var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
     _init() {
-        super._init(0.0, `${Me.metadata.name} Indicator`, false);
+        super._init(0.0, `${Me.metadata.name} CPU Indicator`, false);
 
         let hbox = new St.BoxLayout();
         this.add_child(hbox);
@@ -52,31 +54,6 @@ var TopHatIndicator = class TopHatIndicator extends PanelMenu.Button {
         hbox.add_child(valueCPU);
         this.valueCPU = valueCPU;
 
-        // Memory
-        gicon = Gio.icon_new_for_string(`${Me.path}/icons/mem.svg`);
-        icon = new St.Icon({ gicon, icon_size: 24 });
-        hbox.add_child(icon);
-
-        let valueRAM = new St.Label({ text: '0%', style_class: 'value' });
-        hbox.add_child(valueRAM);
-        this.valueRAM = valueRAM;
-
-        // Network
-        gicon = Gio.icon_new_for_string(`${Me.path}/icons/net.svg`);
-        icon = new St.Icon({ gicon, icon_size: 24 });
-        hbox.add_child(icon);
-
-        let vbox = new St.BoxLayout({ vertical: true });
-        hbox.add_child(vbox);
-
-        let valueNetUp = new St.Label({ text: '0', style_class: 'value-net' });
-        vbox.add_child(valueNetUp);
-        this.valueNetUp = valueNetUp;
-
-        let valueNetDown = new St.Label({ text: '0', style_class: 'value-net' });
-        vbox.add_child(valueNetDown);
-        this.valueNetDown = valueNetDown;
-
         // Initialize libgtop values
         this.cpu = new GTop.glibtop_cpu();
         this.cpuCores = GTop.glibtop_get_sysinfo().ncpu;
@@ -88,50 +65,19 @@ var TopHatIndicator = class TopHatIndicator extends PanelMenu.Button {
             'total': this.cpu.total,
         };
 
-        this.mem = new GTop.glibtop_mem();
-
-        this.net = new GTop.glibtop_netload();
-        let bytesIn = 0;
-        let bytesOut = 0;
-        let netlist = new GTop.glibtop_netlist();
-        this.netDevices = GTop.glibtop_get_netlist(netlist);
-        for (const dev of this.netDevices) {
-            log(`[TopHat] Found network device '${dev}'`);
-            GTop.glibtop_get_netload(this.net, dev);
-            bytesIn += this.net.bytes_in;
-            bytesOut += this.net.bytes_out;
-        }
-        GLib.get_monotonic_time();
-        this.netPrev = {
-            bytes_in: bytesIn,
-            bytes_out: bytesOut,
-        };
-
-        this.refreshTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, UPDATE_INTERVAL, () => this.refresh());
+        this.refreshTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, UPDATE_INTERVAL_CPU, () => this.refresh());
 
         // Menu
         hbox = new St.BoxLayout();
-        let label = new St.Label({ text: 'CPU: ' });
-        hbox.add_child(label);
-        this.menu.box.add_child(hbox);
-        // hbox.add_child(valueCPU);
-
-        hbox = new St.BoxLayout();
-        label = new St.Label({ text: 'Memory: ' });
-        hbox.add_child(label);
-        this.menu.box.add_child(hbox);
-        // hbox.add_child(valueRAM);
-
-        hbox = new St.BoxLayout();
-        label = new St.Label({ text: 'Network: ' });
+        let label = new St.Label({ text: 'CPU details to go here' });
         hbox.add_child(label);
         this.menu.box.add_child(hbox);
 
-        // this.menu.addAction('Menu Item', this.menuAction, null);
+        this.menu.addAction('Menu Item', this.menuAction, null);
     }
 
     menuAction() {
-        log('[TopHat] Menu item activated');
+        log('[TopHat] CPU menu item activated');
     }
 
     refresh() {
@@ -149,6 +95,54 @@ var TopHatIndicator = class TopHatIndicator extends PanelMenu.Button {
         log(`[TopHat] CPU: ${cpuUse}% on ${this.cpuCores} cores`);
         this.valueCPU.text = `${cpuUse}%`;
 
+        return true;
+    }
+
+    destroy() {
+        if (this.refreshTimer !== 0) {
+            GLib.source_remove(this.refreshTimer);
+            this.refreshTimer = 0;
+        }
+        super.destroy();
+    }
+};
+
+var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
+    _init() {
+        super._init(0.0, `${Me.metadata.name} Memory Indicator`, false);
+
+        let hbox = new St.BoxLayout();
+        this.add_child(hbox);
+
+        // Memory
+        let gicon = Gio.icon_new_for_string(`${Me.path}/icons/mem.svg`);
+        let icon = new St.Icon({ gicon, icon_size: 24 });
+        hbox.add_child(icon);
+
+        let valueRAM = new St.Label({ text: '0%', style_class: 'value' });
+        hbox.add_child(valueRAM);
+        this.valueRAM = valueRAM;
+
+        // Initialize libgtop values
+        this.mem = new GTop.glibtop_mem();
+
+        this.refreshTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, UPDATE_INTERVAL_MEM, () => this.refresh());
+
+        // Menu
+        hbox = new St.BoxLayout();
+        let label = new St.Label({ text: 'Memory details to go here' });
+        hbox.add_child(label);
+        this.menu.box.add_child(hbox);
+        // hbox.add_child(valueRAM);
+
+        this.menu.addAction('Menu Item', this.menuAction, null);
+    }
+
+    menuAction() {
+        log('[TopHat] Menu item activated');
+    }
+
+    refresh() {
         // Memory
         GTop.glibtop_get_mem(this.mem);
         let memTotal = this.mem.total / 1024 / 1024;
@@ -157,6 +151,75 @@ var TopHatIndicator = class TopHatIndicator extends PanelMenu.Button {
         log(`[TopHat] Memory: ${memPercent}% of ${Math.round(memTotal)} MB`);
         this.valueRAM.text = `${memPercent}%`;
 
+        return true;
+    }
+
+    destroy() {
+        if (this.refreshTimer !== 0) {
+            GLib.source_remove(this.refreshTimer);
+            this.refreshTimer = 0;
+        }
+        super.destroy();
+    }
+};
+
+var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
+    _init() {
+        super._init(0.0, `${Me.metadata.name} Network Indicator`, false);
+
+        let hbox = new St.BoxLayout();
+        this.add_child(hbox);
+
+        // Network
+        let gicon = Gio.icon_new_for_string(`${Me.path}/icons/net.svg`);
+        let icon = new St.Icon({ gicon, icon_size: 24 });
+        hbox.add_child(icon);
+
+        let vbox = new St.BoxLayout({ vertical: true });
+        hbox.add_child(vbox);
+
+        let valueNetUp = new St.Label({ text: '0', style_class: 'value-net' });
+        vbox.add_child(valueNetUp);
+        this.valueNetUp = valueNetUp;
+
+        let valueNetDown = new St.Label({ text: '0', style_class: 'value-net' });
+        vbox.add_child(valueNetDown);
+        this.valueNetDown = valueNetDown;
+
+        // Initialize libgtop values
+        this.net = new GTop.glibtop_netload();
+        let bytesIn = 0;
+        let bytesOut = 0;
+        let netlist = new GTop.glibtop_netlist();
+        this.netDevices = GTop.glibtop_get_netlist(netlist);
+        for (const dev of this.netDevices) {
+            log(`[TopHat] Found network device '${dev}'`);
+            GTop.glibtop_get_netload(this.net, dev);
+            bytesIn += this.net.bytes_in;
+            bytesOut += this.net.bytes_out;
+        }
+        this.timePrev = GLib.get_monotonic_time();
+        this.netPrev = {
+            bytes_in: bytesIn,
+            bytes_out: bytesOut,
+        };
+
+        this.refreshTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, UPDATE_INTERVAL_NET, () => this.refresh());
+
+        // Menu
+        hbox = new St.BoxLayout();
+        let label = new St.Label({ text: 'Network details to go here' });
+        hbox.add_child(label);
+        this.menu.box.add_child(hbox);
+
+        this.menu.addAction('Menu Item', this.menuAction, null);
+    }
+
+    menuAction() {
+        log('[TopHat] Menu item activated');
+    }
+
+    refresh() {
         // Network
         let bytesIn = 0;
         let bytesOut = 0;
@@ -177,8 +240,6 @@ var TopHatIndicator = class TopHatIndicator extends PanelMenu.Button {
         this.valueNetDown.text = `${netIn}/s`;
         this.valueNetUp.text = `${netOut}/s`;
         log(`[TopHat] Net: bytes_in=${netIn}/s bytes_out=${netOut}/s time=${timeDelta}`);
-
-        // TODO Disk
 
         return true;
     }
@@ -206,15 +267,47 @@ function bytesToHumanString(bytes) {
 
 // Compatibility with gnome-shell >= 3.32
 if (SHELL_MINOR > 30) {
-    TopHatIndicator = GObject.registerClass(
-        { GTypeName: 'TopHatIndicator' },
-        TopHatIndicator,
+    TopHatCpuIndicator = GObject.registerClass(
+        { GTypeName: 'TopHatCpuIndicator' },
+        TopHatCpuIndicator,
+    );
+    TopHatMemIndicator = GObject.registerClass(
+        { GTypeName: 'TopHatMemIndicator' },
+        TopHatMemIndicator,
+    );
+    TopHatNetIndicator = GObject.registerClass(
+        { GTypeName: 'TopHatNetIndicator' },
+        TopHatNetIndicator,
     );
 }
 
-// We're going to declare `indicator` in the scope of the whole script so it can
+class TopHat {
+    constructor() {
+        this.cpu = new TopHatCpuIndicator();
+        this.mem = new TopHatMemIndicator();
+        this.net = new TopHatNetIndicator();
+        // TODO Add disk usage/activity indicator
+    }
+
+    addToPanel() {
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+            // TODO Make a top-level container that passes click signals to the appropriate indicator
+            Main.panel.addToStatusArea(`${Me.metadata.name} Network Indicator`, this.net);
+            Main.panel.addToStatusArea(`${Me.metadata.name} Memory Indicator`, this.mem);
+            Main.panel.addToStatusArea(`${Me.metadata.name} CPU Indicator`, this.cpu);
+        });
+    }
+
+    destroy() {
+        this.cpu.destroy();
+        this.mem.destroy();
+        this.net.destroy();
+    }
+}
+
+// We're going to declare `tophat` in the scope of the whole script so it can
 // be accessed in both `enable()` and `disable()`
-var indicator = null;
+var tophat = null;
 
 function init() {
 }
@@ -222,8 +315,8 @@ function init() {
 function enable() {
     log(`[${Me.metadata.name}] enabling version ${Me.metadata.version}`);
 
-    indicator = new TopHatIndicator();
-    Main.panel.addToStatusArea(`${Me.metadata.name} Indicator`, indicator);
+    tophat = new TopHat();
+    tophat.addToPanel();
 
     log(`[${Me.metadata.name}] enabled`);
 }
@@ -231,9 +324,9 @@ function enable() {
 function disable() {
     log(`[${Me.metadata.name}] disabling version ${Me.metadata.version}`);
 
-    if (indicator !== null) {
-        indicator.destroy();
-        indicator = null;
+    if (tophat !== null) {
+        tophat.destroy();
+        tophat = null;
     }
 
     log(`[${Me.metadata.name}] disabled`);
