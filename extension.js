@@ -12,19 +12,20 @@
 
 // TopHat is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with TopHat.  If not, see <https://www.gnu.org/licenses/>.
+// along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
 const GTop = imports.gi.GTop;
 const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
+const Clutter = imports.gi.Clutter;
 const St = imports.gi.St;
+const PanelMenu = imports.ui.panelMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -49,9 +50,12 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
         let icon = new St.Icon({ gicon, icon_size: 24 });
         hbox.add_child(icon);
 
-        let valueCPU = new St.Label({ text: '0%', style_class: 'value' });
-        hbox.add_child(valueCPU);
-        this.valueCPU = valueCPU;
+        this.meter = new St.DrawingArea({ style_class: 'meter' });
+        hbox.add_child(this.meter);
+        this.meter.connect('repaint', () => this.repaint());
+
+        this.valueCPU = new St.Label({ text: '0%', style_class: 'value' });
+        hbox.add_child(this.valueCPU);
 
         // Initialize libgtop values
         this.cpu = new GTop.glibtop_cpu();
@@ -63,6 +67,7 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
             'nice': this.cpu.nice,
             'total': this.cpu.total,
         };
+        this.cpuUsage = 0;
 
         this.refreshTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, UPDATE_INTERVAL_CPU, () => this.refresh());
 
@@ -85,15 +90,34 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
         let sysDelta = this.cpu.sys - this.cpuPrev.sys;
         let niceDelta = this.cpu.nice - this.cpuPrev.nice;
         let totalDelta = this.cpu.total - this.cpuPrev.total;
-        let cpuUse = Math.round(100 * (userDelta + sysDelta + niceDelta) / totalDelta);
+        this.cpuUsage = Math.round(100 * (userDelta + sysDelta + niceDelta) / totalDelta);
         this.cpuPrev.user = this.cpu.user;
         this.cpuPrev.sys = this.cpu.sys;
         this.cpuPrev.nice = this.cpu.nice;
         this.cpuPrev.total = this.cpu.total;
-        log(`[TopHat] CPU: ${cpuUse}% on ${this.cpuCores} cores`);
-        this.valueCPU.text = `${cpuUse}%`;
+        log(`[TopHat] CPU: ${this.cpuUsage}% on ${this.cpuCores} cores`);
+        this.valueCPU.text = `${this.cpuUsage}%`;
+
+        this.meter.queue_repaint();
 
         return true;
+    }
+
+    repaint() {
+        let [width, height] = this.meter.get_surface_size();
+        let ctx = this.meter.get_context();
+        var _, fg, bg;
+        [_, fg] = Clutter.Color.from_string('#1dacd6');
+        [_, bg] = Clutter.Color.from_string('#333');
+
+        Clutter.cairo_set_source_color(ctx, bg);
+        ctx.rectangle(0, 0, width, height);
+        ctx.fill();
+
+        Clutter.cairo_set_source_color(ctx, fg);
+        let fillHeight = Math.ceil(this.cpuUsage / 100.0 * height);
+        ctx.rectangle(0, height - fillHeight, width, height);
+        ctx.fill();
     }
 
     destroy() {
@@ -116,12 +140,17 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
         let icon = new St.Icon({ gicon, icon_size: 24 });
         hbox.add_child(icon);
 
+        this.meter = new St.DrawingArea({ style_class: 'meter' });
+        hbox.add_child(this.meter);
+        this.meter.connect('repaint', () => this.repaint());
+
         let valueRAM = new St.Label({ text: '0%', style_class: 'value' });
         hbox.add_child(valueRAM);
         this.valueRAM = valueRAM;
 
         // Initialize libgtop values
         this.mem = new GTop.glibtop_mem();
+        this.memUsage = 0;
 
         this.refreshTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, UPDATE_INTERVAL_MEM, () => this.refresh());
 
@@ -143,11 +172,30 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
         GTop.glibtop_get_mem(this.mem);
         let memTotal = this.mem.total / 1024 / 1024;
         let memUsed = this.mem.user / 1024 / 1024;
-        let memPercent = Math.round(memUsed / memTotal * 100);
-        log(`[TopHat] Memory: ${memPercent}% of ${Math.round(memTotal)} MB`);
-        this.valueRAM.text = `${memPercent}%`;
+        this.memUsage = Math.round(memUsed / memTotal * 100);
+        log(`[TopHat] Memory: ${this.memUsage}% of ${Math.round(memTotal)} MB`);
+        this.valueRAM.text = `${this.memUsage}%`;
+
+        this.meter.queue_repaint();
 
         return true;
+    }
+
+    repaint() {
+        let [width, height] = this.meter.get_surface_size();
+        let ctx = this.meter.get_context();
+        var _, fg, bg;
+        [_, fg] = Clutter.Color.from_string('#1dacd6');
+        [_, bg] = Clutter.Color.from_string('#333');
+
+        Clutter.cairo_set_source_color(ctx, bg);
+        ctx.rectangle(0, 0, width, height);
+        ctx.fill();
+
+        Clutter.cairo_set_source_color(ctx, fg);
+        let fillHeight = Math.ceil(this.memUsage / 100.0 * height);
+        ctx.rectangle(0, height - fillHeight, width, height);
+        ctx.fill();
     }
 
     destroy() {
