@@ -21,6 +21,8 @@
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
+// const Pango = imports.gi.Pango;
+// const PangoCairo = imports.gi.PangoCairo;
 const GTop = imports.gi.GTop;
 const Main = imports.ui.main;
 const Clutter = imports.gi.Clutter;
@@ -39,6 +41,9 @@ const UPDATE_INTERVAL_CPU = 1000;
 const UPDATE_INTERVAL_MEM = 2000;
 const UPDATE_INTERVAL_NET = 2000;
 
+const METER_BG_COLOR = '#222';
+const METER_FG_COLOR = '#1dacd6';
+
 var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
     _init() {
         super._init(0.0, `${Me.metadata.name} CPU Indicator`, false);
@@ -49,6 +54,27 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
         let gicon = Gio.icon_new_for_string(`${Me.path}/icons/cpu.svg`);
         let icon = new St.Icon({ gicon, icon_size: 24 });
         hbox.add_child(icon);
+
+        // Exploration of vertical labels
+        // this.label = new St.DrawingArea({ style_class: 'label' });
+        // hbox.add_child(this.label);
+        // this.label.connect('repaint', () => {
+        //     log('repaint');
+        //     let font = Pango.FontDescription.from_string('Monospace 8');
+        //     let ctx = this.label.get_context();
+        //     // let [width, height] = this.meter.get_surface_size();
+        //     var _, fg;
+        //     [_, fg] = Clutter.Color.from_string('#eee');
+
+        //     Clutter.cairo_set_source_color(ctx, fg);
+        //     let layout = PangoCairo.create_layout(ctx);
+        //     layout.set_font_description(font);
+        //     layout.set_line_spacing(0.8);
+        //     layout.set_text('C\rP\rU', 5);
+        //     PangoCairo.show_layout(ctx, layout);
+
+        // });
+        // this.label.queue_repaint();
 
         this.meter = new St.DrawingArea({ style_class: 'meter' });
         hbox.add_child(this.meter);
@@ -107,8 +133,8 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
         let [width, height] = this.meter.get_surface_size();
         let ctx = this.meter.get_context();
         var _, fg, bg;
-        [_, fg] = Clutter.Color.from_string('#1dacd6');
-        [_, bg] = Clutter.Color.from_string('#333');
+        [_, fg] = Clutter.Color.from_string(METER_FG_COLOR);
+        [_, bg] = Clutter.Color.from_string(METER_BG_COLOR);
 
         Clutter.cairo_set_source_color(ctx, bg);
         ctx.rectangle(0, 0, width, height);
@@ -185,8 +211,8 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
         let [width, height] = this.meter.get_surface_size();
         let ctx = this.meter.get_context();
         var _, fg, bg;
-        [_, fg] = Clutter.Color.from_string('#1dacd6');
-        [_, bg] = Clutter.Color.from_string('#333');
+        [_, fg] = Clutter.Color.from_string(METER_FG_COLOR);
+        [_, bg] = Clutter.Color.from_string(METER_BG_COLOR);
 
         Clutter.cairo_set_source_color(ctx, bg);
         ctx.rectangle(0, 0, width, height);
