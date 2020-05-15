@@ -41,6 +41,8 @@ const UPDATE_INTERVAL_CPU = 1000;
 const UPDATE_INTERVAL_MEM = 2000;
 const UPDATE_INTERVAL_NET = 2000;
 
+const SECOND_AS_MICROSECONDS = 1000000;
+
 const METER_BG_COLOR = '#222';
 const METER_FG_COLOR = '#1dacd6';
 
@@ -299,7 +301,7 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
         }
         let bytesInDelta = bytesIn - this.netPrev.bytes_in;
         let bytesOutDelta = bytesOut - this.netPrev.bytes_out;
-        let timeDelta = (time - this.timePrev) / 1000000;
+        let timeDelta = (time - this.timePrev) / SECOND_AS_MICROSECONDS;
         this.timePrev = time;
         this.netPrev.bytes_in = bytesIn;
         this.netPrev.bytes_out = bytesOut;
@@ -325,16 +327,13 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
 // Convert a number of bytes to a more logical human-readable string
 // (e.g., 1024 -> 1 KB)
 function bytesToHumanString(bytes) {
-    if (bytes < 1000) {
-        return `${bytes} B`;
-    } else if (bytes < 1024 * 1024) {
-        let kb = bytes / 1024;
-        if (kb < 1.0)
-            return `0${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024)
+        // Indicate network activity, but don't clutter the UI w/ # of bytes
+        return '1 KB';
+    else if (bytes < 1024 * 1024)
         return `${(bytes / 1024).toFixed(0)} KB`;
-    } else {
+    else
         return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
-    }
 }
 
 // Compatibility with gnome-shell >= 3.32
