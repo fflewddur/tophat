@@ -94,6 +94,12 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
             xcpu_nice: new Array(this.cpuCores),
             xcpu_total: new Array(this.cpuCores),
         };
+        for (let i = 0; i < this.cpuCores; i++) {
+            this.cpuPrev.xcpu_user[i] = this.cpu.xcpu_user[i];
+            this.cpuPrev.xcpu_sys[i] = this.cpu.xcpu_sys[i];
+            this.cpuPrev.xcpu_nice[i] = this.cpu.xcpu_nice[i];
+            this.cpuPrev.xcpu_total[i] = this.cpu.xcpu_total[i];
+        }
 
         this.cpuUsage = 0;
         this.cpuCoreUsage = new Array(this.cpuCores);
