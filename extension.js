@@ -363,14 +363,13 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
         this.valueNetUp.text = `${netOut}/s`;
         this.menuNetDown.text = `${netIn}/s`;
         this.menuNetUp.text = `${netOut}/s`;
-        log(`[TopHat] Net: bytes_in=${(bytesInDelta / timeDelta).toFixed(2)}/s bytes_out=${(bytesOutDelta / timeDelta).toFixed(2)}/s time=${timeDelta}`);
+        // log(`[TopHat] Net: bytes_in=${(bytesInDelta / timeDelta).toFixed(2)}/s bytes_out=${(bytesOutDelta / timeDelta).toFixed(2)}/s time=${timeDelta}`);
 
         return true;
     }
 
     destroy() {
         if (this.refreshTimer !== 0) {
-            log('Stopping timer');
             GLib.source_remove(this.refreshTimer);
             this.refreshTimer = 0;
         }
