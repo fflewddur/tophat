@@ -15,7 +15,9 @@
         "pango",
         "sysinfo",
         "tophat",
-        "vbox"
+        "user",
+        "vbox",
+        "xcpu"
     ],
     "enableFiletypes": [
         "!yaml"
