@@ -6,10 +6,10 @@
 }
 
 .value-net {
-    padding-left: 6px;
+    padding-left: 3px;
     font-size: 10px;
     text-align: right;
-    width: 4em;
+    width: 5em;
 }
 
 .meter {
@@ -18,4 +18,12 @@
     margin-top: 2px;
     margin-bottom: 2px;
     border: solid 1px #555;
+}
+
+.menu-label {
+    padding: 6px 6px 6px 18px;
+}
+
+.menu-value {
+    padding: 6px 18px 6px 6px;
 }

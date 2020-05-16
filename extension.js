@@ -113,20 +113,16 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
         hbox.add_child(this.meter);
         this.meter.connect('repaint', () => this.repaint());
 
-        this.valueCPU = new St.Label({ text: '0%', style_class: 'value' });
-        hbox.add_child(this.valueCPU);
+        // this.valueCPU = new St.Label({ text: '0%', style_class: 'value' });
+        // hbox.add_child(this.valueCPU);
 
         // Menu
         hbox = new St.BoxLayout();
-        let label = new St.Label({ text: 'CPU details to go here' });
+        let label = new St.Label({ text: 'CPU usage:', style_class: 'menu-label' });
         hbox.add_child(label);
+        this.menuCpuUsage = new St.Label({ text: '0%', style_class: 'menu-value' });
+        hbox.add_child(this.menuCpuUsage);
         this.menu.box.add_child(hbox);
-
-        this.menu.addAction('Menu Item', this.menuAction, null);
-    }
-
-    menuAction() {
-        log('[TopHat] CPU menu item activated');
     }
 
     refresh() {
@@ -161,9 +157,9 @@ var TopHatCpuIndicator = class TopHatCpuIndicator extends PanelMenu.Button {
         }
 
         // Update UI
-        log(`[TopHat] CPU: ${this.cpuUsage}% on ${this.cpuCores} cores (${this.cpuCoreUsage.join()})`);
-        this.valueCPU.text = `${this.cpuUsage}%`;
-
+        // log(`[TopHat] CPU: ${this.cpuUsage}% on ${this.cpuCores} cores (${this.cpuCoreUsage.join()})`);
+        // this.valueCPU.text = `${this.cpuUsage}%`;
+        this.menuCpuUsage.text = `${this.cpuUsage}%`;
         this.meter.queue_repaint();
 
         return true;
@@ -222,9 +218,9 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
         hbox.add_child(this.meter);
         this.meter.connect('repaint', () => this.repaint());
 
-        let valueRAM = new St.Label({ text: '0%', style_class: 'value' });
-        hbox.add_child(valueRAM);
-        this.valueRAM = valueRAM;
+        // let valueRAM = new St.Label({ text: '0%', style_class: 'value' });
+        // hbox.add_child(valueRAM);
+        // this.valueRAM = valueRAM;
 
         // Initialize libgtop values
         this.mem = new GTop.glibtop_mem();
@@ -234,16 +230,11 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
 
         // Menu
         hbox = new St.BoxLayout();
-        let label = new St.Label({ text: 'Memory details to go here' });
+        let label = new St.Label({ text: 'Memory usage:', style_class: 'menu-label' });
         hbox.add_child(label);
+        this.menuMemUsage = new St.Label({ text: '0', style_class: 'menu-value' });
+        hbox.add_child(this.menuMemUsage);
         this.menu.box.add_child(hbox);
-        // hbox.add_child(valueRAM);
-
-        this.menu.addAction('Menu Item', this.menuAction, null);
-    }
-
-    menuAction() {
-        log('[TopHat] Menu item activated');
     }
 
     refresh() {
@@ -251,9 +242,9 @@ var TopHatMemIndicator = class TopHatMemIndicator extends PanelMenu.Button {
         let memTotal = this.mem.total / 1024 / 1024;
         let memUsed = this.mem.user / 1024 / 1024;
         this.memUsage = Math.round(memUsed / memTotal * 100);
-        log(`[TopHat] Memory: ${this.memUsage}% of ${Math.round(memTotal)} MB`);
-        this.valueRAM.text = `${this.memUsage}%`;
-
+        // log(`[TopHat] Memory: ${this.memUsage}% of ${Math.round(memTotal)} MB`);
+        // this.valueRAM.text = `${this.memUsage}%`;
+        this.menuMemUsage.text = `${this.memUsage}%`;
         this.meter.queue_repaint();
 
         return true;
@@ -316,7 +307,10 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
         let netlist = new GTop.glibtop_netlist();
         this.netDevices = GTop.glibtop_get_netlist(netlist);
         for (const dev of this.netDevices) {
-            log(`[TopHat] Found network device '${dev}'`);
+            // Skip loopback interface
+            if (dev === 'lo')
+                continue;
+            // log(`[TopHat] Found network device '${dev}'`);
             GTop.glibtop_get_netload(this.net, dev);
             bytesIn += this.net.bytes_in;
             bytesOut += this.net.bytes_out;
@@ -331,15 +325,18 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
 
         // Menu
         hbox = new St.BoxLayout();
-        let label = new St.Label({ text: 'Network details to go here' });
+        let label = new St.Label({ text: 'Download: ', style_class: 'menu-label' });
         hbox.add_child(label);
+        this.menuNetDown = new St.Label({ text: '', style_class: 'menu-value' });
+        hbox.add_child(this.menuNetDown);
         this.menu.box.add_child(hbox);
 
-        this.menu.addAction('Menu Item', this.menuAction, null);
-    }
-
-    menuAction() {
-        log('[TopHat] Menu item activated');
+        hbox = new St.BoxLayout();
+        label = new St.Label({ text: 'Upload: ', style_class: 'menu-label' });
+        hbox.add_child(label);
+        this.menuNetUp = new St.Label({ text: '', style_class: 'menu-value' });
+        hbox.add_child(this.menuNetUp);
+        this.menu.box.add_child(hbox);
     }
 
     refresh() {
@@ -347,6 +344,9 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
         let bytesOut = 0;
         let time = GLib.get_monotonic_time();
         for (const dev of this.netDevices) {
+            if (dev === 'lo')
+                continue;
+            // log(`[TopHat] Found network device '${dev}'`);
             GTop.glibtop_get_netload(this.net, dev);
             bytesIn += this.net.bytes_in;
             bytesOut += this.net.bytes_out;
@@ -361,7 +361,9 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
         let netOut = bytesToHumanString(Math.round(bytesOutDelta / timeDelta));
         this.valueNetDown.text = `${netIn}/s`;
         this.valueNetUp.text = `${netOut}/s`;
-        log(`[TopHat] Net: bytes_in=${netIn}/s bytes_out=${netOut}/s time=${timeDelta}`);
+        this.menuNetDown.text = `${netIn}/s`;
+        this.menuNetUp.text = `${netOut}/s`;
+        log(`[TopHat] Net: bytes_in=${(bytesInDelta / timeDelta).toFixed(2)}/s bytes_out=${(bytesOutDelta / timeDelta).toFixed(2)}/s time=${timeDelta}`);
 
         return true;
     }
@@ -377,15 +379,17 @@ var TopHatNetIndicator = class TopHatNetIndicator extends PanelMenu.Button {
 };
 
 // Convert a number of bytes to a more logical human-readable string
-// (e.g., 1024 -> 1 KB)
+// (e.g., 1024 -> 1 K)
 function bytesToHumanString(bytes) {
-    if (bytes < 1024)
+    if (bytes < 1)
+        return '0 K';
+    else if (bytes < 1024)
         // Indicate network activity, but don't clutter the UI w/ # of bytes
-        return '1 KB';
+        return '1 K';
     else if (bytes < 1024 * 1024)
-        return `${(bytes / 1024).toFixed(0)} KB`;
+        return `${(bytes / 1024).toFixed(0)} K`;
     else
-        return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+        return `${(bytes / 1024 / 1024).toFixed(1)} M`;
 }
 
 // Compatibility with gnome-shell >= 3.32
@@ -430,7 +434,7 @@ class TopHat {
 
 // We're going to declare `tophat` in the scope of the whole script so it can
 // be accessed in both `enable()` and `disable()`
-var tophat = null;
+let tophat = null;
 
 function init() {
 }
