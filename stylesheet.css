@@ -20,6 +20,10 @@
     border: solid 1px #555;
 }
 
+.menu-grid {
+    margin: 0;
+}
+
 .menu-label {
     padding: 6px 6px 6px 18px;
 }
