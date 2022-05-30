@@ -51,3 +51,13 @@
 .menu-value {
     padding: 6px 18px 6px 6px;
 }
+
+.menu-cmd-name {
+    text-align: left;
+    padding: 3px;
+}
+
+.menu-cmd-usage {
+    text-align: right;
+    padding: 3px 3px 3px 0;
+}

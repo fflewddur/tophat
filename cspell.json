@@ -13,6 +13,8 @@
         "netlist",
         "netload",
         "pango",
+        "proclist",
+        "rtime",
         "sysinfo",
         "tophat",
         "user",
