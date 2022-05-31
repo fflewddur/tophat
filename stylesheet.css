@@ -68,13 +68,13 @@
 
 .menu-label {
     font-size: 0.9em;
-    padding: 6px;
+    padding: 3px 6px;
     text-align: left;
 }
 
 .menu-value {
     font-size: 0.9em;
-    padding: 6px;
+    padding: 3px 6px;
     text-align: right;
 }
 
@@ -89,4 +89,11 @@
     font-size: 0.8em;
     text-align: right;
     padding: 3px 6px 3px 0;
+}
+
+.menu-mem-usage {
+    font-size: 0.8em;
+    text-align: right;
+    padding: 3px 6px 3px 0;
+    width: 4em;
 }
