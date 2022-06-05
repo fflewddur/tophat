@@ -1,10 +1,17 @@
 # TopHat
-TopHat is [intended to be] an elegant system resource monitor for the GNOME shell. It's still very much a work-in-progress.
+TopHat is [intended to be] an elegant system resource monitor for the GNOME shell. It display CPU, memory, and network activity in the GNOME top bar.
 
 ## Requirements
 
-- GNOME 42+
-- gir1.2-gtop-2.0
+- GNOME 3.38 or newer
+- GIRepository (gir) bindings for the gtop system monitoring library (e.g., gir1.2-gtop-2.0 on Debian-based systems)
+
+## Tested against
+
+- CenOS Stream 9
+- Debian 11.3
+- Fedora 36
+- Ubuntu 22.04 LTS
 
 ## Contributing and dev notes
 
