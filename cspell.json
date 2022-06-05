@@ -4,10 +4,13 @@
     "words": [
         "gicon",
         "glibtop",
+        "gtop",
         "hbox",
+        "journalctl",
         "kulesza",
         "libgtop",
         "Mainloop",
+        "mkdir",
         "monospace",
         "ncpu",
         "netlist",
