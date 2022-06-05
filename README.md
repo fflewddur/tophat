@@ -11,3 +11,8 @@ TopHat is [intended to be] an elegant system resource monitor for the GNOME shel
 To view logged output, use the command `journalctl -f -o cat /usr/bin/gnome-shell`.
 
 To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng --timeout 10s --cpu 8`.
+
+To install manually:
+    
+    mkdir -p ~/.local/share/gnome-shell/extensions/
+    ln -s [path to tophat repository] ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io
