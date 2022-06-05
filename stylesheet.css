@@ -99,3 +99,28 @@
     padding: 3px 6px 3px 0;
     width: 4em;
 }
+
+.problem-header {
+    margin: 8px;
+    color: #ddd;
+    font-weight: bold;
+    max-width: 15em;
+}
+
+.problem-msg {
+    margin: 8px;
+    color: #ddd;
+    max-width: 15em;
+}
+
+.problem-details-header {
+    margin: 8px 8px 2px 8px;
+    text-align: center;
+    color: #777;
+}
+
+.problem-details {
+    margin: 8px;
+    color: #777;
+    max-width: 15em;
+}

@@ -18,13 +18,26 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+let depFailures = new Array();
+let missingLibs = new Array();
+
 const GLib = imports.gi.GLib;
 const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const Cpu = Me.imports.lib.cpu;
-const Mem = Me.imports.lib.mem;
-const Net = Me.imports.lib.net;
+let GTop = null;
+let Cpu = null;
+let Mem = null;
+let Net = null;
+try {
+    GTop = imports.gi.GTop;
+    Cpu = Me.imports.lib.cpu;
+    Mem = Me.imports.lib.mem;
+    Net = Me.imports.lib.net;
+} catch (err) {
+    depFailures.push(err);
+    missingLibs.push('GTop');
+}
 
 class TopHat {
     constructor() {
@@ -61,8 +74,20 @@ function init() {
 function enable() {
     log(`[${Me.metadata.name}] enabling version ${Me.metadata.version}`);
 
-    tophat = new TopHat();
-    tophat.addToPanel();
+    if (depFailures.length > 0) {
+        log(`[${Me.metadata.name}] missing dependencies, showing problem reporter instead`);
+        const Problem = Me.imports.lib.problem;
+        tophat = new Problem.TopHatProblemReporter();
+        
+        let msg = `It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}`;
+        tophat.setMessage(msg);
+        tophat.setDetails(depFailures.join('\n'));
+
+        Main.panel.addToStatusArea(`${Me.metadata.name} Problem Reporter`, tophat);
+    } else {
+        tophat = new TopHat();
+        tophat.addToPanel();
+    }
 
     log(`[${Me.metadata.name}] enabled`);
 }
