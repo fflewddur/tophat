@@ -54,12 +54,14 @@
 }
 
 .menu-grid {
+    color: #ddd;
     margin: 0 0 12px 0;
     width: 240px;
     max-width: 240px;
 }
 
 .menu-header {
+    color: #777;
     text-align: center;
     font-weight: bold;
     font-size: 0.9em;
