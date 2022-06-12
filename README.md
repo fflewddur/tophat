@@ -8,7 +8,8 @@ TopHat is an elegant system resource monitor for the GNOME shell. It display CPU
 ## Requirements
 
 - GNOME 3.38 or newer
-- GIRepository (gir) bindings for the gtop system monitoring library (e.g., gir1.2-gtop-2.0 on Debian-based systems)
+- The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems, likely already installed as part of GNOME)
+- GIRepository (gir) bindings for the gtop system monitoring library (e.g., 'gir1.2-gtop-2.0' on Debian-based systems)
 
 ## Tested against
 
