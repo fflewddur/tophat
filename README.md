@@ -28,10 +28,25 @@ To install manually:
     mkdir -p ~/.local/share/gnome-shell/extensions/
     ln -s [path to tophat repository] ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io
 
-## Icons
+## License
 
-Icons used with permission from [thenounproject.com](https://thenounproject.com).
+TopHat is distributed under the terms of the GNU General Public License, version 3 or later. See the [license][license] file for details.
 
-Processor: [jai](https://thenounproject.com/jairam.182/)  
-Memory: [Loudoun Design Co.](https://thenounproject.com/LoudounDesignCo/)  
-Network: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)  
+### Credits
+
+TopHat was designed and written by [Todd Kulesza](https://github.com/fflewddur), with much inspiration from the GNOME [system-monitor extension](https://extensions.gnome.org/extension/120/system-monitor/) and [iStat Menus](https://bjango.com/mac/istatmenus/).
+
+### Icons
+
+The images in the 'icons' directory are derived works from [thenounproject.com](https://thenounproject.com) and used under the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/3.0/). The authors of each original work are:
+
+icons/cpu.svg: [jai](https://thenounproject.com/jairam.182/)  
+icons/mem.svg: [Loudoun Design Co.](https://thenonproject.com/LoudounDesignCo/)  
+icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)  
+
+All icons were edited to make them more legible at small sizes.
+
+[project-wiki]: https://wiki.gnome.org/Projects/GnomeShell
+[bug-tracker]: https://gitlab.gnome.org/GNOME/gnome-shell/issues
+[schedule]: https://wiki.gnome.org/Schedule
+[license]: COPYING
