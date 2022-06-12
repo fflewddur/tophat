@@ -39,18 +39,20 @@ try {
     missingLibs.push('GTop');
 }
 
+// Declare `tophat` in the scope of the whole script so it can
+// be accessed in both `enable()` and `disable()`
+let tophat = null;
+
 class TopHat {
     constructor() {
         this.cpu = new Cpu.TopHatCpuIndicator();
         this.mem = new Mem.TopHatMemIndicator();
         this.net = new Net.TopHatNetIndicator();
-        // TODO Add disk usage/activity indicator
     }
 
     addToPanel() {
         // Wait 500 ms to allow other indicators to queue up first
         GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
-            // TODO Make a top-level container that passes click signals to the appropriate indicator
             Main.panel.addToStatusArea(`${Me.metadata.name} Network Indicator`, this.net);
             Main.panel.addToStatusArea(`${Me.metadata.name} Memory Indicator`, this.mem);
             Main.panel.addToStatusArea(`${Me.metadata.name} CPU Indicator`, this.cpu);
@@ -63,10 +65,6 @@ class TopHat {
         this.net.destroy();
     }
 }
-
-// Declare `tophat` in the scope of the whole script so it can
-// be accessed in both `enable()` and `disable()`
-let tophat = null;
 
 function init() {
 }
