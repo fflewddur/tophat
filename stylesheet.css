@@ -22,9 +22,7 @@
 }
 
 .icon {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    margin-right: 4px;
+    margin: 4px 4px 4px 0;
 }
 
 .net {
@@ -33,7 +31,7 @@
 }
 
 .chart {
-    margin: 6px 6px 3px 6px;
+    margin: 6px 6px 6px 6px;
     border: solid 1px #555;
     height: 60px;
     width: 230px;
@@ -55,9 +53,10 @@
 
 .menu-grid {
     color: #ddd;
-    margin: 0 0 12px 0;
-    width: 240px;
-    max-width: 240px;
+    margin: 3px 3px 12px 3px;
+    padding: 0;
+    width: 244px;
+    max-width: 244px;
 }
 
 .menu-header {
