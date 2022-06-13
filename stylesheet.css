@@ -9,13 +9,11 @@
     padding-left: 3px;
     font-size: 10px;
     text-align: right;
-    /* width: 5em; */
     min-width: 3em;
 }
 
 .meter {
     width: 8px;
-    /* background-color:#333; */
     margin-top: 4px;
     margin-bottom: 4px;
     border: solid 1px #555;
