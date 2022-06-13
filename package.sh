@@ -1,3 +1,3 @@
 #! /bin/sh
 
-gnome-extensions pack --force --extra-source lib --extra-source icons ./ && echo "Extension packaged"
+gnome-extensions pack --force --extra-source lib --extra-source icons --extra-source README.md ./ && echo "Extension packaged"
