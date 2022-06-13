@@ -1,7 +1,11 @@
 ---
+# SPDX-License-Identifier: MIT OR LGPL-2.0-or-later
+# SPDX-FileCopyrightText: 2018 Claudio André <claudioandre.br@gmail.com>
 env:
-  es6: true
+  es2021: true
 extends: 'eslint:recommended'
+plugins:
+  - jsdoc
 rules:
   array-bracket-newline:
     - error
@@ -18,13 +22,15 @@ rules:
   block-spacing: error
   brace-style: error
   # Waiting for this to have matured a bit in eslint
-  camelcase:
-     - error
-     - properties: never
-       allow: [^vfunc_, ^on_, _instance_init]
+  # camelcase:
+  #   - error
+  #   - properties: never
+  #     allow: [^vfunc_, ^on_, _instance_init]
   comma-dangle:
     - error
-    - always-multiline
+    - arrays: always-multiline
+      objects: always-multiline
+      functions: never
   comma-spacing:
     - error
     - before: false
@@ -35,8 +41,9 @@ rules:
   computed-property-spacing: error
   curly:
     - error
-    - multi-or-nest
-    - consistent
+    - all
+    # - multi-or-nest
+    # - consistent
   dot-location:
     - error
     - property
@@ -57,6 +64,17 @@ rules:
       - 'CallExpression[callee.object.name=GObject][callee.property.name=registerClass] > ClassExpression:first-child'
       # Allow dedenting chained member expressions
       MemberExpression: 'off'
+  jsdoc/check-alignment: error
+  jsdoc/check-param-names: error
+  jsdoc/check-tag-names: error
+  jsdoc/check-types: error
+  jsdoc/implements-on-classes: error
+  jsdoc/newline-after-description: error
+  # jsdoc/require-jsdoc: error
+  jsdoc/require-param: error
+  jsdoc/require-param-description: error
+  jsdoc/require-param-name: error
+  jsdoc/require-param-type: error
   key-spacing:
     - error
     - beforeColon: false
@@ -68,7 +86,10 @@ rules:
   linebreak-style:
     - error
     - unix
-  lines-between-class-members: error
+  lines-between-class-members:
+    - error
+    - always
+    - exceptAfterSingleLine: true
   max-nested-callbacks: error
   max-statements-per-line: error
   new-parens: error
@@ -87,6 +108,7 @@ rules:
     - error
     - all
     - conditionalAssign: false
+      nestedBinaryExpressions: false
       returnAssign: false
   no-implicit-coercion:
     - error
@@ -103,17 +125,24 @@ rules:
   no-octal-escape: error
   no-proto: error
   no-prototype-builtins: 'off'
+  no-restricted-globals: [error, window]
   no-restricted-properties:
     - error
+    - object: imports
+      property: format
+      message: Use template strings
+    - object: pkg
+      property: initFormat
+      message: Use template strings
+    - object: Lang
+      property: copyProperties
+      message: Use Object.assign()
     - object: Lang
       property: bind
       message: Use arrow notation or Function.prototype.bind()
     - object: Lang
       property: Class
       message: Use ES6 classes
-    - object: imports
-      property: mainloop
-      message: Use GLib main loops and timeouts
   no-restricted-syntax:
     - error
     - selector: >-
@@ -129,6 +158,8 @@ rules:
         BlockStatement[body.length=1]
         CallExpression[arguments.length=0][callee.object.type="Super"][callee.property.name="_init"]
       message: _init() that only calls super._init() is unnecessary
+    - selector: BinaryExpression[operator="instanceof"][right.name="Array"]
+      message: Use Array.isArray()
   no-return-assign: error
   no-return-await: error
   no-self-compare: error
@@ -145,7 +176,7 @@ rules:
   no-unused-vars:
     - error
     # Vars use a suffix _ instead of a prefix because of file-scope private vars
-    - varsIgnorePattern: (^unused|_|init|enable|disable$)
+    - varsIgnorePattern: (^unused|_$)
       argsIgnorePattern: ^(unused|_)
   no-useless-call: error
   no-useless-computed-key: error
@@ -161,16 +192,17 @@ rules:
   object-curly-newline:
     - error
     - consistent: true
-  object-curly-spacing: 
-    - error
-    - always
+      multiline: true
+  # object-curly-spacing: error
   object-shorthand: error
   operator-assignment: error
   operator-linebreak: error
+  padded-blocks:
+    - error
+    - never
   # These may be a bit controversial, we can try them out and enable them later
   # prefer-const: error
   # prefer-destructuring: error
-  prefer-arrow-callback: error
   prefer-numeric-literals: error
   prefer-promise-reject-errors: error
   prefer-rest-params: error
@@ -208,19 +240,19 @@ rules:
   template-curly-spacing: error
   template-tag-spacing: error
   unicode-bom: error
-  valid-jsdoc:
-    - error
-    - requireReturn: false
   wrap-iife:
     - error
     - inside
   yield-star-spacing: error
   yoda: error
+settings:
+  jsdoc:
+    mode: typescript
 globals:
   ARGV: readonly
   Debugger: readonly
   GIRepositoryGType: readonly
-  global: readonly
+  globalThis: readonly
   imports: readonly
   Intl: readonly
   log: readonly
@@ -228,5 +260,12 @@ globals:
   print: readonly
   printerr: readonly
   window: readonly
+  TextEncoder: readonly
+  TextDecoder: readonly
+  console: readonly
+  setTimeout: readonly
+  setInterval: readonly
+  clearTimeout: readonly
+  clearInterval: readonly
 parserOptions:
-  ecmaVersion: 2017
+  ecmaVersion: 2022

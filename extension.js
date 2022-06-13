@@ -18,8 +18,8 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-let depFailures = new Array();
-let missingLibs = new Array();
+let depFailures = [];
+let missingLibs = [];
 
 const GLib = imports.gi.GLib;
 const Main = imports.ui.main;
@@ -30,6 +30,7 @@ let Cpu = null;
 let Mem = null;
 let Net = null;
 try {
+    // eslint-disable-next-line no-unused-vars
     GTop = imports.gi.GTop;
     Cpu = Me.imports.lib.cpu;
     Mem = Me.imports.lib.mem;
@@ -66,9 +67,11 @@ class TopHat {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function init() {
 }
 
+// eslint-disable-next-line no-unused-vars
 function enable() {
     log(`[${Me.metadata.name}] enabling version ${Me.metadata.version}`);
 
@@ -76,7 +79,7 @@ function enable() {
         log(`[${Me.metadata.name}] missing dependencies, showing problem reporter instead`);
         const Problem = Me.imports.lib.problem;
         tophat = new Problem.TopHatProblemReporter();
-        
+
         let msg = `It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}`;
         tophat.setMessage(msg);
         tophat.setDetails(depFailures.join('\n'));
@@ -90,6 +93,7 @@ function enable() {
     log(`[${Me.metadata.name}] enabled`);
 }
 
+// eslint-disable-next-line no-unused-vars
 function disable() {
     log(`[${Me.metadata.name}] disabling version ${Me.metadata.version}`);
 
