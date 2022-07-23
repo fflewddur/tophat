@@ -46,6 +46,7 @@ let tophat = null;
 
 class TopHat {
     constructor() {
+        this.addTimeout = 0;
         this.cpu = new Cpu.TopHatCpuIndicator();
         this.mem = new Mem.TopHatMemIndicator();
         this.net = new Net.TopHatNetIndicator();
@@ -53,7 +54,7 @@ class TopHat {
 
     addToPanel() {
         // Wait 500 ms to allow other indicators to queue up first
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+        this.addTimeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
             Main.panel.addToStatusArea(`${Me.metadata.name} Network Indicator`, this.net);
             Main.panel.addToStatusArea(`${Me.metadata.name} Memory Indicator`, this.mem);
             Main.panel.addToStatusArea(`${Me.metadata.name} CPU Indicator`, this.cpu);
@@ -61,6 +62,10 @@ class TopHat {
     }
 
     destroy() {
+        if (this.addTimeout !== 0) {
+            GLib.source_remove(this.addTimeout);
+            this.addTimeout = 0;
+        }
         this.cpu.destroy();
         this.mem.destroy();
         this.net.destroy();
