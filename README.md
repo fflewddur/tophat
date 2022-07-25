@@ -47,7 +47,5 @@ icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)
 
 All icons were edited to make them more legible at small sizes.
 
-[project-wiki]: https://wiki.gnome.org/Projects/GnomeShell
-[bug-tracker]: https://gitlab.gnome.org/GNOME/gnome-shell/issues
-[schedule]: https://wiki.gnome.org/Schedule
+[bug-tracker]: https://github.com/fflewddur/tophat/issues
 [license]: COPYING
