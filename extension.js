@@ -58,6 +58,7 @@ class TopHat {
             Main.panel.addToStatusArea(`${Me.metadata.name} Network Indicator`, this.net);
             Main.panel.addToStatusArea(`${Me.metadata.name} Memory Indicator`, this.mem);
             Main.panel.addToStatusArea(`${Me.metadata.name} CPU Indicator`, this.cpu);
+            this.addTimeout = 0;
         });
     }
 
