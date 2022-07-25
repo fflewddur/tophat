@@ -1,5 +1,5 @@
 # TopHat
-TopHat is an elegant system resource monitor for the GNOME shell. It display CPU, memory, and network activity in the GNOME top bar.
+TopHat is an elegant system resource monitor for the GNOME shell. It displays CPU, memory, and network activity in the GNOME top bar.
 
 <img src="./screenshots/cpu.png?raw=true" width="360px" alt="Screenshot of processor usage indicator">
 <img src="./screenshots/mem.png?raw=true" width="360px" alt="Screenshot of memory usage indicator">
