@@ -2,7 +2,7 @@
     "uuid": "tophat@fflewddur.github.io",
     "name": "TopHat",
     "description": "An elegant system resource monitor.",
-    "version": 1,
+    "version": 2,
     "shell-version": [ "3.38", "40", "41", "42" ],
     "url": "https://github.com/fflewddur/tophat"
 }
