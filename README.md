@@ -5,6 +5,10 @@ TopHat is an elegant system resource monitor for the GNOME shell. It displays CP
 <img src="./screenshots/mem.png?raw=true" width="360px" alt="Screenshot of memory usage indicator">
 <img src="./screenshots/net.png?raw=true" width="360px" alt="Screenshot of network usage indicator">
 
+## Installation
+
+Install TopHat from the [GNOME Shell extensions page](https://extensions.gnome.org/extension/5219/tophat/).
+
 ## Requirements
 
 - GNOME 3.38 or newer
