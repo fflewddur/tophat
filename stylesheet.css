@@ -37,20 +37,20 @@
 
 .chart-label-then {
     font-size: 0.7em;
-    color: #aaa;
+    /* color: #aaa; */
     text-align: left;
     padding: 0 6px 12px 6px;
 }
 
 .chart-label-now {
     font-size: 0.7em;
-    color: #aaa;
+    /* color: #aaa; */
     text-align: right;
     padding: 0 6px 12px 6px;
 }
 
 .menu-grid {
-    color: #ddd;
+    /* color: #ddd; */
     margin: 3px 3px 12px 3px;
     padding: 0;
     width: 244px;
@@ -58,7 +58,7 @@
 }
 
 .menu-header {
-    color: #777;
+    /* color: #777; */
     text-align: center;
     font-weight: bold;
     font-size: 0.9em;
@@ -99,25 +99,25 @@
 
 .problem-header {
     margin: 8px;
-    color: #ddd;
+    /* color: #ddd; */
     font-weight: bold;
     max-width: 15em;
 }
 
 .problem-msg {
     margin: 8px;
-    color: #ddd;
+    /* color: #ddd; */
     max-width: 15em;
 }
 
 .problem-details-header {
     margin: 8px 8px 2px 8px;
     text-align: center;
-    color: #777;
+    /* color: #777; */
 }
 
 .problem-details {
     margin: 8px;
-    color: #777;
+    /* color: #777; */
     max-width: 15em;
 }
