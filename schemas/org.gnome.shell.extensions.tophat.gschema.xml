@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
+    <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
+    <key name="show-icons" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-cpu" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-mem" type="b">
+      <default>true</default>
+    </key>
+    <key name="show-net" type="b">
+      <default>true</default>
+    </key>
+  </schema>
+</schemalist>

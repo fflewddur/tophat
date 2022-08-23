@@ -46,10 +46,12 @@ let tophat = null;
 
 class TopHat {
     constructor() {
+        let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.tophat');
+
         this.addTimeout = 0;
-        this.cpu = new Cpu.TopHatCpuIndicator();
-        this.mem = new Mem.TopHatMemIndicator();
-        this.net = new Net.TopHatNetIndicator();
+        this.cpu = new Cpu.TopHatCpuIndicator(settings);
+        this.mem = new Mem.TopHatMemIndicator(settings);
+        this.net = new Net.TopHatNetIndicator(settings);
     }
 
     addToPanel() {
