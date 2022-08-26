@@ -17,12 +17,6 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-let Adw;
-try {
-    Adw = imports.gi.Adw;
-} catch (e) {
-    log('[TopHat] Fallback to GTK for preferences');
-}
 const {Gio, Gtk} = imports.gi;
 const gtkVersion = Gtk.get_major_version();
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -33,6 +27,8 @@ function init() {
 
 // eslint-disable-next-line no-unused-vars
 function fillPreferencesWindow(window) {
+    const Adw = imports.gi.Adw;
+
     // Create a preferences page and group
     const settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.tophat');
     const page = new Adw.PreferencesPage();
@@ -53,6 +49,8 @@ function fillPreferencesWindow(window) {
 }
 
 function addRow(label, setting, group, settings) {
+    const Adw = imports.gi.Adw;
+
     const row = new Adw.ActionRow({ title: label });
     group.add(row);
 
@@ -70,7 +68,7 @@ function addRow(label, setting, group, settings) {
 
 // eslint-disable-next-line no-unused-vars
 function buildPrefsWidget() {
-    log(`[TopHat] GtkVersion: ${gtkVersion}`);
+    // log(`[TopHat] GtkVersion: ${gtkVersion}`);
     if (gtkVersion === 3) {
         return buildPrefsWidget3();
     } else {
