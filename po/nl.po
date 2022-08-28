@@ -1,0 +1,94 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the TopHat package.
+#
+# Heimen Stoffels <vistausss@fastmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-shell-extension-tophat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-27 18:09-0700\n"
+"PO-Revision-Date: 2022-08-28 17:00+0200\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Language-Team: Dutch\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 22.08.0\n"
+
+#: prefs.js:41
+msgid "Show CPU monitor"
+msgstr "Cpu-monitor tonen"
+
+#: prefs.js:42
+msgid "Show memory monitor"
+msgstr "Geheugenmonitor tonen"
+
+#: prefs.js:43
+msgid "Show network monitor"
+msgstr "Netwerkmonitor tonen"
+
+#: prefs.js:47 prefs.js:95 prefs.js:123
+msgid "Show icons beside monitors"
+msgstr "Pictogrammen naast monitoren tonen"
+
+#: prefs.js:91 prefs.js:119
+msgid "Show the CPU monitor"
+msgstr "Cpu-monitor tonen"
+
+#: prefs.js:92 prefs.js:120
+msgid "Show the memory monitor"
+msgstr "Geheugenmonitor tonen"
+
+#: prefs.js:93 prefs.js:121
+msgid "Show the network monitor"
+msgstr "Netwerkmonitor tonen"
+
+#: lib/cpu.js:160
+msgid "Processor usage"
+msgstr "Processorgebruik"
+
+#: lib/cpu.js:164
+msgid "Total CPU:"
+msgstr "Totaal cpu-gebruik:"
+
+#: lib/cpu.js:176 lib/mem.js:146 lib/net.js:145
+msgid "2 mins ago"
+msgstr "2 min. geleden"
+
+#: lib/cpu.js:178 lib/mem.js:148 lib/net.js:147
+msgid "now"
+msgstr "zojuist"
+
+#: lib/cpu.js:182 lib/mem.js:152
+msgid "Top processes"
+msgstr "Topprocessen"
+
+#: lib/cpu.js:201 lib/mem.js:171 lib/net.js:159
+msgid "System Monitor"
+msgstr "Systeemmonitor"
+
+#: lib/mem.js:124
+msgid "Memory usage"
+msgstr "Geheugengebruik"
+
+#: lib/mem.js:128
+msgid "RAM used:"
+msgstr "Ram-gebruik:"
+
+#: lib/mem.js:134
+msgid "Swap used:"
+msgstr "Wisselgeheugengebruik:"
+
+#: lib/net.js:123
+msgid "Network usage"
+msgstr "Netwerkgebruik"
+
+#: lib/net.js:127
+msgid "Sending:"
+msgstr "Verstuurd:"
+
+#: lib/net.js:133
+msgid "Receiving:"
+msgstr "Ontvangen:"
