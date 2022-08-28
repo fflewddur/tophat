@@ -39,6 +39,8 @@ try {
     depFailures.push(err);
     missingLibs.push('GTop');
 }
+const Config = Me.imports.lib.config;
+const _ = Config.Domain.gettext;
 
 // Declare `tophat` in the scope of the whole script so it can
 // be accessed in both `enable()` and `disable()`
@@ -77,6 +79,7 @@ class TopHat {
 
 // eslint-disable-next-line no-unused-vars
 function init() {
+    ExtensionUtils.initTranslations(Me.metadata.uuid);
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -88,7 +91,7 @@ function enable() {
         const Problem = Me.imports.lib.problem;
         tophat = new Problem.TopHatProblemReporter();
 
-        let msg = `It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}`;
+        let msg = _(`It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}`);
         tophat.setMessage(msg);
         tophat.setDetails(depFailures.join('\n'));
 

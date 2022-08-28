@@ -20,6 +20,9 @@
 const {Gio, Gtk} = imports.gi;
 const gtkVersion = Gtk.get_major_version();
 const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Config = Me.imports.lib.config;
+const _ = Config.Domain.gettext;
 
 // eslint-disable-next-line no-unused-vars
 function init() {
@@ -35,13 +38,13 @@ function fillPreferencesWindow(window) {
 
     let group = new Adw.PreferencesGroup();
     page.add(group);
-    addRow('Show CPU monitor', 'show-cpu', group, settings);
-    addRow('Show memory monitor', 'show-mem', group, settings);
-    addRow('Show network monitor', 'show-net', group, settings);
+    addRow(_('Show CPU monitor'), 'show-cpu', group, settings);
+    addRow(_('Show memory monitor'), 'show-mem', group, settings);
+    addRow(_('Show network monitor'), 'show-net', group, settings);
 
     group = new Adw.PreferencesGroup();
     page.add(group);
-    addRow('Show icons beside monitors', 'show-icons', group, settings);
+    addRow(_('Show icons beside monitors'), 'show-icons', group, settings);
 
     // Add our page to the window
     window.add(page);
@@ -85,11 +88,11 @@ function buildPrefsWidget3() {
         border_width: 12,
     });
 
-    addPref3(buildSwitch3('show-cpu', 'Show the CPU monitor', settings), frame);
-    addPref3(buildSwitch3('show-mem', 'Show the memory monitor', settings), frame);
-    addPref3(buildSwitch3('show-net', 'Show the network monitor', settings), frame);
+    addPref3(buildSwitch3('show-cpu', _('Show the CPU monitor'), settings), frame);
+    addPref3(buildSwitch3('show-mem', _('Show the memory monitor'), settings), frame);
+    addPref3(buildSwitch3('show-net', _('Show the network monitor'), settings), frame);
 
-    addPref3(buildSwitch3('show-icons', 'Show icons beside monitors', settings), frame);
+    addPref3(buildSwitch3('show-icons', _('Show icons beside monitors'), settings), frame);
 
     frame.connect('realize', () => {
         let window = frame.get_toplevel();
@@ -113,11 +116,11 @@ function buildPrefsWidget4() {
         margin_end: 12,
     });
 
-    addPref4(buildSwitch4('show-cpu', 'Show the CPU monitor', settings), frame);
-    addPref4(buildSwitch4('show-mem', 'Show the memory monitor', settings), frame);
-    addPref4(buildSwitch4('show-net', 'Show the network monitor', settings), frame);
+    addPref4(buildSwitch4('show-cpu', _('Show the CPU monitor'), settings), frame);
+    addPref4(buildSwitch4('show-mem', _('Show the memory monitor'), settings), frame);
+    addPref4(buildSwitch4('show-net', _('Show the network monitor'), settings), frame);
 
-    addPref4(buildSwitch4('show-icons', 'Show icons beside monitors', settings), frame);
+    addPref4(buildSwitch4('show-icons', _('Show icons beside monitors'), settings), frame);
 
     frame.connect('realize', () => {
         let window = frame.get_root();
