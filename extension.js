@@ -42,28 +42,93 @@ try {
 const Config = Me.imports.lib.config;
 const _ = Config.Domain.gettext;
 
+const MenuPosition = {
+    LEFT_EDGE: 0,
+    LEFT: 1,
+    CENTER: 2,
+    RIGHT: 3,
+    RIGHT_EDGE: 4,
+};
+
 // Declare `tophat` in the scope of the whole script so it can
 // be accessed in both `enable()` and `disable()`
 let tophat = null;
 
 class TopHat {
     constructor() {
-        let settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.tophat');
-
+        this.configHandler = new Config.ConfigHandler();
         this.addTimeout = 0;
-        this.cpu = new Cpu.TopHatCpuIndicator(settings);
-        this.mem = new Mem.TopHatMemIndicator(settings);
-        this.net = new Net.TopHatNetIndicator(settings);
+        this.cpu = new Cpu.TopHatCpuIndicator(this.configHandler.settings);
+        this.mem = new Mem.TopHatMemIndicator(this.configHandler.settings);
+        this.net = new Net.TopHatNetIndicator(this.configHandler.settings);
+
+        this.configHandler.settings.connect('changed::position-in-panel', () => {
+            this.moveWithinPanel();
+        });
     }
 
     addToPanel() {
         // Wait 500 ms to allow other indicators to queue up first
         this.addTimeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
-            Main.panel.addToStatusArea(`${Me.metadata.name} Network Indicator`, this.net);
-            Main.panel.addToStatusArea(`${Me.metadata.name} Memory Indicator`, this.mem);
-            Main.panel.addToStatusArea(`${Me.metadata.name} CPU Indicator`, this.cpu);
+            let pref = this._getPreferredPanelBoxAndPosition();
+            Main.panel.addToStatusArea(
+                this.net.role, this.net, pref.position, pref.box
+            );
+            Main.panel.addToStatusArea(
+                this.mem.role, this.mem, pref.position, pref.box
+            );
+            Main.panel.addToStatusArea(
+                this.cpu.role, this.cpu, pref.position, pref.box
+            );
             this.addTimeout = 0;
         });
+    }
+
+    moveWithinPanel() {
+        let pref = this._getPreferredPanelBoxAndPosition();
+        let boxes = {
+            left: Main.panel._leftBox,
+            center: Main.panel._centerBox,
+            right: Main.panel._rightBox,
+        };
+        let boxContainer = boxes[pref.box] || this._rightBox;
+        Main.panel._addToPanelBox(
+            this.net.role, this.net, pref.position, boxContainer
+        );
+        Main.panel._addToPanelBox(
+            this.mem.role, this.mem, pref.position, boxContainer
+        );
+        Main.panel._addToPanelBox(
+            this.cpu.role, this.cpu, pref.position, boxContainer
+        );
+    }
+
+    _getPreferredPanelBoxAndPosition() {
+        let box = 'right';
+        let position = 0;
+        switch (this.configHandler.positionInPanel) {
+        case MenuPosition.LEFT_EDGE:
+            box = 'left';
+            position = 0;
+            break;
+        case MenuPosition.LEFT:
+            box = 'left';
+            position = -1;
+            break;
+        case MenuPosition.CENTER:
+            box = 'center';
+            position = 1;
+            break;
+        case MenuPosition.RIGHT:
+            box = 'right';
+            position = 0;
+            break;
+        case MenuPosition.RIGHT_EDGE:
+            box = 'right';
+            position = -1;
+            break;
+        }
+        return { box, position };
     }
 
     destroy() {
@@ -106,12 +171,8 @@ function enable() {
 
 // eslint-disable-next-line no-unused-vars
 function disable() {
-    log(`[${Me.metadata.name}] disabling version ${Me.metadata.version}`);
-
     if (tophat !== null) {
         tophat.destroy();
         tophat = null;
     }
-
-    log(`[${Me.metadata.name}] disabled`);
 }

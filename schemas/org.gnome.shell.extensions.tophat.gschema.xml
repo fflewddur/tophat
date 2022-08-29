@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
+  <enum id="org.gnome.shell.extensions.tophat.position">
+    <value value="0" nick="leftedge"/>
+    <value value="1" nick="left"/>
+    <value value="2" nick="center"/>
+    <value value="3" nick="right"/>
+    <value value="4" nick="rightedge"/>
+  </enum>
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
+    <key name="position-in-panel" enum="org.gnome.shell.extensions.tophat.position">
+      <default>'right'</default>
+    </key>
     <key name="show-icons" type="b">
       <default>true</default>
     </key>
