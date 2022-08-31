@@ -22,10 +22,10 @@ rules:
   block-spacing: error
   brace-style: error
   # Waiting for this to have matured a bit in eslint
-  # camelcase:
-  #   - error
-  #   - properties: never
-  #     allow: [^vfunc_, ^on_, _instance_init]
+  camelcase:
+    - error
+    - properties: never
+      allow: [^vfunc_, ^on_, _instance_init]
   comma-dangle:
     - error
     - arrays: always-multiline

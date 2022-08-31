@@ -18,6 +18,8 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+/* exported init, enable, disable */
+
 let depFailures = [];
 let missingLibs = [];
 
@@ -142,12 +144,10 @@ class TopHat {
     }
 }
 
-// eslint-disable-next-line no-unused-vars
 function init() {
     ExtensionUtils.initTranslations(Me.metadata.uuid);
 }
 
-// eslint-disable-next-line no-unused-vars
 function enable() {
     log(`[${Me.metadata.name}] enabling version ${Me.metadata.version}`);
 
@@ -169,7 +169,6 @@ function enable() {
     log(`[${Me.metadata.name}] enabled`);
 }
 
-// eslint-disable-next-line no-unused-vars
 function disable() {
     if (tophat !== null) {
         tophat.destroy();

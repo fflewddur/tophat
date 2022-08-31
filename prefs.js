@@ -17,6 +17,8 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+/* exported init, fillPreferencesWindow, buildPrefsWidget */
+
 const { Gio, Gtk } = imports.gi;
 const gtkVersion = Gtk.get_major_version();
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -24,11 +26,9 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Config = Me.imports.lib.config;
 const _ = Config.Domain.gettext;
 
-// eslint-disable-next-line no-unused-vars
 function init() {
 }
 
-// eslint-disable-next-line no-unused-vars
 function fillPreferencesWindow(window) {
     const Adw = imports.gi.Adw;
     const configHandler = new Config.ConfigHandler();
@@ -87,7 +87,6 @@ function addComboRow(label, choices, setting, group, configHandler) {
 
 // GTK versions for backwards-compatibility
 
-// eslint-disable-next-line no-unused-vars
 function buildPrefsWidget() {
     // log(`[TopHat] GtkVersion: ${gtkVersion}`);
     if (gtkVersion === 3) {
