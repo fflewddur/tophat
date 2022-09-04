@@ -17,7 +17,7 @@ Install TopHat from the [GNOME Shell extensions page](https://extensions.gnome.o
 
 ## Tested against
 
-- CenOS Stream 9
+- CentOS Stream 9
 - Debian 11.4
 - Fedora 36
 - Pop!_OS 22.04 LTS
