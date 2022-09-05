@@ -1,9 +1,7 @@
 # TopHat
 TopHat is an elegant system resource monitor for the GNOME shell. It displays CPU, memory, and network activity in the GNOME top bar.
 
-<img src="./screenshots/cpu.png?raw=true" width="360px" alt="Screenshot of processor usage indicator">
-<img src="./screenshots/mem.png?raw=true" width="360px" alt="Screenshot of memory usage indicator">
-<img src="./screenshots/net.png?raw=true" width="360px" alt="Screenshot of network usage indicator">
+<img src="./screenshots/tophat.png?raw=true" width="1084px" alt="Screenshot of TopHat">
 
 ## Installation
 
@@ -11,7 +9,7 @@ Install TopHat from the [GNOME Shell extensions page](https://extensions.gnome.o
 
 ## Requirements
 
-- GNOME 3.38 or newer
+- GNOME 3.32 or newer
 - The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems, likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g., 'gir1.2-gtop-2.0' on Debian-based systems)
 
@@ -25,6 +23,8 @@ Install TopHat from the [GNOME Shell extensions page](https://extensions.gnome.o
 - Ubuntu 22.04 LTS
 
 ## Contributing and dev notes
+
+Contributions to improve TopHat are welcome! To avoid duplicate work, check [the issue tracker](https://github.com/fflewddur/tophat/issues) first. If an issue doesn't already exist for your idea, please create one.
 
 To view logged output, use the command `journalctl -f -o cat /usr/bin/gnome-shell`.
 
