@@ -1,0 +1,94 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the TopHat package.
+# nxjoseph <nxjoseph@protonmail.com>, 2022.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-shell-extension-tophat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-08-27 18:09-0700\n"
+"PO-Revision-Date: 2022-09-05 16:06+0300\n"
+"Last-Translator: nxjoseph <nxjoseph@protonmail.com>\n"
+"Language-Team: Turkish\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: prefs.js:41
+msgid "Show CPU monitor"
+msgstr "CPU monitörünü göster"
+
+#: prefs.js:42
+msgid "Show memory monitor"
+msgstr "Bellek monitörünü göster"
+
+#: prefs.js:43
+msgid "Show network monitor"
+msgstr "İnternet monitörünü göster"
+
+#: prefs.js:47 prefs.js:95 prefs.js:123
+msgid "Show icons beside monitors"
+msgstr "Monitörlerin yanında simgeleri göster"
+
+#: prefs.js:91 prefs.js:119
+msgid "Show the CPU monitor"
+msgstr "CPU monitörünü göster"
+
+#: prefs.js:92 prefs.js:120
+msgid "Show the memory monitor"
+msgstr "Bellek monitörünü göster"
+
+#: prefs.js:93 prefs.js:121
+msgid "Show the network monitor"
+msgstr "İnternet monitörünü göster"
+
+#: lib/cpu.js:160
+msgid "Processor usage"
+msgstr "İşlemci kullanımı"
+
+#: lib/cpu.js:164
+msgid "Total CPU:"
+msgstr "Toplam CPU:"
+
+#: lib/cpu.js:176 lib/mem.js:146 lib/net.js:145
+msgid "2 mins ago"
+msgstr "2 dakika önce"
+
+#: lib/cpu.js:178 lib/mem.js:148 lib/net.js:147
+msgid "now"
+msgstr "şimdi"
+
+#: lib/cpu.js:182 lib/mem.js:152
+msgid "Top processes"
+msgstr "İşlemler"
+
+#: lib/cpu.js:201 lib/mem.js:171 lib/net.js:159
+msgid "System Monitor"
+msgstr "Sistem monitörü"
+
+#: lib/mem.js:124
+msgid "Memory usage"
+msgstr "Bellek kullanımı"
+
+#: lib/mem.js:128
+msgid "RAM used:"
+msgstr "Kullanılan RAM:"
+
+#: lib/mem.js:134
+msgid "Swap used:"
+msgstr "Kullanılan takas alanı:"
+
+#: lib/net.js:123
+msgid "Network usage"
+msgstr "İnternet kullanımı"
+
+#: lib/net.js:127
+msgid "Sending:"
+msgstr "Gönderilen:"
+
+#: lib/net.js:133
+msgid "Receiving:"
+msgstr "Alınan:"
