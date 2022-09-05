@@ -1,0 +1,11 @@
+name: ESLint
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: npm install eslint
+    - name: Run ESLint
+      run: ./node_modules/eslint/bin/eslint.js . --ext .js
