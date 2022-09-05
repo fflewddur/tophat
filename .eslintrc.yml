@@ -42,8 +42,6 @@ rules:
   curly:
     - error
     - all
-    # - multi-or-nest
-    # - consistent
   dot-location:
     - error
     - property
@@ -193,7 +191,7 @@ rules:
     - error
     - consistent: true
       multiline: true
-  # object-curly-spacing: error
+  object-curly-spacing: error
   object-shorthand: error
   operator-assignment: error
   operator-linebreak: error

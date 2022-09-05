@@ -130,7 +130,7 @@ class TopHat {
             position = -1;
             break;
         }
-        return { box, position };
+        return {box, position};
     }
 
     destroy() {

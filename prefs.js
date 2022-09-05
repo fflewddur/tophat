@@ -19,7 +19,7 @@
 
 /* exported init, fillPreferencesWindow, buildPrefsWidget */
 
-const { Gio, Gtk } = imports.gi;
+const {Gio, Gtk} = imports.gi;
 const gtkVersion = Gtk.get_major_version();
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -61,7 +61,7 @@ function fillPreferencesWindow(window) {
 function addActionRow(label, setting, group, configHandler) {
     const Adw = imports.gi.Adw;
 
-    const row = new Adw.ActionRow({ title: label });
+    const row = new Adw.ActionRow({title: label});
     group.add(row);
 
     let toggle = new Gtk.Switch({
@@ -76,7 +76,7 @@ function addActionRow(label, setting, group, configHandler) {
 
 function addComboRow(label, choices, setting, group, configHandler) {
     const Adw = imports.gi.Adw;
-    let row = new Adw.ComboRow({ title: label, model: choices, selected: configHandler[setting] });
+    let row = new Adw.ComboRow({title: label, model: choices, selected: configHandler[setting]});
 
     row.connect('notify::selected', widget => {
         configHandler[setting] = widget.selected;
@@ -139,9 +139,9 @@ function buildPrefsWidget3() {
 }
 
 function buildSwitch3(key, text, settings) {
-    let hbox = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
-    let label = new Gtk.Label({ label: text, xalign: 0 });
-    let toggle = new Gtk.Switch({ active: settings.get_boolean(key) });
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let label = new Gtk.Label({label: text, xalign: 0});
+    let toggle = new Gtk.Switch({active: settings.get_boolean(key)});
 
     toggle.connect('notify::active', function (widget) {
         settings.set_boolean(key, widget.active);
@@ -154,8 +154,8 @@ function buildSwitch3(key, text, settings) {
 }
 
 function buildDropDown3(key, text, choices, configHandler) {
-    let hbox = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
-    let label = new Gtk.Label({ label: text, xalign: 0 });
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let label = new Gtk.Label({label: text, xalign: 0});
     let dropdown = new Gtk.ComboBoxText();
     choices.forEach(choice => {
         dropdown.append_text(choice);
@@ -217,9 +217,9 @@ function buildPrefsWidget4() {
 }
 
 function buildSwitch4(key, text, settings) {
-    let hbox = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
-    let label = new Gtk.Label({ label: text, xalign: 0, hexpand: 1 });
-    let toggle = new Gtk.Switch({ active: settings.get_boolean(key) });
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
+    let toggle = new Gtk.Switch({active: settings.get_boolean(key)});
 
     toggle.connect('notify::active', function (widget) {
         settings.set_boolean(key, widget.active);
@@ -232,9 +232,9 @@ function buildSwitch4(key, text, settings) {
 }
 
 function buildDropDown4(key, text, choices, configHandler) {
-    let hbox = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
-    let label = new Gtk.Label({ label: text, xalign: 0, hexpand: 1 });
-    let dropdown = new Gtk.DropDown({ model: choices });
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
+    let dropdown = new Gtk.DropDown({model: choices});
 
     dropdown.set_selected(configHandler[key]);
     dropdown.connect('notify::selected', widget => {
