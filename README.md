@@ -22,6 +22,10 @@ Install TopHat from the [GNOME Shell extensions page](https://extensions.gnome.o
 - Pop!_OS 22.04 LTS
 - Ubuntu 22.04 LTS
 
+## Release notes
+
+See [RELEASES.md](RELEASES.md) for the list of fixes and new functionality included in each release.
+
 ## Contributing and dev notes
 
 Contributions to improve TopHat are welcome! To avoid duplicate work, check [the issue tracker](https://github.com/fflewddur/tophat/issues) first. If an issue doesn't already exist for your idea, please create one.
