@@ -7,13 +7,17 @@ TopHat is an elegant system resource monitor for the GNOME shell. It displays CP
 
 Install TopHat from the [GNOME Shell extensions page](https://extensions.gnome.org/extension/5219/tophat/).
 
+Most Debian-based systems (including Ubuntu and Pop!_OS) will also need to install 'gir1.2-gtop-2.0'. Usually this means running the command `sudo apt install gir1.2-gtop-2.0`.
+
 ## Requirements
 
 - GNOME 3.32 or newer
 - The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems, likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g., 'gir1.2-gtop-2.0' on Debian-based systems)
 
-## Tested against
+### Compatibility
+
+The latest release of TopHat has been tested on the following systems:
 
 - CentOS Stream 8
 - CentOS Stream 9
@@ -21,6 +25,7 @@ Install TopHat from the [GNOME Shell extensions page](https://extensions.gnome.o
 - Fedora 36
 - Pop!_OS 22.04 LTS
 - Ubuntu 22.04 LTS
+- Ubuntu 22.10 (Preview)
 
 ## Release notes
 
