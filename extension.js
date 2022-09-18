@@ -60,9 +60,9 @@ class TopHat {
     constructor() {
         this.configHandler = new Config.ConfigHandler();
         this.container = new Container.TopHatContainer();
-        this.cpu = new Cpu.TopHatCpuIndicator(this.configHandler.settings);
-        this.mem = new Mem.TopHatMemIndicator(this.configHandler.settings);
-        this.net = new Net.TopHatNetIndicator(this.configHandler.settings);
+        this.cpu = new Cpu.CpuMonitor(this.configHandler.settings);
+        this.mem = new Mem.MemMonitor(this.configHandler.settings);
+        this.net = new Net.NetMonitor(this.configHandler.settings);
         this.container.addMonitor(this.cpu);
         this.container.addMonitor(this.mem);
         this.container.addMonitor(this.net);
