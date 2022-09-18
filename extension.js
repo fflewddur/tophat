@@ -63,7 +63,9 @@ class TopHat {
         this.cpu = new Cpu.TopHatCpuIndicator(this.configHandler.settings);
         this.mem = new Mem.TopHatMemIndicator(this.configHandler.settings);
         this.net = new Net.TopHatNetIndicator(this.configHandler.settings);
-
+        this.container = new Cpu.TopHatContainer();
+        this.cpuNext = new Cpu.TopHatCpuIndicatorNext();
+        this.container.addMonitor(this.cpuNext);
         this.configHandler.settings.connect('changed::position-in-panel', () => {
             this.moveWithinPanel();
         });
@@ -73,6 +75,8 @@ class TopHat {
         // Wait 500 ms to allow other indicators to queue up first
         this.addTimeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
             let pref = this._getPreferredPanelBoxAndPosition();
+            Main.panel.addToStatusArea('TopHat', this.container, pref.position, pref.box);
+            Main.panel.menuManager.addMenu(this.container.monitors[0].menu);
             Main.panel.addToStatusArea(
                 this.net.role, this.net, pref.position, pref.box
             );
@@ -94,6 +98,7 @@ class TopHat {
             right: Main.panel._rightBox,
         };
         let boxContainer = boxes[pref.box] || this._rightBox;
+        Main.panel.addToStatusArea('TopHat', this.container, pref.position, pref.box);
         Main.panel._addToPanelBox(
             this.net.role, this.net, pref.position, boxContainer
         );
