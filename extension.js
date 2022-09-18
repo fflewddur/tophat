@@ -42,6 +42,8 @@ try {
     missingLibs.push('GTop');
 }
 const Config = Me.imports.lib.config;
+const Container = Me.imports.lib.container;
+const Monitor = Me.imports.lib.monitor;
 const _ = Config.Domain.gettext;
 
 const MenuPosition = {
@@ -63,8 +65,8 @@ class TopHat {
         this.cpu = new Cpu.TopHatCpuIndicator(this.configHandler.settings);
         this.mem = new Mem.TopHatMemIndicator(this.configHandler.settings);
         this.net = new Net.TopHatNetIndicator(this.configHandler.settings);
-        this.container = new Cpu.TopHatContainer();
-        this.cpuNext = new Cpu.TopHatCpuIndicatorNext();
+        this.container = new Container.TopHatContainer();
+        this.cpuNext = new Monitor.TopHatCpuIndicatorNext();
         this.container.addMonitor(this.cpuNext);
         this.configHandler.settings.connect('changed::position-in-panel', () => {
             this.moveWithinPanel();
