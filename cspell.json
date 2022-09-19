@@ -9,6 +9,7 @@
         "gtop",
         "hbox",
         "hexpand",
+        "hpadding",
         "journalctl",
         "kulesza",
         "libgtop",
