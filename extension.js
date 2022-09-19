@@ -75,7 +75,7 @@ class TopHat {
         let pref = this._getPreferredPanelBoxAndPosition();
         Main.panel.addToStatusArea('TopHat', this.container, pref.position, pref.box);
         this.container.monitors.forEach(monitor => {
-            log(`Adding menu to manager for ${monitor.name}`);
+            // log(`Adding menu to manager for ${monitor.name}`);
             Main.panel.menuManager.addMenu(monitor.menu);
         });
     }
