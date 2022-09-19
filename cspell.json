@@ -1,13 +1,15 @@
 {
-    "version": "0.1",
+    "version": "0.2",
     "language": "en",
     "words": [
+        "dontCreateMenu",
         "Gettext",
         "gicon",
         "glibtop",
         "gtop",
         "hbox",
         "hexpand",
+        "hpadding",
         "journalctl",
         "kulesza",
         "libgtop",
@@ -29,7 +31,9 @@
         "user",
         "valign",
         "vbox",
+        "vfunc",
         "Vistaus",
+        "workarea",
         "xalign",
         "xcpu"
     ],

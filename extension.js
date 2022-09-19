@@ -23,7 +23,6 @@
 let depFailures = [];
 let missingLibs = [];
 
-const GLib = imports.gi.GLib;
 const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -42,6 +41,7 @@ try {
     missingLibs.push('GTop');
 }
 const Config = Me.imports.lib.config;
+const Container = Me.imports.lib.container;
 const _ = Config.Domain.gettext;
 
 const MenuPosition = {
@@ -59,30 +59,24 @@ let tophat = null;
 class TopHat {
     constructor() {
         this.configHandler = new Config.ConfigHandler();
-        this.addTimeout = 0;
-        this.cpu = new Cpu.TopHatCpuIndicator(this.configHandler.settings);
-        this.mem = new Mem.TopHatMemIndicator(this.configHandler.settings);
-        this.net = new Net.TopHatNetIndicator(this.configHandler.settings);
-
+        this.container = new Container.TopHatContainer();
+        this.cpu = new Cpu.CpuMonitor(this.configHandler.settings);
+        this.mem = new Mem.MemMonitor(this.configHandler.settings);
+        this.net = new Net.NetMonitor(this.configHandler.settings);
+        this.container.addMonitor(this.cpu);
+        this.container.addMonitor(this.mem);
+        this.container.addMonitor(this.net);
         this.configHandler.settings.connect('changed::position-in-panel', () => {
             this.moveWithinPanel();
         });
     }
 
     addToPanel() {
-        // Wait 500 ms to allow other indicators to queue up first
-        this.addTimeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
-            let pref = this._getPreferredPanelBoxAndPosition();
-            Main.panel.addToStatusArea(
-                this.net.role, this.net, pref.position, pref.box
-            );
-            Main.panel.addToStatusArea(
-                this.mem.role, this.mem, pref.position, pref.box
-            );
-            Main.panel.addToStatusArea(
-                this.cpu.role, this.cpu, pref.position, pref.box
-            );
-            this.addTimeout = 0;
+        let pref = this._getPreferredPanelBoxAndPosition();
+        Main.panel.addToStatusArea('TopHat', this.container, pref.position, pref.box);
+        this.container.monitors.forEach(monitor => {
+            // log(`Adding menu to manager for ${monitor.name}`);
+            Main.panel.menuManager.addMenu(monitor.menu);
         });
     }
 
@@ -94,15 +88,7 @@ class TopHat {
             right: Main.panel._rightBox,
         };
         let boxContainer = boxes[pref.box] || this._rightBox;
-        Main.panel._addToPanelBox(
-            this.net.role, this.net, pref.position, boxContainer
-        );
-        Main.panel._addToPanelBox(
-            this.mem.role, this.mem, pref.position, boxContainer
-        );
-        Main.panel._addToPanelBox(
-            this.cpu.role, this.cpu, pref.position, boxContainer
-        );
+        Main.panel._addToPanelBox('TopHat', this.container, pref.position, boxContainer);
     }
 
     _getPreferredPanelBoxAndPosition() {
@@ -134,13 +120,7 @@ class TopHat {
     }
 
     destroy() {
-        if (this.addTimeout !== 0) {
-            GLib.source_remove(this.addTimeout);
-            this.addTimeout = 0;
-        }
-        this.cpu.destroy();
-        this.mem.destroy();
-        this.net.destroy();
+        this.container.destroy();
     }
 }
 
