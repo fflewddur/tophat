@@ -1,6 +1,7 @@
 # Release notes
 
-All notable changes to [TopHat] are listed in this file. The format is loosely based on [Keep a Changelog].
+All notable changes to [TopHat] are listed in this file. The format is loosely
+based on [Keep a Changelog].
 
 ## TopHat 4 - September 19, 2022
 
@@ -10,7 +11,8 @@ All notable changes to [TopHat] are listed in this file. The format is loosely b
 - Added option to change TopHat's position in the panel
 - Added translation infrastructure
 - Added Dutch translation from [@Vistaus](https://github.com/Vistaus)
-- Added Turkish translation from [@nxjosephofficial](https://github.com/nxjosephofficial)
+- Added Turkish translation from
+  [@nxjosephofficial](https://github.com/nxjosephofficial)
 
 ## TopHat 3 - August 25, 2022
 
