@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR Todd Kulesza
 # This file is distributed under the same license as the TopHat package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-shell-extension-tophat\n"
+"Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-27 18:09-0700\n"
+"POT-Creation-Date: 2022-09-19 18:50-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,78 +17,102 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: prefs.js:41
+#: prefs.js:40
 msgid "Show CPU monitor"
 msgstr ""
 
-#: prefs.js:42
+#: prefs.js:41
 msgid "Show memory monitor"
 msgstr ""
 
-#: prefs.js:43
+#: prefs.js:42
 msgid "Show network monitor"
 msgstr ""
 
-#: prefs.js:47 prefs.js:95 prefs.js:123
+#: prefs.js:48 prefs.js:123 prefs.js:202
+msgid "Left edge"
+msgstr ""
+
+#: prefs.js:49 prefs.js:124 prefs.js:203
+msgid "Left"
+msgstr ""
+
+#: prefs.js:50 prefs.js:125 prefs.js:204
+msgid "Center"
+msgstr ""
+
+#: prefs.js:51 prefs.js:126 prefs.js:205
+msgid "Right"
+msgstr ""
+
+#: prefs.js:52 prefs.js:127 prefs.js:206
+msgid "Right edge"
+msgstr ""
+
+#: prefs.js:53 prefs.js:128 prefs.js:207
+msgid "Position in panel"
+msgstr ""
+
+#: prefs.js:55 prefs.js:129 prefs.js:208
 msgid "Show icons beside monitors"
 msgstr ""
 
-#: prefs.js:91 prefs.js:119
+#: prefs.js:113 prefs.js:192
 msgid "Show the CPU monitor"
 msgstr ""
 
-#: prefs.js:92 prefs.js:120
+#: prefs.js:114 prefs.js:193
 msgid "Show the memory monitor"
 msgstr ""
 
-#: prefs.js:93 prefs.js:121
+#: prefs.js:115 prefs.js:194
 msgid "Show the network monitor"
 msgstr ""
 
-#: lib/cpu.js:160
+#: lib/cpu.js:145
 msgid "Processor usage"
 msgstr ""
 
-#: lib/cpu.js:164
+#: lib/cpu.js:149
 msgid "Total CPU:"
 msgstr ""
 
-#: lib/cpu.js:176 lib/mem.js:146 lib/net.js:145
+#: lib/cpu.js:161 lib/mem.js:137 lib/net.js:136
 msgid "2 mins ago"
 msgstr ""
 
-#: lib/cpu.js:178 lib/mem.js:148 lib/net.js:147
+#: lib/cpu.js:163 lib/mem.js:139 lib/net.js:138
 msgid "now"
 msgstr ""
 
-#: lib/cpu.js:182 lib/mem.js:152
+#: lib/cpu.js:167 lib/mem.js:143
 msgid "Top processes"
 msgstr ""
 
-#: lib/cpu.js:201 lib/mem.js:171 lib/net.js:159
+#: lib/cpu.js:186 lib/mem.js:162 lib/net.js:150
 msgid "System Monitor"
 msgstr ""
 
-#: lib/mem.js:124
+#: lib/mem.js:115
 msgid "Memory usage"
 msgstr ""
 
-#: lib/mem.js:128
+#: lib/mem.js:119
 msgid "RAM used:"
 msgstr ""
 
-#: lib/mem.js:134
+#: lib/mem.js:125
 msgid "Swap used:"
 msgstr ""
 
-#: lib/net.js:123
+#: lib/net.js:114
 msgid "Network usage"
 msgstr ""
 
-#: lib/net.js:127
+#: lib/net.js:118
 msgid "Sending:"
 msgstr ""
 
-#: lib/net.js:133
+#: lib/net.js:124
 msgid "Receiving:"
 msgstr ""
