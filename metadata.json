@@ -4,5 +4,7 @@
     "description": "An elegant system resource monitor.",
     "version": 4,
     "shell-version": [ "3.32", "3.34", "3.36", "3.38", "40", "41", "42", "43" ],
-    "url": "https://github.com/fflewddur/tophat"
+    "url": "https://github.com/fflewddur/tophat",
+    "gettext-domain": "tophat@fflewddur.github.io",
+    "settings-schema": "org.gnome.shell.extensions.tophat"
 }

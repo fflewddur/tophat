@@ -125,7 +125,7 @@ class TopHat {
 }
 
 function init() {
-    ExtensionUtils.initTranslations(Me.metadata.uuid);
+    ExtensionUtils.initTranslations();
 }
 
 function enable() {

@@ -27,6 +27,7 @@ const Config = Me.imports.lib.config;
 const _ = Config.Domain.gettext;
 
 function init() {
+    ExtensionUtils.initTranslations();
 }
 
 function fillPreferencesWindow(window) {
