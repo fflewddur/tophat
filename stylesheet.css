@@ -19,8 +19,9 @@
     border: solid 1px #444;
 }
 
-.icon {
-    margin: 4px 4px 4px 0;
+.tophat-panel-icon {
+    icon-size: 16px;
+    margin-right: 2px;
 }
 
 .net {

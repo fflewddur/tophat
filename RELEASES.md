@@ -3,6 +3,10 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Not yet released
+
+- Improved icon appearance with transparent top bars
+
 ## TopHat 4 - September 19, 2022
 
 - Fixed compatibility with GNOME Shell 3.32 and newer
