@@ -14,13 +14,18 @@
 
 .meter {
     width: 8px;
+    height: 20px;
     margin-top: 4px;
     margin-bottom: 4px;
     border: solid 1px #444;
+    border-radius: 2px;
+}
+
+.tophat-monitor {
+    height: 20px;
 }
 
 .tophat-panel-icon {
-    icon-size: 16px;
     margin-right: 2px;
 }
 
@@ -34,6 +39,7 @@
     border: solid 1px #555;
     height: 60px;
     width: 230px;
+    border-radius: 4px;
 }
 
 .chart-label-then {

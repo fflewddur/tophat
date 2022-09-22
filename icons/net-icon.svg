@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="1200pt"
-   height="1200pt"
+   width="1204pt"
+   height="1204pt"
    version="1.1"
-   viewBox="0 0 1200 1200"
+   viewBox="0 0 1204 1204"
    id="svg114"
-   sodipodi:docname="net-icon5.svg"
+   sodipodi:docname="net-icon.svg"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,17 +24,23 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="0.51574601"
-     inkscape:cx="507.03252"
-     inkscape:cy="850.22471"
+     inkscape:cx="232.67267"
+     inkscape:cy="854.10258"
      inkscape:window-width="2487"
      inkscape:window-height="1376"
      inkscape:window-x="73"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g112" />
+     inkscape:current-layer="g112"
+     fit-margin-top="2"
+     fit-margin-left="2"
+     fit-margin-right="2"
+     fit-margin-bottom="2"
+     lock-margins="true" />
   <g
-     fill="#fff"
-     id="g112">
+     fill="#ffffff"
+     id="g112"
+     transform="translate(2,2)">
     <path
        d="m 644.5,952.5 h -397 V 552 C 247.5,524.5 220,500 192,500 H 44.5 C 17,500 0,524.5 0,552 v 600 c 0,27.5 17,48 44.5,48 h 600 c 27.5,0 55.5,-20.5 55.5,-48 v -147.5 c 0,-27.5 -27.5,-52 -55.5,-52 z"
        id="path108"
