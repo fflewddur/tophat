@@ -1,25 +1,8 @@
-.value {
-    padding-left: 6px;
-    padding-top: 3px;
-    width: 2em;
-    text-align: right;
-}
-
 .value-net {
     padding-left: 3px;
     font-size: 10px;
     text-align: right;
     min-width: 4em;
-}
-
-.meter {
-    width: 8px;
-    height: 20px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    padding: 0;
-    border: solid 1px #444;
-    border-radius: 2px;
 }
 
 .tophat-meter {
