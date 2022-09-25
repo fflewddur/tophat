@@ -26,8 +26,12 @@
 }
 
 .tophat-panel-icon {
-    margin-right: 2px;
-    margin-left: 0;
+    margin: 0 1px;
+    padding-left: 0;
+}
+
+.tophat-panel-icon-net {
+    margin: 2px 1px;
 }
 
 .chart {
