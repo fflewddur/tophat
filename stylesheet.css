@@ -22,14 +22,10 @@
     border-radius: 2px;
 }
 
-.tophat-monitor {
-    /* height: 20px; */
-}
-
 .tophat-meter {
     height: 20px;
     margin: 4px 0;
-    border: solid 1px rgba(68, 68, 68, 0.6);
+    border: solid 1px rgba(100, 100, 100, 0.4);
     border-radius: 2px;
     background-color: rgba(0, 0, 0, 0.2);
 }
@@ -49,11 +45,6 @@
 .tophat-panel-icon {
     margin-right: 2px;
     margin-left: 0;
-}
-
-.net {
-    margin-top: 2px;
-    margin-bottom: 2px;
 }
 
 .chart {

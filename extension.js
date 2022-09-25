@@ -60,12 +60,12 @@ class TopHat {
     constructor() {
         this.configHandler = new Config.ConfigHandler();
         this.container = new Container.TopHatContainer();
-        // this.cpu = new Cpu.CpuMonitor(this.configHandler.settings);
+        this.cpu = new Cpu.CpuMonitor(this.configHandler.settings);
         this.mem = new Mem.MemMonitor(this.configHandler.settings);
-        // this.net = new Net.NetMonitor(this.configHandler.settings);
-        // this.container.addMonitor(this.cpu);
+        this.net = new Net.NetMonitor(this.configHandler.settings);
+        this.container.addMonitor(this.cpu);
         this.container.addMonitor(this.mem);
-        // this.container.addMonitor(this.net);
+        this.container.addMonitor(this.net);
         this.configHandler.settings.connect('changed::position-in-panel', () => {
             this.moveWithinPanel();
         });
