@@ -1,10 +1,3 @@
-.value {
-    padding-left: 6px;
-    padding-top: 3px;
-    width: 2em;
-    text-align: right;
-}
-
 .value-net {
     padding-left: 3px;
     font-size: 10px;
@@ -12,26 +5,31 @@
     min-width: 4em;
 }
 
-.meter {
-    width: 8px;
+.tophat-meter {
     height: 20px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border: solid 1px #444;
+    margin: 4px 0;
+    border: solid 1px rgba(100, 100, 100, 0.4);
     border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
-.tophat-monitor {
-    height: 20px;
+.tophat-meter-bar {
+    height: 0;
+    margin: 0 1px 0 0;
+    border-radius: 1px;
+}
+
+.tophat-meter-bar:last-child {
+    margin-right: 0;
 }
 
 .tophat-panel-icon {
-    margin-right: 2px;
+    margin: 0 1px;
+    padding-left: 0;
 }
 
-.net {
-    margin-top: 2px;
-    margin-bottom: 2px;
+.tophat-panel-icon-net {
+    margin: 2px 1px;
 }
 
 .chart {

@@ -53,10 +53,11 @@ function fillPreferencesWindow(window) {
     addComboRow(_('Position in panel'), choices, 'positionInPanel', group, configHandler);
 
     addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
+    addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
     // Add our page to the window
     window.add(page);
-    window.set_default_size(600, 400);
+    window.set_default_size(600, 450);
 }
 
 function addActionRow(label, setting, group, configHandler) {
@@ -127,6 +128,7 @@ function buildPrefsWidget3() {
     choices.push(_('Right edge'));
     addPref3(buildDropDown3('positionInPanel', _('Position in panel'), choices, configHandler), group);
     addPref3(buildSwitch3('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
+    addPref3(buildSwitch3('show-animations', _('Show animations'), configHandler.settings), group);
     frame.add(group);
 
     frame.connect('realize', () => {
@@ -206,6 +208,7 @@ function buildPrefsWidget4() {
     choices.append(_('Right edge'));
     addPref4(buildDropDown4('positionInPanel', _('Position in panel'), choices, configHandler), group);
     addPref4(buildSwitch4('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
+    addPref4(buildSwitch4('show-animations', _('Show animations'), configHandler.settings), group);
     frame.append(group);
 
     frame.connect('realize', () => {

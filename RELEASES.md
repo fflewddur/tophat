@@ -5,7 +5,9 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
+- Animate the top panel bar charts
 - Improved icon appearance with transparent top bars
+- Fixed weirdly tall monitors when using Dash to Panel extension
 
 ## TopHat 4 - September 19, 2022
 
