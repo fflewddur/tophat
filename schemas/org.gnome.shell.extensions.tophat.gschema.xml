@@ -24,5 +24,8 @@
     <key name="show-net" type="b">
       <default>true</default>
     </key>
+    <key name="show-animations" type="b">
+      <default>true</default>
+    </key>
   </schema>
 </schemalist>

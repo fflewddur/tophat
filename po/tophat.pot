@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-19 18:50-0700\n"
+"POT-Creation-Date: 2022-09-25 18:10-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,90 +29,94 @@ msgstr ""
 msgid "Show network monitor"
 msgstr ""
 
-#: prefs.js:48 prefs.js:123 prefs.js:202
+#: prefs.js:48 prefs.js:124 prefs.js:204
 msgid "Left edge"
 msgstr ""
 
-#: prefs.js:49 prefs.js:124 prefs.js:203
+#: prefs.js:49 prefs.js:125 prefs.js:205
 msgid "Left"
 msgstr ""
 
-#: prefs.js:50 prefs.js:125 prefs.js:204
+#: prefs.js:50 prefs.js:126 prefs.js:206
 msgid "Center"
 msgstr ""
 
-#: prefs.js:51 prefs.js:126 prefs.js:205
+#: prefs.js:51 prefs.js:127 prefs.js:207
 msgid "Right"
 msgstr ""
 
-#: prefs.js:52 prefs.js:127 prefs.js:206
+#: prefs.js:52 prefs.js:128 prefs.js:208
 msgid "Right edge"
 msgstr ""
 
-#: prefs.js:53 prefs.js:128 prefs.js:207
+#: prefs.js:53 prefs.js:129 prefs.js:209
 msgid "Position in panel"
 msgstr ""
 
-#: prefs.js:55 prefs.js:129 prefs.js:208
+#: prefs.js:55 prefs.js:130 prefs.js:210
 msgid "Show icons beside monitors"
 msgstr ""
 
-#: prefs.js:113 prefs.js:192
+#: prefs.js:56 prefs.js:131 prefs.js:211
+msgid "Show animations"
+msgstr ""
+
+#: prefs.js:114 prefs.js:194
 msgid "Show the CPU monitor"
 msgstr ""
 
-#: prefs.js:114 prefs.js:193
+#: prefs.js:115 prefs.js:195
 msgid "Show the memory monitor"
 msgstr ""
 
-#: prefs.js:115 prefs.js:194
+#: prefs.js:116 prefs.js:196
 msgid "Show the network monitor"
 msgstr ""
 
-#: lib/cpu.js:145
+#: lib/cpu.js:143
 msgid "Processor usage"
 msgstr ""
 
-#: lib/cpu.js:149
+#: lib/cpu.js:147
 msgid "Total CPU:"
 msgstr ""
 
-#: lib/cpu.js:161 lib/mem.js:137 lib/net.js:136
+#: lib/cpu.js:159 lib/mem.js:134 lib/net.js:133
 msgid "2 mins ago"
 msgstr ""
 
-#: lib/cpu.js:163 lib/mem.js:139 lib/net.js:138
+#: lib/cpu.js:161 lib/mem.js:136 lib/net.js:135
 msgid "now"
 msgstr ""
 
-#: lib/cpu.js:167 lib/mem.js:143
+#: lib/cpu.js:165 lib/mem.js:140
 msgid "Top processes"
 msgstr ""
 
-#: lib/cpu.js:186 lib/mem.js:162 lib/net.js:150
+#: lib/cpu.js:184 lib/mem.js:159 lib/net.js:147
 msgid "System Monitor"
 msgstr ""
 
-#: lib/mem.js:115
+#: lib/mem.js:112
 msgid "Memory usage"
 msgstr ""
 
-#: lib/mem.js:119
+#: lib/mem.js:116
 msgid "RAM used:"
 msgstr ""
 
-#: lib/mem.js:125
+#: lib/mem.js:122
 msgid "Swap used:"
 msgstr ""
 
-#: lib/net.js:114
+#: lib/net.js:111
 msgid "Network usage"
 msgstr ""
 
-#: lib/net.js:118
+#: lib/net.js:115
 msgid "Sending:"
 msgstr ""
 
-#: lib/net.js:124
+#: lib/net.js:121
 msgid "Receiving:"
 msgstr ""
