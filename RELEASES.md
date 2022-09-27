@@ -8,7 +8,7 @@ based on [Keep a Changelog].
 - Animate the top panel bar charts
 - Improved icon appearance with transparent top bars
 - Fixed weirdly tall monitors when using Dash to Panel extension
-- Added hidden option to show network activity in bits insteads of bytes (from [@esalvati](https://github.com/esalvati))
+- Added hidden option to show network activity in bits instead of bytes (from [@esalvati](https://github.com/esalvati))
 
 ## TopHat 4 - September 19, 2022
 
@@ -28,7 +28,6 @@ based on [Keep a Changelog].
 - Fixed compatibility with light desktop themes
 - Fixed compatibility with translucent desktop themes
 - Fixed formatting with Dash to Panel extension
-
 
 ## TopHat 2 - July 24, 2022
 
