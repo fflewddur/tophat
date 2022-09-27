@@ -1,4 +1,5 @@
 # TopHat
+
 TopHat is an elegant system resource monitor for the GNOME shell. It displays
 CPU, memory, and network activity in the GNOME top bar.
 
@@ -54,14 +55,14 @@ To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
 --timeout 10s --cpu 8`.
 
 To test the development version:
-    
+
     mkdir -p ~/.local/share/gnome-shell/extensions/
     ln -s [path to tophat repository] ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io
 
 ## License
 
 TopHat is distributed under the terms of the GNU General Public License,
-version 3 or later. See the [license][license] file for details.
+version 3 or later. See the [license] file for details.
 
 ### Credits
 
@@ -85,5 +86,4 @@ icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)
 
 All icons were edited to make them more legible at small sizes.
 
-[bug-tracker]: https://github.com/fflewddur/tophat/issues
-[license]: COPYING
+[license]: LICENSE
