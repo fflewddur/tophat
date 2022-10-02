@@ -32,6 +32,19 @@
     margin: 2px 1px;
 }
 
+.tophat-menu-button-box {
+    padding: 10px 0 0 0;
+    spacing: 20px;
+}
+
+.tophat-menu-button-box > StButton {
+    border-radius: 32px;
+    margin: 0px;
+    padding: 10px;
+    min-height: 22px;
+    min-width: 22px;
+}
+
 .chart {
     margin: 6px 6px 6px 6px;
     border: solid 1px #555;
