@@ -19,7 +19,7 @@
 
 /* exported init, fillPreferencesWindow, buildPrefsWidget */
 
-const {Gio, Gtk} = imports.gi;
+const {Gdk, Gio, Gtk} = imports.gi;
 const gtkVersion = Gtk.get_major_version();
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -51,13 +51,13 @@ function fillPreferencesWindow(window) {
     choices.append(_('Right'));
     choices.append(_('Right edge'));
     addComboRow(_('Position in panel'), choices, 'positionInPanel', group, configHandler);
-
+    addColorRow(_('Meter color'), 'meterFGColor', group, configHandler);
     addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
     addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
     // Add our page to the window
     window.add(page);
-    window.set_default_size(600, 450);
+    window.set_default_size(400, 520);
 }
 
 function addActionRow(label, setting, group, configHandler) {
@@ -74,6 +74,24 @@ function addActionRow(label, setting, group, configHandler) {
 
     row.add_suffix(toggle);
     row.activatable_widget = toggle;
+}
+
+function addColorRow(label, setting, group, configHandler) {
+    const Adw = imports.gi.Adw;
+
+    const row = new Adw.ActionRow({title: label});
+    group.add(row);
+
+    const button = new Gtk.ColorButton();
+    const rgba = new Gdk.RGBA();
+    rgba.parse(configHandler[setting]);
+    button.set_rgba(rgba);
+    button.connect('color-set', widget => {
+        configHandler[setting] = widget.get_rgba().to_string();
+    });
+
+    row.add_suffix(button);
+    row.activatable_widget = button;
 }
 
 function addComboRow(label, choices, setting, group, configHandler) {
