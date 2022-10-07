@@ -19,7 +19,7 @@
 
 /* exported init, fillPreferencesWindow, buildPrefsWidget */
 
-const {Gio, Gtk} = imports.gi;
+const {Gdk, Gio, Gtk} = imports.gi;
 const gtkVersion = Gtk.get_major_version();
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -33,15 +33,10 @@ function init() {
 function fillPreferencesWindow(window) {
     const Adw = imports.gi.Adw;
     const configHandler = new Config.ConfigHandler();
-    const page = new Adw.PreferencesPage();
+    let page = new Adw.PreferencesPage({title: 'General', icon_name: 'preferences-system-symbolic'});
+    window.add(page);
 
-    let group = new Adw.PreferencesGroup();
-    page.add(group);
-    addActionRow(_('Show CPU monitor'), 'show-cpu', group, configHandler);
-    addActionRow(_('Show memory monitor'), 'show-mem', group, configHandler);
-    addActionRow(_('Show network monitor'), 'show-net', group, configHandler);
-
-    group = new Adw.PreferencesGroup();
+    let group = new Adw.PreferencesGroup({title: _('General')});
     page.add(group);
 
     let choices = new Gtk.StringList();
@@ -51,13 +46,25 @@ function fillPreferencesWindow(window) {
     choices.append(_('Right'));
     choices.append(_('Right edge'));
     addComboRow(_('Position in panel'), choices, 'positionInPanel', group, configHandler);
-
+    addColorRow(_('Meter color'), 'meterFGColor', group, configHandler);
     addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
     addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
-    // Add our page to the window
-    window.add(page);
-    window.set_default_size(600, 450);
+    group = new Adw.PreferencesGroup({title: _('Processor')});
+    addActionRow(_('Show CPU monitor'), 'show-cpu', group, configHandler);
+    // addActionRow(_('Show individual cores'), 'cpu-show-cores', group, configHandler);
+    page.add(group);
+
+    group = new Adw.PreferencesGroup({title: _('Memory')});
+    addActionRow(_('Show memory monitor'), 'show-mem', group, configHandler);
+    page.add(group);
+
+    group = new Adw.PreferencesGroup({title: _('Network')});
+    addActionRow(_('Show network monitor'), 'show-net', group, configHandler);
+    // addActionRow(_('Measure usage in bits'), 'show-net', group, configHandler);
+    page.add(group);
+
+    window.set_default_size(300, 600);
 }
 
 function addActionRow(label, setting, group, configHandler) {
@@ -74,6 +81,24 @@ function addActionRow(label, setting, group, configHandler) {
 
     row.add_suffix(toggle);
     row.activatable_widget = toggle;
+}
+
+function addColorRow(label, setting, group, configHandler) {
+    const Adw = imports.gi.Adw;
+
+    const row = new Adw.ActionRow({title: label});
+    group.add(row);
+
+    const button = new Gtk.ColorButton();
+    const rgba = new Gdk.RGBA();
+    rgba.parse(configHandler[setting]);
+    button.set_rgba(rgba);
+    button.connect('color-set', widget => {
+        configHandler[setting] = widget.get_rgba().to_string();
+    });
+
+    row.add_suffix(button);
+    row.activatable_widget = button;
 }
 
 function addComboRow(label, choices, setting, group, configHandler) {
@@ -127,6 +152,7 @@ function buildPrefsWidget3() {
     choices.push(_('Right'));
     choices.push(_('Right edge'));
     addPref3(buildDropDown3('positionInPanel', _('Position in panel'), choices, configHandler), group);
+    addPref3(buildColorButton3('meterFGColor', _('Meter color'), configHandler), group);
     addPref3(buildSwitch3('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref3(buildSwitch3('show-animations', _('Show animations'), configHandler.settings), group);
     frame.add(group);
@@ -152,6 +178,23 @@ function buildSwitch3(key, text, settings) {
 
     hbox.pack_start(label, true, true, 0);
     hbox.add(toggle);
+
+    return hbox;
+}
+
+function buildColorButton3(key, text, configHandler) {
+    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    const label = new Gtk.Label({label: text, xalign: 0});
+    const button = new Gtk.ColorButton();
+    const rgba = new Gdk.RGBA();
+    rgba.parse(configHandler[key]);
+    button.set_rgba(rgba);
+    button.connect('color-set', widget => {
+        configHandler[key] = widget.get_rgba().to_string();
+    });
+
+    hbox.pack_start(label, true, true, 0);
+    hbox.add(button);
 
     return hbox;
 }
@@ -207,6 +250,7 @@ function buildPrefsWidget4() {
     choices.append(_('Right'));
     choices.append(_('Right edge'));
     addPref4(buildDropDown4('positionInPanel', _('Position in panel'), choices, configHandler), group);
+    addPref4(buildColorButton4('meterFGColor', _('Meter color'), configHandler), group);
     addPref4(buildSwitch4('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref4(buildSwitch4('show-animations', _('Show animations'), configHandler.settings), group);
     frame.append(group);
@@ -231,6 +275,23 @@ function buildSwitch4(key, text, settings) {
 
     hbox.append(label);
     hbox.append(toggle);
+
+    return hbox;
+}
+
+function buildColorButton4(key, text, configHandler) {
+    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    const label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
+    const button = new Gtk.ColorButton();
+    const rgba = new Gdk.RGBA();
+    rgba.parse(configHandler[key]);
+    button.set_rgba(rgba);
+    button.connect('color-set', widget => {
+        configHandler[key] = widget.get_rgba().to_string();
+    });
+
+    hbox.append(label);
+    hbox.append(button);
 
     return hbox;
 }
