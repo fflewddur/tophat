@@ -33,15 +33,10 @@ function init() {
 function fillPreferencesWindow(window) {
     const Adw = imports.gi.Adw;
     const configHandler = new Config.ConfigHandler();
-    const page = new Adw.PreferencesPage();
+    let page = new Adw.PreferencesPage({title: 'General', icon_name: 'preferences-system-symbolic'});
+    window.add(page);
 
-    let group = new Adw.PreferencesGroup();
-    page.add(group);
-    addActionRow(_('Show CPU monitor'), 'show-cpu', group, configHandler);
-    addActionRow(_('Show memory monitor'), 'show-mem', group, configHandler);
-    addActionRow(_('Show network monitor'), 'show-net', group, configHandler);
-
-    group = new Adw.PreferencesGroup();
+    let group = new Adw.PreferencesGroup({title: _('General')});
     page.add(group);
 
     let choices = new Gtk.StringList();
@@ -55,9 +50,21 @@ function fillPreferencesWindow(window) {
     addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
     addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
-    // Add our page to the window
-    window.add(page);
-    window.set_default_size(400, 520);
+    group = new Adw.PreferencesGroup({title: _('Processor')});
+    addActionRow(_('Show CPU monitor'), 'show-cpu', group, configHandler);
+    // addActionRow(_('Show individual cores'), 'cpu-show-cores', group, configHandler);
+    page.add(group);
+
+    group = new Adw.PreferencesGroup({title: _('Memory')});
+    addActionRow(_('Show memory monitor'), 'show-mem', group, configHandler);
+    page.add(group);
+
+    group = new Adw.PreferencesGroup({title: _('Network')});
+    addActionRow(_('Show network monitor'), 'show-net', group, configHandler);
+    // addActionRow(_('Measure usage in bits'), 'show-net', group, configHandler);
+    page.add(group);
+
+    window.set_default_size(300, 600);
 }
 
 function addActionRow(label, setting, group, configHandler) {
