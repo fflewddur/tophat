@@ -152,6 +152,7 @@ function buildPrefsWidget3() {
     choices.push(_('Right'));
     choices.push(_('Right edge'));
     addPref3(buildDropDown3('positionInPanel', _('Position in panel'), choices, configHandler), group);
+    addPref3(buildColorButton3('meterFGColor', _('Meter color'), configHandler), group);
     addPref3(buildSwitch3('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref3(buildSwitch3('show-animations', _('Show animations'), configHandler.settings), group);
     frame.add(group);
@@ -177,6 +178,23 @@ function buildSwitch3(key, text, settings) {
 
     hbox.pack_start(label, true, true, 0);
     hbox.add(toggle);
+
+    return hbox;
+}
+
+function buildColorButton3(key, text, configHandler) {
+    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    const label = new Gtk.Label({label: text, xalign: 0});
+    const button = new Gtk.ColorButton();
+    const rgba = new Gdk.RGBA();
+    rgba.parse(configHandler[key]);
+    button.set_rgba(rgba);
+    button.connect('color-set', widget => {
+        configHandler[key] = widget.get_rgba().to_string();
+    });
+
+    hbox.pack_start(label, true, true, 0);
+    hbox.add(button);
 
     return hbox;
 }
@@ -232,6 +250,7 @@ function buildPrefsWidget4() {
     choices.append(_('Right'));
     choices.append(_('Right edge'));
     addPref4(buildDropDown4('positionInPanel', _('Position in panel'), choices, configHandler), group);
+    addPref4(buildColorButton4('meterFGColor', _('Meter color'), configHandler), group);
     addPref4(buildSwitch4('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref4(buildSwitch4('show-animations', _('Show animations'), configHandler.settings), group);
     frame.append(group);
@@ -256,6 +275,23 @@ function buildSwitch4(key, text, settings) {
 
     hbox.append(label);
     hbox.append(toggle);
+
+    return hbox;
+}
+
+function buildColorButton4(key, text, configHandler) {
+    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    const label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
+    const button = new Gtk.ColorButton();
+    const rgba = new Gdk.RGBA();
+    rgba.parse(configHandler[key]);
+    button.set_rgba(rgba);
+    button.connect('color-set', widget => {
+        configHandler[key] = widget.get_rgba().to_string();
+    });
+
+    hbox.append(label);
+    hbox.append(button);
 
     return hbox;
 }
