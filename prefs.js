@@ -52,7 +52,7 @@ function fillPreferencesWindow(window) {
 
     group = new Adw.PreferencesGroup({title: _('Processor')});
     addActionRow(_('Show CPU monitor'), 'show-cpu', group, configHandler);
-    // addActionRow(_('Show individual cores'), 'cpu-show-cores', group, configHandler);
+    addActionRow(_('Show each core'), 'cpu-show-cores', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Memory')});
