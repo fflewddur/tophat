@@ -5,7 +5,8 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
-- Animate the top panel bar charts
+- Added option to animate the top panel bar charts
+- Added option to change meter color
 - Improved icon appearance with transparent top bars
 - Fixed weirdly tall monitors when using Dash to Panel extension
 - Added hidden option to show network activity in bits instead of bytes (from [@esalvati](https://github.com/esalvati))
