@@ -7,6 +7,10 @@
     <value value="3" nick="right"/>
     <value value="4" nick="rightedge"/>
   </enum>
+  <enum id="org.gnome.shell.extensions.tophat.network-unit">
+    <value value="0" nick="bytes"/>
+    <value value="1" nick="bits"/>
+  </enum>
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
     <key name="position-in-panel" enum="org.gnome.shell.extensions.tophat.position">
@@ -53,6 +57,11 @@
       <default>true</default>
       <summary>Show a meter bar for each CPU core</summary>
       <description>When true, the CPU monitors will show a meter bar representing each CPU core. When false, one bar will represent all CPU usage.</description>
+    </key>
+     <key name="network-usage-unit" enum="org.gnome.shell.extensions.tophat.network-unit">
+      <default>'bytes'</default>
+      <summary>Unit for showing network usage</summary>
+      <description>Show network usage in bytes or bits.</description>
     </key>
   </schema>
 </schemalist>

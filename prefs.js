@@ -61,7 +61,10 @@ function fillPreferencesWindow(window) {
 
     group = new Adw.PreferencesGroup({title: _('Network')});
     addActionRow(_('Show network monitor'), 'show-net', group, configHandler);
-    // addActionRow(_('Measure usage in bits'), 'show-net', group, configHandler);
+    choices = new Gtk.StringList();
+    choices.append(_('Bytes'));
+    choices.append(_('Bits'));
+    addComboRow(_('Measurement unit'), choices, 'networkUnit', group, configHandler);
     page.add(group);
 
     window.set_default_size(300, 600);
