@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-tophat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-27 18:09-0700\n"
-"PO-Revision-Date: 2022-08-28 17:00+0200\n"
+"POT-Creation-Date: 2022-09-25 18:10-0700\n"
+"PO-Revision-Date: 2022-11-05 20:26+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -15,80 +15,108 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.08.0\n"
+"X-Generator: Poedit 3.2.1\n"
 
-#: prefs.js:41
+#: prefs.js:40
 msgid "Show CPU monitor"
 msgstr "Cpu-monitor tonen"
 
-#: prefs.js:42
+#: prefs.js:41
 msgid "Show memory monitor"
 msgstr "Geheugenmonitor tonen"
 
-#: prefs.js:43
+#: prefs.js:42
 msgid "Show network monitor"
 msgstr "Netwerkmonitor tonen"
 
-#: prefs.js:47 prefs.js:95 prefs.js:123
+#: prefs.js:48 prefs.js:124 prefs.js:204
+msgid "Left edge"
+msgstr "Linkerrand"
+
+#: prefs.js:49 prefs.js:125 prefs.js:205
+msgid "Left"
+msgstr "Links"
+
+#: prefs.js:50 prefs.js:126 prefs.js:206
+msgid "Center"
+msgstr "Midden"
+
+#: prefs.js:51 prefs.js:127 prefs.js:207
+msgid "Right"
+msgstr "Rechts"
+
+#: prefs.js:52 prefs.js:128 prefs.js:208
+msgid "Right edge"
+msgstr "Rechterrand"
+
+#: prefs.js:53 prefs.js:129 prefs.js:209
+msgid "Position in panel"
+msgstr "Locatie op bovenbalk"
+
+#: prefs.js:55 prefs.js:130 prefs.js:210
 msgid "Show icons beside monitors"
 msgstr "Pictogrammen naast monitoren tonen"
 
-#: prefs.js:91 prefs.js:119
+#: prefs.js:56 prefs.js:131 prefs.js:211
+msgid "Show animations"
+msgstr "Animaties gebruiken"
+
+#: prefs.js:114 prefs.js:194
 msgid "Show the CPU monitor"
 msgstr "Cpu-monitor tonen"
 
-#: prefs.js:92 prefs.js:120
+#: prefs.js:115 prefs.js:195
 msgid "Show the memory monitor"
 msgstr "Geheugenmonitor tonen"
 
-#: prefs.js:93 prefs.js:121
+#: prefs.js:116 prefs.js:196
 msgid "Show the network monitor"
 msgstr "Netwerkmonitor tonen"
 
-#: lib/cpu.js:160
+#: lib/cpu.js:143
 msgid "Processor usage"
 msgstr "Processorgebruik"
 
-#: lib/cpu.js:164
+#: lib/cpu.js:147
 msgid "Total CPU:"
 msgstr "Totaal cpu-gebruik:"
 
-#: lib/cpu.js:176 lib/mem.js:146 lib/net.js:145
+#: lib/cpu.js:159 lib/mem.js:134 lib/net.js:133
 msgid "2 mins ago"
 msgstr "2 min. geleden"
 
-#: lib/cpu.js:178 lib/mem.js:148 lib/net.js:147
+#: lib/cpu.js:161 lib/mem.js:136 lib/net.js:135
 msgid "now"
 msgstr "zojuist"
 
-#: lib/cpu.js:182 lib/mem.js:152
+#: lib/cpu.js:165 lib/mem.js:140
 msgid "Top processes"
 msgstr "Topprocessen"
 
-#: lib/cpu.js:201 lib/mem.js:171 lib/net.js:159
+#: lib/cpu.js:184 lib/mem.js:159 lib/net.js:147
 msgid "System Monitor"
 msgstr "Systeemmonitor"
 
-#: lib/mem.js:124
+#: lib/mem.js:112
 msgid "Memory usage"
 msgstr "Geheugengebruik"
 
-#: lib/mem.js:128
+#: lib/mem.js:116
 msgid "RAM used:"
 msgstr "Ram-gebruik:"
 
-#: lib/mem.js:134
+#: lib/mem.js:122
 msgid "Swap used:"
 msgstr "Wisselgeheugengebruik:"
 
-#: lib/net.js:123
+#: lib/net.js:111
 msgid "Network usage"
 msgstr "Netwerkgebruik"
 
-#: lib/net.js:127
+#: lib/net.js:115
 msgid "Sending:"
 msgstr "Verstuurd:"
 
-#: lib/net.js:133
+#: lib/net.js:121
 msgid "Receiving:"
 msgstr "Ontvangen:"
