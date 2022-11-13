@@ -51,16 +51,16 @@ function fillPreferencesWindow(window) {
     addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
     group = new Adw.PreferencesGroup({title: _('Processor')});
-    addActionRow(_('Show CPU monitor'), 'show-cpu', group, configHandler);
+    addActionRow(_('Show the CPU monitor'), 'show-cpu', group, configHandler);
     addActionRow(_('Show each core'), 'cpu-show-cores', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Memory')});
-    addActionRow(_('Show memory monitor'), 'show-mem', group, configHandler);
+    addActionRow(_('Show the memory monitor'), 'show-mem', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Network')});
-    addActionRow(_('Show network monitor'), 'show-net', group, configHandler);
+    addActionRow(_('Show the network monitor'), 'show-net', group, configHandler);
     choices = new Gtk.StringList();
     choices.append(_('Bytes'));
     choices.append(_('Bits'));
@@ -131,7 +131,7 @@ function buildPrefsWidget3() {
 
     let frame = new Gtk.Box({
         orientation: Gtk.Orientation.VERTICAL,
-        spacing: 48,
+        spacing: 24,
         border_width: 24,
     });
 
@@ -139,15 +139,7 @@ function buildPrefsWidget3() {
         orientation: Gtk.Orientation.VERTICAL,
         spacing: 12,
     });
-    addPref3(buildSwitch3('show-cpu', _('Show the CPU monitor'), configHandler.settings), group);
-    addPref3(buildSwitch3('show-mem', _('Show the memory monitor'), configHandler.settings), group);
-    addPref3(buildSwitch3('show-net', _('Show the network monitor'), configHandler.settings), group);
-    frame.add(group);
-
-    group = new Gtk.Box({
-        orientation: Gtk.Orientation.VERTICAL,
-        spacing: 12,
-    });
+    addPref3(buildHeader3(_('General')), group);
     let choices = [];
     choices.push(_('Left edge'));
     choices.push(_('Left'));
@@ -158,6 +150,35 @@ function buildPrefsWidget3() {
     addPref3(buildColorButton3('meterFGColor', _('Meter color'), configHandler), group);
     addPref3(buildSwitch3('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref3(buildSwitch3('show-animations', _('Show animations'), configHandler.settings), group);
+    frame.add(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref3(buildHeader3(_('Processor')), group);
+    addPref3(buildSwitch3('show-cpu', _('Show the CPU monitor'), configHandler.settings), group);
+    addPref3(buildSwitch3('cpu-show-cores', _('Show each core'), configHandler.settings), group);
+    frame.add(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref3(buildHeader3(_('Memory')), group);
+    addPref3(buildSwitch3('show-mem', _('Show the memory monitor'), configHandler.settings), group);
+    frame.add(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref3(buildHeader3(_('Network')), group);
+    addPref3(buildSwitch3('show-net', _('Show the network monitor'), configHandler.settings), group);
+    choices = [];
+    choices.push(_('Bytes'));
+    choices.push(_('Bits'));
+    addPref3(buildDropDown3('networkUnit', _('Measurement unit'), choices, configHandler), group);
     frame.add(group);
 
     frame.connect('realize', () => {
@@ -171,7 +192,7 @@ function buildPrefsWidget3() {
 }
 
 function buildSwitch3(key, text, settings) {
-    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12, margin_start: 12});
     let label = new Gtk.Label({label: text, xalign: 0});
     let toggle = new Gtk.Switch({active: settings.get_boolean(key)});
 
@@ -186,7 +207,7 @@ function buildSwitch3(key, text, settings) {
 }
 
 function buildColorButton3(key, text, configHandler) {
-    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12, margin_start: 12});
     const label = new Gtk.Label({label: text, xalign: 0});
     const button = new Gtk.ColorButton();
     const rgba = new Gdk.RGBA();
@@ -203,7 +224,7 @@ function buildColorButton3(key, text, configHandler) {
 }
 
 function buildDropDown3(key, text, choices, configHandler) {
-    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12, margin_start: 12});
     let label = new Gtk.Label({label: text, xalign: 0});
     let dropdown = new Gtk.ComboBoxText();
     choices.forEach(choice => {
@@ -220,6 +241,11 @@ function buildDropDown3(key, text, choices, configHandler) {
     return hbox;
 }
 
+function buildHeader3(text) {
+    const label = new Gtk.Label({label: text, xalign: 0});
+    return label;
+}
+
 function addPref3(widget, frame) {
     frame.add(widget);
 }
@@ -229,7 +255,7 @@ function buildPrefsWidget4() {
 
     let frame = new Gtk.Box({
         orientation: Gtk.Orientation.VERTICAL,
-        spacing: 48,
+        spacing: 24,
         margin_top: 24, margin_bottom: 24, margin_start: 24, margin_end: 24,
     });
 
@@ -237,15 +263,7 @@ function buildPrefsWidget4() {
         orientation: Gtk.Orientation.VERTICAL,
         spacing: 12,
     });
-    addPref4(buildSwitch4('show-cpu', _('Show the CPU monitor'), configHandler.settings), group);
-    addPref4(buildSwitch4('show-mem', _('Show the memory monitor'), configHandler.settings), group);
-    addPref4(buildSwitch4('show-net', _('Show the network monitor'), configHandler.settings), group);
-    frame.append(group);
-
-    group = new Gtk.Box({
-        orientation: Gtk.Orientation.VERTICAL,
-        spacing: 12,
-    });
+    addPref4(buildHeader4(_('General')), group);
     let choices = new Gtk.StringList();
     choices.append(_('Left edge'));
     choices.append(_('Left'));
@@ -258,6 +276,35 @@ function buildPrefsWidget4() {
     addPref4(buildSwitch4('show-animations', _('Show animations'), configHandler.settings), group);
     frame.append(group);
 
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref4(buildHeader4(_('Processor')), group);
+    addPref4(buildSwitch4('show-cpu', _('Show the CPU monitor'), configHandler.settings), group);
+    addPref4(buildSwitch4('cpu-show-cores', _('Show each core'), configHandler.settings), group);
+    frame.append(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref4(buildHeader4(_('Memory')), group);
+    addPref4(buildSwitch4('show-mem', _('Show the memory monitor'), configHandler.settings), group);
+    frame.append(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref4(buildHeader4(_('Network')), group);
+    addPref4(buildSwitch4('show-net', _('Show the network monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    choices.append(_('Bytes'));
+    choices.append(_('Bits'));
+    addPref4(buildDropDown4('networkUnit', _('Measurement unit'), choices, configHandler), group);
+    frame.append(group);
+
     frame.connect('realize', () => {
         let window = frame.get_root();
         window.default_width = 300;
@@ -268,7 +315,7 @@ function buildPrefsWidget4() {
 }
 
 function buildSwitch4(key, text, settings) {
-    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12, margin_start: 12});
     let label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
     let toggle = new Gtk.Switch({active: settings.get_boolean(key)});
 
@@ -283,7 +330,7 @@ function buildSwitch4(key, text, settings) {
 }
 
 function buildColorButton4(key, text, configHandler) {
-    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    const hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12, margin_start: 12});
     const label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
     const button = new Gtk.ColorButton();
     const rgba = new Gdk.RGBA();
@@ -300,7 +347,7 @@ function buildColorButton4(key, text, configHandler) {
 }
 
 function buildDropDown4(key, text, choices, configHandler) {
-    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12});
+    let hbox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, spacing: 12, margin_start: 12});
     let label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
     let dropdown = new Gtk.DropDown({model: choices});
 
@@ -312,6 +359,11 @@ function buildDropDown4(key, text, choices, configHandler) {
     hbox.append(dropdown);
 
     return hbox;
+}
+
+function buildHeader4(text) {
+    const label = new Gtk.Label({label: text, xalign: 0, hexpand: 1});
+    return label;
 }
 
 function addPref4(widget, frame) {
