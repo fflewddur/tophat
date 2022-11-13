@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist>
+<schemalist gettext-domain="gnome-shell-extensions">
   <enum id="org.gnome.shell.extensions.tophat.position">
     <value value="0" nick="leftedge"/>
     <value value="1" nick="left"/>
@@ -7,25 +7,61 @@
     <value value="3" nick="right"/>
     <value value="4" nick="rightedge"/>
   </enum>
+  <enum id="org.gnome.shell.extensions.tophat.network-unit">
+    <value value="0" nick="bytes"/>
+    <value value="1" nick="bits"/>
+  </enum>
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
     <key name="position-in-panel" enum="org.gnome.shell.extensions.tophat.position">
       <default>'right'</default>
+      <summary>Position in the panel</summary>
+      <description>Where in the panel the monitors should be positioned.</description>
     </key>
     <key name="show-icons" type="b">
       <default>true</default>
+      <summary>Show icons beside monitors</summary>
+      <description>Display icons next to each monitor to help identify them.</description>
     </key>
     <key name="show-cpu" type="b">
       <default>true</default>
+      <summary>Show the CPU monitor</summary>
+      <description>Show the CPU monitor.</description>
     </key>
     <key name="show-mem" type="b">
       <default>true</default>
+      <summary>Show the memory monitor</summary>
+      <description>Show the memory monitor.</description>
     </key>
     <key name="show-net" type="b">
       <default>true</default>
+      <summary>Show the network monitor</summary>
+      <description>Show the network monitor.</description>
     </key>
     <key name="show-animations" type="b">
       <default>true</default>
+      <summary>Animate monitor changes</summary>
+      <description>Use animations when the heights of meter bars change.</description>
+    </key>
+    <key name="meter-fg-color" type="s">
+      <default>'#1dacd6'</default>
+      <summary>Color of the meter bars and chart areas</summary>
+      <description>The color of meter bars and chart areas, in either hex or RGBA format.</description>
+    </key>
+    <key name="meter-bar-width" type="i">
+      <default>10</default>
+      <summary>Width of the meter bars</summary>
+      <description>Width of the meter bars in pixels. When a meter needs to show more than two bars, this value will be multiplied by .75; when a meter needs to show more than eight bars, this value will be multipled by .5.</description>
+    </key>
+    <key name="cpu-show-cores" type="b">
+      <default>true</default>
+      <summary>Show a meter bar for each CPU core</summary>
+      <description>When true, the CPU monitors will show a meter bar representing each CPU core. When false, one bar will represent all CPU usage.</description>
+    </key>
+     <key name="network-usage-unit" enum="org.gnome.shell.extensions.tophat.network-unit">
+      <default>'bytes'</default>
+      <summary>Unit for showing network usage</summary>
+      <description>Show network usage in bytes or bits.</description>
     </key>
   </schema>
 </schemalist>
