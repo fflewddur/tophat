@@ -5,11 +5,12 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
-- Added option to animate the top panel bar charts
+- Added option to animate the top panel meters
 - Added option to change meter color
+- Added option to condense CPU cores into one meter
+- Added option to show network activity in bits instead of bytes (from [@esalvati](https://github.com/esalvati))
 - Improved icon appearance with transparent top bars
 - Fixed weirdly tall monitors when using Dash to Panel extension
-- Added hidden option to show network activity in bits instead of bytes (from [@esalvati](https://github.com/esalvati))
 - Added French translation from [@noirbizarre](https://github.com/noirbizarre)
 
 ## TopHat 4 - September 19, 2022
