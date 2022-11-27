@@ -8,8 +8,18 @@ TopHat">
 
 ## Installation
 
-Install TopHat from the [GNOME Shell extensions
+1. Install TopHat from the [GNOME Shell extensions
 page](https://extensions.gnome.org/extension/5219/tophat/).
+
+2. Manually install TopHat.
+- Install `gnome-tweak-tool` and `unzip`.
+- Download a TopHat release for your GNOME version on GNOME's extensions page.
+- Extract downloaded zip to `~/.local/share/gnome-shell/extensions/`. If you don't have `~/.local/share/gnome-shell/extensions/`, create it by running `mkdir -p ~/.local/share/gnome-shell/extensions/`.
+```
+unzip tophatfflewddur.github.io.vX.shell-extension.zip \
+-d ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io/
+```
+- Shell reload is required `Alt+F2 r Enter`. The extension can be enabled with gnome-tweak-tool. 
 
 Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 'gir1.2-gtop-2.0' to be installed. Usually this means running the command
