@@ -50,7 +50,7 @@
     border: solid 1px #555;
     height: 60px;
     width: 230px;
-    border-radius: 4px;
+    /* border-radius: 4px; */
 }
 
 .chart-label-then {
