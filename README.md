@@ -13,7 +13,7 @@ page](https://extensions.gnome.org/extension/5219/tophat/).
 
 Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 'gir1.2-gtop-2.0' to be installed. Usually this means running the command
-`sudo apt install gir1.2-gtop-2.0`.
+`sudo apt install gir1.2-gtop-2.0` followed by a system restart.
 
 ### Requirements
 
@@ -27,14 +27,16 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 
 The latest release of TopHat has been tested on the following systems:
 
+- Arch Linux
 - CentOS Stream 8
 - CentOS Stream 9
 - Debian 11.4 (first install gir1.2-gtop-2.0 package)
 - Fedora 36
+- Fedora 37
 - openSUSE Leap 15.4 (first install typelib-1_0-GTop-2_0 package)
 - Pop!_OS 22.04 LTS (first install gir1.2-gtop-2.0 package)
 - Ubuntu 22.04 LTS (first install gir1.2-gtop-2.0 package)
-- Ubuntu 22.10 Preview (first install gir1.2-gtop-2.0 package)
+- Ubuntu 22.10 (first install gir1.2-gtop-2.0 package)
 
 ## Release notes
 
