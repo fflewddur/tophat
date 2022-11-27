@@ -37,6 +37,7 @@ try {
     Mem = Me.imports.lib.mem;
     Net = Me.imports.lib.net;
 } catch (err) {
+    log(`[${Me.metadata.name}] Error loading dependencies: ${err}`);
     depFailures.push(err);
     missingLibs.push('GTop');
 }
@@ -129,7 +130,7 @@ function init() {
 }
 
 function enable() {
-    log(`[${Me.metadata.name}] enabling version ${Me.metadata.version}`);
+    // log(`[${Me.metadata.name}] enabling version ${Me.metadata.version}`);
 
     if (depFailures.length > 0) {
         log(`[${Me.metadata.name}] missing dependencies, showing problem reporter instead`);
@@ -146,7 +147,7 @@ function enable() {
         tophat.addToPanel();
     }
 
-    log(`[${Me.metadata.name}] enabled`);
+    // log(`[${Me.metadata.name}] enabled`);
 }
 
 function disable() {
