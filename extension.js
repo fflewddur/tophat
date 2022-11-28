@@ -61,9 +61,9 @@ class TopHat {
     constructor() {
         this.configHandler = new Config.ConfigHandler();
         this.container = new Container.TopHatContainer();
-        this.cpu = new Cpu.CpuMonitor(this.configHandler.settings);
-        this.mem = new Mem.MemMonitor(this.configHandler.settings);
-        this.net = new Net.NetMonitor(this.configHandler.settings);
+        this.cpu = new Cpu.CpuMonitor(this.configHandler);
+        this.mem = new Mem.MemMonitor(this.configHandler);
+        this.net = new Net.NetMonitor(this.configHandler);
         this.container.addMonitor(this.cpu);
         this.container.addMonitor(this.mem);
         this.container.addMonitor(this.net);
@@ -122,6 +122,7 @@ class TopHat {
 
     destroy() {
         this.container.destroy();
+        this.configHandler.destroy();
     }
 }
 
