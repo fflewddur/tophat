@@ -3,16 +3,17 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Not yet released
+## TopHat 5 - November 28, 2022
 
-- Added option to animate the top panel meters
+- Added option to animate the meters
 - Added option to change meter color
 - Added option to condense CPU cores into one meter
 - Added option to show network activity in bits instead of bytes (from [@esalvati](https://github.com/esalvati))
 - Added preferences button to dropdown menu
-- Improved icon appearance with transparent top bars
-- Fixed weirdly tall monitors when using Dash to Panel extension
 - Added French translation from [@noirbizarre](https://github.com/noirbizarre)
+- Fixed icon appearance with transparent top bars
+- Fixed weirdly tall monitors when using Dash to Panel extension
+- Removed support for GNOME Shell 3.36 and earlier
 
 ## TopHat 4 - September 19, 2022
 

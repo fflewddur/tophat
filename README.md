@@ -17,7 +17,7 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 
 ### Requirements
 
-- GNOME 3.32 or newer
+- GNOME 3.38 or newer
 - The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems,
   likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g.,
@@ -28,7 +28,6 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
-- CentOS Stream 8
 - CentOS Stream 9
 - Debian 11.4 (first install gir1.2-gtop-2.0 package)
 - Fedora 36
@@ -52,10 +51,13 @@ issue doesn't already exist for your idea, please create one.
 ### Useful development commands
 
 To view GNOME Shell logs output:
-`journalctl -f -o cat /usr/bin/gnome-shell`.
+`journalctl -f -o cat /usr/bin/gnome-shell`
+
+To view logs for extension preferences:
+`journalctl -f -o cat /usr/bin/gjs`
 
 To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
---timeout 10s --cpu 8`.
+--timeout 10s --cpu 8` or `stress-ng --vm-bytes 80% --vm-populate -t 30 -vm 4`.
 
 To test the development version:
 
