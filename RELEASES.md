@@ -9,7 +9,7 @@ based on [Keep a Changelog].
 - Added option to change meter color
 - Added option to condense CPU cores into one meter
 - Added option to show network activity in bits instead of bytes (from [@esalvati](https://github.com/esalvati))
-- Added preferences button to dropdown menu
+- Added preferences launcher to dropdown menu
 - Added French translation from [@noirbizarre](https://github.com/noirbizarre)
 - Fixed icon appearance with transparent top bars
 - Fixed weirdly tall monitors when using Dash to Panel extension
