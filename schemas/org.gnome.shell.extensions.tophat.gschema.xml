@@ -48,10 +48,10 @@
       <summary>Color of the meter bars and chart areas</summary>
       <description>The color of meter bars and chart areas, in either hex or RGBA format.</description>
     </key>
-    <key name="meter-bar-width" type="i">
-      <default>10</default>
+    <key name="meter-bar-width" type="d">
+      <default>0.6</default>
       <summary>Width of the meter bars</summary>
-      <description>Width of the meter bars in pixels. When a meter needs to show more than two bars, this value will be multiplied by .75; when a meter needs to show more than eight bars, this value will be multipled by .5.</description>
+      <description>Width of the meter bars in 'em's. When a meter needs to show more than two bars, this value will be multiplied by .75; when a meter needs to show more than eight bars, this value will be multipled by .5.</description>
     </key>
     <key name="cpu-show-cores" type="b">
       <default>true</default>
