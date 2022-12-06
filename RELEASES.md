@@ -3,6 +3,10 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Not yet released
+
+- Add ability to scale gracefully at higher resolutions
+
 ## TopHat 5 - November 28, 2022
 
 - Added option to animate the meters
