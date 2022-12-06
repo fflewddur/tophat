@@ -1,15 +1,14 @@
 .tophat-meter {
     height: 1em;
-    margin: 0.4em 0;
-    border: solid 0.03em rgba(100, 100, 100, 0.4);
+    margin: 0;
+    padding: 1px;
     border-radius: 0.2em;
     background-color: rgba(0, 0, 0, 0.2);
 }
 
 .tophat-meter-bar {
-    height: 3em;
-    margin: 0 0.08em 0 0;
-    border-radius: 0.1em;
+    height: 1px;
+    margin: 0 1px 0 0;
 }
 
 .tophat-meter-bar:last-child {
@@ -53,7 +52,6 @@
     border: solid 1px #555;
     height: 6em;
     width: 230px;
-    /* border-radius: 4px; */
 }
 
 .chart-label-then {
