@@ -21,6 +21,18 @@
     min-width: 5em;
 }
 
+.tophat-meter-value-power {
+    font-size: 0.7em;
+    text-align: right;
+    min-width: 5em;
+}
+
+.tophat-meter-value-battery {
+    font-size: 0.7em;
+    text-align: right;
+    min-width: 5em;
+}
+
 .tophat-panel-icon {
     margin: 0 0.03em;
     padding-left: 0;

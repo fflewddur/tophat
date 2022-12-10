@@ -43,10 +43,30 @@
       <summary>Animate monitor changes</summary>
       <description>Use animations when the heights of meter bars change.</description>
     </key>
+     <key name="show-bat" type="b">
+      <default>true</default>
+      <summary>Show the network monitor</summary>
+      <description>Show the network monitor.</description>
+    </key>
     <key name="meter-fg-color" type="s">
       <default>'#1dacd6'</default>
       <summary>Color of the meter bars and chart areas</summary>
       <description>The color of meter bars and chart areas, in either hex or RGBA format.</description>
+    </key>
+    <key name="meter-fg-battery-color" type="s">
+      <default>'#FFFFFF'</default>
+      <summary>Color of the battery line</summary>
+      <description>Color of the battery line, in either hex or RGBA format.</description>
+    </key>
+    <key name="meter-fg-charging-color" type="s">
+      <default>'#8ED5EA'</default>
+      <summary>Color of the power graph when charging</summary>
+      <description>Color of the power graph when charging, in either hex or RGBA format.</description>
+    </key>
+    <key name="meter-fg-discharging-color" type="s">
+      <default>'#1dacd6'</default>
+      <summary>Color of the power graph when discharging</summary>
+      <description>Color of the power graph when discharging, in either hex or RGBA format.</description>
     </key>
     <key name="meter-bar-width" type="d">
       <default>0.6</default>

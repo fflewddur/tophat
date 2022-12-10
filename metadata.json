@@ -1,10 +1,10 @@
 {
-    "uuid": "tophat@fflewddur.github.io",
-    "name": "TopHat",
+    "uuid": "tophat_battery@WiseroOrb.github.io",
+    "name": "TopHat-Battery",
     "description": "An elegant system resource monitor.",
     "version": 5,
     "shell-version": [ "3.38", "40", "41", "42", "43" ],
-    "url": "https://github.com/fflewddur/tophat",
-    "gettext-domain": "tophat@fflewddur.github.io",
+    "url": "tophat_battery@WiseroOrb.github.io",
+    "gettext-domain": "tophat_battery@WiseroOrb.github.io",
     "settings-schema": "org.gnome.shell.extensions.tophat"
 }
