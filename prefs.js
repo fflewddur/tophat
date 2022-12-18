@@ -67,6 +67,9 @@ function fillPreferencesWindow(window) {
     addComboRow(_('Measurement unit'), choices, 'networkUnit', group, configHandler);
     page.add(group);
 
+    group = new Adw.PreferencesGroup({title: _('Battery')});
+    addActionRow(_('Show the battery monitor'), 'show-bat', group, configHandler);
+    page.add(group);
     // window.set_default_size(300, 600);
 }
 
