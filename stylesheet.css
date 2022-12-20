@@ -85,15 +85,20 @@
 }
 
 .menu-label {
-    font-size: 0.9em;
+    font-size: 1em;
     padding: 0.25em 0.5em;
     text-align: left;
 }
 
 .menu-value {
-    font-size: 0.9em;
+    font-size: 1em;
     padding: 0.25em 0.5em;
     text-align: right;
+}
+
+.menu-value-details {
+    font-size: 0.8em;
+    margin-bottom: 0.5em;
 }
 
 .menu-cmd-name {
