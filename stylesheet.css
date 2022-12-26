@@ -51,7 +51,7 @@
     margin: 0.5em;
     border: solid 1px #555;
     height: 6em;
-    width: 230px;
+    width: 250px;
 }
 
 .chart-label-then {
@@ -72,8 +72,8 @@
     /* color: #ddd; */
     margin: 0.25em 0.25em 1em 0.25em;
     padding: 0;
-    width: 244px;
-    max-width: 244px;
+    width: 264px;
+    max-width: 264px;
 }
 
 .menu-header {
@@ -90,20 +90,17 @@
     text-align: left;
 }
 
-.menu-label-details {
-    font-size: 0.8em;
-    margin-bottom: 0.5em;
-    padding-left: 2em;
-}
-
 .menu-value {
     font-size: 1em;
     padding: 0.25em 0.5em;
     text-align: right;
 }
 
-.menu-value-details {
+.menu-details {
     font-size: 0.8em;
+}
+
+.menu-section-end {
     margin-bottom: 0.5em;
 }
 
