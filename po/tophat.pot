@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-26 17:54-0800\n"
+"POT-Creation-Date: 2022-12-27 13:44-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,31 +97,39 @@ msgstr ""
 msgid "Measurement unit"
 msgstr ""
 
-#: lib/cpu.js:164
+#: lib/cpu.js:163
 msgid "Processor usage"
 msgstr ""
 
-#: lib/cpu.js:167
+#: lib/cpu.js:166
 msgid "Processor utilization:"
 msgstr ""
 
-#: lib/cpu.js:181 lib/mem.js:201 lib/net.js:129
+#: lib/cpu.js:180 lib/mem.js:201 lib/net.js:129
 msgid "2 mins ago"
 msgstr ""
 
-#: lib/cpu.js:183 lib/mem.js:203 lib/net.js:131
+#: lib/cpu.js:182 lib/mem.js:203 lib/net.js:131
 msgid "now"
 msgstr ""
 
-#: lib/cpu.js:186 lib/mem.js:206
+#: lib/cpu.js:185 lib/mem.js:206
 msgid "Top processes"
 msgstr ""
 
-#: lib/cpu.js:330
+#: lib/cpu.js:323
+msgid "model n/a"
+msgstr ""
+
+#: lib/cpu.js:332
 msgid "Frequency:"
 msgstr ""
 
-#: lib/cpu.js:344
+#: lib/cpu.js:338 lib/cpu.js:352
+msgid "n/a"
+msgstr ""
+
+#: lib/cpu.js:346
 msgid "Temperature:"
 msgstr ""
 
@@ -131,6 +139,10 @@ msgstr ""
 
 #: lib/mem.js:176
 msgid "RAM used:"
+msgstr ""
+
+#: lib/mem.js:181 lib/mem.js:191
+msgid "size n/a"
 msgstr ""
 
 #: lib/mem.js:186
