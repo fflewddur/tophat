@@ -2,6 +2,7 @@
     "version": "0.2",
     "language": "en",
     "words": [
+        "coretemp",
         "dontCreateMenu",
         "esalvati",
         "Freqs",
@@ -12,6 +13,7 @@
         "hbox",
         "hexpand",
         "hpadding",
+        "hwmon",
         "journalctl",
         "kulesza",
         "libgtop",
