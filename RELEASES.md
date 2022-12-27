@@ -3,11 +3,12 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Not yet released
+## TopHat 6 - December 27, 2022
 
 - Added CPU model, clock speed, and temperature to processor menu
 - Added memory size, swap size, and current usage to memory menu
 - Fixed problems with high-resolution displays
+- Fixed miscalculation of per-process memory usage
 
 ## TopHat 5 - November 28, 2022
 
