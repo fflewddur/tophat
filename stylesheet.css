@@ -51,7 +51,6 @@
     margin: 0.5em;
     border: solid 1px #555;
     height: 6em;
-    width: 250px;
 }
 
 .chart-label-then {
@@ -72,8 +71,7 @@
     /* color: #ddd; */
     margin: 0.25em 0.25em 1em 0.25em;
     padding: 0;
-    width: 264px;
-    max-width: 264px;
+    width: 18em;
 }
 
 .menu-header {

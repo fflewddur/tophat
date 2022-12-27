@@ -30,7 +30,6 @@ The latest release of TopHat has been tested on the following systems:
 - Arch Linux
 - CentOS Stream 9
 - Debian 11.4 (first install gir1.2-gtop-2.0 package)
-- Fedora 36
 - Fedora 37
 - openSUSE Leap 15.4 (first install typelib-1_0-GTop-2_0 package)
 - Pop!_OS 22.04 LTS (first install gir1.2-gtop-2.0 package)
