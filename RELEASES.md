@@ -5,7 +5,9 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
-- Add ability to scale gracefully at higher resolutions
+- Added CPU model, clock speed, and temperature to processor menu
+- Added memory size, swap size, and current usage to memory menu
+- Fixed problems with high-resolution displays
 
 ## TopHat 5 - November 28, 2022
 
