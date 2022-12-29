@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-tophat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-27 19:11-0800\n"
-"PO-Revision-Date: 2022-12-02 14:35+0100\n"
+"POT-Creation-Date: 2022-12-27 13:44-0800\n"
+"PO-Revision-Date: 2022-12-29 14:02+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: prefs.js:39 prefs.js:142 prefs.js:266
 msgid "General"
@@ -97,35 +97,55 @@ msgstr "Bits"
 msgid "Measurement unit"
 msgstr "Meeteenheid"
 
-#: lib/cpu.js:157
+#: lib/cpu.js:163
 msgid "Processor usage"
 msgstr "Processorgebruik"
 
-#: lib/cpu.js:160
-msgid "Total CPU:"
-msgstr "Totaal cpu-gebruik:"
+#: lib/cpu.js:166
+msgid "Processor utilization:"
+msgstr "Processorgebruik:"
 
-#: lib/cpu.js:170 lib/mem.js:120 lib/net.js:129
+#: lib/cpu.js:180 lib/mem.js:201 lib/net.js:129
 msgid "2 mins ago"
 msgstr "2 min. geleden"
 
-#: lib/cpu.js:172 lib/mem.js:122 lib/net.js:131
+#: lib/cpu.js:182 lib/mem.js:203 lib/net.js:131
 msgid "now"
 msgstr "zojuist"
 
-#: lib/cpu.js:175 lib/mem.js:125
+#: lib/cpu.js:185 lib/mem.js:206
 msgid "Top processes"
 msgstr "Topprocessen"
 
-#: lib/mem.js:102
+#: lib/cpu.js:323
+msgid "model n/a"
+msgstr "model n/b"
+
+#: lib/cpu.js:332
+msgid "Frequency:"
+msgstr "Frequentie:"
+
+#: lib/cpu.js:338 lib/cpu.js:352
+msgid "n/a"
+msgstr "n/b"
+
+#: lib/cpu.js:346
+msgid "Temperature:"
+msgstr "Temperatuur:"
+
+#: lib/mem.js:173
 msgid "Memory usage"
 msgstr "Geheugengebruik"
 
-#: lib/mem.js:105
+#: lib/mem.js:176
 msgid "RAM used:"
 msgstr "Ram-gebruik:"
 
-#: lib/mem.js:110
+#: lib/mem.js:181 lib/mem.js:191
+msgid "size n/a"
+msgstr "omvang n/b"
+
+#: lib/mem.js:186
 msgid "Swap used:"
 msgstr "Wisselgeheugengebruik:"
 
@@ -140,6 +160,9 @@ msgstr "Verstuurd:"
 #: lib/net.js:119
 msgid "Receiving:"
 msgstr "Ontvangen:"
+
+#~ msgid "Total CPU:"
+#~ msgstr "Totaal cpu-gebruik:"
 
 #~ msgid "Show CPU monitor"
 #~ msgstr "Cpu-monitor tonen"
