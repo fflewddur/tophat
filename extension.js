@@ -30,12 +30,14 @@ let GTop = null;
 let Cpu = null;
 let Mem = null;
 let Net = null;
+let FS = null;
 try {
     // eslint-disable-next-line no-unused-vars
     GTop = imports.gi.GTop;
     Cpu = Me.imports.lib.cpu;
     Mem = Me.imports.lib.mem;
     Net = Me.imports.lib.net;
+    FS = Me.imports.lib.fs;
 } catch (err) {
     log(`[${Me.metadata.name}] Error loading dependencies: ${err}`);
     depFailures.push(err);
@@ -64,9 +66,11 @@ class TopHat {
         this.cpu = new Cpu.CpuMonitor(this.configHandler);
         this.mem = new Mem.MemMonitor(this.configHandler);
         this.net = new Net.NetMonitor(this.configHandler);
+        this.fs = new FS.FileSystemMonitor(this.configHandler);
         this.container.addMonitor(this.cpu);
         this.container.addMonitor(this.mem);
         this.container.addMonitor(this.net);
+        this.container.addMonitor(this.fs);
         this.configHandler.settings.connect('changed::position-in-panel', () => {
             this.moveWithinPanel();
         });

@@ -28,6 +28,11 @@
       <summary>Show the CPU monitor</summary>
       <description>Show the CPU monitor.</description>
     </key>
+    <key name="show-disk" type="b">
+      <default>true</default>
+      <summary>Show the filesystem monitor</summary>
+      <description>Show the filesystem monitor.</description>
+    </key>
     <key name="show-mem" type="b">
       <default>true</default>
       <summary>Show the memory monitor</summary>
