@@ -69,8 +69,8 @@ class TopHat {
         this.fs = new FS.FileSystemMonitor(this.configHandler);
         this.container.addMonitor(this.cpu);
         this.container.addMonitor(this.mem);
-        this.container.addMonitor(this.net);
         this.container.addMonitor(this.fs);
+        this.container.addMonitor(this.net);
         this.configHandler.settings.connect('changed::position-in-panel', () => {
             this.moveWithinPanel();
         });
