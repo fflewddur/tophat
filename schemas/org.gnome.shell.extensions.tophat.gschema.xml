@@ -58,11 +58,6 @@
       <summary>Secondary color of the meter bars and chart areas</summary>
       <description>The secondary color of meter bars and chart areas, in either hex or RGBA format.</description>
     </key>
-    <key name="meter-fg-battery-color" type="s">
-      <default>'#FFFFFF'</default>
-      <summary>Color of the battery line</summary>
-      <description>Color of the battery line, in either hex or RGBA format.</description>
-    </key>
     <key name="meter-fg-charging-color" type="s">
       <default>'#8ED5EA'</default>
       <summary>Color of the power graph when charging</summary>
