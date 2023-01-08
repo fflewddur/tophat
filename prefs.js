@@ -79,7 +79,7 @@ function fillPreferencesWindow(window) {
     addComboRow(_('Measurement unit'), choices, 'networkUnit', group, configHandler);
     page.add(group);
 
-    // window.set_default_size(300, 600);
+    window.set_default_size(300, 0);
 }
 
 function addActionRow(label, setting, group, configHandler) {
