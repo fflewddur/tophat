@@ -3,6 +3,10 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Not yet released
+
+- Fixed problem reading temperatures from AMD CPUs (from [@theizzer](https://github.com/theizzer))
+
 ## TopHat 6 - December 27, 2022
 
 - Added CPU model, clock speed, and temperature to processor menu
