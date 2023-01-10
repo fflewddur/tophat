@@ -32,6 +32,7 @@
         "pango",
         "Prefs",
         "proclist",
+        "rbytes",
         "rtime",
         "sysinfo",
         "thenounproject",
@@ -42,6 +43,7 @@
         "vbox",
         "vfunc",
         "Vistaus",
+        "wbytes",
         "workarea",
         "xalign",
         "xcpu"
