@@ -47,6 +47,7 @@ function fillPreferencesWindow(window) {
     choices.append(_('Right edge'));
     addComboRow(_('Position in panel'), choices, 'positionInPanel', group, configHandler);
     addColorRow(_('Meter color'), 'meterFGColor', group, configHandler);
+    addColorRow(_('Meter secondary color'), 'meterFGSecondayColor', group, configHandler);
     addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
     addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
@@ -67,6 +68,9 @@ function fillPreferencesWindow(window) {
     addComboRow(_('Measurement unit'), choices, 'networkUnit', group, configHandler);
     page.add(group);
 
+    group = new Adw.PreferencesGroup({title: _('Battery')});
+    addActionRow(_('Show the battery monitor'), 'show-bat', group, configHandler);
+    page.add(group);
     // window.set_default_size(300, 600);
 }
 
@@ -94,6 +98,7 @@ function addColorRow(label, setting, group, configHandler) {
 
     const button = new Gtk.ColorButton();
     const rgba = new Gdk.RGBA();
+    log(Object.keys(configHandler));
     rgba.parse(configHandler[setting]);
     button.set_rgba(rgba);
     button.connect('color-set', widget => {
@@ -148,6 +153,7 @@ function buildPrefsWidget3() {
     choices.push(_('Right edge'));
     addPref3(buildDropDown3('positionInPanel', _('Position in panel'), choices, configHandler), group);
     addPref3(buildColorButton3('meterFGColor', _('Meter color'), configHandler), group);
+    addPref3(buildColorButton3('meterFGSecondaryColor', _('Meter color'), configHandler), group);
     addPref3(buildSwitch3('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref3(buildSwitch3('show-animations', _('Show animations'), configHandler.settings), group);
     frame.add(group);
@@ -179,6 +185,18 @@ function buildPrefsWidget3() {
     choices.push(_('Bytes'));
     choices.push(_('Bits'));
     addPref3(buildDropDown3('networkUnit', _('Measurement unit'), choices, configHandler), group);
+    frame.add(group);
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref3(buildHeader3(_('Battery')), group);
+    addPref3(buildSwitch3('show-bat', _('Show the battery monitor'), configHandler.settings), group);
     frame.add(group);
 
     frame.connect('realize', () => {
@@ -272,6 +290,7 @@ function buildPrefsWidget4() {
     choices.append(_('Right edge'));
     addPref4(buildDropDown4('positionInPanel', _('Position in panel'), choices, configHandler), group);
     addPref4(buildColorButton4('meterFGColor', _('Meter color'), configHandler), group);
+    addPref4(buildColorButton4('meterFGSecondaryColor', _('Meter color'), configHandler), group);
     addPref4(buildSwitch4('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref4(buildSwitch4('show-animations', _('Show animations'), configHandler.settings), group);
     frame.append(group);
@@ -303,6 +322,14 @@ function buildPrefsWidget4() {
     choices.append(_('Bytes'));
     choices.append(_('Bits'));
     addPref4(buildDropDown4('networkUnit', _('Measurement unit'), choices, configHandler), group);
+    frame.append(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref4(buildHeader4(_('Battery')), group);
+    addPref4(buildSwitch4('show-bat', _('Show the battery monitor'), configHandler.settings), group);
     frame.append(group);
 
     frame.connect('realize', () => {

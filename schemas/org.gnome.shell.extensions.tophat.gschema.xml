@@ -43,10 +43,20 @@
       <summary>Animate monitor changes</summary>
       <description>Use animations when the heights of meter bars change.</description>
     </key>
+     <key name="show-bat" type="b">
+      <default>true</default>
+      <summary>Show the network monitor</summary>
+      <description>Show the network monitor.</description>
+    </key>
     <key name="meter-fg-color" type="s">
       <default>'#1dacd6'</default>
       <summary>Color of the meter bars and chart areas</summary>
       <description>The color of meter bars and chart areas, in either hex or RGBA format.</description>
+    </key>
+    <key name="meter-fg-secondary-color" type="s">
+      <default>'#8ED5EA'</default>
+      <summary>Secondary color of the meter bars and chart areas</summary>
+      <description>The secondary color of meter bars and chart areas, in either hex or RGBA format.</description>
     </key>
     <key name="meter-bar-width" type="d">
       <default>0.6</default>
