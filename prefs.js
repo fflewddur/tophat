@@ -187,6 +187,13 @@ function buildPrefsWidget3() {
     });
     addPref3(buildHeader3(_('Disk')), group);
     addPref3(buildSwitch3('show-disk', _('Show the disk monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    let parts = Shared.getPartitions();
+    parts.forEach(p => {
+        choices.append(p);
+    });
+    configHandler.setPartitions(choices);
+    addPref3(buildDropDown3('mountToMonitor', _('Disk partition to monitor'), choices, configHandler), group);
     frame.add(group);
 
     group = new Gtk.Box({
@@ -319,6 +326,13 @@ function buildPrefsWidget4() {
     });
     addPref4(buildHeader4(_('Disk')), group);
     addPref4(buildSwitch4('show-disk', _('Show the disk monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    let parts = Shared.getPartitions();
+    parts.forEach(p => {
+        choices.append(p);
+    });
+    configHandler.setPartitions(choices);
+    addPref4(buildDropDown4('mountToMonitor', _('Disk partition to monitor'), choices, configHandler), group);
     frame.append(group);
 
     group = new Gtk.Box({
