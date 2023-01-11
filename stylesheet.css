@@ -71,7 +71,7 @@
     /* color: #ddd; */
     margin: 0.25em 0.25em 1em 0.25em;
     padding: 0;
-    width: 18em;
+    min-width: 18em;
 }
 
 .menu-header {
@@ -80,6 +80,11 @@
     font-weight: bold;
     font-size: 0.9em;
     padding: 0.5em;
+}
+
+.menu-subheader {
+    text-align: center;
+    font-size: 0.8em;
 }
 
 .menu-label {
@@ -120,6 +125,13 @@
     text-align: right;
     padding: 0.25em 0.5em 0.25em 0;
     width: 4em;
+}
+
+.menu-disk-activity {
+    font-size: 0.8em;
+    text-align: right;
+    padding: 0.25em 0.5em 0.25em 0;
+    width: 5em;
 }
 
 .problem-header {
