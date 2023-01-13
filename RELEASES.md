@@ -5,6 +5,7 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
+- Added a disk activity and file system usage monitor
 - Fixed problem reading temperatures from AMD CPUs (from [@theizzer](https://github.com/theizzer))
 
 ## TopHat 6 - December 27, 2022
