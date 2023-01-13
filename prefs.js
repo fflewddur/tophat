@@ -23,6 +23,7 @@ const {Gdk, Gio, Gtk} = imports.gi;
 const gtkVersion = Gtk.get_major_version();
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
+const Shared = Me.imports.lib.shared;
 const Config = Me.imports.lib.config;
 const _ = Config.Domain.gettext;
 
@@ -59,6 +60,17 @@ function fillPreferencesWindow(window) {
     addActionRow(_('Show the memory monitor'), 'show-mem', group, configHandler);
     page.add(group);
 
+    group = new Adw.PreferencesGroup({title: _('Disk')});
+    addActionRow(_('Show the disk monitor'), 'show-disk', group, configHandler);
+    choices = new Gtk.StringList();
+    let parts = Shared.getPartitions();
+    parts.forEach(p => {
+        choices.append(p);
+    });
+    configHandler.setPartitions(choices);
+    addComboRow(_('Disk partition to monitor'), choices, 'mountToMonitor', group, configHandler);
+    page.add(group);
+
     group = new Adw.PreferencesGroup({title: _('Network')});
     addActionRow(_('Show the network monitor'), 'show-net', group, configHandler);
     choices = new Gtk.StringList();
@@ -67,7 +79,7 @@ function fillPreferencesWindow(window) {
     addComboRow(_('Measurement unit'), choices, 'networkUnit', group, configHandler);
     page.add(group);
 
-    // window.set_default_size(300, 600);
+    window.set_default_size(300, 0);
 }
 
 function addActionRow(label, setting, group, configHandler) {
@@ -167,6 +179,21 @@ function buildPrefsWidget3() {
     });
     addPref3(buildHeader3(_('Memory')), group);
     addPref3(buildSwitch3('show-mem', _('Show the memory monitor'), configHandler.settings), group);
+    frame.add(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref3(buildHeader3(_('Disk')), group);
+    addPref3(buildSwitch3('show-disk', _('Show the disk monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    let parts = Shared.getPartitions();
+    parts.forEach(p => {
+        choices.append(p);
+    });
+    configHandler.setPartitions(choices);
+    addPref3(buildDropDown3('mountToMonitor', _('Disk partition to monitor'), choices, configHandler), group);
     frame.add(group);
 
     group = new Gtk.Box({
@@ -291,6 +318,21 @@ function buildPrefsWidget4() {
     });
     addPref4(buildHeader4(_('Memory')), group);
     addPref4(buildSwitch4('show-mem', _('Show the memory monitor'), configHandler.settings), group);
+    frame.append(group);
+
+    group = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+    addPref4(buildHeader4(_('Disk')), group);
+    addPref4(buildSwitch4('show-disk', _('Show the disk monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    let parts = Shared.getPartitions();
+    parts.forEach(p => {
+        choices.append(p);
+    });
+    configHandler.setPartitions(choices);
+    addPref4(buildDropDown4('mountToMonitor', _('Disk partition to monitor'), choices, configHandler), group);
     frame.append(group);
 
     group = new Gtk.Box({

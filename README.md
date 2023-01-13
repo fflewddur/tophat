@@ -83,6 +83,7 @@ Commons Attribution license](https://creativecommons.org/licenses/by/3.0/).
 The authors of each original work are:
 
 icons/cpu.svg: [jai](https://thenounproject.com/jairam.182/)  
+icons/disk.svg: [guntur cahya](https://thenounproject.com/gunturcahya05/)  
 icons/mem.svg: [Loudoun Design
 Co.](https://thenonproject.com/LoudounDesignCo/)  
 icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)  

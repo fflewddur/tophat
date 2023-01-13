@@ -28,6 +28,11 @@
       <summary>Show the CPU monitor</summary>
       <description>Show the CPU monitor.</description>
     </key>
+    <key name="show-disk" type="b">
+      <default>true</default>
+      <summary>Show the filesystem monitor</summary>
+      <description>Show the filesystem monitor.</description>
+    </key>
     <key name="show-mem" type="b">
       <default>true</default>
       <summary>Show the memory monitor</summary>
@@ -58,10 +63,15 @@
       <summary>Show a meter bar for each CPU core</summary>
       <description>When true, the CPU monitors will show a meter bar representing each CPU core. When false, one bar will represent all CPU usage.</description>
     </key>
-     <key name="network-usage-unit" enum="org.gnome.shell.extensions.tophat.network-unit">
+    <key name="network-usage-unit" enum="org.gnome.shell.extensions.tophat.network-unit">
       <default>'bytes'</default>
       <summary>Unit for showing network usage</summary>
       <description>Show network usage in bytes or bits.</description>
+    </key>
+    <key name="mount-to-monitor" type="s">
+      <default>''</default>
+      <summary>The mount to monitor in the top bar</summary>
+      <description>The disk usage monitor will show the filesystem usage for this partition in the top bar.</description>
     </key>
   </schema>
 </schemalist>
