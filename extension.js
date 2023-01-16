@@ -82,6 +82,7 @@ class TopHat {
         this.container.monitors.forEach(monitor => {
             // log(`Adding menu to manager for ${monitor.name}`);
             Main.panel.menuManager.addMenu(monitor.menu);
+            monitor.refresh();
         });
     }
 

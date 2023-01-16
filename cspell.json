@@ -35,6 +35,8 @@
         "rbytes",
         "rtime",
         "sysinfo",
+        "Tctl",
+        "Tdie",
         "thenounproject",
         "tophat",
         "typelib",
