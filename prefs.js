@@ -187,10 +187,10 @@ function buildPrefsWidget3() {
     });
     addPref3(buildHeader3(_('Disk')), group);
     addPref3(buildSwitch3('show-disk', _('Show the disk monitor'), configHandler.settings), group);
-    choices = new Gtk.StringList();
+    choices = [];
     let parts = Shared.getPartitions();
     parts.forEach(p => {
-        choices.append(p);
+        choices.push(p);
     });
     configHandler.setPartitions(choices);
     addPref3(buildDropDown3('mountToMonitor', _('Disk partition to monitor'), choices, configHandler), group);
