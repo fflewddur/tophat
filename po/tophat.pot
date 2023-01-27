@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-27 13:44-0800\n"
+"POT-Creation-Date: 2023-01-26 19:02-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,146 +17,182 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: prefs.js:39 prefs.js:142 prefs.js:266
+#: prefs.js:40 prefs.js:154 prefs.js:293
 msgid "General"
 msgstr ""
 
-#: prefs.js:43 prefs.js:144 prefs.js:268
+#: prefs.js:44 prefs.js:156 prefs.js:295
 msgid "Left edge"
 msgstr ""
 
-#: prefs.js:44 prefs.js:145 prefs.js:269
+#: prefs.js:45 prefs.js:157 prefs.js:296
 msgid "Left"
 msgstr ""
 
-#: prefs.js:45 prefs.js:146 prefs.js:270
+#: prefs.js:46 prefs.js:158 prefs.js:297
 msgid "Center"
 msgstr ""
 
-#: prefs.js:46 prefs.js:147 prefs.js:271
+#: prefs.js:47 prefs.js:159 prefs.js:298
 msgid "Right"
 msgstr ""
 
-#: prefs.js:47 prefs.js:148 prefs.js:272
+#: prefs.js:48 prefs.js:160 prefs.js:299
 msgid "Right edge"
 msgstr ""
 
-#: prefs.js:48 prefs.js:149 prefs.js:273
+#: prefs.js:49 prefs.js:161 prefs.js:300
 msgid "Position in panel"
 msgstr ""
 
-#: prefs.js:49 prefs.js:150 prefs.js:274
+#: prefs.js:50 prefs.js:162 prefs.js:301
 msgid "Meter color"
 msgstr ""
 
-#: prefs.js:50 prefs.js:151 prefs.js:275
+#: prefs.js:51 prefs.js:163 prefs.js:302
 msgid "Show icons beside monitors"
 msgstr ""
 
-#: prefs.js:51 prefs.js:152 prefs.js:276
+#: prefs.js:52 prefs.js:164 prefs.js:303
 msgid "Show animations"
 msgstr ""
 
-#: prefs.js:53 prefs.js:159 prefs.js:283
+#: prefs.js:54 prefs.js:171 prefs.js:310
 msgid "Processor"
 msgstr ""
 
-#: prefs.js:54 prefs.js:160 prefs.js:284
+#: prefs.js:55 prefs.js:172 prefs.js:311
 msgid "Show the CPU monitor"
 msgstr ""
 
-#: prefs.js:55 prefs.js:161 prefs.js:285
+#: prefs.js:56 prefs.js:173 prefs.js:312
 msgid "Show each core"
 msgstr ""
 
-#: prefs.js:58 prefs.js:168 prefs.js:292
+#: prefs.js:59 prefs.js:180 prefs.js:319
 msgid "Memory"
 msgstr ""
 
-#: prefs.js:59 prefs.js:169 prefs.js:293
+#: prefs.js:60 prefs.js:181 prefs.js:320
 msgid "Show the memory monitor"
 msgstr ""
 
-#: prefs.js:62 prefs.js:176 prefs.js:300
+#: prefs.js:63 prefs.js:188 prefs.js:327
+msgid "Disk"
+msgstr ""
+
+#: prefs.js:64 prefs.js:189 prefs.js:328
+msgid "Show the disk monitor"
+msgstr ""
+
+#: prefs.js:71 prefs.js:196 prefs.js:335
+msgid "Disk partition to monitor"
+msgstr ""
+
+#: prefs.js:74 prefs.js:203 prefs.js:342
 msgid "Network"
 msgstr ""
 
-#: prefs.js:63 prefs.js:177 prefs.js:301
+#: prefs.js:75 prefs.js:204 prefs.js:343
 msgid "Show the network monitor"
 msgstr ""
 
-#: prefs.js:65 prefs.js:179 prefs.js:303
+#: prefs.js:77 prefs.js:206 prefs.js:345
 msgid "Bytes"
 msgstr ""
 
-#: prefs.js:66 prefs.js:180 prefs.js:304
+#: prefs.js:78 prefs.js:207 prefs.js:346
 msgid "Bits"
 msgstr ""
 
-#: prefs.js:67 prefs.js:181 prefs.js:305
+#: prefs.js:79 prefs.js:208 prefs.js:347
 msgid "Measurement unit"
 msgstr ""
 
-#: lib/cpu.js:163
+#: lib/cpu.js:195
 msgid "Processor usage"
 msgstr ""
 
-#: lib/cpu.js:166
+#: lib/cpu.js:198
 msgid "Processor utilization:"
 msgstr ""
 
-#: lib/cpu.js:180 lib/mem.js:201 lib/net.js:129
+#: lib/cpu.js:212 lib/fs.js:203 lib/mem.js:235 lib/net.js:153
 msgid "2 mins ago"
 msgstr ""
 
-#: lib/cpu.js:182 lib/mem.js:203 lib/net.js:131
+#: lib/cpu.js:214 lib/fs.js:205 lib/mem.js:237 lib/net.js:155
 msgid "now"
 msgstr ""
 
-#: lib/cpu.js:185 lib/mem.js:206
+#: lib/cpu.js:217 lib/fs.js:208 lib/mem.js:240
 msgid "Top processes"
 msgstr ""
 
-#: lib/cpu.js:323
+#: lib/cpu.js:262
 msgid "model n/a"
 msgstr ""
 
-#: lib/cpu.js:332
+#: lib/cpu.js:271
 msgid "Frequency:"
 msgstr ""
 
-#: lib/cpu.js:338 lib/cpu.js:352
+#: lib/cpu.js:277 lib/cpu.js:291 lib/fs.js:188 lib/fs.js:194
 msgid "n/a"
 msgstr ""
 
-#: lib/cpu.js:346
+#: lib/cpu.js:285
 msgid "Temperature:"
 msgstr ""
 
-#: lib/mem.js:173
+#: lib/fs.js:183
+msgid "Disk activity"
+msgstr ""
+
+#: lib/fs.js:186
+msgid "Writing:"
+msgstr ""
+
+#: lib/fs.js:192
+msgid "Reading:"
+msgstr ""
+
+#: lib/fs.js:214
+msgid "Writing"
+msgstr ""
+
+#: lib/fs.js:216
+msgid "Reading"
+msgstr ""
+
+#: lib/fs.js:232
+msgid "Filesystem usage"
+msgstr ""
+
+#: lib/mem.js:207
 msgid "Memory usage"
 msgstr ""
 
-#: lib/mem.js:176
+#: lib/mem.js:210
 msgid "RAM used:"
 msgstr ""
 
-#: lib/mem.js:181 lib/mem.js:191
+#: lib/mem.js:215 lib/mem.js:225
 msgid "size n/a"
 msgstr ""
 
-#: lib/mem.js:186
+#: lib/mem.js:220
 msgid "Swap used:"
 msgstr ""
 
-#: lib/net.js:111
-msgid "Network usage"
+#: lib/net.js:135
+msgid "Network activity"
 msgstr ""
 
-#: lib/net.js:114
+#: lib/net.js:138
 msgid "Sending:"
 msgstr ""
 
-#: lib/net.js:119
+#: lib/net.js:143
 msgid "Receiving:"
 msgstr ""
