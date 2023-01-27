@@ -7,6 +7,9 @@ based on [Keep a Changelog].
 
 - Added a disk activity and file system usage monitor
 - Fixed problem reading temperatures from AMD CPUs (from [@theizzer](https://github.com/theizzer))
+- Fixed non-existant swap partitions showing as 'NaN%' in the memory menu (from [@flozz](https://github.com/flozz))
+- Improved efficiency by fully disabling monitors when they are hidden
+- Updated translations: Dutch (from [@Vistaus](https://github.com/Vistaus))
 
 ## TopHat 6 - December 27, 2022
 
