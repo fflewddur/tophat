@@ -3,7 +3,8 @@
 TopHat aims to be an elegant system resource monitor for the GNOME shell. It
 displays CPU, memory, and network activity in the GNOME top bar.
 
-<img src="./screenshots/tophat.png?raw=true" width="1080px" alt="Screenshot of TopHat">
+<img src="./screenshots/tophat.png?raw=true" width="1080px" alt="Screenshot of
+TopHat">
 
 ## Installation
 
@@ -49,14 +50,13 @@ issue doesn't already exist for your idea, please create one.
 
 ### Useful development commands
 
-To view GNOME Shell logs output:
-`journalctl -f -o cat /usr/bin/gnome-shell`
+To view GNOME Shell logs output: `journalctl -f -o cat /usr/bin/gnome-shell`
 
-To view logs for extension preferences:
-`journalctl -f -o cat /usr/bin/gjs`
+To view logs for extension preferences: `journalctl -f -o cat /usr/bin/gjs`
 
 To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
---timeout 10s --cpu 8` or `stress-ng --vm-bytes 80% --vm-populate -t 30 -vm 4`.
+--timeout 10s --cpu 8` or `stress-ng --vm-bytes 80% --vm-populate -t 30 -vm
+4`.
 
 To test the development version:
 

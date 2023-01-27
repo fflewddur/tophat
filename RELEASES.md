@@ -3,12 +3,14 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Not yet released
+## TopHat 7 - January 27, 2023
 
 - Added a disk activity and file system usage monitor
 - Fixed compatibility with GNOME 3.32 - 3.36
-- Fixed problem reading temperatures from AMD CPUs (from [@theizzer](https://github.com/theizzer))
-- Fixed non-existent swap partitions showing as 'NaN%' in the memory menu (from [@flozz](https://github.com/flozz))
+- Fixed problem reading temperatures from AMD CPUs (from
+  [@theizzer](https://github.com/theizzer))
+- Fixed non-existent swap partitions showing as 'NaN%' in the memory menu
+  (from [@flozz](https://github.com/flozz))
 - Improved efficiency by fully disabling monitors when they are hidden
 - Updated translations: Dutch (from [@Vistaus](https://github.com/Vistaus))
 
@@ -24,7 +26,8 @@ based on [Keep a Changelog].
 - Added option to animate the meters
 - Added option to change meter color
 - Added option to condense CPU cores into one meter
-- Added option to show network activity in bits instead of bytes (from [@esalvati](https://github.com/esalvati))
+- Added option to show network activity in bits instead of bytes (from
+  [@esalvati](https://github.com/esalvati))
 - Added preferences launcher to dropdown menu
 - Added French translation from [@noirbizarre](https://github.com/noirbizarre)
 - Fixed icon appearance with transparent top bars
