@@ -71,7 +71,7 @@ class TopHat {
         this.container.addMonitor(this.mem);
         this.container.addMonitor(this.fs);
         this.container.addMonitor(this.net);
-        this.configHandler.settings.connect('changed::position-in-panel', () => {
+        this.configHandler.connect_void('position-in-panel', () => {
             this.moveWithinPanel();
         });
     }

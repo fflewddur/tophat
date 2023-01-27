@@ -16,7 +16,7 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 
 ### Requirements
 
-- GNOME 3.38 or newer
+- GNOME 3.32 or newer
 - The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems,
   likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g.,
@@ -27,6 +27,7 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
+- CentOS Stream 8
 - CentOS Stream 9
 - Debian 11.4 (first install gir1.2-gtop-2.0 package)
 - Fedora 37

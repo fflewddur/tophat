@@ -6,8 +6,9 @@ based on [Keep a Changelog].
 ## Not yet released
 
 - Added a disk activity and file system usage monitor
+- Fixed compatibility with GNOME 3.32 - 3.36
 - Fixed problem reading temperatures from AMD CPUs (from [@theizzer](https://github.com/theizzer))
-- Fixed non-existant swap partitions showing as 'NaN%' in the memory menu (from [@flozz](https://github.com/flozz))
+- Fixed non-existent swap partitions showing as 'NaN%' in the memory menu (from [@flozz](https://github.com/flozz))
 - Improved efficiency by fully disabling monitors when they are hidden
 - Updated translations: Dutch (from [@Vistaus](https://github.com/Vistaus))
 
