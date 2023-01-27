@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-26 19:02-0800\n"
+"POT-Creation-Date: 2023-01-27 11:31-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,90 +109,90 @@ msgstr ""
 msgid "Measurement unit"
 msgstr ""
 
-#: lib/cpu.js:195
+#: lib/cpu.js:196
 msgid "Processor usage"
 msgstr ""
 
-#: lib/cpu.js:198
+#: lib/cpu.js:199
 msgid "Processor utilization:"
 msgstr ""
 
-#: lib/cpu.js:212 lib/fs.js:203 lib/mem.js:235 lib/net.js:153
+#: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:154
 msgid "2 mins ago"
 msgstr ""
 
-#: lib/cpu.js:214 lib/fs.js:205 lib/mem.js:237 lib/net.js:155
+#: lib/cpu.js:215 lib/fs.js:206 lib/mem.js:238 lib/net.js:156
 msgid "now"
 msgstr ""
 
-#: lib/cpu.js:217 lib/fs.js:208 lib/mem.js:240
+#: lib/cpu.js:218 lib/fs.js:209 lib/mem.js:241
 msgid "Top processes"
 msgstr ""
 
-#: lib/cpu.js:262
+#: lib/cpu.js:263
 msgid "model n/a"
 msgstr ""
 
-#: lib/cpu.js:271
+#: lib/cpu.js:272
 msgid "Frequency:"
 msgstr ""
 
-#: lib/cpu.js:277 lib/cpu.js:291 lib/fs.js:188 lib/fs.js:194
+#: lib/cpu.js:278 lib/cpu.js:292 lib/fs.js:189 lib/fs.js:195
 msgid "n/a"
 msgstr ""
 
-#: lib/cpu.js:285
+#: lib/cpu.js:286
 msgid "Temperature:"
 msgstr ""
 
-#: lib/fs.js:183
+#: lib/fs.js:184
 msgid "Disk activity"
 msgstr ""
 
-#: lib/fs.js:186
+#: lib/fs.js:187
 msgid "Writing:"
 msgstr ""
 
-#: lib/fs.js:192
+#: lib/fs.js:193
 msgid "Reading:"
 msgstr ""
 
-#: lib/fs.js:214
+#: lib/fs.js:215
 msgid "Writing"
 msgstr ""
 
-#: lib/fs.js:216
+#: lib/fs.js:217
 msgid "Reading"
 msgstr ""
 
-#: lib/fs.js:232
+#: lib/fs.js:233
 msgid "Filesystem usage"
 msgstr ""
 
-#: lib/mem.js:207
+#: lib/mem.js:208
 msgid "Memory usage"
 msgstr ""
 
-#: lib/mem.js:210
+#: lib/mem.js:211
 msgid "RAM used:"
 msgstr ""
 
-#: lib/mem.js:215 lib/mem.js:225
+#: lib/mem.js:216 lib/mem.js:226
 msgid "size n/a"
 msgstr ""
 
-#: lib/mem.js:220
+#: lib/mem.js:221
 msgid "Swap used:"
 msgstr ""
 
-#: lib/net.js:135
+#: lib/net.js:136
 msgid "Network activity"
 msgstr ""
 
-#: lib/net.js:138
+#: lib/net.js:139
 msgid "Sending:"
 msgstr ""
 
-#: lib/net.js:143
+#: lib/net.js:144
 msgid "Receiving:"
 msgstr ""
