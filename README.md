@@ -30,7 +30,7 @@ The latest release of TopHat has been tested on the following systems:
 - Arch Linux
 - CentOS Stream 8
 - CentOS Stream 9
-- Debian 11.4 (first install gir1.2-gtop-2.0 package)
+- Debian 11.6 (first install gir1.2-gtop-2.0 package)
 - Fedora 37
 - openSUSE Leap 15.4 (first install typelib-1_0-GTop-2_0 package)
 - Pop!_OS 22.04 LTS (first install gir1.2-gtop-2.0 package)
@@ -47,6 +47,12 @@ included in each release.
 Contributions to improve TopHat are welcome! To avoid duplicate work, check
 [the issue tracker](https://github.com/fflewddur/tophat/issues) first. If an
 issue doesn't already exist for your idea, please create one.
+
+To keep the code format consistent, please use `eslint` before submitting a
+PR. You can install eslint by running the command `npm install eslint` from
+the TopHat repo directory. To run the linter, use the command
+`./node_modules/eslint/bin/eslint.js . --ext .js`; alternatively, the ESLint
+plugin for VS Code will automatically run the linter for you.
 
 ### Useful development commands
 
