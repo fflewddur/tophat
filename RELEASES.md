@@ -3,6 +3,10 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## TopHat 8 - February 13, 2023
+
+- Fixed problems that caused excessive error messages in log files
+
 ## TopHat 7 - January 27, 2023
 
 - Added a disk activity and file system usage monitor
