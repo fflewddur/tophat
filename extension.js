@@ -143,7 +143,7 @@ function enable() {
         const Problem = Me.imports.lib.problem;
         tophat = new Problem.TopHatProblemReporter();
 
-        let msg = _(`It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}`);
+        let msg = _(`It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}\n\nAfter installing them, you'll need to restart your computer.`);
         tophat.setMessage(msg);
         tophat.setDetails(depFailures.join('\n'));
 
