@@ -6,6 +6,11 @@ displays CPU, memory, disk, and network activity in the GNOME top bar.
 <img src="./screenshots/tophat.png?raw=true" width="1080px" alt="Screenshot of
 TopHat">
 
+## Release notes
+
+See [RELEASES.md](RELEASES.md) for the list of fixes and new functionality
+included in each release.
+
 ## Installation
 
 Install TopHat from the [GNOME Shell extensions
@@ -37,10 +42,27 @@ The latest release of TopHat has been tested on the following systems:
 - Ubuntu 22.04 LTS (first install gir1.2-gtop-2.0 package)
 - Ubuntu 22.10 (first install gir1.2-gtop-2.0 package)
 
-## Release notes
+Even if your system is not in this list, as long as it meets the
+requirements mentioned above, you should be able to run TopHat. If not, please
+file a bug report on [the issue
+tracker](https://github.com/fflewddur/tophat/issues).
 
-See [RELEASES.md](RELEASES.md) for the list of fixes and new functionality
-included in each release.
+### Manual installation
+
+If you prefer not to use https://extensions.gnome.org to install and update
+GNOME Shell extensions, you can manually install TopHat by following these
+steps. You may need to install the `unzip` and `gnome-extensions-app`
+utilities first.
+
+1) Download the latest TopHat release from
+   https://github.com/fflewddur/tophat/releases.
+2) Ensure your local extension directory exists by running the command `mkdir
+   -p ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io`.
+3) Extract the TopHat ZIP file into your local extension directory with the
+   command `unzip [path-to-tophat.zip] -d
+   ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io`
+4) Log out of your computer and log back in (or restart your system).
+5) Enable TopHat in the `gnome-extensions-app`.
 
 ## Contributing
 
