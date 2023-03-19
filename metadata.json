@@ -2,8 +2,8 @@
     "uuid": "tophat@fflewddur.github.io",
     "name": "TopHat",
     "description": "View CPU, memory, disk, and network activity in the GNOME top bar.",
-    "version": 8,
-    "shell-version": [ "3.32", "3.34", "3.36", "3.38", "40", "41", "42", "43" ],
+    "version": 9,
+    "shell-version": [ "3.32", "3.34", "3.36", "3.38", "40", "41", "42", "43", "44" ],
     "url": "https://github.com/fflewddur/tophat",
     "gettext-domain": "tophat@fflewddur.github.io",
     "settings-schema": "org.gnome.shell.extensions.tophat"
