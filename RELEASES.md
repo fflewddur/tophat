@@ -3,6 +3,13 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## TopHat 9 - March 19, 2023
+
+- Fixed a GNOME Shell crash that could occur when a virtual network is removed
+- Fixed double-counting of network traffic to virtual machines
+- Fixed detection of mounted/unmounted drives in the disk activity monitor
+- Verified compatibility with GNOME 44
+
 ## TopHat 8 - February 13, 2023
 
 - Fixed problems that caused excessive error messages in log files
