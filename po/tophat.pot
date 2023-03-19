@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-27 11:31-0800\n"
+"POT-Creation-Date: 2023-03-19 16:02-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,11 +117,11 @@ msgstr ""
 msgid "Processor utilization:"
 msgstr ""
 
-#: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:154
+#: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:155
 msgid "2 mins ago"
 msgstr ""
 
-#: lib/cpu.js:215 lib/fs.js:206 lib/mem.js:238 lib/net.js:156
+#: lib/cpu.js:215 lib/fs.js:206 lib/mem.js:238 lib/net.js:157
 msgid "now"
 msgstr ""
 
@@ -185,14 +185,14 @@ msgstr ""
 msgid "Swap used:"
 msgstr ""
 
-#: lib/net.js:136
+#: lib/net.js:137
 msgid "Network activity"
 msgstr ""
 
-#: lib/net.js:139
+#: lib/net.js:140
 msgid "Sending:"
 msgstr ""
 
-#: lib/net.js:144
+#: lib/net.js:145
 msgid "Receiving:"
 msgstr ""
