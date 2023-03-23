@@ -114,7 +114,7 @@ msgstr "İşlemci kullanımı"
 
 #: lib/cpu.js:199
 msgid "Processor utilization:"
-msgstr "İşlemciden yararlanma:"
+msgstr "İşlemci kullanımı:"
 
 #: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:155
 msgid "2 mins ago"
@@ -146,7 +146,7 @@ msgstr "Sıcaklık:"
 
 #: lib/fs.js:184
 msgid "Disk activity"
-msgstr "Disk aktivitesi"
+msgstr "Disk kullanımı"
 
 #: lib/fs.js:187
 msgid "Writing:"
@@ -186,12 +186,12 @@ msgstr "Kullanılan takas alanı:"
 
 #: lib/net.js:137
 msgid "Network activity"
-msgstr "İnternet aktivitesi"
+msgstr "İnternet kullanımı"
 
 #: lib/net.js:140
 msgid "Sending:"
-msgstr "Gönderiliyor:"
+msgstr "Gönderilen:"
 
 #: lib/net.js:145
 msgid "Receiving:"
-msgstr "Alınıyor:"
+msgstr "Alınan:"
