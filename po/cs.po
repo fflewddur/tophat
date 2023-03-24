@@ -1,0 +1,199 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Todd Kulesza
+# This file is distributed under the same license as the TopHat package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: TopHat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-19 16:02-0700\n"
+"PO-Revision-Date: 2023-03-24 19:33+0100\n"
+"Last-Translator: Amerey.eu <info@amerey.eu>\n"
+"Language-Team: \n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: prefs.js:40 prefs.js:154 prefs.js:293
+msgid "General"
+msgstr "Obecné"
+
+#: prefs.js:44 prefs.js:156 prefs.js:295
+msgid "Left edge"
+msgstr "Levý okraj"
+
+#: prefs.js:45 prefs.js:157 prefs.js:296
+msgid "Left"
+msgstr "Vlevo"
+
+#: prefs.js:46 prefs.js:158 prefs.js:297
+msgid "Center"
+msgstr "Uprostřed"
+
+#: prefs.js:47 prefs.js:159 prefs.js:298
+msgid "Right"
+msgstr "Vpravo"
+
+#: prefs.js:48 prefs.js:160 prefs.js:299
+msgid "Right edge"
+msgstr "Pravý okraj"
+
+#: prefs.js:49 prefs.js:161 prefs.js:300
+msgid "Position in panel"
+msgstr "Umístění na panelu"
+
+#: prefs.js:50 prefs.js:162 prefs.js:301
+msgid "Meter color"
+msgstr "Barva metru"
+
+#: prefs.js:51 prefs.js:163 prefs.js:302
+msgid "Show icons beside monitors"
+msgstr "Zobrazit ikony vedle sledování"
+
+#: prefs.js:52 prefs.js:164 prefs.js:303
+msgid "Show animations"
+msgstr "Zobrazit animace"
+
+#: prefs.js:54 prefs.js:171 prefs.js:310
+msgid "Processor"
+msgstr "Procesor"
+
+#: prefs.js:55 prefs.js:172 prefs.js:311
+msgid "Show the CPU monitor"
+msgstr "Zobrazit sledování CPU"
+
+#: prefs.js:56 prefs.js:173 prefs.js:312
+msgid "Show each core"
+msgstr "Zobrazit každé jádro"
+
+#: prefs.js:59 prefs.js:180 prefs.js:319
+msgid "Memory"
+msgstr "Paměť"
+
+#: prefs.js:60 prefs.js:181 prefs.js:320
+msgid "Show the memory monitor"
+msgstr "Zobrazit sledování paměti"
+
+#: prefs.js:63 prefs.js:188 prefs.js:327
+msgid "Disk"
+msgstr "Disk"
+
+#: prefs.js:64 prefs.js:189 prefs.js:328
+msgid "Show the disk monitor"
+msgstr "Zobrazit sledování disku"
+
+#: prefs.js:71 prefs.js:196 prefs.js:335
+msgid "Disk partition to monitor"
+msgstr "Oddíl disku ke sledování"
+
+#: prefs.js:74 prefs.js:203 prefs.js:342
+msgid "Network"
+msgstr "Síť"
+
+#: prefs.js:75 prefs.js:204 prefs.js:343
+msgid "Show the network monitor"
+msgstr "Zobrazit sledování sítě"
+
+#: prefs.js:77 prefs.js:206 prefs.js:345
+msgid "Bytes"
+msgstr "Bajty"
+
+#: prefs.js:78 prefs.js:207 prefs.js:346
+msgid "Bits"
+msgstr "Bity"
+
+#: prefs.js:79 prefs.js:208 prefs.js:347
+msgid "Measurement unit"
+msgstr "Jednotka měření"
+
+#: lib/cpu.js:196
+msgid "Processor usage"
+msgstr "Využití procesoru"
+
+#: lib/cpu.js:199
+msgid "Processor utilization:"
+msgstr "Vytížení procesoru:"
+
+#: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:155
+msgid "2 mins ago"
+msgstr "před 2 minutami"
+
+#: lib/cpu.js:215 lib/fs.js:206 lib/mem.js:238 lib/net.js:157
+msgid "now"
+msgstr "nyní"
+
+#: lib/cpu.js:218 lib/fs.js:209 lib/mem.js:241
+msgid "Top processes"
+msgstr "Nejvíce vytěžující procesy"
+
+#: lib/cpu.js:263
+msgid "model n/a"
+msgstr "model není k dispozici"
+
+#: lib/cpu.js:272
+msgid "Frequency:"
+msgstr "Frekvence:"
+
+#: lib/cpu.js:278 lib/cpu.js:292 lib/fs.js:189 lib/fs.js:195
+msgid "n/a"
+msgstr "není k dispozici"
+
+#: lib/cpu.js:286
+msgid "Temperature:"
+msgstr "Teplota:"
+
+#: lib/fs.js:184
+msgid "Disk activity"
+msgstr "Aktivita disku"
+
+#: lib/fs.js:187
+msgid "Writing:"
+msgstr "Zápis:"
+
+#: lib/fs.js:193
+msgid "Reading:"
+msgstr "Čtení:"
+
+#: lib/fs.js:215
+msgid "Writing"
+msgstr "Zápis"
+
+#: lib/fs.js:217
+msgid "Reading"
+msgstr "Čtení"
+
+#: lib/fs.js:233
+msgid "Filesystem usage"
+msgstr "Využití souborového systému"
+
+#: lib/mem.js:208
+msgid "Memory usage"
+msgstr "Využití paměti"
+
+#: lib/mem.js:211
+msgid "RAM used:"
+msgstr "Použitá RAM:"
+
+#: lib/mem.js:216 lib/mem.js:226
+msgid "size n/a"
+msgstr "velikost není k dispozici"
+
+#: lib/mem.js:221
+msgid "Swap used:"
+msgstr "Swap - využití:"
+
+#: lib/net.js:137
+msgid "Network activity"
+msgstr "Síťová aktivita"
+
+#: lib/net.js:140
+msgid "Sending:"
+msgstr "Odesílání:"
+
+#: lib/net.js:145
+msgid "Receiving:"
+msgstr "Příjem:"
