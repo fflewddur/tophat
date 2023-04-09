@@ -1,15 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR Todd Kulesza
 # This file is distributed under the same license as the TopHat package.
 # nxjoseph <nxjoseph@protonmail.com>, 2022.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-shell-extension-tophat\n"
+"Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-27 18:09-0700\n"
-"PO-Revision-Date: 2022-09-05 16:06+0300\n"
+"POT-Creation-Date: 2023-03-19 16:02-0700\n"
+"PO-Revision-Date: 2023-03-24 12:16+0300\n"
 "Last-Translator: nxjoseph <nxjoseph@protonmail.com>\n"
 "Language-Team: Turkish\n"
 "Language: tr\n"
@@ -17,78 +16,182 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: prefs.js:41
-msgid "Show CPU monitor"
-msgstr "CPU monitörünü göster"
+#: prefs.js:40 prefs.js:154 prefs.js:293
+msgid "General"
+msgstr "Genel"
 
-#: prefs.js:42
-msgid "Show memory monitor"
-msgstr "Bellek monitörünü göster"
+#: prefs.js:44 prefs.js:156 prefs.js:295
+msgid "Left edge"
+msgstr "Sol kenar"
 
-#: prefs.js:43
-msgid "Show network monitor"
-msgstr "İnternet monitörünü göster"
+#: prefs.js:45 prefs.js:157 prefs.js:296
+msgid "Left"
+msgstr "Sol"
 
-#: prefs.js:47 prefs.js:95 prefs.js:123
+#: prefs.js:46 prefs.js:158 prefs.js:297
+msgid "Center"
+msgstr "Orta"
+
+#: prefs.js:47 prefs.js:159 prefs.js:298
+msgid "Right"
+msgstr "Sağ"
+
+#: prefs.js:48 prefs.js:160 prefs.js:299
+msgid "Right edge"
+msgstr "Sağ kenar"
+
+#: prefs.js:49 prefs.js:161 prefs.js:300
+msgid "Position in panel"
+msgstr "Paneldeki pozisyon"
+
+#: prefs.js:50 prefs.js:162 prefs.js:301
+msgid "Meter color"
+msgstr "Ölçer rengi"
+
+#: prefs.js:51 prefs.js:163 prefs.js:302
 msgid "Show icons beside monitors"
-msgstr "Monitörlerin yanında simgeleri göster"
+msgstr "İkonları monitörlerin yanında göster"
 
-#: prefs.js:91 prefs.js:119
+#: prefs.js:52 prefs.js:164 prefs.js:303
+msgid "Show animations"
+msgstr "Animasyonları göster"
+
+#: prefs.js:54 prefs.js:171 prefs.js:310
+msgid "Processor"
+msgstr "İşlemci"
+
+#: prefs.js:55 prefs.js:172 prefs.js:311
 msgid "Show the CPU monitor"
-msgstr "CPU monitörünü göster"
+msgstr "İşlemci monitörünü göster"
 
-#: prefs.js:92 prefs.js:120
+#: prefs.js:56 prefs.js:173 prefs.js:312
+msgid "Show each core"
+msgstr "Her bir çekirdeği göster"
+
+#: prefs.js:59 prefs.js:180 prefs.js:319
+msgid "Memory"
+msgstr "Bellek"
+
+#: prefs.js:60 prefs.js:181 prefs.js:320
 msgid "Show the memory monitor"
 msgstr "Bellek monitörünü göster"
 
-#: prefs.js:93 prefs.js:121
+#: prefs.js:63 prefs.js:188 prefs.js:327
+msgid "Disk"
+msgstr "Disk"
+
+#: prefs.js:64 prefs.js:189 prefs.js:328
+msgid "Show the disk monitor"
+msgstr "Disk monitörünü göster"
+
+#: prefs.js:71 prefs.js:196 prefs.js:335
+msgid "Disk partition to monitor"
+msgstr "Monitörlenecek disk bölümü"
+
+#: prefs.js:74 prefs.js:203 prefs.js:342
+msgid "Network"
+msgstr "İnternet"
+
+#: prefs.js:75 prefs.js:204 prefs.js:343
 msgid "Show the network monitor"
 msgstr "İnternet monitörünü göster"
 
-#: lib/cpu.js:160
+#: prefs.js:77 prefs.js:206 prefs.js:345
+msgid "Bytes"
+msgstr "Bayt"
+
+#: prefs.js:78 prefs.js:207 prefs.js:346
+msgid "Bits"
+msgstr "Bit"
+
+#: prefs.js:79 prefs.js:208 prefs.js:347
+msgid "Measurement unit"
+msgstr "Ölçü birimi"
+
+#: lib/cpu.js:196
 msgid "Processor usage"
 msgstr "İşlemci kullanımı"
 
-#: lib/cpu.js:164
-msgid "Total CPU:"
-msgstr "Toplam CPU:"
+#: lib/cpu.js:199
+msgid "Processor utilization:"
+msgstr "İşlemci kullanımı:"
 
-#: lib/cpu.js:176 lib/mem.js:146 lib/net.js:145
+#: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:155
 msgid "2 mins ago"
 msgstr "2 dakika önce"
 
-#: lib/cpu.js:178 lib/mem.js:148 lib/net.js:147
+#: lib/cpu.js:215 lib/fs.js:206 lib/mem.js:238 lib/net.js:157
 msgid "now"
-msgstr "şimdi"
+msgstr "şu an"
 
-#: lib/cpu.js:182 lib/mem.js:152
+#: lib/cpu.js:218 lib/fs.js:209 lib/mem.js:241
 msgid "Top processes"
 msgstr "İşlemler"
 
-#: lib/cpu.js:201 lib/mem.js:171 lib/net.js:159
-msgid "System Monitor"
-msgstr "Sistem monitörü"
+#: lib/cpu.js:263
+msgid "model n/a"
+msgstr "model bilinmiyor"
 
-#: lib/mem.js:124
+#: lib/cpu.js:272
+msgid "Frequency:"
+msgstr "Frekans:"
+
+#: lib/cpu.js:278 lib/cpu.js:292 lib/fs.js:189 lib/fs.js:195
+msgid "n/a"
+msgstr "bilinmiyor"
+
+#: lib/cpu.js:286
+msgid "Temperature:"
+msgstr "Sıcaklık:"
+
+#: lib/fs.js:184
+msgid "Disk activity"
+msgstr "Disk kullanımı"
+
+#: lib/fs.js:187
+msgid "Writing:"
+msgstr "Yazılıyor:"
+
+#: lib/fs.js:193
+msgid "Reading:"
+msgstr "Okunuyor:"
+
+#: lib/fs.js:215
+msgid "Writing"
+msgstr "Yazma"
+
+#: lib/fs.js:217
+msgid "Reading"
+msgstr "Okuma"
+
+#: lib/fs.js:233
+msgid "Filesystem usage"
+msgstr "Dosya sistemi kullanımı"
+
+#: lib/mem.js:208
 msgid "Memory usage"
 msgstr "Bellek kullanımı"
 
-#: lib/mem.js:128
+#: lib/mem.js:211
 msgid "RAM used:"
-msgstr "Kullanılan RAM:"
+msgstr "Kullanılan bellek:"
 
-#: lib/mem.js:134
+#: lib/mem.js:216 lib/mem.js:226
+msgid "size n/a"
+msgstr "boyut bilinmiyor"
+
+#: lib/mem.js:221
 msgid "Swap used:"
 msgstr "Kullanılan takas alanı:"
 
-#: lib/net.js:123
-msgid "Network usage"
+#: lib/net.js:137
+msgid "Network activity"
 msgstr "İnternet kullanımı"
 
-#: lib/net.js:127
+#: lib/net.js:140
 msgid "Sending:"
 msgstr "Gönderilen:"
 
-#: lib/net.js:133
+#: lib/net.js:145
 msgid "Receiving:"
 msgstr "Alınan:"
