@@ -3,6 +3,12 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Not yet released
+
+- Fixed panel icons to follow system theme (from [@hrqmonteiro](https://github.com/hrqmonteiro))
+- Added Czech translation (from [@Amereyeu](https://github.com/Amereyeu))
+- Updated Turkish translation (from [@nxjosephofficial](https://github.com/nxjosephofficial))
+
 ## TopHat 9 - March 19, 2023
 
 - Fixed a GNOME Shell crash that could occur when a virtual network is removed
