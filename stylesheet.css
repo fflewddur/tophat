@@ -1,6 +1,6 @@
 .tophat-meter {
     height: 1em;
-    margin: 0;
+    margin: 0 0 0 6px;
     padding: 1px;
     border-radius: 0.2em;
     background-color: rgba(0, 0, 0, 0.2);
@@ -23,7 +23,7 @@
 
 .tophat-panel-icon {
     margin: 0 0.03em;
-    padding-left: 0;
+    padding: 0;
 }
 
 .tophat-panel-icon-net {
@@ -37,7 +37,7 @@
 
 .tophat-menu-button-box > StButton {
     border-radius: 2em;
-    margin: 0px;
+    margin: 0;
     padding: 0.7em;
     min-height: 0.5em;
     min-width: 0.5em;
@@ -45,6 +45,11 @@
 
 .tophat-menu-button-box > StButton > StIcon {
     icon-size: 1.25em;
+}
+
+.tophat-panel-usage {
+    min-width: 2.5em;
+    margin: 0 0 0 6px;
 }
 
 .chart {
