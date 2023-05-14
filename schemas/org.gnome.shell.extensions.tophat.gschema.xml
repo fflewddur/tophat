@@ -11,6 +11,11 @@
     <value value="0" nick="bytes"/>
     <value value="1" nick="bits"/>
   </enum>
+  <enum id="org.gnome.shell.extensions.tophat.visualization">
+    <value value="0" nick="chart"/>
+    <value value="1" nick="numeric"/>
+    <value value="2" nick="both"/>
+  </enum>
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
     <key name="position-in-panel" enum="org.gnome.shell.extensions.tophat.position">
@@ -18,6 +23,26 @@
       <summary>Position in the panel</summary>
       <description>Where in the panel the monitors should be positioned.</description>
     </key>
+        <key name="cpu-display" enum="org.gnome.shell.extensions.tophat.visualization">
+      <default>'chart'</default>
+      <summary>How to visualize the CPU monitor</summary>
+      <description>How to visualize the CPU monitor</description>
+    </key>
+    <key name="mem-display" enum="org.gnome.shell.extensions.tophat.visualization">
+      <default>'chart'</default>
+      <summary>How to visualize the memory monitor</summary>
+      <description>How to visualize the memory monitor</description>
+    </key>
+    <key name="disk-display" enum="org.gnome.shell.extensions.tophat.visualization">
+      <default>'chart'</default>
+      <summary>How to visualize the disk monitor</summary>
+      <description>How to visualize the disk monitor</description>
+    </key>
+    <!-- <key name="net-display" enum="org.gnome.shell.extensions.tophat.visualization">
+      <default>'numeric'</default>
+      <summary>How to visualize the network monitor</summary>
+      <description>How to visualize the network monitor</description>
+    </key> -->
     <key name="show-icons" type="b">
       <default>true</default>
       <summary>Show icons beside monitors</summary>

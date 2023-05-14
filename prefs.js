@@ -53,15 +53,30 @@ function fillPreferencesWindow(window) {
 
     group = new Adw.PreferencesGroup({title: _('Processor')});
     addActionRow(_('Show the CPU monitor'), 'show-cpu', group, configHandler);
+    choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addComboRow(_('Show as'), choices, 'cpuDisplay', group, configHandler);
     addActionRow(_('Show each core'), 'cpu-show-cores', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Memory')});
     addActionRow(_('Show the memory monitor'), 'show-mem', group, configHandler);
+    choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addComboRow(_('Show as'), choices, 'memDisplay', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Disk')});
     addActionRow(_('Show the disk monitor'), 'show-disk', group, configHandler);
+    choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addComboRow(_('Show as'), choices, 'diskDisplay', group, configHandler);
     choices = new Gtk.StringList();
     let parts = Shared.getPartitions();
     parts.forEach(p => {
@@ -170,6 +185,11 @@ function buildPrefsWidget3() {
     });
     addPref3(buildHeader3(_('Processor')), group);
     addPref3(buildSwitch3('show-cpu', _('Show the CPU monitor'), configHandler.settings), group);
+    choices = [];
+    choices.push(_('Usage meter'));
+    choices.push(_('Numeric value'));
+    choices.push(_('Both meter and value'));
+    addPref3(buildDropDown3('cpuDisplay', _('Show as'), choices, configHandler), group);
     addPref3(buildSwitch3('cpu-show-cores', _('Show each core'), configHandler.settings), group);
     frame.add(group);
 
@@ -179,6 +199,11 @@ function buildPrefsWidget3() {
     });
     addPref3(buildHeader3(_('Memory')), group);
     addPref3(buildSwitch3('show-mem', _('Show the memory monitor'), configHandler.settings), group);
+    choices = [];
+    choices.push(_('Usage meter'));
+    choices.push(_('Numeric value'));
+    choices.push(_('Both meter and value'));
+    addPref3(buildDropDown3('memDisplay', _('Show as'), choices, configHandler), group);
     frame.add(group);
 
     group = new Gtk.Box({
@@ -187,6 +212,11 @@ function buildPrefsWidget3() {
     });
     addPref3(buildHeader3(_('Disk')), group);
     addPref3(buildSwitch3('show-disk', _('Show the disk monitor'), configHandler.settings), group);
+    choices = [];
+    choices.push(_('Usage meter'));
+    choices.push(_('Numeric value'));
+    choices.push(_('Both meter and value'));
+    addPref3(buildDropDown3('diskDisplay', _('Show as'), choices, configHandler), group);
     choices = [];
     let parts = Shared.getPartitions();
     parts.forEach(p => {
@@ -309,6 +339,11 @@ function buildPrefsWidget4() {
     });
     addPref4(buildHeader4(_('Processor')), group);
     addPref4(buildSwitch4('show-cpu', _('Show the CPU monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addPref4(buildDropDown4('cpuDisplay', _('Show as'), choices, configHandler), group);
     addPref4(buildSwitch4('cpu-show-cores', _('Show each core'), configHandler.settings), group);
     frame.append(group);
 
@@ -318,6 +353,11 @@ function buildPrefsWidget4() {
     });
     addPref4(buildHeader4(_('Memory')), group);
     addPref4(buildSwitch4('show-mem', _('Show the memory monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addPref4(buildDropDown4('memDisplay', _('Show as'), choices, configHandler), group);
     frame.append(group);
 
     group = new Gtk.Box({
@@ -326,6 +366,11 @@ function buildPrefsWidget4() {
     });
     addPref4(buildHeader4(_('Disk')), group);
     addPref4(buildSwitch4('show-disk', _('Show the disk monitor'), configHandler.settings), group);
+    choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addPref4(buildDropDown4('diskDisplay', _('Show as'), choices, configHandler), group);
     choices = new Gtk.StringList();
     let parts = Shared.getPartitions();
     parts.forEach(p => {
