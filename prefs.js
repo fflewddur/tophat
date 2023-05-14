@@ -54,29 +54,29 @@ function fillPreferencesWindow(window) {
     group = new Adw.PreferencesGroup({title: _('Processor')});
     addActionRow(_('Show the CPU monitor'), 'show-cpu', group, configHandler);
     choices = new Gtk.StringList();
-    choices.append(_('Chart'));
-    choices.append(_('Numeric'));
-    choices.append(_('Both'));
-    addComboRow(_('Visualization'), choices, 'cpuDisplay', group, configHandler);
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addComboRow(_('Show as'), choices, 'cpuDisplay', group, configHandler);
     addActionRow(_('Show each core'), 'cpu-show-cores', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Memory')});
-    choices = new Gtk.StringList();
-    choices.append(_('Chart'));
-    choices.append(_('Numeric'));
-    choices.append(_('Both'));
-    addComboRow(_('Visualization'), choices, 'memDisplay', group, configHandler);
     addActionRow(_('Show the memory monitor'), 'show-mem', group, configHandler);
+    choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addComboRow(_('Show as'), choices, 'memDisplay', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Disk')});
     addActionRow(_('Show the disk monitor'), 'show-disk', group, configHandler);
     choices = new Gtk.StringList();
-    choices.append(_('Chart'));
-    choices.append(_('Numeric'));
-    choices.append(_('Both'));
-    addComboRow(_('Visualization'), choices, 'diskDisplay', group, configHandler);
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    addComboRow(_('Show as'), choices, 'diskDisplay', group, configHandler);
     choices = new Gtk.StringList();
     let parts = Shared.getPartitions();
     parts.forEach(p => {

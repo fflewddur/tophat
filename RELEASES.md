@@ -5,6 +5,7 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
+- Added option to display numeric value instead of (or in addition to) usage meters
 - Fixed panel icons to follow system theme (from [@hrqmonteiro](https://github.com/hrqmonteiro))
 - Added Czech translation (from [@Amereyeu](https://github.com/Amereyeu))
 - Updated Turkish translation (from [@nxjosephofficial](https://github.com/nxjosephofficial))
