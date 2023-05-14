@@ -24,7 +24,7 @@
       <description>Where in the panel the monitors should be positioned.</description>
     </key>
         <key name="cpu-display" enum="org.gnome.shell.extensions.tophat.visualization">
-      <default>'both'</default>
+      <default>'chart'</default>
       <summary>How to visualize the CPU monitor</summary>
       <description>How to visualize the CPU monitor</description>
     </key>
