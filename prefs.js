@@ -51,7 +51,7 @@ function fillPreferencesWindow(window) {
     choices.append(_('Slow'));
     choices.append(_('Medium'));
     choices.append(_('Fast'));
-    addComboRow(_('Update interval'), choices, 'refreshRate', group, configHandler);
+    addComboRow(_('Refresh speed'), choices, 'refreshRate', group, configHandler);
     addColorRow(_('Meter color'), 'meterFGColor', group, configHandler);
     addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
     addActionRow(_('Show animations'), 'show-animations', group, configHandler);
@@ -179,6 +179,11 @@ function buildPrefsWidget3() {
     choices.push(_('Right'));
     choices.push(_('Right edge'));
     addPref3(buildDropDown3('positionInPanel', _('Position in panel'), choices, configHandler), group);
+    choices = [];
+    choices.push(_('Slow'));
+    choices.push(_('Medium'));
+    choices.push(_('Fast'));
+    addPref3(buildDropDown3('refreshRate', _('Refresh speed'), choices, configHandler), group);
     addPref3(buildColorButton3('meterFGColor', _('Meter color'), configHandler), group);
     addPref3(buildSwitch3('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref3(buildSwitch3('show-animations', _('Show animations'), configHandler.settings), group);
@@ -333,6 +338,11 @@ function buildPrefsWidget4() {
     choices.append(_('Right'));
     choices.append(_('Right edge'));
     addPref4(buildDropDown4('positionInPanel', _('Position in panel'), choices, configHandler), group);
+    choices = new Gtk.StringList();
+    choices.append(_('Slow'));
+    choices.append(_('Medium'));
+    choices.append(_('Fast'));
+    addPref4(buildDropDown4('refreshRate', _('Refresh speed'), choices, configHandler), group);
     addPref4(buildColorButton4('meterFGColor', _('Meter color'), configHandler), group);
     addPref4(buildSwitch4('show-icons', _('Show icons beside monitors'), configHandler.settings), group);
     addPref4(buildSwitch4('show-animations', _('Show animations'), configHandler.settings), group);
