@@ -17,11 +17,9 @@
     <value value="2" nick="both"/>
   </enum>
   <enum id="org.gnome.shell.extensions.tophat.refresh-rate">
-    <value value="0" nick="slowest"/>
-    <value value="1" nick="slow"/>
-    <value value="2" nick="medium"/>
-    <value value="3" nick="fast"/>
-    <value value="4" nick="fastest"/>
+    <value value="0" nick="slow"/>
+    <value value="1" nick="medium"/>
+    <value value="2" nick="fast"/>
   </enum>
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->

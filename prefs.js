@@ -48,11 +48,9 @@ function fillPreferencesWindow(window) {
     choices.append(_('Right edge'));
     addComboRow(_('Position in panel'), choices, 'positionInPanel', group, configHandler);
     choices = new Gtk.StringList();
-    choices.append(_('Slowest'));
     choices.append(_('Slow'));
     choices.append(_('Medium'));
     choices.append(_('Fast'));
-    choices.append(_('Fastest'));
     addComboRow(_('Update interval'), choices, 'refreshRate', group, configHandler);
     addColorRow(_('Meter color'), 'meterFGColor', group, configHandler);
     addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
