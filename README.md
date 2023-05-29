@@ -89,7 +89,7 @@ To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
 To test the development version:
 
     mkdir -p ~/.local/share/gnome-shell/extensions/
-    ln -s [path to tophat repository] ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io
+    ln -s [path to tophat repository]/tophat@fflewddur.github.io ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io
 
 ## License
 
