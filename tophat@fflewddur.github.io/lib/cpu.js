@@ -248,11 +248,20 @@ var CpuMonitor = GObject.registerClass({
         for (let i = 0; i < Config.N_TOP_PROCESSES; i++) {
             let cmd = new St.Label({text: '', style_class: 'menu-cmd-name'});
             this.addMenuRow(cmd, 0, 1, 1);
-            let usage = new St.Label({text: '', style_class: 'menu-cmd-usage'});
+            let style = 'menu-cmd-usage';
+            if (i === Config.N_TOP_PROCESSES - 1) {
+                style = 'menu-cmd-usage menu-section-end';
+            }
+            let usage = new St.Label({text: '', style_class: style});
             this.addMenuRow(usage, 1, 1, 1);
             let p = new Shared.TopProcess(cmd, usage);
             this.topProcesses.push(p);
         }
+
+        label = new St.Label({text: _('System uptime'), style_class: 'menu-header'});
+        this.addMenuRow(label, 0, 2, 1);
+        this.menuUptime = new St.Label({text: '', style_class: 'menu-uptime menu-section-end'});
+        this.addMenuRow(this.menuUptime, 0, 2, 1);
 
         this.buildMenuButtons();
     }
@@ -555,7 +564,28 @@ var CpuMonitor = GObject.registerClass({
             this._readCPUTemps();
         }
 
+        // Also get the system's uptime
+        this._readSystemUptime();
+
         return true;
+    }
+
+    _readSystemUptime() {
+        let uptime = new GTop.glibtop_uptime();
+        GTop.glibtop_get_uptime(uptime);
+        let days = 0, hours = 0, mins = 0;
+        mins = Math.floor((uptime.uptime % 3600) / 60);
+        hours = Math.floor((uptime.uptime % 86400) / 3600);
+        days = Math.floor(uptime.uptime / 86400);
+        let parts = [];
+        if (days > 0) {
+            parts.push(ngettext('%d day', '%d days', days).format(days));
+        }
+        if (days > 0 || hours > 0) {
+            parts.push(ngettext('%d hour', '%d hours', hours).format(hours));
+        }
+        parts.push(ngettext('%d minute', '%d minutes', mins).format(mins));
+        this.menuUptime.text = parts.join(' ');
     }
 
     _repaintHistory() {
