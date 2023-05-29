@@ -48,6 +48,7 @@
 }
 
 .tophat-panel-usage {
+    text-align: right;
     min-width: 2em;
     margin: 0 0 0 6px;
 }
