@@ -3,7 +3,7 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Not yet released
+## TopHat 10 - May 29, 2023
 
 - Added option to adjust refresh speed
 - Added option to display numeric values instead of (or in addition to) usage meters
