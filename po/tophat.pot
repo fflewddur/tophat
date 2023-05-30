@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-29 15:35-0700\n"
+"POT-Creation-Date: 2023-05-29 17:04-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -259,24 +259,49 @@ msgstr ""
 msgid "Top processes"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:289
-msgid "model n/a"
+#: tophat@fflewddur.github.io/lib/cpu.js:261
+msgid "System uptime"
 msgstr ""
 
 #: tophat@fflewddur.github.io/lib/cpu.js:298
+msgid "model n/a"
+msgstr ""
+
+#: tophat@fflewddur.github.io/lib/cpu.js:307
 msgid "Frequency:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:304
-#: tophat@fflewddur.github.io/lib/cpu.js:318
+#: tophat@fflewddur.github.io/lib/cpu.js:313
+#: tophat@fflewddur.github.io/lib/cpu.js:327
 #: tophat@fflewddur.github.io/lib/fs.js:215
 #: tophat@fflewddur.github.io/lib/fs.js:221
 msgid "n/a"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:312
+#: tophat@fflewddur.github.io/lib/cpu.js:321
 msgid "Temperature:"
 msgstr ""
+
+#: tophat@fflewddur.github.io/lib/cpu.js:582
+#, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: tophat@fflewddur.github.io/lib/cpu.js:585
+#, javascript-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: tophat@fflewddur.github.io/lib/cpu.js:587
+#, javascript-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
 
 #: tophat@fflewddur.github.io/lib/fs.js:210
 msgid "Disk activity"
