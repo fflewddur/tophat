@@ -140,6 +140,11 @@
     width: 5em;
 }
 
+.menu-uptime {
+    font-size: 0.8em;
+    text-align: center;
+}
+
 .problem-header {
     margin: 1em;
     /* color: #ddd; */
