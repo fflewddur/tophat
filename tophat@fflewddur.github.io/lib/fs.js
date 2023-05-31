@@ -218,20 +218,35 @@ var FileSystemMonitor = GObject.registerClass({
 
         label = new St.Label({text: _('Reading:'), style_class: 'menu-label'});
         this.addMenuRow(label, 0, 2, 1);
-        label = new St.Label({text: _('n/a'), style_class: 'menu-value'});
+        label = new St.Label({text: _('n/a'), style_class: 'menu-value menu-section-end'});
         this.addMenuRow(label, 2, 1, 1);
         this.menuDiskReads = label;
 
-        this.historyChart = new St.DrawingArea({style_class: 'chart'});
+        // Create a grid layout for the history chart
+        let grid = new St.Widget({
+            layout_manager: new Clutter.GridLayout({orientation: Clutter.Orientation.VERTICAL}),
+        });
+        this.historyGrid = grid.layout_manager;
+        this.addMenuRow(grid, 0, 3, 1);
+
+        this.historyChart = new St.DrawingArea({style_class: 'chart', x_expand: true});
         this.historyChart.connect('repaint', () => this._repaintHistory());
-        this.addMenuRow(this.historyChart, 0, 3, 1);
+        this.historyGrid.attach(this.historyChart, 0, 0, 2, 3);
+
+        label = new St.Label({text: _('Write'), y_align: Clutter.ActorAlign.START, style_class: 'chart-label'});
+        this.historyGrid.attach(label, 2, 0, 1, 1);
+        label = new St.Label({text: '100%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label'});
+        this.historyGrid.attach(label, 2, 1, 1, 1);
+        this.historyMaxVal = label;
+        label = new St.Label({text: _('Read'), y_align: Clutter.ActorAlign.END, style_class: 'chart-label'});
+        this.historyGrid.attach(label, 2, 2, 1, 1);
 
         let limitInMins = Config.HISTORY_MAX_SIZE / 60;
         let startLabel = ngettext('%d min ago', '%d mins ago', limitInMins).format(limitInMins);
         label = new St.Label({text: startLabel, style_class: 'chart-label-then'});
-        this.addMenuRow(label, 0, 2, 1);
+        this.historyGrid.attach(label, 0, 3, 1, 1);
         label = new St.Label({text: _('now'), style_class: 'chart-label-now'});
-        this.addMenuRow(label, 2, 1, 1);
+        this.historyGrid.attach(label, 1, 3, 1, 1);
 
         label = new St.Label({text: _('Top processes'), style_class: 'menu-header'});
         this.addMenuRow(label, 0, 3, 1);
@@ -260,7 +275,7 @@ var FileSystemMonitor = GObject.registerClass({
         label = new St.Label({text: _('Filesystem usage'), style_class: 'menu-header'});
         this.addMenuRow(label, 0, 3, 1);
 
-        let grid = new St.Widget({
+        grid = new St.Widget({
             layout_manager: new Clutter.GridLayout({orientation: Clutter.Orientation.VERTICAL}),
         });
         this.menuFSDetails = grid.layout_manager;
@@ -420,9 +435,10 @@ var FileSystemMonitor = GObject.registerClass({
         let pointSpacing = width / (this.historyLimit - 1);
         let xStart = (this.historyLimit - this.history.length) * pointSpacing;
         let ctx = this.historyChart.get_context();
-        var fg, bg;
+        var fg, bg, gc;
         [, fg] = Clutter.Color.from_string(this.meter_fg_color);
         [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
+        [, gc] = Clutter.Color.from_string(Config.METER_GRID_COLOR);
 
         // Use a small value to avoid max == 0
         let max = 0.001;
@@ -434,10 +450,16 @@ var FileSystemMonitor = GObject.registerClass({
                 max = da.write;
             }
         }
+        max = Shared.roundMax(max);
+        this.historyMaxVal.text = `${Shared.bytesToHumanString(max, 'bytes', true)}/s`;
         max *= 2; // leave room for both upload and download speeds on the same chart
 
         Clutter.cairo_set_source_color(ctx, bg);
         ctx.rectangle(0, 0, width, height);
+        ctx.fill();
+
+        Clutter.cairo_set_source_color(ctx, gc);
+        ctx.rectangle(0, height / 2, width, 1);
         ctx.fill();
 
         Clutter.cairo_set_source_color(ctx, fg);

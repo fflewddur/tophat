@@ -54,14 +54,21 @@
 }
 
 .chart {
-    margin: 0.5em;
+    margin: 0.5em 0.25em 0.5em 0.5em;
     border: solid 1px #555;
     height: 6em;
+}
+
+.chart-label {
+    font-size: 0.8em;
+    padding: 0.5em 0;
+    color: #777;
 }
 
 .chart-label-then {
     font-size: 0.7em;
     /* color: #aaa; */
+    color: #777;
     text-align: left;
     padding: 0 0.5em 1em 0.5em;
 }
@@ -69,6 +76,7 @@
 .chart-label-now {
     font-size: 0.7em;
     /* color: #aaa; */
+    color: #777;
     text-align: right;
     padding: 0 0.5em 1em 0.5em;
 }
