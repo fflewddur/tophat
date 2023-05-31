@@ -3,6 +3,11 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Not yet released
+
+- Added y-axis scales to the activity over time charts
+- Added system uptime to the CPU monitor menu
+
 ## TopHat 10 - May 29, 2023
 
 - Added option to adjust refresh speed
