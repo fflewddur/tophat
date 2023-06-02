@@ -19,6 +19,7 @@
 
 /* exported SECOND_AS_MICROSECONDS, SECOND_AS_MILLISECONDS, TopProcess */
 /* exported getProcessList, getProcessName, bytesToHumanString, getPartitions */
+/* exported roundMax */
 
 const {Gio, GTop} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -92,11 +93,15 @@ const TEN_TB_IN_B = 10000000000000;
 
 // Convert a number of bytes to a more logical human-readable string
 // (e.g., 1024 -> 1 K)
-function bytesToHumanString(bytes, unit = 'bytes') {
+function bytesToHumanString(bytes, unit = 'bytes', imprecise = false) {
     if (isNaN(bytes)) {
         return bytes;
     }
     let quantity = bytes;
+    let precision = 1;
+    if (imprecise) {
+        precision = 0;
+    }
     let suffix = 'B';
     if (unit === 'bits') {
         quantity *= 8;
@@ -110,18 +115,27 @@ function bytesToHumanString(bytes, unit = 'bytes') {
     } else if (quantity < ONE_MB_IN_B) {
         return `${(quantity / 1000).toFixed(0)} K${suffix}`;
     } else if (quantity < TEN_MB_IN_B) { // Show one decimal of precision for < 100 MB
-        return `${(quantity / ONE_MB_IN_B).toFixed(1)} M${suffix}`;
+        return `${(quantity / ONE_MB_IN_B).toFixed(precision)} M${suffix}`;
     } else if (quantity < ONE_GB_IN_B) {
         return `${(quantity / ONE_MB_IN_B).toFixed(0)} M${suffix}`;
     } else if (quantity < TEN_GB_IN_B) {
-        return `${(quantity / ONE_GB_IN_B).toFixed(1)} G${suffix}`;
+        return `${(quantity / ONE_GB_IN_B).toFixed(precision)} G${suffix}`;
     } else if (quantity < ONE_TB_IN_B) {
         return `${(quantity / ONE_GB_IN_B).toFixed(0)} G${suffix}`;
     } else if (quantity < TEN_TB_IN_B) {
-        return `${(quantity / ONE_TB_IN_B).toFixed(1)} T${suffix}`;
+        return `${(quantity / ONE_TB_IN_B).toFixed(precision)} T${suffix}`;
     } else {
         return `${(quantity / ONE_TB_IN_B).toFixed(0)} T${suffix}`;
     }
+}
+
+// Round up to the nearest power of 10 (or half that)
+function roundMax(val) {
+    let result = Math.pow(10, Math.ceil(Math.log10(val)));
+    if (result / 2 > val) {
+        result /= 2;
+    }
+    return result;
 }
 
 // Returns an array of disk partition mount points
