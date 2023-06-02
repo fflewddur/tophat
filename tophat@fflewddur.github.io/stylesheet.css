@@ -62,21 +62,19 @@
 .chart-label {
     font-size: 0.8em;
     padding: 0.5em 0;
-    color: #777;
+    color: #999;
 }
 
 .chart-label-then {
     font-size: 0.7em;
-    /* color: #aaa; */
-    color: #777;
+    color: #999;
     text-align: left;
     padding: 0 0.5em 1em 0.5em;
 }
 
 .chart-label-now {
     font-size: 0.7em;
-    /* color: #aaa; */
-    color: #777;
+    color: #999;
     text-align: right;
     padding: 0 0.5em 1em 0.5em;
 }
