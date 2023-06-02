@@ -129,9 +129,13 @@ function bytesToHumanString(bytes, unit = 'bytes', imprecise = false) {
     }
 }
 
-// Round up to the nearest power of 10
+// Round up to the nearest power of 10 (or half that)
 function roundMax(val) {
-    return Math.pow(10, Math.ceil(Math.log10(val)));
+    let result = Math.pow(10, Math.ceil(Math.log10(val)));
+    if (result / 2 > val) {
+        result /= 2;
+    }
+    return result;
 }
 
 // Returns an array of disk partition mount points
