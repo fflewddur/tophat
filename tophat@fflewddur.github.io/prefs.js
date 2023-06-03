@@ -78,17 +78,22 @@ function fillPreferencesWindow(window) {
     group = new Adw.PreferencesGroup({title: _('Disk')});
     addActionRow(_('Show the disk monitor'), 'show-disk', group, configHandler);
     choices = new Gtk.StringList();
+    choices.append(_('Available storage'));
+    choices.append(_('Disk activity'));
+    choices.append(_('Storage and activity'));
+    addComboRow(_('Monitor shows'), choices, 'diskMonitorMode', group, configHandler);
+    choices = new Gtk.StringList();
     choices.append(_('Usage meter'));
     choices.append(_('Numeric value'));
     choices.append(_('Both meter and value'));
-    addComboRow(_('Show as'), choices, 'diskDisplay', group, configHandler);
+    addComboRow(_('Show available storage as'), choices, 'diskDisplay', group, configHandler);
     choices = new Gtk.StringList();
     let parts = Shared.getPartitions();
     parts.forEach(p => {
         choices.append(p);
     });
     configHandler.setPartitions(choices);
-    addComboRow(_('Disk partition to monitor'), choices, 'mountToMonitor', group, configHandler);
+    addComboRow(_('Filesystem to monitor'), choices, 'mountToMonitor', group, configHandler);
     page.add(group);
 
     group = new Adw.PreferencesGroup({title: _('Network')});
@@ -99,7 +104,7 @@ function fillPreferencesWindow(window) {
     addComboRow(_('Measurement unit'), choices, 'networkUnit', group, configHandler);
     page.add(group);
 
-    window.set_default_size(300, 0);
+    window.set_default_size(400, 0);
 }
 
 function addActionRow(label, setting, group, configHandler) {
@@ -223,17 +228,22 @@ function buildPrefsWidget3() {
     addPref3(buildHeader3(_('Disk')), group);
     addPref3(buildSwitch3('show-disk', _('Show the disk monitor'), configHandler.settings), group);
     choices = [];
+    choices.push(_('Available storage'));
+    choices.push(_('Disk activity'));
+    choices.push(_('Storage and activity'));
+    addPref3(buildDropDown3('diskMonitorMode', _('Monitor shows'), choices, configHandler), group);
+    choices = [];
     choices.push(_('Usage meter'));
     choices.push(_('Numeric value'));
     choices.push(_('Both meter and value'));
-    addPref3(buildDropDown3('diskDisplay', _('Show as'), choices, configHandler), group);
+    addPref3(buildDropDown3('diskDisplay', _('Show available storage as'), choices, configHandler), group);
     choices = [];
     let parts = Shared.getPartitions();
     parts.forEach(p => {
         choices.push(p);
     });
     configHandler.setPartitions(choices);
-    addPref3(buildDropDown3('mountToMonitor', _('Disk partition to monitor'), choices, configHandler), group);
+    addPref3(buildDropDown3('mountToMonitor', _('Filesystem to monitor'), choices, configHandler), group);
     frame.add(group);
 
     group = new Gtk.Box({
@@ -382,17 +392,22 @@ function buildPrefsWidget4() {
     addPref4(buildHeader4(_('Disk')), group);
     addPref4(buildSwitch4('show-disk', _('Show the disk monitor'), configHandler.settings), group);
     choices = new Gtk.StringList();
+    choices.append(_('Available storage'));
+    choices.append(_('Disk activity'));
+    choices.append(_('Storage and activity'));
+    addPref4(buildDropDown4('diskMonitorMode', _('Monitor shows'), choices, configHandler), group);
+    choices = new Gtk.StringList();
     choices.append(_('Usage meter'));
     choices.append(_('Numeric value'));
     choices.append(_('Both meter and value'));
-    addPref4(buildDropDown4('diskDisplay', _('Show as'), choices, configHandler), group);
+    addPref4(buildDropDown4('diskDisplay', _('Show available storage as'), choices, configHandler), group);
     choices = new Gtk.StringList();
     let parts = Shared.getPartitions();
     parts.forEach(p => {
         choices.append(p);
     });
     configHandler.setPartitions(choices);
-    addPref4(buildDropDown4('mountToMonitor', _('Disk partition to monitor'), choices, configHandler), group);
+    addPref4(buildDropDown4('mountToMonitor', _('Filesystem to monitor'), choices, configHandler), group);
     frame.append(group);
 
     group = new Gtk.Box({

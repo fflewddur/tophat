@@ -21,6 +21,11 @@
     <value value="1" nick="medium"/>
     <value value="2" nick="fast"/>
   </enum>
+  <enum id="org.gnome.shell.extensions.tophat.disk-monitor-mode">
+    <value value="0" nick="storage"/>
+    <value value="1" nick="activity"/>
+    <value value="2" nick="both"/>
+  </enum>
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
     <key name="position-in-panel" enum="org.gnome.shell.extensions.tophat.position">
@@ -102,6 +107,11 @@
       <default>'bytes'</default>
       <summary>Unit for showing network usage</summary>
       <description>Show network usage in bytes or bits.</description>
+    </key>
+    <key name="disk-monitor-mode" enum="org.gnome.shell.extensions.tophat.disk-monitor-mode">
+      <default>'storage'</default>
+      <summary>Monitor available storage, disk activity, or both</summary>
+      <description>Sets the behavior of the disk monitor in the top panel to summarize available storage, disk activity, or both.</description>
     </key>
     <key name="mount-to-monitor" type="s">
       <default>''</default>

@@ -104,6 +104,13 @@ var FileSystemMonitor = GObject.registerClass({
             GObject.ParamFlags.READWRITE,
             ''
         ),
+        'monitor-mode': GObject.ParamSpec.string(
+            'monitor-mode',
+            'Monitor mode',
+            'Monitor filesystem usage, disk activity, or both',
+            GObject.ParamFlags.READWRITE,
+            ''
+        ),
     },
 }, class TopHatFileSystemMonitor extends Monitor.TopHatMonitor {
     _init(configHandler) {
@@ -120,6 +127,20 @@ var FileSystemMonitor = GObject.registerClass({
         });
         this.add_child(this.usage);
 
+        let vbox = new St.BoxLayout({vertical: true});
+        vbox.connect('notify::vertical', obj => {
+            obj.vertical = true;
+        });
+        this.add_child(vbox);
+        this.activityBox = vbox;
+
+        let valueRead = new St.Label({text: '0', style_class: 'tophat-meter-value-net', y_expand: true, y_align: Clutter.ActorAlign.END});
+        vbox.add_child(valueRead);
+        this.valueRead = valueRead;
+        let valueWrite = new St.Label({text: '0', style_class: 'tophat-meter-value-net', y_expand: true, y_align: Clutter.ActorAlign.START});
+        vbox.add_child(valueWrite);
+        this.valueWrite = valueWrite;
+
         this.timePrev = GLib.get_monotonic_time();
         this.diskActivityPrev = new DiskActivity();
         this.history = new Array(0);
@@ -135,6 +156,7 @@ var FileSystemMonitor = GObject.registerClass({
         configHandler.settings.bind('show-animations', this, 'show-animation', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('disk-display', this, 'visualization', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('mount-to-monitor', this, 'mount', Gio.SettingsBindFlags.GET);
+        configHandler.settings.bind('disk-monitor-mode', this, 'monitor-mode', Gio.SettingsBindFlags.GET);
 
         let id = this.connect('notify::visible', () => {
             if (this.visible) {
@@ -147,6 +169,10 @@ var FileSystemMonitor = GObject.registerClass({
         id = this.connect('notify::refresh-rate', () => {
             this._stopTimers();
             this._startTimers();
+        });
+        this._signals.push(id);
+        id = this.connect('notify::monitor-mode', () => {
+            this.updateVisualization();
         });
         this._signals.push(id);
 
@@ -165,6 +191,36 @@ var FileSystemMonitor = GObject.registerClass({
         }
         this._mount = value;
         this.notify('mount');
+    }
+
+    get monitor_mode() {
+        return this._monitor_mode;
+    }
+
+    set monitor_mode(value) {
+        if (this._monitor_mode === value) {
+            return;
+        }
+        this._monitor_mode = value;
+        this.notify('monitor-mode');
+    }
+
+    updateVisualization() {
+        super.updateVisualization();
+
+        switch (this.monitor_mode) {
+        case 'storage':
+            this.activityBox.visible = false;
+            break;
+        case 'activity':
+            this.activityBox.visible = true;
+            this.usage.visible = false;
+            this.meter.visible = false;
+            break;
+        case 'both':
+            this.activityBox.visible = true;
+            break;
+        }
     }
 
     _startTimers() {
@@ -417,6 +473,8 @@ var FileSystemMonitor = GObject.registerClass({
         let diskWrite = Shared.bytesToHumanString(Math.round(write));
         this.menuDiskReads.text = `${diskRead}/s`;
         this.menuDiskWrites.text = `${diskWrite}/s`;
+        this.valueRead.text = `${diskRead}/s`;
+        this.valueWrite.text = `${diskWrite}/s`;
 
         while (this.history.length >= this.historyLimit) {
             this.history.shift();

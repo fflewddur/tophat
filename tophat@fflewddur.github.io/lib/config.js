@@ -171,6 +171,14 @@ var ConfigHandler = class ConfigHandler {
         }
     }
 
+    get diskMonitorMode() {
+        return this._settings.get_enum('disk-monitor-mode');
+    }
+
+    set diskMonitorMode(value) {
+        this._settings.set_enum('disk-monitor-mode', value);
+    }
+
     destroy() {
         this.signal_ids.forEach(id => {
             this._settings.disconnect(id);
