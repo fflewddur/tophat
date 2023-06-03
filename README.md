@@ -36,6 +36,7 @@ The latest release of TopHat has been tested on the following systems:
 - CentOS Stream 8
 - CentOS Stream 9
 - Debian 11.7 (first install gir1.2-gtop-2.0 package)
+- Debian 12 (first install gir1.2-gtop-2.0 package)
 - Fedora 38
 - openSUSE Leap 15.4 (first install typelib-1_0-GTop-2_0 package)
 - Pop!_OS 22.04 LTS (first install gir1.2-gtop-2.0 package)
