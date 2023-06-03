@@ -22,7 +22,7 @@
     <value value="2" nick="fast"/>
   </enum>
   <enum id="org.gnome.shell.extensions.tophat.disk-monitor-mode">
-    <value value="0" nick="used_storage"/>
+    <value value="0" nick="storage"/>
     <value value="1" nick="activity"/>
     <value value="2" nick="both"/>
   </enum>
@@ -109,9 +109,9 @@
       <description>Show network usage in bytes or bits.</description>
     </key>
     <key name="disk-monitor-mode" enum="org.gnome.shell.extensions.tophat.disk-monitor-mode">
-      <default>'both'</default>
-      <summary>Monitor filesystem usage, disk activity, or both</summary>
-      <description>Sets the behavior of the disk monitor in the top panel to summarize filesystem usage, disk activity, or both.</description>
+      <default>'storage'</default>
+      <summary>Monitor available storage, disk activity, or both</summary>
+      <description>Sets the behavior of the disk monitor in the top panel to summarize available storage, disk activity, or both.</description>
     </key>
     <key name="mount-to-monitor" type="s">
       <default>''</default>

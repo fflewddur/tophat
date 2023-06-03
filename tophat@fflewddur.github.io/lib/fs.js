@@ -172,17 +172,7 @@ var FileSystemMonitor = GObject.registerClass({
         });
         this._signals.push(id);
         id = this.connect('notify::monitor-mode', () => {
-            switch (this.monitor_mode) {
-            case 'used_storage':
-                this.activityBox.visible = false;
-                break;
-            case 'activity':
-                this.activityBox.visible = true;
-                break;
-            case 'both':
-                this.activityBox.visible = true;
-                break;
-            }
+            this.updateVisualization();
         });
         this._signals.push(id);
 
@@ -213,6 +203,24 @@ var FileSystemMonitor = GObject.registerClass({
         }
         this._monitor_mode = value;
         this.notify('monitor-mode');
+    }
+
+    updateVisualization() {
+        super.updateVisualization();
+
+        switch (this.monitor_mode) {
+        case 'storage':
+            this.activityBox.visible = false;
+            break;
+        case 'activity':
+            this.activityBox.visible = true;
+            this.usage.visible = false;
+            this.meter.visible = false;
+            break;
+        case 'both':
+            this.activityBox.visible = true;
+            break;
+        }
     }
 
     _startTimers() {

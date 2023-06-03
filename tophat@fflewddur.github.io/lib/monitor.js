@@ -96,6 +96,7 @@ var TopHatMonitor = GObject.registerClass({
         this.box = hbox;
         this.meter = null;
         this.usage = null;
+        this.activityBox = null;
 
         this.connect('style-changed', this._onStyleChanged.bind(this));
         this.connect('destroy', this._onDestroy.bind(this));
@@ -212,15 +213,22 @@ var TopHatMonitor = GObject.registerClass({
         }
         this.meter = meter;
         if (this.meter) {
-            // Ensure the usage label follows after the meter
+            // Ensure the usage label follows after the meter...
             if (this.usage) {
                 this.box.remove_child(this.usage);
+            }
+            // ... and the activity box follows after them
+            if (this.activityBox) {
+                this.box.remove_child(this.activityBox);
             }
             this.meter.setColor(this.meter_fg_color);
             this.add_child(this.meter);
             this.meter.updateBarWidth(this._meter_bar_width);
             if (this.usage) {
                 this.add_child(this.usage);
+            }
+            if (this.activityBox) {
+                this.add_child(this.activityBox);
             }
             this.updateVisualization();
             this.toggleAnimation();
@@ -245,6 +253,16 @@ var TopHatMonitor = GObject.registerClass({
     }
 
     updateVisualization() {
+        if (this.monitor_mode === 'activity') {
+            if (this.meter) {
+                this.meter.visible = false;
+            }
+            if (this.usage) {
+                this.usage.visible = false;
+            }
+            return;
+        }
+
         switch (this.visualization) {
         case 'chart':
             if (this.meter) {
