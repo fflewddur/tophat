@@ -5,6 +5,7 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
+- Added option to show disk activity instead of (or in addition to) available storage
 - Added y-axis scales to the activity over time charts
 - Added system uptime to the CPU monitor menu
 
