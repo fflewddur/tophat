@@ -83,6 +83,11 @@ function fillPreferencesWindow(window) {
     choices.append(_('Both meter and value'));
     addComboRow(_('Show as'), choices, 'diskDisplay', group, configHandler);
     choices = new Gtk.StringList();
+    choices.append(_('Filesystem usage'));
+    choices.append(_('Disk activity'));
+    choices.append(_('Both usage and activity'));
+    addComboRow(_('Monitor'), choices, 'diskMonitorMode', group, configHandler);
+    choices = new Gtk.StringList();
     let parts = Shared.getPartitions();
     parts.forEach(p => {
         choices.append(p);
