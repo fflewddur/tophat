@@ -114,6 +114,7 @@ The authors of each original work are:
 
 icons/cpu.svg: [jai](https://thenounproject.com/jairam.182/)  
 icons/disk.svg: [guntur cahya](https://thenounproject.com/gunturcahya05/)  
+icons/logo.svg: [Sergey Krivoy](https://thenounproject.com/krivoydesigner/)
 icons/mem.svg: [Loudoun Design
 Co.](https://thenonproject.com/LoudounDesignCo/)  
 icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)  
