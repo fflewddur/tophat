@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
+# Czech translation for TopHat.
 # Copyright (C) YEAR Todd Kulesza
 # This file is distributed under the same license as the TopHat package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Amerey.eu <info@amerey.eu>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 16:02-0700\n"
-"PO-Revision-Date: 2023-03-24 19:33+0100\n"
+"POT-Creation-Date: 2023-06-10 10:52-0700\n"
+"PO-Revision-Date: 2023-06-12 14:19+0200\n"
 "Last-Translator: Amerey.eu <info@amerey.eu>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -16,184 +16,386 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.1\n"
 
-#: prefs.js:40 prefs.js:154 prefs.js:293
+#: tophat@fflewddur.github.io/prefs.js:40
+#: tophat@fflewddur.github.io/prefs.js:179
+#: tophat@fflewddur.github.io/prefs.js:343
 msgid "General"
 msgstr "Obecné"
 
-#: prefs.js:44 prefs.js:156 prefs.js:295
+#: tophat@fflewddur.github.io/prefs.js:44
+#: tophat@fflewddur.github.io/prefs.js:181
+#: tophat@fflewddur.github.io/prefs.js:345
 msgid "Left edge"
 msgstr "Levý okraj"
 
-#: prefs.js:45 prefs.js:157 prefs.js:296
+#: tophat@fflewddur.github.io/prefs.js:45
+#: tophat@fflewddur.github.io/prefs.js:182
+#: tophat@fflewddur.github.io/prefs.js:346
 msgid "Left"
 msgstr "Vlevo"
 
-#: prefs.js:46 prefs.js:158 prefs.js:297
+#: tophat@fflewddur.github.io/prefs.js:46
+#: tophat@fflewddur.github.io/prefs.js:183
+#: tophat@fflewddur.github.io/prefs.js:347
 msgid "Center"
 msgstr "Uprostřed"
 
-#: prefs.js:47 prefs.js:159 prefs.js:298
+#: tophat@fflewddur.github.io/prefs.js:47
+#: tophat@fflewddur.github.io/prefs.js:184
+#: tophat@fflewddur.github.io/prefs.js:348
 msgid "Right"
 msgstr "Vpravo"
 
-#: prefs.js:48 prefs.js:160 prefs.js:299
+#: tophat@fflewddur.github.io/prefs.js:48
+#: tophat@fflewddur.github.io/prefs.js:185
+#: tophat@fflewddur.github.io/prefs.js:349
 msgid "Right edge"
 msgstr "Pravý okraj"
 
-#: prefs.js:49 prefs.js:161 prefs.js:300
+#: tophat@fflewddur.github.io/prefs.js:49
+#: tophat@fflewddur.github.io/prefs.js:186
+#: tophat@fflewddur.github.io/prefs.js:350
 msgid "Position in panel"
 msgstr "Umístění na panelu"
 
-#: prefs.js:50 prefs.js:162 prefs.js:301
+#: tophat@fflewddur.github.io/prefs.js:51
+#: tophat@fflewddur.github.io/prefs.js:188
+#: tophat@fflewddur.github.io/prefs.js:352
+msgid "Slow"
+msgstr "Pomalý"
+
+#: tophat@fflewddur.github.io/prefs.js:52
+#: tophat@fflewddur.github.io/prefs.js:189
+#: tophat@fflewddur.github.io/prefs.js:353
+msgid "Medium"
+msgstr "Středně rychlý"
+
+#: tophat@fflewddur.github.io/prefs.js:53
+#: tophat@fflewddur.github.io/prefs.js:190
+#: tophat@fflewddur.github.io/prefs.js:354
+msgid "Fast"
+msgstr "Rychlý"
+
+#: tophat@fflewddur.github.io/prefs.js:54
+#: tophat@fflewddur.github.io/prefs.js:191
+#: tophat@fflewddur.github.io/prefs.js:355
+msgid "Refresh speed"
+msgstr "Obnovovací rychlost"
+
+#: tophat@fflewddur.github.io/prefs.js:55
+#: tophat@fflewddur.github.io/prefs.js:192
+#: tophat@fflewddur.github.io/prefs.js:356
 msgid "Meter color"
 msgstr "Barva metru"
 
-#: prefs.js:51 prefs.js:163 prefs.js:302
+#: tophat@fflewddur.github.io/prefs.js:56
+#: tophat@fflewddur.github.io/prefs.js:193
+#: tophat@fflewddur.github.io/prefs.js:357
 msgid "Show icons beside monitors"
 msgstr "Zobrazit ikony vedle sledování"
 
-#: prefs.js:52 prefs.js:164 prefs.js:303
+#: tophat@fflewddur.github.io/prefs.js:57
+#: tophat@fflewddur.github.io/prefs.js:194
+#: tophat@fflewddur.github.io/prefs.js:358
 msgid "Show animations"
 msgstr "Zobrazit animace"
 
-#: prefs.js:54 prefs.js:171 prefs.js:310
+#: tophat@fflewddur.github.io/prefs.js:59
+#: tophat@fflewddur.github.io/prefs.js:201
+#: tophat@fflewddur.github.io/prefs.js:365
 msgid "Processor"
 msgstr "Procesor"
 
-#: prefs.js:55 prefs.js:172 prefs.js:311
+#: tophat@fflewddur.github.io/prefs.js:60
+#: tophat@fflewddur.github.io/prefs.js:202
+#: tophat@fflewddur.github.io/prefs.js:366
 msgid "Show the CPU monitor"
 msgstr "Zobrazit sledování CPU"
 
-#: prefs.js:56 prefs.js:173 prefs.js:312
+#: tophat@fflewddur.github.io/prefs.js:62
+#: tophat@fflewddur.github.io/prefs.js:72
+#: tophat@fflewddur.github.io/prefs.js:86
+#: tophat@fflewddur.github.io/prefs.js:204
+#: tophat@fflewddur.github.io/prefs.js:218
+#: tophat@fflewddur.github.io/prefs.js:236
+#: tophat@fflewddur.github.io/prefs.js:368
+#: tophat@fflewddur.github.io/prefs.js:382
+#: tophat@fflewddur.github.io/prefs.js:400
+msgid "Usage meter"
+msgstr "Měřič spotřeby"
+
+#: tophat@fflewddur.github.io/prefs.js:63
+#: tophat@fflewddur.github.io/prefs.js:73
+#: tophat@fflewddur.github.io/prefs.js:87
+#: tophat@fflewddur.github.io/prefs.js:205
+#: tophat@fflewddur.github.io/prefs.js:219
+#: tophat@fflewddur.github.io/prefs.js:237
+#: tophat@fflewddur.github.io/prefs.js:369
+#: tophat@fflewddur.github.io/prefs.js:383
+#: tophat@fflewddur.github.io/prefs.js:401
+msgid "Numeric value"
+msgstr "Číselná hodnota"
+
+#: tophat@fflewddur.github.io/prefs.js:64
+#: tophat@fflewddur.github.io/prefs.js:74
+#: tophat@fflewddur.github.io/prefs.js:88
+#: tophat@fflewddur.github.io/prefs.js:206
+#: tophat@fflewddur.github.io/prefs.js:220
+#: tophat@fflewddur.github.io/prefs.js:238
+#: tophat@fflewddur.github.io/prefs.js:370
+#: tophat@fflewddur.github.io/prefs.js:384
+#: tophat@fflewddur.github.io/prefs.js:402
+msgid "Both meter and value"
+msgstr "Jak metr, tak hodnota"
+
+#: tophat@fflewddur.github.io/prefs.js:65
+#: tophat@fflewddur.github.io/prefs.js:75
+#: tophat@fflewddur.github.io/prefs.js:207
+#: tophat@fflewddur.github.io/prefs.js:221
+#: tophat@fflewddur.github.io/prefs.js:371
+#: tophat@fflewddur.github.io/prefs.js:385
+msgid "Show as"
+msgstr "Zobrazit jako"
+
+#: tophat@fflewddur.github.io/prefs.js:66
+#: tophat@fflewddur.github.io/prefs.js:208
+#: tophat@fflewddur.github.io/prefs.js:372
 msgid "Show each core"
 msgstr "Zobrazit každé jádro"
 
-#: prefs.js:59 prefs.js:180 prefs.js:319
+#: tophat@fflewddur.github.io/prefs.js:69
+#: tophat@fflewddur.github.io/prefs.js:215
+#: tophat@fflewddur.github.io/prefs.js:379
 msgid "Memory"
 msgstr "Paměť"
 
-#: prefs.js:60 prefs.js:181 prefs.js:320
+#: tophat@fflewddur.github.io/prefs.js:70
+#: tophat@fflewddur.github.io/prefs.js:216
+#: tophat@fflewddur.github.io/prefs.js:380
 msgid "Show the memory monitor"
 msgstr "Zobrazit sledování paměti"
 
-#: prefs.js:63 prefs.js:188 prefs.js:327
+#: tophat@fflewddur.github.io/prefs.js:78
+#: tophat@fflewddur.github.io/prefs.js:228
+#: tophat@fflewddur.github.io/prefs.js:392
 msgid "Disk"
 msgstr "Disk"
 
-#: prefs.js:64 prefs.js:189 prefs.js:328
+#: tophat@fflewddur.github.io/prefs.js:79
+#: tophat@fflewddur.github.io/prefs.js:229
+#: tophat@fflewddur.github.io/prefs.js:393
 msgid "Show the disk monitor"
 msgstr "Zobrazit sledování disku"
 
-#: prefs.js:71 prefs.js:196 prefs.js:335
-msgid "Disk partition to monitor"
-msgstr "Oddíl disku ke sledování"
+#: tophat@fflewddur.github.io/prefs.js:81
+#: tophat@fflewddur.github.io/prefs.js:231
+#: tophat@fflewddur.github.io/prefs.js:395
+msgid "Available storage"
+msgstr "Dostupné úložiště"
 
-#: prefs.js:74 prefs.js:203 prefs.js:342
-msgid "Network"
-msgstr "Síť"
-
-#: prefs.js:75 prefs.js:204 prefs.js:343
-msgid "Show the network monitor"
-msgstr "Zobrazit sledování sítě"
-
-#: prefs.js:77 prefs.js:206 prefs.js:345
-msgid "Bytes"
-msgstr "Bajty"
-
-#: prefs.js:78 prefs.js:207 prefs.js:346
-msgid "Bits"
-msgstr "Bity"
-
-#: prefs.js:79 prefs.js:208 prefs.js:347
-msgid "Measurement unit"
-msgstr "Jednotka měření"
-
-#: lib/cpu.js:196
-msgid "Processor usage"
-msgstr "Využití procesoru"
-
-#: lib/cpu.js:199
-msgid "Processor utilization:"
-msgstr "Vytížení procesoru:"
-
-#: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:155
-msgid "2 mins ago"
-msgstr "před 2 minutami"
-
-#: lib/cpu.js:215 lib/fs.js:206 lib/mem.js:238 lib/net.js:157
-msgid "now"
-msgstr "nyní"
-
-#: lib/cpu.js:218 lib/fs.js:209 lib/mem.js:241
-msgid "Top processes"
-msgstr "Nejvíce vytěžující procesy"
-
-#: lib/cpu.js:263
-msgid "model n/a"
-msgstr "model není k dispozici"
-
-#: lib/cpu.js:272
-msgid "Frequency:"
-msgstr "Frekvence:"
-
-#: lib/cpu.js:278 lib/cpu.js:292 lib/fs.js:189 lib/fs.js:195
-msgid "n/a"
-msgstr "není k dispozici"
-
-#: lib/cpu.js:286
-msgid "Temperature:"
-msgstr "Teplota:"
-
-#: lib/fs.js:184
+#: tophat@fflewddur.github.io/prefs.js:82
+#: tophat@fflewddur.github.io/prefs.js:232
+#: tophat@fflewddur.github.io/prefs.js:396
+#: tophat@fflewddur.github.io/lib/fs.js:266
 msgid "Disk activity"
 msgstr "Aktivita disku"
 
-#: lib/fs.js:187
+#: tophat@fflewddur.github.io/prefs.js:83
+#: tophat@fflewddur.github.io/prefs.js:233
+#: tophat@fflewddur.github.io/prefs.js:397
+msgid "Storage and activity"
+msgstr "Úložiště a aktivita"
+
+#: tophat@fflewddur.github.io/prefs.js:84
+#: tophat@fflewddur.github.io/prefs.js:234
+#: tophat@fflewddur.github.io/prefs.js:398
+msgid "Monitor shows"
+msgstr "Monitor ukazuje"
+
+#: tophat@fflewddur.github.io/prefs.js:89
+#: tophat@fflewddur.github.io/prefs.js:239
+#: tophat@fflewddur.github.io/prefs.js:403
+msgid "Show available storage as"
+msgstr "Zobrazit dostupné úložiště jako"
+
+#: tophat@fflewddur.github.io/prefs.js:96
+#: tophat@fflewddur.github.io/prefs.js:246
+#: tophat@fflewddur.github.io/prefs.js:410
+msgid "Filesystem to monitor"
+msgstr "Souborový systém ke sledování"
+
+#: tophat@fflewddur.github.io/prefs.js:99
+#: tophat@fflewddur.github.io/prefs.js:253
+#: tophat@fflewddur.github.io/prefs.js:417
+msgid "Network"
+msgstr "Síť"
+
+#: tophat@fflewddur.github.io/prefs.js:100
+#: tophat@fflewddur.github.io/prefs.js:254
+#: tophat@fflewddur.github.io/prefs.js:418
+msgid "Show the network monitor"
+msgstr "Zobrazit sledování sítě"
+
+#: tophat@fflewddur.github.io/prefs.js:102
+#: tophat@fflewddur.github.io/prefs.js:256
+#: tophat@fflewddur.github.io/prefs.js:420
+msgid "Bytes"
+msgstr "Bajty"
+
+#: tophat@fflewddur.github.io/prefs.js:103
+#: tophat@fflewddur.github.io/prefs.js:257
+#: tophat@fflewddur.github.io/prefs.js:421
+msgid "Bits"
+msgstr "Bity"
+
+#: tophat@fflewddur.github.io/prefs.js:104
+#: tophat@fflewddur.github.io/prefs.js:258
+#: tophat@fflewddur.github.io/prefs.js:422
+msgid "Measurement unit"
+msgstr "Jednotka měření"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:221
+msgid "Processor usage"
+msgstr "Využití procesoru"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:224
+msgid "Processor utilization:"
+msgstr "Vytížení procesoru:"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:252
+#: tophat@fflewddur.github.io/lib/fs.js:301
+#: tophat@fflewddur.github.io/lib/mem.js:275
+#: tophat@fflewddur.github.io/lib/net.js:183
+#, javascript-format
+msgid "%d min ago"
+msgid_plural "%d mins ago"
+msgstr[0] "před %d minutou"
+msgstr[1] "před %d minutami"
+msgstr[2] "před %d minutami"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:255
+#: tophat@fflewddur.github.io/lib/fs.js:304
+#: tophat@fflewddur.github.io/lib/mem.js:278
+#: tophat@fflewddur.github.io/lib/net.js:186
+msgid "now"
+msgstr "nyní"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:258
+#: tophat@fflewddur.github.io/lib/fs.js:307
+#: tophat@fflewddur.github.io/lib/mem.js:281
+msgid "Top processes"
+msgstr "Nejvíce vytěžující procesy"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:275
+msgid "System uptime"
+msgstr "Provozní doba systému"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:312
+msgid "model n/a"
+msgstr "model není k dispozici"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:321
+msgid "Frequency:"
+msgstr "Frekvence:"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:327
+#: tophat@fflewddur.github.io/lib/cpu.js:341
+#: tophat@fflewddur.github.io/lib/fs.js:271
+#: tophat@fflewddur.github.io/lib/fs.js:277
+msgid "n/a"
+msgstr "není k dispozici"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:335
+msgid "Temperature:"
+msgstr "Teplota:"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:596
+#, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d den"
+msgstr[1] "%d dny"
+msgstr[2] "%d dny"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:599
+#, javascript-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d hodina"
+msgstr[1] "%d hodiny"
+msgstr[2] "%d hodiny"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:601
+#, javascript-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minuta"
+msgstr[1] "%d minuty"
+msgstr[2] "%d minuty"
+
+#: tophat@fflewddur.github.io/lib/fs.js:269
 msgid "Writing:"
 msgstr "Zápis:"
 
-#: lib/fs.js:193
+#: tophat@fflewddur.github.io/lib/fs.js:275
 msgid "Reading:"
 msgstr "Čtení:"
 
-#: lib/fs.js:215
+#: tophat@fflewddur.github.io/lib/fs.js:292
+msgid "Write"
+msgstr "Zápis"
+
+#: tophat@fflewddur.github.io/lib/fs.js:297
+msgid "Read"
+msgstr "Čtení"
+
+#: tophat@fflewddur.github.io/lib/fs.js:313
 msgid "Writing"
 msgstr "Zápis"
 
-#: lib/fs.js:217
+#: tophat@fflewddur.github.io/lib/fs.js:315
 msgid "Reading"
 msgstr "Čtení"
 
-#: lib/fs.js:233
+#: tophat@fflewddur.github.io/lib/fs.js:331
 msgid "Filesystem usage"
 msgstr "Využití souborového systému"
 
-#: lib/mem.js:208
+#: tophat@fflewddur.github.io/lib/mem.js:233
 msgid "Memory usage"
 msgstr "Využití paměti"
 
-#: lib/mem.js:211
+#: tophat@fflewddur.github.io/lib/mem.js:236
 msgid "RAM used:"
 msgstr "Použitá RAM:"
 
-#: lib/mem.js:216 lib/mem.js:226
+#: tophat@fflewddur.github.io/lib/mem.js:241
+#: tophat@fflewddur.github.io/lib/mem.js:251
 msgid "size n/a"
 msgstr "velikost není k dispozici"
 
-#: lib/mem.js:221
+#: tophat@fflewddur.github.io/lib/mem.js:246
 msgid "Swap used:"
 msgstr "Swap - využití:"
 
-#: lib/net.js:137
+#: tophat@fflewddur.github.io/lib/net.js:150
 msgid "Network activity"
 msgstr "Síťová aktivita"
 
-#: lib/net.js:140
+#: tophat@fflewddur.github.io/lib/net.js:153
 msgid "Sending:"
 msgstr "Odesílání:"
 
-#: lib/net.js:145
+#: tophat@fflewddur.github.io/lib/net.js:158
 msgid "Receiving:"
 msgstr "Příjem:"
+
+#: tophat@fflewddur.github.io/lib/net.js:174
+msgid "Send"
+msgstr "Odeslat"
+
+#: tophat@fflewddur.github.io/lib/net.js:179
+msgid "Recv"
+msgstr "Recv"
