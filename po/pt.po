@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-10 10:52-0700\n"
-"PO-Revision-Date: 2023-08-16 21:34-0300\n"
+"PO-Revision-Date: 2023-08-17 12:30-0300\n"
 "Last-Translator: Mateus Santos <swyknox@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <>\n"
 "Language: pt_BR\n"
@@ -243,13 +243,13 @@ msgstr "Mostrar o monitor de rede"
 #: tophat@fflewddur.github.io/prefs.js:256
 #: tophat@fflewddur.github.io/prefs.js:420
 msgid "Bytes"
-msgstr ""
+msgstr "Bytes"
 
 #: tophat@fflewddur.github.io/prefs.js:103
 #: tophat@fflewddur.github.io/prefs.js:257
 #: tophat@fflewddur.github.io/prefs.js:421
 msgid "Bits"
-msgstr ""
+msgstr "Bits"
 
 #: tophat@fflewddur.github.io/prefs.js:104
 #: tophat@fflewddur.github.io/prefs.js:258
@@ -305,7 +305,7 @@ msgstr "Frequência:"
 #: tophat@fflewddur.github.io/lib/fs.js:271
 #: tophat@fflewddur.github.io/lib/fs.js:277
 msgid "n/a"
-msgstr ""
+msgstr "n/a"
 
 #: tophat@fflewddur.github.io/lib/cpu.js:335
 msgid "Temperature:"
