@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-10 10:52-0700\n"
-"PO-Revision-Date: 2023-08-17 12:30-0300\n"
+"PO-Revision-Date: 2023-08-17 14:33-0300\n"
 "Last-Translator: Mateus Santos <swyknox@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <>\n"
 "Language: pt_BR\n"
@@ -294,7 +294,7 @@ msgstr "Tempo de atividade do sistema"
 
 #: tophat@fflewddur.github.io/lib/cpu.js:312
 msgid "model n/a"
-msgstr "modelo n/a"
+msgstr "modelo n/d"
 
 #: tophat@fflewddur.github.io/lib/cpu.js:321
 msgid "Frequency:"
@@ -305,7 +305,7 @@ msgstr "Frequência:"
 #: tophat@fflewddur.github.io/lib/fs.js:271
 #: tophat@fflewddur.github.io/lib/fs.js:277
 msgid "n/a"
-msgstr "n/a"
+msgstr "n/d"
 
 #: tophat@fflewddur.github.io/lib/cpu.js:335
 msgid "Temperature:"
@@ -371,7 +371,7 @@ msgstr "Memória RAM usada:"
 #: tophat@fflewddur.github.io/lib/mem.js:241
 #: tophat@fflewddur.github.io/lib/mem.js:251
 msgid "size n/a"
-msgstr "tamanho n/a"
+msgstr "tamanho n/d"
 
 #: tophat@fflewddur.github.io/lib/mem.js:246
 msgid "Swap used:"
