@@ -68,7 +68,11 @@ rules:
   jsdoc/check-types: error
   jsdoc/implements-on-classes: error
   jsdoc/newline-after-description: error
-  # jsdoc/require-jsdoc: error
+  jsdoc/tag-lines: 
+    - error
+    - any
+    - startLines: 1
+  jsdoc/require-jsdoc: error
   jsdoc/require-param: error
   jsdoc/require-param-description: error
   jsdoc/require-param-name: error
@@ -126,12 +130,6 @@ rules:
   no-restricted-globals: [error, window]
   no-restricted-properties:
     - error
-    - object: imports
-      property: format
-      message: Use template strings
-    - object: pkg
-      property: initFormat
-      message: Use template strings
     - object: Lang
       property: copyProperties
       message: Use Object.assign()
@@ -267,3 +265,4 @@ globals:
   clearInterval: readonly
 parserOptions:
   ecmaVersion: 2022
+  sourceType: module
