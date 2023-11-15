@@ -17,17 +17,19 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-/* exported CpuMonitor */
+import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import GTop from 'gi://GTop';
+import St from 'gi://St';
 
-const {Gio, GLib, Clutter, GObject, St, GTop} = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Config = Me.imports.lib.config;
-const Shared = Me.imports.lib.shared;
-const Monitor = Me.imports.lib.monitor;
-const FileModule = Me.imports.lib.file;
-const _ = Config.Domain.gettext;
-const ngettext = Config.Domain.ngettext;
+import {gettext as _, ngettext} from 'resource:///org/gnome/shell/extensions/extension.js';
+
+import * as Config from './config.js';
+import * as Shared from './shared.js';
+import * as Monitor from './monitor.js';
+import * as FileModule from './file.js';
 
 class CPUUse {
     constructor(user = 0, sys = 0) {
@@ -79,7 +81,7 @@ class ProcessCPUUse {
     }
 }
 
-var CpuMonitor = GObject.registerClass({
+export var CpuMonitor = GObject.registerClass({
     Properties: {
         'show-cores': GObject.ParamSpec.boolean(
             'show-cores',
@@ -91,7 +93,7 @@ var CpuMonitor = GObject.registerClass({
     },
 }, class TopHatCpuMonitor extends Monitor.TopHatMonitor {
     _init(configHandler) {
-        super._init(`${Me.metadata.name} CPU Monitor`);
+        super._init('TopHat CPU Monitor');
 
         // Initialize libgtop values
         this.cpuCores = GTop.glibtop_get_sysinfo().ncpu;
@@ -121,7 +123,7 @@ var CpuMonitor = GObject.registerClass({
         this.refreshChartsTimer = 0;
         this.refreshProcessesTimer = 0;
 
-        let gicon = Gio.icon_new_for_string(`${Me.path}/icons/cpu-icon-symbolic.svg`);
+        let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/cpu-icon-symbolic.svg`);
         this.icon = new St.Icon({gicon, style_class: 'system-status-icon tophat-panel-icon'});
         this.add_child(this.icon);
 
@@ -345,11 +347,11 @@ var CpuMonitor = GObject.registerClass({
                     this.menuCpuTemps.push(label);
                 }
             }).catch(err => {
-                log(`[${Me.metadata.name}] Error reading /proc/cpuinfo: ${err}`);
+                log(`[${this.metadata.name}] Error reading /proc/cpuinfo: ${err}`);
                 this.hasProc = false;
             });
         }).catch(err => {
-            log(`[${Me.metadata.name}] Error finding temperature monitors: ${err}`);
+            log(`[TopHat] Error finding temperature monitors: ${err}`);
             this.hasTemp = false;
         });
     }
@@ -389,7 +391,7 @@ var CpuMonitor = GObject.registerClass({
                 }
                 resolve(this.cpuTempMonitors.size > 0);
             }).catch(err => {
-                log(`[${Me.metadata.name}] Error listing files in ${basePath}: ${err}`);
+                log(`[TopHat] Error listing files in ${basePath}: ${err}`);
                 reject(err);
             });
         });
@@ -503,7 +505,7 @@ var CpuMonitor = GObject.registerClass({
                 });
             }
         }).catch(err => {
-            log(`[${Me.metadata.name}] Error reading /proc/cpuinfo: ${err}`);
+            log(`[TopHat] Error reading /proc/cpuinfo: ${err}`);
             this.hasProc = false;
         });
     }
@@ -514,7 +516,7 @@ var CpuMonitor = GObject.registerClass({
                 temp = parseInt(temp);
                 this.menuCpuTemps[id].text = `${(temp / 1000).toFixed(0)} °C`;
             }).catch(err => {
-                log(`[${Me.metadata.name}] Error reading ${path}: ${err}`);
+                log(`[TopHat] Error reading ${path}: ${err}`);
                 this.hasTemp = false;
             });
         });

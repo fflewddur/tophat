@@ -18,23 +18,24 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 /* global global */
-/* exported TopHatMonitor, Meter */
 
-const {Atk, Clutter, GLib, GObject, Shell, St} = imports.gi;
-const PopupMenu = imports.ui.popupMenu;
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
-const ShellConfig = imports.misc.config;
-const Util = imports.misc.util;
-const Me = ExtensionUtils.getCurrentExtension();
-const Config = Me.imports.lib.config;
-const _ = Config.Domain.gettext;
+import Atk from 'gi://Atk';
+import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Shell from 'gi://Shell';
+import St from 'gi://St';
+
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+
 const MENU_COLUMNS = 2;
 const ANIMATION_DURATION = 500;
 
 // Re-implement GNOME Shell's PanelMenuButton class, with minor changes to
 // support adding it to a container
-var TopHatMonitor = GObject.registerClass({
+export var TopHatMonitor = GObject.registerClass({
     Properties: {
         'meter-bar-width': GObject.ParamSpec.double(
             'meter-bar-width',
@@ -188,11 +189,12 @@ var TopHatMonitor = GObject.registerClass({
     }
 
     get role() {
-        return `${Me.metadata.name} ${this.name}`;
+        return `TopHat ${this.name}`;
     }
 
     refresh() {
         // Override this in child classes to refresh resource consumption/activity
+        console.error('Must override Monitor.refresh()');
     }
 
     toggleAnimation() {
@@ -346,13 +348,10 @@ var TopHatMonitor = GObject.registerClass({
         button.connect('clicked', () => {
             this.menu.close(true);
             try {
-                if (ExtensionUtils && ExtensionUtils.openPrefs) {
-                    ExtensionUtils.openPrefs();
-                } else {
-                    Util.spawn(['gnome-shell-extension-prefs', Me.metadata.uuid]);
-                }
+                let obj = Extension.lookupByUUID('tophat@fflewddur.github.io');
+                obj.openPreferences();
             } catch (err) {
-                log(`[${Me.metadata.name}] Error opening settings: ${err}`);
+                log(`[TopHat] Error opening settings: ${err}`);
             }
         });
         box.add_child(button);
@@ -546,45 +545,7 @@ var TopHatMonitor = GObject.registerClass({
     }
 });
 
-// Older versions of GNOME Shell used a different version of Clutter.
-// The TopHatMonitorLegacy class is compatible with these older releases.
-const [shellMajor, shellMinor] = ShellConfig.PACKAGE_VERSION.split('.').map(s => Number(s));
-if (shellMajor === 3 && shellMinor <= 36) {
-    // log('TopHat: Using legacy base class');
-    var TopHatMonitorLegacy = GObject.registerClass(
-        class TopHatMonitorLegacyBase extends TopHatMonitor {
-            vfunc_allocate(box, flags) {
-                this.set_allocation(box, flags);
-
-                let child = this.get_first_child();
-                if (!child) {
-                    return;
-                }
-
-                let [, natWidth] = child.get_preferred_width(-1);
-
-                let availWidth = box.x2 - box.x1;
-                let availHeight = box.y2 - box.y1;
-
-                let childBox = new Clutter.ActorBox();
-                if (natWidth + 2 * this._natHPadding <= availWidth) {
-                    childBox.x1 = this._natHPadding;
-                    childBox.x2 = availWidth - this._natHPadding;
-                } else {
-                    childBox.x1 = this._minHPadding;
-                    childBox.x2 = availWidth - this._minHPadding;
-                }
-
-                childBox.y1 = 0;
-                childBox.y2 = availHeight;
-
-                child.allocate(childBox, flags);
-            }
-        });
-    TopHatMonitor = TopHatMonitorLegacy;
-}
-
-var Meter = GObject.registerClass({
+export var Meter = GObject.registerClass({
 }, class TopHatMeter extends St.BoxLayout {
     _init(numBars = 1, width) {
         super._init({style_class: 'tophat-meter', y_align: Clutter.ActorAlign.CENTER, y_expand: true});

@@ -17,16 +17,11 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-/* exported TopHatContainer */
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
-const {GObject, St} = imports.gi;
-const PanelMenu = imports.ui.panelMenu;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Config = Me.imports.lib.config;
-const _ = Config.Domain.gettext;
-
-var TopHatContainer = GObject.registerClass(
+export var TopHatContainer = GObject.registerClass(
 class TopHatContainer extends PanelMenu.Button {
     _init(menuAlignment, nameText, dontCreateMenu) {
         super._init({
