@@ -84,7 +84,7 @@ export var NetMonitor = GObject.registerClass({
             if (dev === 'lo') {
                 continue;
             }
-            // log(`[TopHat] Found network device '${dev}'`);
+            // console.debug(`[TopHat] Found network device '${dev}'`);
             GTop.glibtop_get_netload(this.net, dev);
             bytesIn += this.net.bytes_in;
             bytesOut += this.net.bytes_out;
@@ -202,7 +202,7 @@ export var NetMonitor = GObject.registerClass({
                 // Ignore loopback and virtual devices
                 continue;
             }
-            // log(`[TopHat] Found network device '${dev}'`);
+            // console.debug(`[TopHat] Found network device '${dev}'`);
             GTop.glibtop_get_netload(this.net, dev);
             bytesIn += this.net.bytes_in;
             bytesOut += this.net.bytes_out;
@@ -219,7 +219,7 @@ export var NetMonitor = GObject.registerClass({
         this.valueNetUp.text = `${netOut}/s`;
         this.menuNetDown.text = `${netIn}/s`;
         this.menuNetUp.text = `${netOut}/s`;
-        // log(`[TopHat] Net: bytes_in=${(bytesInDelta / timeDelta).toFixed(2)}/s bytes_out=${(bytesOutDelta / timeDelta).toFixed(2)}/s time=${timeDelta}`);
+        // console.debug(`[TopHat] Net: bytes_in=${(bytesInDelta / timeDelta).toFixed(2)}/s bytes_out=${(bytesOutDelta / timeDelta).toFixed(2)}/s time=${timeDelta}`);
 
         while (this.history.length >= this.historyLimit) {
             this.history.shift();

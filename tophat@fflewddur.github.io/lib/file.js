@@ -24,7 +24,7 @@ export class File {
         try {
             exists = this.file.query_exists(null);
         } catch (err) {
-            log(`[TopHat] Error reading ${this.file.get_path()}: ${err}`);
+            console.error(`[TopHat] Error reading ${this.file.get_path()}: ${err}`);
         }
         return exists;
     }
@@ -68,7 +68,7 @@ export class File {
             contents = this.file.load_contents(null)[1];
             contents = Decoder.decode(contents).trim();
         } catch (e) {
-            log(`[TopHat] Error reading ${this.file.get_path()}: ${e}`);
+            console.error(`[TopHat] Error reading ${this.file.get_path()}: ${e}`);
         }
         return contents;
     }

@@ -322,7 +322,7 @@ export var MemMonitor = GObject.registerClass(
             this.historyChart.queue_repaint();
 
             // Update panel meter
-            // log(`setUsage(${this.memUsage.mem} * 100)`);
+            // console.debug(`setUsage(${this.memUsage.mem} * 100)`);
             this.meter.setUsage([this.memUsage.mem * 100]);
             this.usage.text = `${(this.memUsage.mem * 100).toFixed(0)}%`;
 
@@ -359,7 +359,7 @@ export var MemMonitor = GObject.registerClass(
                 this.menuSwapUsage.text = `${(this.memUsage.swap * 100).toFixed(0)}%`;
                 this.menuSwapSize.text = `${(this.memUsage.swapUsed / KB_PER_GB).toFixed(1)} GB of ${(this.memUsage.swapSize / KB_PER_GB).toFixed(1)} GB`;
             }).catch(err => {
-                log(`[TopHat] Error reading /proc/meminfo: ${err}`);
+                console.error(`[TopHat] Error reading /proc/meminfo: ${err}`);
                 this.hasProc = false;
             });
         }

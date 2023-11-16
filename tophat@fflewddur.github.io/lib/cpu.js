@@ -347,11 +347,11 @@ export var CpuMonitor = GObject.registerClass({
                     this.menuCpuTemps.push(label);
                 }
             }).catch(err => {
-                log(`[${this.metadata.name}] Error reading /proc/cpuinfo: ${err}`);
+                console.error(`[${this.metadata.name}] Error reading /proc/cpuinfo: ${err}`);
                 this.hasProc = false;
             });
         }).catch(err => {
-            log(`[TopHat] Error finding temperature monitors: ${err}`);
+            console.error(`[TopHat] Error finding temperature monitors: ${err}`);
             this.hasTemp = false;
         });
     }
@@ -391,7 +391,7 @@ export var CpuMonitor = GObject.registerClass({
                 }
                 resolve(this.cpuTempMonitors.size > 0);
             }).catch(err => {
-                log(`[TopHat] Error listing files in ${basePath}: ${err}`);
+                console.error(`[TopHat] Error listing files in ${basePath}: ${err}`);
                 reject(err);
             });
         });
@@ -438,7 +438,7 @@ export var CpuMonitor = GObject.registerClass({
         this.history.push(this.cpuUsage.copy());
 
         // Update UI
-        // log(`[TopHat] CPU: ${this.cpuUsage}% on ${this.cpuCores} cores (${this.cpuCoreUsage.join()})`);
+        // console.debug(`[TopHat] CPU: ${this.cpuUsage}% on ${this.cpuCores} cores (${this.cpuCoreUsage.join()})`);
         let cpuTotal = this.cpuUsage.total();
         this.usage.text = `${cpuTotal}%`;
 
@@ -505,7 +505,7 @@ export var CpuMonitor = GObject.registerClass({
                 });
             }
         }).catch(err => {
-            log(`[TopHat] Error reading /proc/cpuinfo: ${err}`);
+            console.error(`[TopHat] Error reading /proc/cpuinfo: ${err}`);
             this.hasProc = false;
         });
     }
@@ -516,7 +516,7 @@ export var CpuMonitor = GObject.registerClass({
                 temp = parseInt(temp);
                 this.menuCpuTemps[id].text = `${(temp / 1000).toFixed(0)} °C`;
             }).catch(err => {
-                log(`[TopHat] Error reading ${path}: ${err}`);
+                console.error(`[TopHat] Error reading ${path}: ${err}`);
                 this.hasTemp = false;
             });
         });

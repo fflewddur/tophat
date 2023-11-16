@@ -60,7 +60,6 @@ export var ConfigHandler = class ConfigHandler {
     }
 
     set positionInPanel(value) {
-        // log(`set positionInPanel to ${value}`);
         this._settings.set_enum('position-in-panel', value);
     }
 

@@ -81,7 +81,7 @@ export function getProcessName(pid) {
         }
     }
     // if (cmd === '') {
-    //     log(`Still no cmd for pid ${pid}`);
+    //     console.debug(`Still no cmd for pid ${pid}`);
     // }
     // TODO: return both shortened cmd (for menu display) and full cmd (for tooltips)
     cmd = cmd.slice(0, 35);
@@ -179,6 +179,6 @@ export function getPartitions() {
         }
     });
     mounts = Array.from(mountMap.values());
-    // log(`mounts = ${mounts}`);
+    // console.debug(`[TopHat] mounts = ${mounts}`);
     return mounts;
 }

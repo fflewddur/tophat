@@ -351,7 +351,7 @@ export var TopHatMonitor = GObject.registerClass({
                 let obj = Extension.lookupByUUID('tophat@fflewddur.github.io');
                 obj.openPreferences();
             } catch (err) {
-                log(`[TopHat] Error opening settings: ${err}`);
+                console.error(`[TopHat] Error opening settings: ${err}`);
             }
         });
         box.add_child(button);

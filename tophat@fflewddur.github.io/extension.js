@@ -66,7 +66,7 @@ class TopHat {
         let pref = this._getPreferredPanelBoxAndPosition();
         Main.panel.addToStatusArea('TopHat', this.container, pref.position, pref.box);
         this.container.monitors.forEach(monitor => {
-            // log(`Adding menu to manager for ${monitor.name}`);
+            // console.debug(`Adding menu to manager for ${monitor.name}`);
             Main.panel.menuManager.addMenu(monitor.menu);
             monitor.refresh();
         });
@@ -126,9 +126,9 @@ export default class TopHatExt extends Extension {
     }
 
     enable() {
-        // log(`[TopHat] enabling version ${this.metadata.version}`);
+        // console.debug(`[TopHat] enabling version ${this.metadata.version}`);
         if (depFailures.length > 0) {
-            log(`[${this.metadata.name}] missing dependencies, showing problem reporter instead`);
+            console.warn(`[${this.metadata.name}] missing dependencies, showing problem reporter instead`);
             // const Problem = this.imports.lib.problem;
             this.tophat = new Problem.TopHatProblemReporter();
 
@@ -141,7 +141,7 @@ export default class TopHatExt extends Extension {
             this.tophat = new TopHat(this.getSettings(), this.metadata);
             this.tophat.addToPanel();
         }
-        // log(`[${this.metadata.name}] enabled`);
+        // console.debug(`[${this.metadata.name}] enabled`);
     }
 
     disable() {

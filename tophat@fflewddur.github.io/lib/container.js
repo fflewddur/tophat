@@ -36,7 +36,7 @@ class TopHatContainer extends PanelMenu.Button {
     }
 
     addMonitor(monitor) {
-        // log(`TopHat addMonitor(${monitor.name})`);
+        // console.debug(`[TopHat] addMonitor(${monitor.name})`);
         this.monitors.push(monitor);
         this.box.add_child(monitor);
     }
