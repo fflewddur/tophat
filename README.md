@@ -8,6 +8,9 @@ TopHat">
 
 ## Release notes
 
+This is the legacy branch of TopHat. It supports GNOME 3.32 through GNOME 44.
+Active development of TopHat now supports GNOME 45 and later.
+
 See [RELEASES.md](RELEASES.md) for the list of fixes and new functionality
 included in each release.
 
@@ -22,7 +25,7 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 
 ### Requirements
 
-- GNOME 3.32 or newer
+- GNOME 3.32 through GNOME 44
 - The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems,
   likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g.,
