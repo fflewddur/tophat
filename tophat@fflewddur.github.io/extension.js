@@ -18,34 +18,24 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-/* exported init, enable, disable */
-
 let depFailures = [];
 let missingLibs = [];
 
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-let GTop = null;
-let Cpu = null;
-let Mem = null;
-let Net = null;
-let FS = null;
-try {
-    // eslint-disable-next-line no-unused-vars
-    GTop = imports.gi.GTop;
-    Cpu = Me.imports.lib.cpu;
-    Mem = Me.imports.lib.mem;
-    Net = Me.imports.lib.net;
-    FS = Me.imports.lib.fs;
-} catch (err) {
-    log(`[${Me.metadata.name}] Error loading dependencies: ${err}`);
-    depFailures.push(err);
-    missingLibs.push('GTop');
-}
-const Config = Me.imports.lib.config;
-const Container = Me.imports.lib.container;
-const _ = Config.Domain.gettext;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as Cpu from './lib/cpu.js';
+import * as Mem from './lib/mem.js';
+import * as Net from './lib/net.js';
+import * as FS from './lib/fs.js';
+
+// TODO: Update the UI if we have trouble loading GTop + friends
+// console.error(`[${Me.metadata.name}] Error loading dependencies: ${err}`);
+// depFailures.push(err);
+// missingLibs.push('GTop');
+
+import * as Config from './lib/config.js';
+import * as Container from './lib/container.js';
+import * as Problem from './lib/problem.js';
 
 const MenuPosition = {
     LEFT_EDGE: 0,
@@ -55,13 +45,9 @@ const MenuPosition = {
     RIGHT_EDGE: 4,
 };
 
-// Declare `tophat` in the scope of the whole script so it can
-// be accessed in both `enable()` and `disable()`
-let tophat = null;
-
 class TopHat {
-    constructor() {
-        this.configHandler = new Config.ConfigHandler();
+    constructor(settings, metadata) {
+        this.configHandler = new Config.ConfigHandler(settings, metadata);
         this.container = new Container.TopHatContainer();
         this.cpu = new Cpu.CpuMonitor(this.configHandler);
         this.mem = new Mem.MemMonitor(this.configHandler);
@@ -80,7 +66,7 @@ class TopHat {
         let pref = this._getPreferredPanelBoxAndPosition();
         Main.panel.addToStatusArea('TopHat', this.container, pref.position, pref.box);
         this.container.monitors.forEach(monitor => {
-            // log(`Adding menu to manager for ${monitor.name}`);
+            // console.debug(`Adding menu to manager for ${monitor.name}`);
             Main.panel.menuManager.addMenu(monitor.menu);
             monitor.refresh();
         });
@@ -131,34 +117,37 @@ class TopHat {
     }
 }
 
-function init() {
-    ExtensionUtils.initTranslations();
-}
-
-function enable() {
-    // log(`[${Me.metadata.name}] enabling version ${Me.metadata.version}`);
-
-    if (depFailures.length > 0) {
-        log(`[${Me.metadata.name}] missing dependencies, showing problem reporter instead`);
-        const Problem = Me.imports.lib.problem;
-        tophat = new Problem.TopHatProblemReporter();
-
-        let msg = _(`It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}\n\nAfter installing them, you'll need to restart your computer.`);
-        tophat.setMessage(msg);
-        tophat.setDetails(depFailures.join('\n'));
-
-        Main.panel.addToStatusArea(`${Me.metadata.name} Problem Reporter`, tophat);
-    } else {
-        tophat = new TopHat();
-        tophat.addToPanel();
+// FIXME: TopHat itself should derive from Extension
+export default class TopHatExt extends Extension {
+    constructor(metadata) {
+        super(metadata);
+        this.tophat = null;
+        this.initTranslations();
     }
 
-    // log(`[${Me.metadata.name}] enabled`);
-}
+    enable() {
+        // console.debug(`[TopHat] enabling version ${this.metadata.version}`);
+        if (depFailures.length > 0) {
+            console.warn(`[${this.metadata.name}] missing dependencies, showing problem reporter instead`);
+            // const Problem = this.imports.lib.problem;
+            this.tophat = new Problem.TopHatProblemReporter();
 
-function disable() {
-    if (tophat !== null) {
-        tophat.destroy();
-        tophat = null;
+            let msg = _(`It looks like your computer is missing GIRepository (gir) bindings for the following libraries: ${missingLibs.join(', ')}\n\nAfter installing them, you'll need to restart your computer.`);
+            this.tophat.setMessage(msg);
+            this.tophat.setDetails(depFailures.join('\n'));
+
+            Main.panel.addToStatusArea(`${this.metadata.name} Problem Reporter`, this.tophat);
+        } else {
+            this.tophat = new TopHat(this.getSettings(), this.metadata);
+            this.tophat.addToPanel();
+        }
+        // console.debug(`[${this.metadata.name}] enabled`);
+    }
+
+    disable() {
+        if (this.tophat !== null) {
+            this.tophat.destroy();
+            this.tophat = null;
+        }
     }
 }

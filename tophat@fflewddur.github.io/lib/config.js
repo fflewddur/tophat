@@ -19,30 +19,25 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 // Time between resource updates, in milliseconds
-var UPDATE_INTERVAL_CPU = 2000;
-var UPDATE_INTERVAL_MEM = 2000;
-var UPDATE_INTERVAL_NET = 2000;
-var UPDATE_INTERVAL_DISK = 5000;
-var UPDATE_INTERVAL_PROCLIST = 5000;
+export var UPDATE_INTERVAL_CPU = 2000;
+export var UPDATE_INTERVAL_MEM = 2000;
+export var UPDATE_INTERVAL_NET = 2000;
+export var UPDATE_INTERVAL_DISK = 5000;
+export var UPDATE_INTERVAL_PROCLIST = 5000;
 
-var METER_BG_COLOR = '#00000033';
-var METER_GRID_COLOR = '#77777766';
+export var METER_BG_COLOR = '#00000033';
+export var METER_GRID_COLOR = '#77777766';
 
-var HISTORY_MAX_SIZE = 300; // The time-series graphs will show data for this many seconds
+export var HISTORY_MAX_SIZE = 300; // The time-series graphs will show data for this many seconds
 
-var N_TOP_PROCESSES = 6;
+export var N_TOP_PROCESSES = 6;
 
-const Gettext = imports.gettext;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-
-var Domain = Gettext.domain(Me.metadata.uuid);
-
-var ConfigHandler = class ConfigHandler {
-    constructor() {
+export var ConfigHandler = class ConfigHandler {
+    constructor(settings, metadata) {
         this.signal_ids = [];
-        this._settings = ExtensionUtils.getSettings();
+        this._settings = settings;
         this._partitions = null;
+        this.metadata = metadata;
     }
 
     setPartitions(parts) {
@@ -65,7 +60,6 @@ var ConfigHandler = class ConfigHandler {
     }
 
     set positionInPanel(value) {
-        // log(`set positionInPanel to ${value}`);
         this._settings.set_enum('position-in-panel', value);
     }
 

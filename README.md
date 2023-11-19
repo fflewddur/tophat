@@ -22,7 +22,7 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 
 ### Requirements
 
-- GNOME 3.32 or newer
+- GNOME 45 or newer (older releases of TopHat are available for GNOME 3.32 - 44)
 - The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems,
   likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g.,
@@ -33,15 +33,8 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
-- CentOS Stream 8
-- CentOS Stream 9
-- Debian 11.7 (first install gir1.2-gtop-2.0 package)
-- Debian 12 (first install gir1.2-gtop-2.0 package)
-- Fedora 38
-- openSUSE Leap 15.4 (first install typelib-1_0-GTop-2_0 package)
-- Pop!_OS 22.04 LTS (first install gir1.2-gtop-2.0 package)
-- Ubuntu 22.04 LTS (first install gir1.2-gtop-2.0 package)
-- Ubuntu 23.04 (first install gir1.2-gtop-2.0 package)
+- Fedora 39
+- Ubuntu 23.10 (first install gir1.2-gtop-2.0 package)
 
 Even if your system is not in this list, as long as it meets the
 requirements mentioned above, you should be able to run TopHat. If not, please
@@ -79,9 +72,9 @@ plugin for VS Code will automatically run the linter for you.
 
 ### Useful development commands
 
-To view GNOME Shell logs output: `journalctl -f -o cat /usr/bin/gnome-shell`
+To view logs for GNOME Shell: `journalctl -f /usr/bin/gnome-shell`
 
-To view logs for extension preferences: `journalctl -f -o cat /usr/bin/gjs`
+To view logs for extension preferences: `journalctl -f /usr/bin/gjs`
 
 To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
 --timeout 10s --cpu 8` or `stress-ng --vm-bytes 80% --vm-populate -t 30 -vm

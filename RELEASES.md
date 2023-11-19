@@ -3,6 +3,12 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Not yet released
+
+- Ported to GNOME 45 (based on initial port from [enecciara](https://github.com/enecciari))
+- Added Portuguese translation (from [@swyknox](https://github.com/swyknox))
+- Updated Czech translation (from [@Amereyeu](https://github.com/Amereyeu))
+
 ## TopHat 11 - June 10, 2023
 
 - Added option to show disk activity instead of (or in addition to) available storage

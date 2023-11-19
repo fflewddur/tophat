@@ -17,20 +17,17 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-/* exported TopHatProblemReporter */
+import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
+import St from 'gi://St';
 
-const Gio = imports.gi.Gio;
-const GObject = imports.gi.GObject;
-const St = imports.gi.St;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-var TopHatProblemReporter = GObject.registerClass(
+export var TopHatProblemReporter = GObject.registerClass(
     class TopHatProblemReporter extends PanelMenu.Button {
         _init() {
-            super._init(0.0, `${Me.metadata.name} Problem Reporter`, false);
+            super._init(0.0, 'TopHat Problem Reporter', false);
 
             let icon = new St.Icon({
                 gicon: new Gio.ThemedIcon({name: 'dialog-error-symbolic'}),
