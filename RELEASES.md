@@ -3,7 +3,7 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Not yet released
+## TopHat 13 - November 21, 2023
 
 - Ported to GNOME 45 (based on initial port from [enecciara](https://github.com/enecciari))
 - Added Portuguese translation (from [@swyknox](https://github.com/swyknox))

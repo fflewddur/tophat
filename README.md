@@ -22,7 +22,8 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
 
 ### Requirements
 
-- GNOME 45 or newer (older releases of TopHat are available for GNOME 3.32 - 44)
+- GNOME 45 or newer (older releases of TopHat are available for GNOME 3.32 -
+  44 in the legacy branch at https://github.com/fflewddur/tophat/tree/legacy)
 - The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems,
   likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g.,
