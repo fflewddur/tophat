@@ -37,7 +37,7 @@ class NetUse {
     }
 }
 
-export var NetMonitor = GObject.registerClass({
+export const NetMonitor = GObject.registerClass({
     Properties: {
         'network-unit': GObject.ParamSpec.string(
             'network-unit',
@@ -237,7 +237,7 @@ export var NetMonitor = GObject.registerClass({
         let pointSpacing = width / (this.historyLimit - 1);
         let xStart = (this.historyLimit - this.history.length) * pointSpacing;
         let ctx = this.historyChart.get_context();
-        var fgDown, fgUp, bg, gc;
+        let fgDown, fgUp, bg, gc;
         [, fgDown] = Clutter.Color.from_string(this.meter_fg_color);
         [, fgUp] = Clutter.Color.from_string(this.meter_fg_color);
         [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);

@@ -35,7 +35,7 @@ const ANIMATION_DURATION = 500;
 
 // Re-implement GNOME Shell's PanelMenuButton class, with minor changes to
 // support adding it to a container
-export var TopHatMonitor = GObject.registerClass({
+export const TopHatMonitor = GObject.registerClass({
     Properties: {
         'meter-bar-width': GObject.ParamSpec.double(
             'meter-bar-width',
@@ -545,7 +545,7 @@ export var TopHatMonitor = GObject.registerClass({
     }
 });
 
-export var Meter = GObject.registerClass({
+export const Meter = GObject.registerClass({
 }, class TopHatMeter extends St.BoxLayout {
     _init(numBars = 1, width) {
         super._init({style_class: 'tophat-meter', y_align: Clutter.ActorAlign.CENTER, y_expand: true});

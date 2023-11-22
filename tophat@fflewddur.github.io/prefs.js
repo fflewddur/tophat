@@ -29,7 +29,6 @@ import * as Shared from './lib/shared.js';
 
 export default class TopHatPrefs extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        this.initTranslations();
         const configHandler = new Config.ConfigHandler(this.getSettings(), this.metadata);
         let page = new Adw.PreferencesPage({title: 'General', icon_name: 'preferences-system-symbolic'});
         window.add(page);

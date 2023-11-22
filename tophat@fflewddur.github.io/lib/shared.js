@@ -20,15 +20,15 @@
 import Gio from 'gi://Gio';
 import GTop from 'gi://GTop';
 
-export var SECOND_AS_MICROSECONDS = 1000000;
-export var SECOND_AS_MILLISECONDS = 1000;
+export const SECOND_AS_MICROSECONDS = 1000000;
+export const SECOND_AS_MILLISECONDS = 1000;
 
-export var TopProcess = class TopProcess {
+export class TopProcess {
     constructor(cmd, usage) {
         this.cmd = cmd;
         this.usage = usage;
     }
-};
+}
 
 /**
  * Return an array of active processes.
@@ -36,7 +36,7 @@ export var TopProcess = class TopProcess {
 export function getProcessList() {
     let extraInfo = new GTop.glibtop_proclist();
     let exclude = 0;
-    var processes = GTop.glibtop_get_proclist(
+    let processes = GTop.glibtop_get_proclist(
         extraInfo, GTop.GLIBTOP_KERN_PROC_ALL, exclude
     );
     if (extraInfo.number > 0) {
@@ -56,7 +56,7 @@ export function getProcessName(pid) {
     let argSize = new GTop.glibtop_proc_args();
     let args = GTop.glibtop_get_proc_args(argSize, pid, 0);
 
-    var cmd = '';
+    let cmd = '';
     if (args) {
         let lastSeparator = args.lastIndexOf('/');
         cmd = args;

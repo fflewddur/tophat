@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 'use strict';
 
 // Copyright (C) 2020 Todd Kulesza <todd@dropline.net>
@@ -19,20 +18,20 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 // Time between resource updates, in milliseconds
-export var UPDATE_INTERVAL_CPU = 2000;
-export var UPDATE_INTERVAL_MEM = 2000;
-export var UPDATE_INTERVAL_NET = 2000;
-export var UPDATE_INTERVAL_DISK = 5000;
-export var UPDATE_INTERVAL_PROCLIST = 5000;
+export const UPDATE_INTERVAL_CPU = 2000;
+export const UPDATE_INTERVAL_MEM = 2000;
+export const UPDATE_INTERVAL_NET = 2000;
+export const UPDATE_INTERVAL_DISK = 5000;
+export const UPDATE_INTERVAL_PROCLIST = 5000;
 
-export var METER_BG_COLOR = '#00000033';
-export var METER_GRID_COLOR = '#77777766';
+export const METER_BG_COLOR = '#00000033';
+export const METER_GRID_COLOR = '#77777766';
 
-export var HISTORY_MAX_SIZE = 300; // The time-series graphs will show data for this many seconds
+export const HISTORY_MAX_SIZE = 300; // The time-series graphs will show data for this many seconds
 
-export var N_TOP_PROCESSES = 6;
+export const N_TOP_PROCESSES = 6;
 
-export var ConfigHandler = class ConfigHandler {
+export class ConfigHandler {
     constructor(settings, metadata) {
         this.signal_ids = [];
         this._settings = settings;
@@ -178,4 +177,4 @@ export var ConfigHandler = class ConfigHandler {
             this._settings.disconnect(id);
         });
     }
-};
+}

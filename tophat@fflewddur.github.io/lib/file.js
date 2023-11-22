@@ -3,13 +3,6 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
-var Decoder;
-try {
-    Decoder = new TextDecoder('utf-8');
-} catch (error) {
-    console.error(`Could not create TextDecoder: ${error}`);
-}
-
 export class File {
     constructor(path) {
         if (path.indexOf('https://') === -1) {
@@ -38,7 +31,8 @@ export class File {
                         let contents = file.load_contents_finish(res)[1];
 
                         // convert contents to string
-                        contents = Decoder.decode(contents).trim();
+                        const decoder = new TextDecoder('utf-8');
+                        contents = decoder.decode(contents).trim();
 
                         // split contents by delimiter if passed in
                         if (delimiter) {
@@ -66,7 +60,8 @@ export class File {
         let contents = null;
         try {
             contents = this.file.load_contents(null)[1];
-            contents = Decoder.decode(contents).trim();
+            const decoder = new TextDecoder('utf-8');
+            contents = decoder.decode(contents).trim();
         } catch (e) {
             console.error(`[TopHat] Error reading ${this.file.get_path()}: ${e}`);
         }
@@ -110,8 +105,3 @@ export class File {
         });
     }
 }
-
-
-
-
-

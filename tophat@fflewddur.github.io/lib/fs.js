@@ -97,7 +97,7 @@ class FSUsage {
     }
 }
 
-export var FileSystemMonitor = GObject.registerClass({
+export const FileSystemMonitor = GObject.registerClass({
     Properties: {
         'mount': GObject.ParamSpec.string(
             'mount',
@@ -495,7 +495,7 @@ export var FileSystemMonitor = GObject.registerClass({
         let pointSpacing = width / (this.historyLimit - 1);
         let xStart = (this.historyLimit - this.history.length) * pointSpacing;
         let ctx = this.historyChart.get_context();
-        var fg, bg, gc;
+        let fg, bg, gc;
         [, fg] = Clutter.Color.from_string(this.meter_fg_color);
         [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
         [, gc] = Clutter.Color.from_string(Config.METER_GRID_COLOR);

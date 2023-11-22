@@ -122,7 +122,6 @@ export default class TopHatExt extends Extension {
     constructor(metadata) {
         super(metadata);
         this.tophat = null;
-        this.initTranslations();
     }
 
     enable() {

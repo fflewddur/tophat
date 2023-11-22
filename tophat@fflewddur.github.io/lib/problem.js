@@ -24,7 +24,7 @@ import St from 'gi://St';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-export var TopHatProblemReporter = GObject.registerClass(
+export const TopHatProblemReporter = GObject.registerClass(
     class TopHatProblemReporter extends PanelMenu.Button {
         _init() {
             super._init(0.0, 'TopHat Problem Reporter', false);

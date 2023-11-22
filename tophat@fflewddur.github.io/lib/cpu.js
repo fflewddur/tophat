@@ -81,7 +81,7 @@ class ProcessCPUUse {
     }
 }
 
-export var CpuMonitor = GObject.registerClass({
+export const CpuMonitor = GObject.registerClass({
     Properties: {
         'show-cores': GObject.ParamSpec.boolean(
             'show-cores',
@@ -609,7 +609,7 @@ export var CpuMonitor = GObject.registerClass({
         let pointSpacing = width / (this.historyLimit - 1);
         let xStart = (this.historyLimit - this.history.length) * pointSpacing;
         let ctx = this.historyChart.get_context();
-        var fg, bg;
+        let fg, bg;
         [, fg] = Clutter.Color.from_string(this.meter_fg_color);
         [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
 
