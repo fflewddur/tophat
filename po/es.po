@@ -1,0 +1,311 @@
+# Spanish translations for TopHat package.
+# Copyright (C) 2023 Todd Kulesza
+# This file is distributed under the same license as the TopHat package.
+# Jose Luis <joseluis.tirado@gmail.com>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: TopHat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-21 20:54-0800\n"
+"PO-Revision-Date: 2023-12-30 23:11+0100\n"
+"Last-Translator: Jose Luis Tirado <joseluis.tirado@gmail.com>\n"
+"Language-Team: Spanish <es@tp.org.es>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.1\n"
+
+#: tophat@fflewddur.github.io/prefs.js:36
+msgid "General"
+msgstr "General"
+
+#: tophat@fflewddur.github.io/prefs.js:40
+msgid "Left edge"
+msgstr "Borde izquierdo"
+
+#: tophat@fflewddur.github.io/prefs.js:41
+msgid "Left"
+msgstr "Izquierda"
+
+#: tophat@fflewddur.github.io/prefs.js:42
+msgid "Center"
+msgstr "Centro"
+
+#: tophat@fflewddur.github.io/prefs.js:43
+msgid "Right"
+msgstr "Derecha"
+
+#: tophat@fflewddur.github.io/prefs.js:44
+msgid "Right edge"
+msgstr "Borde derecho"
+
+#: tophat@fflewddur.github.io/prefs.js:45
+msgid "Position in panel"
+msgstr "Posición en el panel"
+
+#: tophat@fflewddur.github.io/prefs.js:47
+msgid "Slow"
+msgstr "Lenta"
+
+#: tophat@fflewddur.github.io/prefs.js:48
+msgid "Medium"
+msgstr "Media"
+
+#: tophat@fflewddur.github.io/prefs.js:49
+msgid "Fast"
+msgstr "Rápida"
+
+#: tophat@fflewddur.github.io/prefs.js:50
+msgid "Refresh speed"
+msgstr "Velocidad de refresco"
+
+#: tophat@fflewddur.github.io/prefs.js:51
+msgid "Meter color"
+msgstr "Color de las gráficas"
+
+#: tophat@fflewddur.github.io/prefs.js:52
+msgid "Show icons beside monitors"
+msgstr "Mostrar iconos junto a los monitores"
+
+#: tophat@fflewddur.github.io/prefs.js:53
+msgid "Show animations"
+msgstr "Mostrar animaciones"
+
+#: tophat@fflewddur.github.io/prefs.js:55
+msgid "Processor"
+msgstr "Procesador"
+
+#: tophat@fflewddur.github.io/prefs.js:56
+msgid "Show the CPU monitor"
+msgstr "Mostrar monitor de CPU"
+
+#: tophat@fflewddur.github.io/prefs.js:58
+#: tophat@fflewddur.github.io/prefs.js:68
+#: tophat@fflewddur.github.io/prefs.js:82
+msgid "Usage meter"
+msgstr "Medidor de uso"
+
+#: tophat@fflewddur.github.io/prefs.js:59
+#: tophat@fflewddur.github.io/prefs.js:69
+#: tophat@fflewddur.github.io/prefs.js:83
+msgid "Numeric value"
+msgstr "Valor numérico"
+
+#: tophat@fflewddur.github.io/prefs.js:60
+#: tophat@fflewddur.github.io/prefs.js:70
+#: tophat@fflewddur.github.io/prefs.js:84
+msgid "Both meter and value"
+msgstr "Ambos, medidor y valor"
+
+#: tophat@fflewddur.github.io/prefs.js:61
+#: tophat@fflewddur.github.io/prefs.js:71
+msgid "Show as"
+msgstr "Mostrar como"
+
+#: tophat@fflewddur.github.io/prefs.js:62
+msgid "Show each core"
+msgstr "Mostrar todos los núcleos"
+
+#: tophat@fflewddur.github.io/prefs.js:65
+msgid "Memory"
+msgstr "Memoria"
+
+#: tophat@fflewddur.github.io/prefs.js:66
+msgid "Show the memory monitor"
+msgstr "Mostrar el monitor de memoria"
+
+#: tophat@fflewddur.github.io/prefs.js:74
+msgid "Disk"
+msgstr "Disco"
+
+#: tophat@fflewddur.github.io/prefs.js:75
+msgid "Show the disk monitor"
+msgstr "Mostrar el monitor de disco"
+
+#: tophat@fflewddur.github.io/prefs.js:77
+msgid "Available storage"
+msgstr "Almacenamiento disponible"
+
+#: tophat@fflewddur.github.io/prefs.js:78
+#: tophat@fflewddur.github.io/lib/fs.js:268
+msgid "Disk activity"
+msgstr "Actividad de disco"
+
+#: tophat@fflewddur.github.io/prefs.js:79
+msgid "Storage and activity"
+msgstr "Almacenamiento y actividad"
+
+#: tophat@fflewddur.github.io/prefs.js:80
+msgid "Monitor shows"
+msgstr "El monitor muestra"
+
+#: tophat@fflewddur.github.io/prefs.js:85
+msgid "Show available storage as"
+msgstr "Mostrar almacenamiento disponible como"
+
+#: tophat@fflewddur.github.io/prefs.js:92
+msgid "Filesystem to monitor"
+msgstr "Sistema de archivos a monitorizar"
+
+#: tophat@fflewddur.github.io/prefs.js:95
+msgid "Network"
+msgstr "Red"
+
+#: tophat@fflewddur.github.io/prefs.js:96
+msgid "Show the network monitor"
+msgstr "Mostrar el monitor de red"
+
+#: tophat@fflewddur.github.io/prefs.js:98
+msgid "Bytes"
+msgstr "Bytes"
+
+#: tophat@fflewddur.github.io/prefs.js:99
+msgid "Bits"
+msgstr "Bits"
+
+#: tophat@fflewddur.github.io/prefs.js:100
+msgid "Measurement unit"
+msgstr "Unidad de medida"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:223
+msgid "Processor usage"
+msgstr "Uso del procesador"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:226
+msgid "Processor utilization:"
+msgstr "Uso del procesador:"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:254
+#: tophat@fflewddur.github.io/lib/fs.js:303
+#: tophat@fflewddur.github.io/lib/mem.js:272
+#: tophat@fflewddur.github.io/lib/net.js:180
+#, javascript-format
+msgid "%d min ago"
+msgid_plural "%d mins ago"
+msgstr[0] "hace %d minuto"
+msgstr[1] "hace %d minutos"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:257
+#: tophat@fflewddur.github.io/lib/fs.js:306
+#: tophat@fflewddur.github.io/lib/mem.js:275
+#: tophat@fflewddur.github.io/lib/net.js:183
+msgid "now"
+msgstr "ahora"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:260
+#: tophat@fflewddur.github.io/lib/fs.js:309
+#: tophat@fflewddur.github.io/lib/mem.js:278
+msgid "Top processes"
+msgstr "Procesos principales"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:277
+msgid "System uptime"
+msgstr "Tiempo de funcionamiento del sistema"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:314
+msgid "model n/a"
+msgstr "modelo n/d"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:323
+msgid "Frequency:"
+msgstr "Frecuencia:"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:329
+#: tophat@fflewddur.github.io/lib/cpu.js:343
+#: tophat@fflewddur.github.io/lib/fs.js:273
+#: tophat@fflewddur.github.io/lib/fs.js:279
+msgid "n/a"
+msgstr "n/d"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:337
+msgid "Temperature:"
+msgstr "Temperatura:"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:598
+#, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d día"
+msgstr[1] "%d días"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:601
+#, javascript-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d hora"
+msgstr[1] "%d horas"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:603
+#, javascript-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minuto"
+msgstr[1] "%d minutos"
+
+#: tophat@fflewddur.github.io/lib/fs.js:271
+msgid "Writing:"
+msgstr "Escritura:"
+
+#: tophat@fflewddur.github.io/lib/fs.js:277
+msgid "Reading:"
+msgstr "Lectura:"
+
+#: tophat@fflewddur.github.io/lib/fs.js:294
+msgid "Write"
+msgstr "Escribir"
+
+#: tophat@fflewddur.github.io/lib/fs.js:299
+msgid "Read"
+msgstr "Leer"
+
+#: tophat@fflewddur.github.io/lib/fs.js:315
+msgid "Writing"
+msgstr "Escritura"
+
+#: tophat@fflewddur.github.io/lib/fs.js:317
+msgid "Reading"
+msgstr "Lectura"
+
+#: tophat@fflewddur.github.io/lib/fs.js:333
+msgid "Filesystem usage"
+msgstr "Uso del sistema de archivos"
+
+#: tophat@fflewddur.github.io/lib/mem.js:230
+msgid "Memory usage"
+msgstr "Uso de la memoria"
+
+#: tophat@fflewddur.github.io/lib/mem.js:233
+msgid "RAM used:"
+msgstr "RAM usada:"
+
+#: tophat@fflewddur.github.io/lib/mem.js:238
+#: tophat@fflewddur.github.io/lib/mem.js:248
+msgid "size n/a"
+msgstr "tamaño n/d"
+
+#: tophat@fflewddur.github.io/lib/mem.js:243
+msgid "Swap used:"
+msgstr "Swap usada:"
+
+#: tophat@fflewddur.github.io/lib/net.js:147
+msgid "Network activity"
+msgstr "Actividad de red"
+
+#: tophat@fflewddur.github.io/lib/net.js:150
+msgid "Sending:"
+msgstr "Envío:"
+
+#: tophat@fflewddur.github.io/lib/net.js:155
+msgid "Receiving:"
+msgstr "Recepción:"
+
+#: tophat@fflewddur.github.io/lib/net.js:171
+msgid "Send"
+msgstr "Envío"
+
+#: tophat@fflewddur.github.io/lib/net.js:176
+msgid "Recv"
+msgstr "Recep."
