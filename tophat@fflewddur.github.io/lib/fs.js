@@ -514,15 +514,15 @@ export const FileSystemMonitor = GObject.registerClass({
         this.historyMaxVal.text = `${Shared.bytesToHumanString(max, 'bytes', true)}/s`;
         max *= 2; // leave room for both upload and download speeds on the same chart
 
-        Clutter.cairo_set_source_color(ctx, bg);
+        Shared.setSourceColor(ctx, bg);
         ctx.rectangle(0, 0, width, height);
         ctx.fill();
 
-        Clutter.cairo_set_source_color(ctx, gc);
+        Shared.setSourceColor(ctx, gc);
         ctx.rectangle(0, height / 2, width, 1);
         ctx.fill();
 
-        Clutter.cairo_set_source_color(ctx, fg);
+        Shared.setSourceColor(ctx, fg);
         ctx.moveTo(xStart, height);
         for (let i = 0; i < this.history.length; i++) {
             let pointHeight = Math.ceil(this.history[i].read / max * height);
@@ -534,7 +534,7 @@ export const FileSystemMonitor = GObject.registerClass({
         ctx.closePath();
         ctx.fill();
 
-        Clutter.cairo_set_source_color(ctx, fg);
+        Shared.setSourceColor(ctx, fg);
         ctx.moveTo(xStart, 0);
         for (let i = 0; i < this.history.length; i++) {
             let pointHeight = Math.ceil(this.history[i].write / max * height);

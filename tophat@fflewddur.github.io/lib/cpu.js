@@ -613,11 +613,11 @@ export const CpuMonitor = GObject.registerClass({
         [, fg] = Clutter.Color.from_string(this.meter_fg_color);
         [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
 
-        Clutter.cairo_set_source_color(ctx, bg);
+        Shared.setSourceColor(ctx, bg);
         ctx.rectangle(0, 0, width, height);
         ctx.fill();
 
-        Clutter.cairo_set_source_color(ctx, fg);
+        Shared.setSourceColor(ctx, fg);
         ctx.moveTo(xStart, height);
         for (let i = 0; i < this.history.length; i++) {
             let pointHeight = Math.ceil(this.history[i].total() / 100.0 * height);
