@@ -1,197 +1,312 @@
-# Copyright (C) YEAR Todd Kulesza
+# Copyright (C) 2022-2024 Todd Kulesza
 # This file is distributed under the same license as the TopHat package.
-# nxjoseph <nxjoseph@protonmail.com>, 2022.
 #
+# nxjoseph <nxjoseph@protonmail.com>, 2022.
+# Sabri Ünal <yakushabb@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-19 16:02-0700\n"
-"PO-Revision-Date: 2023-03-24 12:16+0300\n"
-"Last-Translator: nxjoseph <nxjoseph@protonmail.com>\n"
-"Language-Team: Turkish\n"
+"POT-Creation-Date: 2023-11-21 20:54-0800\n"
+"PO-Revision-Date: 2024-03-11 16:32+0300\n"
+"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
+"Language-Team: Turkish <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
 
-#: prefs.js:40 prefs.js:154 prefs.js:293
+#: tophat@fflewddur.github.io/prefs.js:36
 msgid "General"
 msgstr "Genel"
 
-#: prefs.js:44 prefs.js:156 prefs.js:295
+#: tophat@fflewddur.github.io/prefs.js:40
 msgid "Left edge"
 msgstr "Sol kenar"
 
-#: prefs.js:45 prefs.js:157 prefs.js:296
+#: tophat@fflewddur.github.io/prefs.js:41
 msgid "Left"
 msgstr "Sol"
 
-#: prefs.js:46 prefs.js:158 prefs.js:297
+#: tophat@fflewddur.github.io/prefs.js:42
 msgid "Center"
 msgstr "Orta"
 
-#: prefs.js:47 prefs.js:159 prefs.js:298
+#: tophat@fflewddur.github.io/prefs.js:43
 msgid "Right"
 msgstr "Sağ"
 
-#: prefs.js:48 prefs.js:160 prefs.js:299
+#: tophat@fflewddur.github.io/prefs.js:44
 msgid "Right edge"
 msgstr "Sağ kenar"
 
-#: prefs.js:49 prefs.js:161 prefs.js:300
+#: tophat@fflewddur.github.io/prefs.js:45
 msgid "Position in panel"
-msgstr "Paneldeki pozisyon"
+msgstr "Paneldeki konum"
 
-#: prefs.js:50 prefs.js:162 prefs.js:301
+#: tophat@fflewddur.github.io/prefs.js:47
+msgid "Slow"
+msgstr "Yavaş"
+
+#: tophat@fflewddur.github.io/prefs.js:48
+msgid "Medium"
+msgstr "Orta"
+
+#: tophat@fflewddur.github.io/prefs.js:49
+msgid "Fast"
+msgstr "Hızlı"
+
+#: tophat@fflewddur.github.io/prefs.js:50
+msgid "Refresh speed"
+msgstr "Yenileme hızı"
+
+#: tophat@fflewddur.github.io/prefs.js:51
 msgid "Meter color"
 msgstr "Ölçer rengi"
 
-#: prefs.js:51 prefs.js:163 prefs.js:302
+#: tophat@fflewddur.github.io/prefs.js:52
 msgid "Show icons beside monitors"
-msgstr "İkonları monitörlerin yanında göster"
+msgstr "Gözlemcilerin yanında simge göster"
 
-#: prefs.js:52 prefs.js:164 prefs.js:303
+#: tophat@fflewddur.github.io/prefs.js:53
 msgid "Show animations"
-msgstr "Animasyonları göster"
+msgstr "Canlandırmaları göster"
 
-#: prefs.js:54 prefs.js:171 prefs.js:310
+#: tophat@fflewddur.github.io/prefs.js:55
 msgid "Processor"
 msgstr "İşlemci"
 
-#: prefs.js:55 prefs.js:172 prefs.js:311
+#: tophat@fflewddur.github.io/prefs.js:56
 msgid "Show the CPU monitor"
-msgstr "İşlemci monitörünü göster"
+msgstr "İşlemci gözlemcisini göster"
 
-#: prefs.js:56 prefs.js:173 prefs.js:312
+#: tophat@fflewddur.github.io/prefs.js:58
+#: tophat@fflewddur.github.io/prefs.js:68
+#: tophat@fflewddur.github.io/prefs.js:82
+msgid "Usage meter"
+msgstr "Kullanım ölçer"
+
+#: tophat@fflewddur.github.io/prefs.js:59
+#: tophat@fflewddur.github.io/prefs.js:69
+#: tophat@fflewddur.github.io/prefs.js:83
+msgid "Numeric value"
+msgstr "Sayısal değer"
+
+#: tophat@fflewddur.github.io/prefs.js:60
+#: tophat@fflewddur.github.io/prefs.js:70
+#: tophat@fflewddur.github.io/prefs.js:84
+msgid "Both meter and value"
+msgstr "Ölçer ve değer birlikte"
+
+#: tophat@fflewddur.github.io/prefs.js:61
+#: tophat@fflewddur.github.io/prefs.js:71
+msgid "Show as"
+msgstr "Gösterim şekli"
+
+#: tophat@fflewddur.github.io/prefs.js:62
 msgid "Show each core"
 msgstr "Her bir çekirdeği göster"
 
-#: prefs.js:59 prefs.js:180 prefs.js:319
+#: tophat@fflewddur.github.io/prefs.js:65
 msgid "Memory"
 msgstr "Bellek"
 
-#: prefs.js:60 prefs.js:181 prefs.js:320
+#: tophat@fflewddur.github.io/prefs.js:66
 msgid "Show the memory monitor"
-msgstr "Bellek monitörünü göster"
+msgstr "Bellek gözlemcisini göster"
 
-#: prefs.js:63 prefs.js:188 prefs.js:327
+#: tophat@fflewddur.github.io/prefs.js:74
 msgid "Disk"
 msgstr "Disk"
 
-#: prefs.js:64 prefs.js:189 prefs.js:328
+#: tophat@fflewddur.github.io/prefs.js:75
 msgid "Show the disk monitor"
-msgstr "Disk monitörünü göster"
+msgstr "Disk gözlemcisini göster"
 
-#: prefs.js:71 prefs.js:196 prefs.js:335
-msgid "Disk partition to monitor"
-msgstr "Monitörlenecek disk bölümü"
+#: tophat@fflewddur.github.io/prefs.js:77
+msgid "Available storage"
+msgstr "Kullanılabilir depolama alanı"
 
-#: prefs.js:74 prefs.js:203 prefs.js:342
+#: tophat@fflewddur.github.io/prefs.js:78
+#: tophat@fflewddur.github.io/lib/fs.js:268
+msgid "Disk activity"
+msgstr "Disk Etkinliği"
+
+#: tophat@fflewddur.github.io/prefs.js:79
+msgid "Storage and activity"
+msgstr "Depolama ve etkinlik"
+
+#: tophat@fflewddur.github.io/prefs.js:80
+msgid "Monitor shows"
+msgstr "Gözlemciler göstersin"
+
+#: tophat@fflewddur.github.io/prefs.js:85
+msgid "Show available storage as"
+msgstr "Kullanılabilir depolama alanını şu şekilde göster"
+
+#: tophat@fflewddur.github.io/prefs.js:92
+msgid "Filesystem to monitor"
+msgstr "Gözlenecek dosya sistemi"
+
+#: tophat@fflewddur.github.io/prefs.js:95
 msgid "Network"
-msgstr "İnternet"
+msgstr "Ağ"
 
-#: prefs.js:75 prefs.js:204 prefs.js:343
+#: tophat@fflewddur.github.io/prefs.js:96
 msgid "Show the network monitor"
-msgstr "İnternet monitörünü göster"
+msgstr "Ağ gözlemcisini göster"
 
-#: prefs.js:77 prefs.js:206 prefs.js:345
+#: tophat@fflewddur.github.io/prefs.js:98
 msgid "Bytes"
 msgstr "Bayt"
 
-#: prefs.js:78 prefs.js:207 prefs.js:346
+#: tophat@fflewddur.github.io/prefs.js:99
 msgid "Bits"
 msgstr "Bit"
 
-#: prefs.js:79 prefs.js:208 prefs.js:347
+#: tophat@fflewddur.github.io/prefs.js:100
 msgid "Measurement unit"
-msgstr "Ölçü birimi"
+msgstr "Ölçüm birimi"
 
-#: lib/cpu.js:196
+#: tophat@fflewddur.github.io/lib/cpu.js:223
 msgid "Processor usage"
-msgstr "İşlemci kullanımı"
+msgstr "İşlemci Kullanımı"
 
-#: lib/cpu.js:199
+#: tophat@fflewddur.github.io/lib/cpu.js:226
 msgid "Processor utilization:"
-msgstr "İşlemci kullanımı:"
+msgstr "İşlemci Kullanımı:"
 
-#: lib/cpu.js:213 lib/fs.js:204 lib/mem.js:236 lib/net.js:155
-msgid "2 mins ago"
-msgstr "2 dakika önce"
+#: tophat@fflewddur.github.io/lib/cpu.js:254
+#: tophat@fflewddur.github.io/lib/fs.js:303
+#: tophat@fflewddur.github.io/lib/mem.js:272
+#: tophat@fflewddur.github.io/lib/net.js:180
+#, javascript-format
+msgid "%d min ago"
+msgid_plural "%d mins ago"
+msgstr[0] "%d dakika önce"
+msgstr[1] "%d dakika önce"
 
-#: lib/cpu.js:215 lib/fs.js:206 lib/mem.js:238 lib/net.js:157
+#: tophat@fflewddur.github.io/lib/cpu.js:257
+#: tophat@fflewddur.github.io/lib/fs.js:306
+#: tophat@fflewddur.github.io/lib/mem.js:275
+#: tophat@fflewddur.github.io/lib/net.js:183
 msgid "now"
-msgstr "şu an"
+msgstr "şimdi"
 
-#: lib/cpu.js:218 lib/fs.js:209 lib/mem.js:241
+#: tophat@fflewddur.github.io/lib/cpu.js:260
+#: tophat@fflewddur.github.io/lib/fs.js:309
+#: tophat@fflewddur.github.io/lib/mem.js:278
 msgid "Top processes"
-msgstr "İşlemler"
+msgstr "Üst süreçler"
 
-#: lib/cpu.js:263
+#: tophat@fflewddur.github.io/lib/cpu.js:277
+msgid "System uptime"
+msgstr "Sistem çalışma süresi"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:314
 msgid "model n/a"
 msgstr "model bilinmiyor"
 
-#: lib/cpu.js:272
+#: tophat@fflewddur.github.io/lib/cpu.js:323
 msgid "Frequency:"
 msgstr "Frekans:"
 
-#: lib/cpu.js:278 lib/cpu.js:292 lib/fs.js:189 lib/fs.js:195
+#: tophat@fflewddur.github.io/lib/cpu.js:329
+#: tophat@fflewddur.github.io/lib/cpu.js:343
+#: tophat@fflewddur.github.io/lib/fs.js:273
+#: tophat@fflewddur.github.io/lib/fs.js:279
 msgid "n/a"
 msgstr "bilinmiyor"
 
-#: lib/cpu.js:286
+#: tophat@fflewddur.github.io/lib/cpu.js:337
 msgid "Temperature:"
 msgstr "Sıcaklık:"
 
-#: lib/fs.js:184
-msgid "Disk activity"
-msgstr "Disk kullanımı"
+#: tophat@fflewddur.github.io/lib/cpu.js:598
+#, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d gün"
+msgstr[1] "%d gün"
 
-#: lib/fs.js:187
+#: tophat@fflewddur.github.io/lib/cpu.js:601
+#, javascript-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d saat"
+msgstr[1] "%d saat"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:603
+#, javascript-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d dakika"
+msgstr[1] "%d dakika"
+
+#: tophat@fflewddur.github.io/lib/fs.js:271
 msgid "Writing:"
-msgstr "Yazılıyor:"
+msgstr "Yazma:"
 
-#: lib/fs.js:193
+#: tophat@fflewddur.github.io/lib/fs.js:277
 msgid "Reading:"
-msgstr "Okunuyor:"
+msgstr "Okuma:"
 
-#: lib/fs.js:215
+#: tophat@fflewddur.github.io/lib/fs.js:294
+msgid "Write"
+msgstr "Yazma"
+
+#: tophat@fflewddur.github.io/lib/fs.js:299
+msgid "Read"
+msgstr "Okuma"
+
+#: tophat@fflewddur.github.io/lib/fs.js:315
 msgid "Writing"
 msgstr "Yazma"
 
-#: lib/fs.js:217
+#: tophat@fflewddur.github.io/lib/fs.js:317
 msgid "Reading"
 msgstr "Okuma"
 
-#: lib/fs.js:233
+#: tophat@fflewddur.github.io/lib/fs.js:333
 msgid "Filesystem usage"
-msgstr "Dosya sistemi kullanımı"
+msgstr "Dosya Sistemi Kullanımı"
 
-#: lib/mem.js:208
+#: tophat@fflewddur.github.io/lib/mem.js:230
 msgid "Memory usage"
-msgstr "Bellek kullanımı"
+msgstr "Bellek Kullanımı"
 
-#: lib/mem.js:211
+#: tophat@fflewddur.github.io/lib/mem.js:233
 msgid "RAM used:"
 msgstr "Kullanılan bellek:"
 
-#: lib/mem.js:216 lib/mem.js:226
+#: tophat@fflewddur.github.io/lib/mem.js:238
+#: tophat@fflewddur.github.io/lib/mem.js:248
 msgid "size n/a"
 msgstr "boyut bilinmiyor"
 
-#: lib/mem.js:221
+#: tophat@fflewddur.github.io/lib/mem.js:243
 msgid "Swap used:"
 msgstr "Kullanılan takas alanı:"
 
-#: lib/net.js:137
+#: tophat@fflewddur.github.io/lib/net.js:147
 msgid "Network activity"
-msgstr "İnternet kullanımı"
+msgstr "Ağ Etkinliği"
 
-#: lib/net.js:140
+#: tophat@fflewddur.github.io/lib/net.js:150
 msgid "Sending:"
 msgstr "Gönderilen:"
 
-#: lib/net.js:145
+#: tophat@fflewddur.github.io/lib/net.js:155
 msgid "Receiving:"
 msgstr "Alınan:"
+
+#: tophat@fflewddur.github.io/lib/net.js:171
+msgid "Send"
+msgstr "Gönderilen"
+
+#: tophat@fflewddur.github.io/lib/net.js:176
+msgid "Recv"
+msgstr "Alınan"
