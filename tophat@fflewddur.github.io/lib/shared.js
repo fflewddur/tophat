@@ -19,6 +19,7 @@
 
 import Gio from 'gi://Gio';
 import GTop from 'gi://GTop';
+import Clutter from 'gi://Clutter';
 
 export const SECOND_AS_MICROSECONDS = 1000000;
 export const SECOND_AS_MILLISECONDS = 1000;
@@ -181,4 +182,22 @@ export function getPartitions() {
     mounts = Array.from(mountMap.values());
     // console.debug(`[TopHat] mounts = ${mounts}`);
     return mounts;
+}
+
+/**
+ * Sets source color for given context element using:
+ * - setSourceColor for Gnome 46 and later
+ * - cairo_set_source_color for Gnome 45
+ *
+ * @param {cairo.Context} ctx - Context element to set color on
+ * @param {Clutter.Color} color - Color to set
+ */
+export function setSourceColor(ctx, color) {
+    if (ctx.setSourceColor) {
+        // Use new color setting if available
+        ctx.setSourceColor(color);
+    } else {
+        // Fall back to old ways
+        Clutter.cairo_set_source_color(ctx, color);
+    }
 }

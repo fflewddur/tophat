@@ -248,7 +248,7 @@ export const TopHatMonitor = GObject.registerClass({
             this.menu.connect('open-state-changed', this._onOpenStateChanged.bind(this));
             this.menu.actor.connect('key-press-event', this._onMenuKeyPress.bind(this));
 
-            Main.uiGroup.add_actor(this.menu.actor);
+            Main.uiGroup.add_child(this.menu.actor);
             this.menu.actor.hide();
         }
         this.emit('menu-set');
