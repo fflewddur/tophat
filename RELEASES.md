@@ -3,6 +3,12 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## TopHat 14 - March 24, 2024
+
+- Ported to GNOME 46 (thanks to [Wunsz](https://github.com/Wunsz))
+- Added Spanish translation (from [txelu](https://github.com/txelu))
+- Updated Turkish translation (from [yakushabb](https://github.com/yakushabb))
+
 ## TopHat 13 - November 21, 2023
 
 - Ported to GNOME 45 (based on initial port from [enecciara](https://github.com/enecciari))

@@ -52,6 +52,7 @@
         "theizzer",
         "thenounproject",
         "tophat",
+        "txelu",
         "typelib",
         "user",
         "valign",
@@ -62,8 +63,10 @@
         "vnet",
         "wbytes",
         "workarea",
+        "Wunsz",
         "xalign",
-        "xcpu"
+        "xcpu",
+        "yakushabb"
     ],
     "enableFiletypes": [
         "!yaml"
