@@ -1,5 +1,5 @@
 # the packaged extension
-/tophat@fflewddur.github.io.shell-extension.zip
+/tophat@fflewddur.github.io.*.shell-extension.zip
 
 # node stuff
 /node_modules
