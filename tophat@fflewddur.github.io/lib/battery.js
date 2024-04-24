@@ -93,10 +93,9 @@ export const PowerMonitor = GObject.registerClass({
         }
         this.batteryDevice = batteryDevice;
         if (batteryDevice === null) {
-            log('TopHat did not found a rechargeable battery to monitor');
+            console.warn('TopHat did not found a rechargeable battery to monitor');
         } else {
             const path = batteryDevice.native_path;
-            log(`TopHat battery：${path}`);
             this.battery_path = `/sys/class/power_supply/${path}/uevent`;
         }
         this.history = new Array(0);
@@ -190,7 +189,6 @@ export const PowerMonitor = GObject.registerClass({
     }
 
     refresh() {
-        log(`TopHat battery：refresh`);
         this._getPowerValues();
         this._refreshCharts();
     }
@@ -217,7 +215,6 @@ export const PowerMonitor = GObject.registerClass({
 
         this.valuePower.text = `${charging}${power}W`;
         this.menuPower.text = `${charging}${power}W`;
-        log(`TopHat battery：status=${status}，power=${power}`);
 
         this.historyChart.queue_repaint();
         this.cycle_count_n.text = `${this.batteryValues.cycle_count}`
@@ -319,7 +316,6 @@ export const PowerMonitor = GObject.registerClass({
                 } else {
                     timeLeft = (output['ENERGY_NOW'] / output['POWER_NOW']);
                 }
-                log(`TopHat battery：timeLeft=${timeLeft}`);
 
                 // don't process Infinity values
                 if (timeLeft !== Infinity) {
@@ -346,7 +342,6 @@ export const PowerMonitor = GObject.registerClass({
                     timeLeft = parseInt(avg)
                 }
             }
-            log(`TopHat battery：timeLeft2=${timeLeft}`);
 
             this.batteryValues = new PowerUse(
                 output['POWER_NOW'],
@@ -356,7 +351,7 @@ export const PowerMonitor = GObject.registerClass({
                 timeLeft,
             )
         }).catch(err => {
-            log(`TopHat battery：${err}`);
+            console.error(`TopHat battery：${err}`);
         });
 
     }
