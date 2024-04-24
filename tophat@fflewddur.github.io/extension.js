@@ -27,6 +27,7 @@ import * as Cpu from './lib/cpu.js';
 import * as Mem from './lib/mem.js';
 import * as Net from './lib/net.js';
 import * as FS from './lib/fs.js';
+import * as Bat from './lib/battery.js';
 
 // TODO: Update the UI if we have trouble loading GTop + friends
 // console.error(`[${Me.metadata.name}] Error loading dependencies: ${err}`);
@@ -53,10 +54,12 @@ class TopHat {
         this.mem = new Mem.MemMonitor(this.configHandler);
         this.net = new Net.NetMonitor(this.configHandler);
         this.fs = new FS.FileSystemMonitor(this.configHandler);
+        this.bat = new Bat.PowerMonitor(this.configHandler);
         this.container.addMonitor(this.cpu);
         this.container.addMonitor(this.mem);
         this.container.addMonitor(this.fs);
         this.container.addMonitor(this.net);
+        this.container.addMonitor(this.bat);
         this.configHandler.connect_void('position-in-panel', () => {
             this.moveWithinPanel();
         });

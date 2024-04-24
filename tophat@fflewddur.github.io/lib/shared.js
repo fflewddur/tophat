@@ -24,6 +24,24 @@ import Clutter from 'gi://Clutter';
 export const SECOND_AS_MICROSECONDS = 1000000;
 export const SECOND_AS_MILLISECONDS = 1000;
 
+
+export function formatTime(seconds) {
+    if (seconds < 60) {
+        return seconds + "s";
+    } else if (seconds < 3600) {
+        const mins = Math.floor(seconds / 60);
+        const remainingSecs = Math.floor(seconds % 60);
+        return mins + "min " + remainingSecs + "s";
+    } else {
+        const hours = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const remainingSecs = Math.floor(seconds % 60);
+        return hours + "h " + mins + "min " + remainingSecs + "s";
+    }
+}
+
+
+
 export class TopProcess {
     constructor(cmd, usage) {
         this.cmd = cmd;
