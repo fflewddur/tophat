@@ -70,8 +70,8 @@ export const PowerMonitor = GObject.registerClass({
         this.batteryValues = new PowerUse()
 
         let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/bat-icon.svg`);
-        let icon = new St.Icon({ gicon, style_class: 'system-status-icon tophat-panel-icon' });
-        this.add_child(icon);
+        this.icon = new St.Icon({ gicon, style_class: 'system-status-icon tophat-panel-icon' });
+        this.add_child(this.icon);
 
         this.valuePower = new St.Label({
             text: '',
@@ -99,13 +99,13 @@ export const PowerMonitor = GObject.registerClass({
             this.battery_path = `/sys/class/power_supply/${path}/uevent`;
         }
         this.history = new Array(0);
+        this.refreshChartsTimer = 0;
 
-        this.refreshChartsTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, Config.UPDATE_INTERVAL_NET, () => this._refreshCharts());
         configHandler.settings.bind('show-bat', this, 'visible', Gio.SettingsBindFlags.DEFAULT);
-        configHandler.settings.bind('show-icons', icon, 'visible', Gio.SettingsBindFlags.DEFAULT);
+        configHandler.settings.bind('show-icons', this.icon, 'visible', Gio.SettingsBindFlags.DEFAULT);
+        configHandler.settings.bind('refresh-rate', this, 'refresh-rate', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('meter-fg-secondary-color', this, 'charging-color', Gio.SettingsBindFlags.DEFAULT);
         configHandler.settings.bind('meter-fg-color', this, 'discharging-color', Gio.SettingsBindFlags.DEFAULT);
-
 
         let id = this.connect('notify::visible', () => {
             if (this.visible) {
@@ -358,10 +358,12 @@ export const PowerMonitor = GObject.registerClass({
 
 
     destroy() {
-        if (this.refreshChartsTimer !== 0) {
-            GLib.source_remove(this.refreshChartsTimer);
-            this.refreshChartsTimer = 0;
-        }
+        this._stopTimers();
+        Gio.Settings.unbind(this, 'visible');
+        Gio.Settings.unbind(this, 'refresh-rate');
+        Gio.Settings.unbind(this.icon, 'visible');
+        Gio.Settings.unbind(this, 'meter-fg-color');
+        Gio.Settings.unbind(this, 'meter-fg-secondary-color');
         super.destroy();
     }
 });
