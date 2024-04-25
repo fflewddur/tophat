@@ -37,7 +37,7 @@ import * as FileModule from './file.js';
 
 
 class PowerUse {
-    constructor(power = 0, battery = 0, status = 0, cycle_count = 0, time_left=0) {
+    constructor(power = 0, battery = 0, status = 0, cycle_count = 0, time_left = 0) {
         this.power = power;
         this.battery = battery;
         this.status = status;
@@ -218,7 +218,7 @@ export const PowerMonitor = GObject.registerClass({
 
         this.historyChart.queue_repaint();
         this.cycle_count_n.text = `${this.batteryValues.cycle_count}`
-        this.capacity.text = `${this.batteryValues.battery}%`
+        this.capacity.text = `${this.batteryValues.battery.toFixed(1)}%`
         this.time_left.text = `${Shared.formatTime(this.batteryValues.time_left / Shared.SECOND_AS_MICROSECONDS)}`
         return true;
     }
