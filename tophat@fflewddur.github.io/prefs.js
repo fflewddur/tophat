@@ -51,6 +51,7 @@ export default class TopHatPrefs extends ExtensionPreferences {
         this.addColorRow(_('Meter color'), 'meterFGColor', group, configHandler);
         this.addColorRow(_('Meter secondary color'), 'meterFGSecondayColor', group, configHandler);
         this.addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
+        this.addActionRow(_("Use adwaita's built-in icons"), 'use-adwaita-icon', group, configHandler);
         this.addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
         group = new Adw.PreferencesGroup({title: _('Processor')});

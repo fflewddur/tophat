@@ -71,8 +71,9 @@ export const PowerMonitor = GObject.registerClass({
         super._init(`TopHat Power Monitor`);
         this.batteryValues = new PowerUse()
 
-        let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/bat-icon.svg`);
-        this.icon = new St.Icon({ gicon, style_class: 'system-status-icon tophat-panel-icon' });
+        this.gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/bat-icon.svg`);
+        this.gicon_adwaita = new Gio.ThemedIcon({ name: "battery-symbolic" })
+        this.icon = new St.Icon({ gicon: this.gicon, style_class: 'system-status-icon tophat-panel-icon' });
         this.add_child(this.icon);
 
         this.valuePower = new St.Label({
@@ -105,18 +106,25 @@ export const PowerMonitor = GObject.registerClass({
 
         configHandler.settings.bind('show-bat', this, 'visible', Gio.SettingsBindFlags.DEFAULT);
         configHandler.settings.bind('show-icons', this.icon, 'visible', Gio.SettingsBindFlags.DEFAULT);
+        configHandler.settings.bind('use-adwaita-icon', this, 'use-adwaita-icon', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('refresh-rate', this, 'refresh-rate', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('meter-fg-secondary-color', this, 'charging-color', Gio.SettingsBindFlags.DEFAULT);
         configHandler.settings.bind('meter-fg-color', this, 'discharging-color', Gio.SettingsBindFlags.DEFAULT);
 
-        let id = this.connect('notify::visible', () => {
-            if (this.visible) {
-                this._startTimers();
-            } else {
-                this._stopTimers();
-            }
-        });
-        this._signals.push(id);
+        this._set_icon();
+        let id;
+        for (const s of ["use-adwaita-icon", "visible"]) {
+             id = this.connect(`notify::${s}`, () => {
+                if (this.visible) {
+                    this._set_icon();
+                    this._startTimers();
+                } else {
+                    this._stopTimers();
+                }
+            });
+            this._signals.push(id);
+        }
+        
         id = this.connect('notify::refresh-rate', () => {
             this._stopTimers();
             this._startTimers();
@@ -126,6 +134,14 @@ export const PowerMonitor = GObject.registerClass({
         this._buildMenu();
         this._startTimers();
 
+    }
+
+    _set_icon() {
+        if (this.use_adwaita_icon) {
+            this.icon.gicon = this.gicon_adwaita
+        } else {
+            this.icon.gicon = this.gicon
+        }
     }
 
     _startTimers() {

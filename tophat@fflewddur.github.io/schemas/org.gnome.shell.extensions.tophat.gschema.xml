@@ -58,6 +58,11 @@
       <summary>Show icons beside monitors</summary>
       <description>Display icons next to each monitor to help identify them.</description>
     </key>
+    <key name="use-adwaita-icon" type="b">
+      <default>false</default>
+      <summary>Use adwaita's built-in icons</summary>
+      <description>Use adwaita's built-in icons instead of software-customized ones.</description>
+    </key>
     <key name="show-cpu" type="b">
       <default>true</default>
       <summary>Show the CPU monitor</summary>
