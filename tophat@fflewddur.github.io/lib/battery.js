@@ -249,7 +249,7 @@ export const PowerMonitor = GObject.registerClass({
         ctx.moveTo(xStart, height);
         for (let i = 0; i < this.history.length; i++) {
             let pointHeight = Math.ceil(this.history[i].power / maxPower * height);
-            if (this.history[i].status !== "Charging") {
+            if (this.history[i].status === "Charging") {
                 pointHeight = 0;
             }
             let x = xStart + pointSpacing * i;
@@ -264,7 +264,7 @@ export const PowerMonitor = GObject.registerClass({
         ctx.moveTo(xStart, height);
         for (let i = 0; i < this.history.length; i++) {
             let pointHeight = Math.ceil(this.history[i].power / maxPower * height);
-            if (this.history[i].status === "Charging") {
+            if (this.history[i].status !== "Charging") {
                 pointHeight = 0;
             }
             let x = xStart + pointSpacing * i;
