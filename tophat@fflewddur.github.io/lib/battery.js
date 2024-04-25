@@ -37,12 +37,14 @@ import * as FileModule from './file.js';
 
 
 class PowerUse {
-    constructor(power = 0, battery = 0, status = 0, cycle_count = 0, time_left = 0) {
+    constructor(power = 0, battery = 0, status = 0, cycle_count = 0, time_left = 0, energy_full = 0, energy_full_design = 0) {
         this.power = power;
         this.battery = battery;
         this.status = status;
         this.cycle_count = cycle_count;
         this.time_left = time_left;
+        this.energy_full = energy_full;
+        this.energy_full_design = energy_full_design;
 
     }
 }
@@ -150,7 +152,7 @@ export const PowerMonitor = GObject.registerClass({
 
 
     _buildMenu() {
-        let label = new St.Label({ text: _('Power usage'), style_class: 'menu-header' });
+        let label = new St.Label({ text: _('Battery usage'), style_class: 'menu-header' });
         this.addMenuRow(label, 0, 2, 1);
 
         label = new St.Label({ text: _('Power:'), style_class: 'menu-label' });
@@ -171,19 +173,26 @@ export const PowerMonitor = GObject.registerClass({
         label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
         this.addMenuRow(label, 1, 1, 1);
 
+        this.addMenuRow(new St.Label({ text: _('Remaining Time'), style_class: 'menu-cmd-name' }), 0, 1, 1);
+        this.time_left = new St.Label({ text: '', style_class: 'menu-cmd-usage menu-section-end' });
+        this.addMenuRow(this.time_left, 1, 1, 1);
 
         this.addMenuRow(new St.Label({ text: _('Cycle count'), style_class: 'menu-cmd-name' }), 0, 1, 1);
         this.cycle_count_n = new St.Label({ text: '', style_class: 'menu-cmd-usage menu-section-end' });
         this.addMenuRow(this.cycle_count_n, 1, 1, 1);
 
-        this.addMenuRow(new St.Label({ text: _('Capacity'), style_class: 'menu-cmd-name' }), 0, 1, 1);
+        this.addMenuRow(new St.Label({ text: _('Battery Capacity'), style_class: 'menu-cmd-name' }), 0, 1, 1);
         this.capacity = new St.Label({ text: '', style_class: 'menu-cmd-usage menu-section-end' });
         this.addMenuRow(this.capacity, 1, 1, 1);
 
+        this.addMenuRow(new St.Label({ text: _('Energy (full)'), style_class: 'menu-cmd-name' }), 0, 1, 1);
+        this.energy_full = new St.Label({ text: '', style_class: 'menu-cmd-usage menu-section-end' });
+        this.addMenuRow(this.energy_full, 1, 1, 1);
 
-        this.addMenuRow(new St.Label({ text: _('Time Left'), style_class: 'menu-cmd-name' }), 0, 1, 1);
-        this.time_left = new St.Label({ text: '', style_class: 'menu-cmd-usage menu-section-end' });
-        this.addMenuRow(this.time_left, 1, 1, 1);
+        this.addMenuRow(new St.Label({ text: _('Energy (design)'), style_class: 'menu-cmd-name' }), 0, 1, 1);
+        this.energy_full_design = new St.Label({ text: '', style_class: 'menu-cmd-usage menu-section-end' });
+        this.addMenuRow(this.energy_full_design, 1, 1, 1);
+
 
         this.buildMenuButtons();
     }
@@ -220,6 +229,8 @@ export const PowerMonitor = GObject.registerClass({
         this.cycle_count_n.text = `${this.batteryValues.cycle_count}`
         this.capacity.text = `${this.batteryValues.battery.toFixed(1)}%`
         this.time_left.text = `${Shared.formatTime(this.batteryValues.time_left / Shared.SECOND_AS_MICROSECONDS)}`
+        this.energy_full.text = `${(this.batteryValues.energy_full / 1000000).toFixed(1)}Wh`
+        this.energy_full_design.text = `${(this.batteryValues.energy_full_design / 1000000).toFixed(1)}Wh`
         return true;
     }
 
@@ -349,6 +360,8 @@ export const PowerMonitor = GObject.registerClass({
                 output['STATUS'],
                 output['CYCLE_COUNT'],
                 timeLeft,
+                output['ENERGY_FULL'],
+                output['ENERGY_FULL_DESIGN'],
             )
         }).catch(err => {
             console.error(`TopHat battery：${err}`);
