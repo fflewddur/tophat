@@ -175,3 +175,8 @@
     /* color: #777; */
     max-width: 15em;
 }
+.hidden {
+    padding: 0px;
+    margin: 0px;
+    height: 0px;
+}
