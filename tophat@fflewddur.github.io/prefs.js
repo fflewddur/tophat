@@ -69,6 +69,8 @@ export default class TopHatPrefs extends ExtensionPreferences {
         choices.append(_('Numeric value'));
         choices.append(_('Both meter and value'));
         this.addComboRow(_('Show as'), choices, 'memDisplay', group, configHandler);
+        this.addActionRow(_('Show cached'), 'mem-show-cached', group, configHandler);
+        this.addColorRow(_('Cached meter color'), 'cachedMeterFGColor', group, configHandler);
         page.add(group);
 
         group = new Adw.PreferencesGroup({title: _('Disk')});
