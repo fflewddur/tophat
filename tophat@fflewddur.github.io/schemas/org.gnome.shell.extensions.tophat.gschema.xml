@@ -121,11 +121,11 @@
     <key name="mem-show-cached" type="b">
       <default>false</default>
       <summary>Show cached memory in the memory monitor</summary>
-      <description>Show cahced memory in the memory monitor.</description>
+      <description>Show cached memory in the memory monitor.</description>
     </key>
     <key name="cached-meter-fg-color" type="s">
       <default>'#00000033'</default>
-      <summary>Color of thei cached meter chart area</summary>
+      <summary>Color of the cached meter chart area</summary>
       <description>The color of cached meter chart area, in either hex or RGBA format.</description>
     </key>
   </schema>
