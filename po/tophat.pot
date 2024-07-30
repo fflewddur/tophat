@@ -84,19 +84,19 @@ msgstr ""
 
 #: tophat@fflewddur.github.io/prefs.js:58
 #: tophat@fflewddur.github.io/prefs.js:68
-#: tophat@fflewddur.github.io/prefs.js:82
+#: tophat@fflewddur.github.io/prefs.js:84
 msgid "Usage meter"
 msgstr ""
 
 #: tophat@fflewddur.github.io/prefs.js:59
 #: tophat@fflewddur.github.io/prefs.js:69
-#: tophat@fflewddur.github.io/prefs.js:83
+#: tophat@fflewddur.github.io/prefs.js:85
 msgid "Numeric value"
 msgstr ""
 
 #: tophat@fflewddur.github.io/prefs.js:60
 #: tophat@fflewddur.github.io/prefs.js:70
-#: tophat@fflewddur.github.io/prefs.js:84
+#: tophat@fflewddur.github.io/prefs.js:86
 msgid "Both meter and value"
 msgstr ""
 
@@ -117,56 +117,64 @@ msgstr ""
 msgid "Show the memory monitor"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:74
+#: tophat@fflewddur.github.io/prefs.js:72
+msgid "Show cached"
+msgstr ""
+
+#: tophat@fflewddur.github.io/prefs.js:73
+msgid "Cached meter color"
+msgstr ""
+
+#: tophat@fflewddur.github.io/prefs.js:76
 msgid "Disk"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:75
+#: tophat@fflewddur.github.io/prefs.js:77
 msgid "Show the disk monitor"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:77
+#: tophat@fflewddur.github.io/prefs.js:79
 msgid "Available storage"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:78
+#: tophat@fflewddur.github.io/prefs.js:80
 #: tophat@fflewddur.github.io/lib/fs.js:268
 msgid "Disk activity"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:79
+#: tophat@fflewddur.github.io/prefs.js:81
 msgid "Storage and activity"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:80
+#: tophat@fflewddur.github.io/prefs.js:82
 msgid "Monitor shows"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:85
+#: tophat@fflewddur.github.io/prefs.js:87
 msgid "Show available storage as"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:92
+#: tophat@fflewddur.github.io/prefs.js:94
 msgid "Filesystem to monitor"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:95
+#: tophat@fflewddur.github.io/prefs.js:97
 msgid "Network"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:96
+#: tophat@fflewddur.github.io/prefs.js:98
 msgid "Show the network monitor"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:98
+#: tophat@fflewddur.github.io/prefs.js:100
 msgid "Bytes"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:99
+#: tophat@fflewddur.github.io/prefs.js:101
 msgid "Bits"
 msgstr ""
 
-#: tophat@fflewddur.github.io/prefs.js:100
+#: tophat@fflewddur.github.io/prefs.js:102
 msgid "Measurement unit"
 msgstr ""
 
@@ -180,7 +188,7 @@ msgstr ""
 
 #: tophat@fflewddur.github.io/lib/cpu.js:254
 #: tophat@fflewddur.github.io/lib/fs.js:303
-#: tophat@fflewddur.github.io/lib/mem.js:272
+#: tophat@fflewddur.github.io/lib/mem.js:367
 #: tophat@fflewddur.github.io/lib/net.js:180
 #, javascript-format
 msgid "%d min ago"
@@ -190,14 +198,14 @@ msgstr[1] ""
 
 #: tophat@fflewddur.github.io/lib/cpu.js:257
 #: tophat@fflewddur.github.io/lib/fs.js:306
-#: tophat@fflewddur.github.io/lib/mem.js:275
+#: tophat@fflewddur.github.io/lib/mem.js:370
 #: tophat@fflewddur.github.io/lib/net.js:183
 msgid "now"
 msgstr ""
 
 #: tophat@fflewddur.github.io/lib/cpu.js:260
 #: tophat@fflewddur.github.io/lib/fs.js:309
-#: tophat@fflewddur.github.io/lib/mem.js:278
+#: tophat@fflewddur.github.io/lib/mem.js:373
 msgid "Top processes"
 msgstr ""
 
@@ -273,21 +281,26 @@ msgstr ""
 msgid "Filesystem usage"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:230
+#: tophat@fflewddur.github.io/lib/mem.js:315
 msgid "Memory usage"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:233
+#: tophat@fflewddur.github.io/lib/mem.js:318
 msgid "RAM used:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:238
-#: tophat@fflewddur.github.io/lib/mem.js:248
+#: tophat@fflewddur.github.io/lib/mem.js:323
+#: tophat@fflewddur.github.io/lib/mem.js:333
+#: tophat@fflewddur.github.io/lib/mem.js:343
 msgid "size n/a"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:243
+#: tophat@fflewddur.github.io/lib/mem.js:328
 msgid "Swap used:"
+msgstr ""
+
+#: tophat@fflewddur.github.io/lib/mem.js:338
+msgid "Cached:"
 msgstr ""
 
 #: tophat@fflewddur.github.io/lib/net.js:147

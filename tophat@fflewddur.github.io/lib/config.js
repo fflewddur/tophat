@@ -172,6 +172,22 @@ export class ConfigHandler {
         this._settings.set_enum('disk-monitor-mode', value);
     }
 
+    get memShowCached() {
+        return this._settings.get_boolean('mem-show-cached');
+    }
+
+    set memShowCached(value) {
+        this._settings.set_boolean('mem-show-cached', value);
+    }
+
+    get cachedMeterFGColor() {
+        return this._settings.get_string('cached-meter-fg-color');
+    }
+
+    set cachedMeterFGColor(value) {
+        this._settings.set_string('cached-meter-fg-color', value);
+    }
+
     destroy() {
         this.signal_ids.forEach(id => {
             this._settings.disconnect(id);

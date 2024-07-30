@@ -33,7 +33,7 @@
       <summary>Position in the panel</summary>
       <description>Where in the panel the monitors should be positioned.</description>
     </key>
-        <key name="cpu-display" enum="org.gnome.shell.extensions.tophat.visualization">
+    <key name="cpu-display" enum="org.gnome.shell.extensions.tophat.visualization">
       <default>'chart'</default>
       <summary>How to visualize the CPU monitor</summary>
       <description>How to visualize the CPU monitor</description>
@@ -117,6 +117,16 @@
       <default>''</default>
       <summary>The mount to monitor in the top bar</summary>
       <description>The disk usage monitor will show the filesystem usage for this partition in the top bar.</description>
+    </key>
+    <key name="mem-show-cached" type="b">
+      <default>false</default>
+      <summary>Show cached memory in the memory monitor</summary>
+      <description>Show cached memory in the memory monitor.</description>
+    </key>
+    <key name="cached-meter-fg-color" type="s">
+      <default>'#00000033'</default>
+      <summary>Color of the cached meter chart area</summary>
+      <description>The color of cached meter chart area, in either hex or RGBA format.</description>
     </key>
   </schema>
 </schemalist>
