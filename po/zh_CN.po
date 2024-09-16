@@ -56,7 +56,7 @@ msgstr "中等的"
 
 #: tophat@fflewddur.github.io/prefs.js:49
 msgid "Fast"
-msgstr "快速的"
+msgstr "快速"
 
 #: tophat@fflewddur.github.io/prefs.js:50
 msgid "Refresh speed"
