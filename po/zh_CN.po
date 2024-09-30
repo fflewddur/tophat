@@ -52,7 +52,7 @@ msgstr "缓慢"
 
 #: tophat@fflewddur.github.io/prefs.js:48
 msgid "Medium"
-msgstr "中等的"
+msgstr "中等"
 
 #: tophat@fflewddur.github.io/prefs.js:49
 msgid "Fast"
