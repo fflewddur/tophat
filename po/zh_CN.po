@@ -48,7 +48,7 @@ msgstr "面板中的位置"
 
 #: tophat@fflewddur.github.io/prefs.js:47
 msgid "Slow"
-msgstr "缓慢的"
+msgstr "缓慢"
 
 #: tophat@fflewddur.github.io/prefs.js:48
 msgid "Medium"
