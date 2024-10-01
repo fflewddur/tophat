@@ -17,6 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Cogl from 'gi://Cogl';
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
@@ -24,7 +25,7 @@ import GObject from 'gi://GObject';
 import GTop from 'gi://GTop';
 import St from 'gi://St';
 
-import {gettext as _, ngettext} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { gettext as _, ngettext } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Config from './config.js';
 import * as Shared from './shared.js';
@@ -152,7 +153,7 @@ export const MemMonitor = GObject.registerClass(
             this.refreshProcessesTimer = 0;
 
             let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/mem-icon-symbolic.svg`);
-            this.icon = new St.Icon({gicon, style_class: 'system-status-icon tophat-panel-icon'});
+            this.icon = new St.Icon({ gicon, style_class: 'system-status-icon tophat-panel-icon' });
             this.add_child(this.icon);
 
             this.usage = new St.Label({
@@ -227,12 +228,12 @@ export const MemMonitor = GObject.registerClass(
         }
 
         _buildMenu() {
-            let label = new St.Label({text: _('Memory usage'), style_class: 'menu-header'});
+            let label = new St.Label({ text: _('Memory usage'), style_class: 'menu-header' });
             this.addMenuRow(label, 0, 2, 1);
 
-            label = new St.Label({text: _('RAM used:'), style_class: 'menu-label'});
+            label = new St.Label({ text: _('RAM used:'), style_class: 'menu-label' });
             this.addMenuRow(label, 0, 1, 1);
-            this.menuMemUsage = new St.Label({text: '0%', style_class: 'menu-value'});
+            this.menuMemUsage = new St.Label({ text: '0%', style_class: 'menu-value' });
             this.addMenuRow(this.menuMemUsage, 1, 1, 1);
             this.menuMemSize = new St.Label({
                 text: _('size n/a'),
@@ -240,9 +241,9 @@ export const MemMonitor = GObject.registerClass(
             });
             this.addMenuRow(this.menuMemSize, 0, 2, 1);
 
-            label = new St.Label({text: _('Swap used:'), style_class: 'menu-label'});
+            label = new St.Label({ text: _('Swap used:'), style_class: 'menu-label' });
             this.addMenuRow(label, 0, 1, 1);
-            this.menuSwapUsage = new St.Label({text: '0%', style_class: 'menu-value'});
+            this.menuSwapUsage = new St.Label({ text: '0%', style_class: 'menu-value' });
             this.addMenuRow(this.menuSwapUsage, 1, 1, 1);
             this.menuSwapSize = new St.Label({
                 text: _('size n/a'),
@@ -252,37 +253,37 @@ export const MemMonitor = GObject.registerClass(
 
             // Create a grid layout for the history chart
             let grid = new St.Widget({
-                layout_manager: new Clutter.GridLayout({orientation: Clutter.Orientation.VERTICAL}),
+                layout_manager: new Clutter.GridLayout({ orientation: Clutter.Orientation.VERTICAL }),
             });
             this.historyGrid = grid.layout_manager;
             this.addMenuRow(grid, 0, 2, 1);
 
-            this.historyChart = new St.DrawingArea({style_class: 'chart', x_expand: true});
+            this.historyChart = new St.DrawingArea({ style_class: 'chart', x_expand: true });
             this.historyChart.connect('repaint', () => this._repaintHistory());
             this.historyGrid.attach(this.historyChart, 0, 0, 2, 3);
 
-            label = new St.Label({text: '100%', y_align: Clutter.ActorAlign.START, style_class: 'chart-label'});
+            label = new St.Label({ text: '100%', y_align: Clutter.ActorAlign.START, style_class: 'chart-label' });
             this.historyGrid.attach(label, 2, 0, 1, 1);
-            label = new St.Label({text: '50%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label'});
+            label = new St.Label({ text: '50%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label' });
             this.historyGrid.attach(label, 2, 1, 1, 1);
-            label = new St.Label({text: '0', y_align: Clutter.ActorAlign.END, style_class: 'chart-label'});
+            label = new St.Label({ text: '0', y_align: Clutter.ActorAlign.END, style_class: 'chart-label' });
             this.historyGrid.attach(label, 2, 2, 1, 1);
 
             let limitInMins = Config.HISTORY_MAX_SIZE / 60;
             let startLabel = ngettext('%d min ago', '%d mins ago', limitInMins).format(limitInMins);
-            label = new St.Label({text: startLabel, style_class: 'chart-label-then'});
+            label = new St.Label({ text: startLabel, style_class: 'chart-label-then' });
             this.historyGrid.attach(label, 0, 3, 1, 1);
-            label = new St.Label({text: _('now'), style_class: 'chart-label-now'});
+            label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
             this.historyGrid.attach(label, 1, 3, 1, 1);
 
-            label = new St.Label({text: _('Top processes'), style_class: 'menu-header'});
+            label = new St.Label({ text: _('Top processes'), style_class: 'menu-header' });
             this.addMenuRow(label, 0, 2, 1);
 
             this.topProcesses = [];
             for (let i = 0; i < Config.N_TOP_PROCESSES; i++) {
-                let cmd = new St.Label({text: '', style_class: 'menu-cmd-name'});
+                let cmd = new St.Label({ text: '', style_class: 'menu-cmd-name' });
                 this.addMenuRow(cmd, 0, 1, 1);
-                let usage = new St.Label({text: '', style_class: 'menu-mem-usage'});
+                let usage = new St.Label({ text: '', style_class: 'menu-mem-usage' });
                 this.addMenuRow(usage, 1, 1, 1);
                 let p = new Shared.TopProcess(cmd, usage);
                 this.topProcesses.push(p);
@@ -417,8 +418,13 @@ export const MemMonitor = GObject.registerClass(
             let xStart = (this.historyLimit - this.history.length) * pointSpacing;
             let ctx = this.historyChart.get_context();
             let fg, bg;
-            [, fg] = Clutter.Color.from_string(this.meter_fg_color);
-            [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
+            if (typeof Cogl.Color.from_string === 'function') {
+                [, fg] = Cogl.Color.from_string(this.meter_fg_color);
+                [, bg] = Cogl.Color.from_string(Config.METER_BG_COLOR);
+            } else {
+                [, fg] = Clutter.Color.from_string(this.meter_fg_color);
+                [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
+            }
 
             Shared.setSourceColor(ctx, bg);
             ctx.rectangle(0, 0, width, height);

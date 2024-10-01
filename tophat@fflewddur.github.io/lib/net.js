@@ -17,6 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Cogl from 'gi://Cogl';
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
@@ -24,7 +25,7 @@ import GObject from 'gi://GObject';
 import GTop from 'gi://GTop';
 import St from 'gi://St';
 
-import {gettext as _, ngettext} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { gettext as _, ngettext } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Config from './config.js';
 import * as Shared from './shared.js';
@@ -52,24 +53,24 @@ export const NetMonitor = GObject.registerClass({
         super._init('TopHat Network Monitor');
 
         let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/net-icon-symbolic.svg`);
-        this.icon = new St.Icon({gicon, style_class: 'system-status-icon tophat-panel-icon tophat-panel-icon-net'});
+        this.icon = new St.Icon({ gicon, style_class: 'system-status-icon tophat-panel-icon tophat-panel-icon-net' });
         this.add_child(this.icon);
 
-        let vbox = new St.BoxLayout({vertical: true});
+        let vbox = new St.BoxLayout({ vertical: true });
         vbox.connect('notify::vertical', obj => {
             obj.vertical = true;
         });
         this.add_child(vbox);
 
-        let padding = new St.Widget({y_expand: true});
+        let padding = new St.Widget({ y_expand: true });
         vbox.add_child(padding);
-        let valueNetUp = new St.Label({text: '0', style_class: 'tophat-meter-value-net'});
+        let valueNetUp = new St.Label({ text: '0', style_class: 'tophat-meter-value-net' });
         vbox.add_child(valueNetUp);
         this.valueNetUp = valueNetUp;
-        let valueNetDown = new St.Label({text: '0', style_class: 'tophat-meter-value-net'});
+        let valueNetDown = new St.Label({ text: '0', style_class: 'tophat-meter-value-net' });
         vbox.add_child(valueNetDown);
         this.valueNetDown = valueNetDown;
-        padding = new St.Widget({y_expand: true});
+        padding = new St.Widget({ y_expand: true });
         vbox.add_child(padding);
 
         // Initialize libgtop values
@@ -144,43 +145,43 @@ export const NetMonitor = GObject.registerClass({
     }
 
     _buildMenu() {
-        let label = new St.Label({text: _('Network activity'), style_class: 'menu-header'});
+        let label = new St.Label({ text: _('Network activity'), style_class: 'menu-header' });
         this.addMenuRow(label, 0, 2, 1);
 
-        label = new St.Label({text: _('Sending:'), style_class: 'menu-label'});
+        label = new St.Label({ text: _('Sending:'), style_class: 'menu-label' });
         this.addMenuRow(label, 0, 1, 1);
-        this.menuNetUp = new St.Label({text: '', style_class: 'menu-value'});
+        this.menuNetUp = new St.Label({ text: '', style_class: 'menu-value' });
         this.addMenuRow(this.menuNetUp, 1, 1, 1);
 
-        label = new St.Label({text: _('Receiving:'), style_class: 'menu-label'});
+        label = new St.Label({ text: _('Receiving:'), style_class: 'menu-label' });
         this.addMenuRow(label, 0, 1, 1);
-        this.menuNetDown = new St.Label({text: '', style_class: 'menu-value menu-section-end'});
+        this.menuNetDown = new St.Label({ text: '', style_class: 'menu-value menu-section-end' });
         this.addMenuRow(this.menuNetDown, 1, 1, 1);
 
         // Create a grid layout for the history chart
         let grid = new St.Widget({
-            layout_manager: new Clutter.GridLayout({orientation: Clutter.Orientation.VERTICAL}),
+            layout_manager: new Clutter.GridLayout({ orientation: Clutter.Orientation.VERTICAL }),
         });
         this.historyGrid = grid.layout_manager;
         this.addMenuRow(grid, 0, 3, 1);
 
-        this.historyChart = new St.DrawingArea({style_class: 'chart', x_expand: true});
+        this.historyChart = new St.DrawingArea({ style_class: 'chart', x_expand: true });
         this.historyChart.connect('repaint', () => this._repaintHistory());
         this.historyGrid.attach(this.historyChart, 0, 0, 2, 3);
 
-        label = new St.Label({text: _('Send'), y_align: Clutter.ActorAlign.START, style_class: 'chart-label'});
+        label = new St.Label({ text: _('Send'), y_align: Clutter.ActorAlign.START, style_class: 'chart-label' });
         this.historyGrid.attach(label, 2, 0, 1, 1);
-        label = new St.Label({text: '100%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label'});
+        label = new St.Label({ text: '100%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label' });
         this.historyGrid.attach(label, 2, 1, 1, 1);
         this.historyMaxVal = label;
-        label = new St.Label({text: _('Recv'), y_align: Clutter.ActorAlign.END, style_class: 'chart-label'});
+        label = new St.Label({ text: _('Recv'), y_align: Clutter.ActorAlign.END, style_class: 'chart-label' });
         this.historyGrid.attach(label, 2, 2, 1, 1);
 
         let limitInMins = Config.HISTORY_MAX_SIZE / 60;
         let startLabel = ngettext('%d min ago', '%d mins ago', limitInMins).format(limitInMins);
-        label = new St.Label({text: startLabel, style_class: 'chart-label-then'});
+        label = new St.Label({ text: startLabel, style_class: 'chart-label-then' });
         this.historyGrid.attach(label, 0, 3, 1, 1);
-        label = new St.Label({text: _('now'), style_class: 'chart-label-now'});
+        label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
         this.historyGrid.attach(label, 1, 3, 1, 1);
 
         this.buildMenuButtons();
@@ -238,10 +239,17 @@ export const NetMonitor = GObject.registerClass({
         let xStart = (this.historyLimit - this.history.length) * pointSpacing;
         let ctx = this.historyChart.get_context();
         let fgDown, fgUp, bg, gc;
-        [, fgDown] = Clutter.Color.from_string(this.meter_fg_color);
-        [, fgUp] = Clutter.Color.from_string(this.meter_fg_color);
-        [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
-        [, gc] = Clutter.Color.from_string(Config.METER_GRID_COLOR);
+        if (typeof Cogl.Color.from_string === 'function') {
+            [, fgDown] = Cogl.Color.from_string(this.meter_fg_color);
+            [, fgUp] = Cogl.Color.from_string(this.meter_fg_color);
+            [, bg] = Cogl.Color.from_string(Config.METER_BG_COLOR);
+            [, gc] = Cogl.Color.from_string(Config.METER_GRID_COLOR);
+        } else {
+            [, fgDown] = Clutter.Color.from_string(this.meter_fg_color);
+            [, fgUp] = Clutter.Color.from_string(this.meter_fg_color);
+            [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
+            [, gc] = Clutter.Color.from_string(Config.METER_GRID_COLOR);
+        }
 
         // Use a small value to avoid max == 0
         let max = 0.001;

@@ -17,6 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Cogl from 'gi://Cogl';
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
@@ -610,8 +611,13 @@ export const CpuMonitor = GObject.registerClass({
         let xStart = (this.historyLimit - this.history.length) * pointSpacing;
         let ctx = this.historyChart.get_context();
         let fg, bg;
-        [, fg] = Clutter.Color.from_string(this.meter_fg_color);
-        [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
+        if (typeof Cogl.Color.from_string === 'function') {
+            [, fg] = Cogl.Color.from_string(this.meter_fg_color);
+            [, bg] = Cogl.Color.from_string(Config.METER_BG_COLOR);
+        } else {
+            [, fg] = Clutter.Color.from_string(this.meter_fg_color);
+            [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
+        }
 
         Shared.setSourceColor(ctx, bg);
         ctx.rectangle(0, 0, width, height);

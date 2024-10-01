@@ -17,6 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Cogl from 'gi://Cogl';
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
@@ -28,7 +29,7 @@ import * as Config from './config.js';
 import * as Shared from './shared.js';
 import * as Monitor from './monitor.js';
 
-import {gettext as _, ngettext} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { gettext as _, ngettext } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 class DiskActivity {
     constructor(read = 0, write = 0) {
@@ -59,7 +60,7 @@ class ProcDiskActivity {
 
     hasRecentActivity() {
         return this.timePrev > 0 &&
-               ((this.write - this.writePrev) > 0 || (this.read - this.readPrev) > 0);
+            ((this.write - this.writePrev) > 0 || (this.read - this.readPrev) > 0);
     }
 
     recentActivity() {
@@ -119,7 +120,7 @@ export const FileSystemMonitor = GObject.registerClass({
         super._init('TopHat FS Monitor');
 
         let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/disk-icon-symbolic.svg`);
-        this.icon = new St.Icon({gicon, style_class: 'system-status-icon tophat-panel-icon'});
+        this.icon = new St.Icon({ gicon, style_class: 'system-status-icon tophat-panel-icon' });
         this.add_child(this.icon);
 
         this.usage = new St.Label({
@@ -129,17 +130,17 @@ export const FileSystemMonitor = GObject.registerClass({
         });
         this.add_child(this.usage);
 
-        let vbox = new St.BoxLayout({vertical: true});
+        let vbox = new St.BoxLayout({ vertical: true });
         vbox.connect('notify::vertical', obj => {
             obj.vertical = true;
         });
         this.add_child(vbox);
         this.activityBox = vbox;
 
-        let valueRead = new St.Label({text: '0', style_class: 'tophat-meter-value-net', y_expand: true, y_align: Clutter.ActorAlign.END});
+        let valueRead = new St.Label({ text: '0', style_class: 'tophat-meter-value-net', y_expand: true, y_align: Clutter.ActorAlign.END });
         vbox.add_child(valueRead);
         this.valueRead = valueRead;
-        let valueWrite = new St.Label({text: '0', style_class: 'tophat-meter-value-net', y_expand: true, y_align: Clutter.ActorAlign.START});
+        let valueWrite = new St.Label({ text: '0', style_class: 'tophat-meter-value-net', y_expand: true, y_align: Clutter.ActorAlign.START });
         vbox.add_child(valueWrite);
         this.valueWrite = valueWrite;
 
@@ -211,17 +212,17 @@ export const FileSystemMonitor = GObject.registerClass({
         super.updateVisualization();
 
         switch (this.monitor_mode) {
-        case 'storage':
-            this.activityBox.visible = false;
-            break;
-        case 'activity':
-            this.activityBox.visible = true;
-            this.usage.visible = false;
-            this.meter.visible = false;
-            break;
-        case 'both':
-            this.activityBox.visible = true;
-            break;
+            case 'storage':
+                this.activityBox.visible = false;
+                break;
+            case 'activity':
+                this.activityBox.visible = true;
+                this.usage.visible = false;
+                this.meter.visible = false;
+                break;
+            case 'both':
+                this.activityBox.visible = true;
+                break;
         }
     }
 
@@ -265,76 +266,76 @@ export const FileSystemMonitor = GObject.registerClass({
     _buildMenu() {
         this.numMenuCols = 3;
 
-        let label = new St.Label({text: _('Disk activity'), style_class: 'menu-header'});
+        let label = new St.Label({ text: _('Disk activity'), style_class: 'menu-header' });
         this.addMenuRow(label, 0, 3, 1);
 
-        label = new St.Label({text: _('Writing:'), style_class: 'menu-label'});
+        label = new St.Label({ text: _('Writing:'), style_class: 'menu-label' });
         this.addMenuRow(label, 0, 2, 1);
-        label = new St.Label({text: _('n/a'), style_class: 'menu-value'});
+        label = new St.Label({ text: _('n/a'), style_class: 'menu-value' });
         this.addMenuRow(label, 2, 1, 1);
         this.menuDiskWrites = label;
 
-        label = new St.Label({text: _('Reading:'), style_class: 'menu-label'});
+        label = new St.Label({ text: _('Reading:'), style_class: 'menu-label' });
         this.addMenuRow(label, 0, 2, 1);
-        label = new St.Label({text: _('n/a'), style_class: 'menu-value menu-section-end'});
+        label = new St.Label({ text: _('n/a'), style_class: 'menu-value menu-section-end' });
         this.addMenuRow(label, 2, 1, 1);
         this.menuDiskReads = label;
 
         // Create a grid layout for the history chart
         let grid = new St.Widget({
-            layout_manager: new Clutter.GridLayout({orientation: Clutter.Orientation.VERTICAL}),
+            layout_manager: new Clutter.GridLayout({ orientation: Clutter.Orientation.VERTICAL }),
         });
         this.historyGrid = grid.layout_manager;
         this.addMenuRow(grid, 0, 3, 1);
 
-        this.historyChart = new St.DrawingArea({style_class: 'chart', x_expand: true});
+        this.historyChart = new St.DrawingArea({ style_class: 'chart', x_expand: true });
         this.historyChart.connect('repaint', () => this._repaintHistory());
         this.historyGrid.attach(this.historyChart, 0, 0, 2, 3);
 
-        label = new St.Label({text: _('Write'), y_align: Clutter.ActorAlign.START, style_class: 'chart-label'});
+        label = new St.Label({ text: _('Write'), y_align: Clutter.ActorAlign.START, style_class: 'chart-label' });
         this.historyGrid.attach(label, 2, 0, 1, 1);
-        label = new St.Label({text: '100%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label'});
+        label = new St.Label({ text: '100%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label' });
         this.historyGrid.attach(label, 2, 1, 1, 1);
         this.historyMaxVal = label;
-        label = new St.Label({text: _('Read'), y_align: Clutter.ActorAlign.END, style_class: 'chart-label'});
+        label = new St.Label({ text: _('Read'), y_align: Clutter.ActorAlign.END, style_class: 'chart-label' });
         this.historyGrid.attach(label, 2, 2, 1, 1);
 
         let limitInMins = Config.HISTORY_MAX_SIZE / 60;
         let startLabel = ngettext('%d min ago', '%d mins ago', limitInMins).format(limitInMins);
-        label = new St.Label({text: startLabel, style_class: 'chart-label-then'});
+        label = new St.Label({ text: startLabel, style_class: 'chart-label-then' });
         this.historyGrid.attach(label, 0, 3, 1, 1);
-        label = new St.Label({text: _('now'), style_class: 'chart-label-now'});
+        label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
         this.historyGrid.attach(label, 1, 3, 1, 1);
 
-        label = new St.Label({text: _('Top processes'), style_class: 'menu-header'});
+        label = new St.Label({ text: _('Top processes'), style_class: 'menu-header' });
         this.addMenuRow(label, 0, 3, 1);
 
-        label = new St.Label({text: ''});
+        label = new St.Label({ text: '' });
         this.addMenuRow(label, 0, 1, 1);
 
-        label = new St.Label({text: _('Writing'), style_class: 'menu-subheader'});
+        label = new St.Label({ text: _('Writing'), style_class: 'menu-subheader' });
         this.addMenuRow(label, 1, 1, 1);
-        label = new St.Label({text: _('Reading'), style_class: 'menu-subheader'});
+        label = new St.Label({ text: _('Reading'), style_class: 'menu-subheader' });
         this.addMenuRow(label, 2, 1, 1);
 
         this.topProcesses = [];
         for (let i = 0; i < Config.N_TOP_PROCESSES; i++) {
-            let cmd = new St.Label({text: '', style_class: 'menu-cmd-name'});
+            let cmd = new St.Label({ text: '', style_class: 'menu-cmd-name' });
             this.addMenuRow(cmd, 0, 1, 1);
             let usage = [];
-            usage.push(new St.Label({text: '', style_class: 'menu-disk-activity'}));
-            usage.push(new St.Label({text: '', style_class: 'menu-disk-activity'}));
+            usage.push(new St.Label({ text: '', style_class: 'menu-disk-activity' }));
+            usage.push(new St.Label({ text: '', style_class: 'menu-disk-activity' }));
             this.addMenuRow(usage[0], 1, 1, 1);
             this.addMenuRow(usage[1], 2, 1, 1);
             let p = new Shared.TopProcess(cmd, usage);
             this.topProcesses.push(p);
         }
 
-        label = new St.Label({text: _('Filesystem usage'), style_class: 'menu-header'});
+        label = new St.Label({ text: _('Filesystem usage'), style_class: 'menu-header' });
         this.addMenuRow(label, 0, 3, 1);
 
         grid = new St.Widget({
-            layout_manager: new Clutter.GridLayout({orientation: Clutter.Orientation.VERTICAL}),
+            layout_manager: new Clutter.GridLayout({ orientation: Clutter.Orientation.VERTICAL }),
         });
         this.menuFSDetails = grid.layout_manager;
         this.addMenuRow(grid, 0, 3, 1);
@@ -371,7 +372,7 @@ export const FileSystemMonitor = GObject.registerClass({
             }
 
             // Create a row for each mount point with it's % usage
-            label = new St.Label({text: mountPath, style_class: 'menu-label'});
+            label = new St.Label({ text: mountPath, style_class: 'menu-label' });
             this.menuFSDetails.attach(label, 0, row, 1, 1);
             label = new St.Label({
                 text: `${fs.usage().toFixed(0)}%`,
@@ -382,7 +383,7 @@ export const FileSystemMonitor = GObject.registerClass({
             row++;
 
             // Create a row showing free space and total disk size in absolute units
-            label = new St.Label({text: `${Shared.bytesToHumanString(fs.free)} available of ${Shared.bytesToHumanString(fs.size)}`, style_class: 'menu-value menu-details menu-section-end'});
+            label = new St.Label({ text: `${Shared.bytesToHumanString(fs.free)} available of ${Shared.bytesToHumanString(fs.size)}`, style_class: 'menu-value menu-details menu-section-end' });
             this.menuFSDetails.attach(label, 0, row, 2, 1);
             row++;
 
@@ -496,9 +497,15 @@ export const FileSystemMonitor = GObject.registerClass({
         let xStart = (this.historyLimit - this.history.length) * pointSpacing;
         let ctx = this.historyChart.get_context();
         let fg, bg, gc;
-        [, fg] = Clutter.Color.from_string(this.meter_fg_color);
-        [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
-        [, gc] = Clutter.Color.from_string(Config.METER_GRID_COLOR);
+        if (typeof Cogl.Color.from_string === 'function') {
+            [, fg] = Cogl.Color.from_string(this.meter_fg_color);
+            [, bg] = Cogl.Color.from_string(Config.METER_BG_COLOR);
+            [, gc] = Cogl.Color.from_string(Config.METER_GRID_COLOR);
+        } else {
+            [, fg] = Clutter.Color.from_string(this.meter_fg_color);
+            [, bg] = Clutter.Color.from_string(Config.METER_BG_COLOR);
+            [, gc] = Clutter.Color.from_string(Config.METER_GRID_COLOR);
+        }
 
         // Use a small value to avoid max == 0
         let max = 0.001;

@@ -17,8 +17,9 @@ Install TopHat from the [GNOME Shell extensions
 page](https://extensions.gnome.org/extension/5219/tophat/).
 
 Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
-'gir1.2-gtop-2.0' to be installed. Usually this means running the command
-`sudo apt install gir1.2-gtop-2.0` followed by a system restart.
+'gir1.2-gtop-2.0' and 'gir1.2-gtkclutter-1.0' to be installed. Usually this
+means running the command `sudo apt install gir1.2-gtop-2.0
+gir1.2-gtkclutter-1.0` followed by a system restart.
 
 ### Requirements
 
@@ -28,14 +29,19 @@ Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
   likely already installed as part of GNOME)
 - GIRepository (gir) bindings for the gtop system monitoring library (e.g.,
   'gir1.2-gtop-2.0' on Debian-based systems)
+- GIRepository (gir) bindings for Clutter (e.g., 'gir1.2-gtkclutter-1.0' on
+  Debian-based systems)
 
 ### Compatibility
 
 The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
-- Fedora 39
-- Ubuntu 23.10 (first install gir1.2-gtop-2.0 package)
+- Fedora 40 (first install clutter package)
+- Ubuntu 24.04 (first install gir1.2-gtop-2.0 and gir1.2-gtkclutter-1.0
+  packages)
+- Ubuntu 24.10 (first install gir1.2-gtop-2.0 and gir1.2-gtkclutter-1.0
+  packages)
 
 Even if your system is not in this list, as long as it meets the
 requirements mentioned above, you should be able to run TopHat. If not, please
