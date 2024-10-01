@@ -102,6 +102,14 @@ export class ConfigHandler {
         this._settings.set_string('meter-fg-color', value);
     }
 
+    get meterFGSecondayColor() {
+        return this._settings.get_string('meter-fg-secondary-color');
+    }
+
+    set meterFGSecondayColor(value) {
+        this._settings.set_string('meter-fg-secondary-color', value);
+    }
+
     get meterBarWidth() {
         return this._settings.get_int('meter-bar-width');
     }

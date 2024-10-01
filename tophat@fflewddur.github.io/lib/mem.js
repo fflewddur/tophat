@@ -25,7 +25,7 @@ import GObject from 'gi://GObject';
 import GTop from 'gi://GTop';
 import St from 'gi://St';
 
-import {gettext as _, ngettext} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { gettext as _, ngettext } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Config from './config.js';
 import * as Shared from './shared.js';
@@ -152,8 +152,9 @@ export const MemMonitor = GObject.registerClass(
             this.refreshChartsTimer = 0;
             this.refreshProcessesTimer = 0;
 
-            let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/mem-icon-symbolic.svg`);
-            this.icon = new St.Icon({gicon, style_class: 'system-status-icon tophat-panel-icon'});
+            this.gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/mem-icon-symbolic.svg`);
+            this.gicon_adwaita = new Gio.ThemedIcon({ name: "drive-harddisk-solidstate-symbolic" })
+            this.icon = new St.Icon({ gicon: this.gicon, style_class: 'system-status-icon tophat-panel-icon' });
             this.add_child(this.icon);
 
             this.usage = new St.Label({
@@ -166,19 +167,25 @@ export const MemMonitor = GObject.registerClass(
             configHandler.settings.bind('show-mem', this, 'visible', Gio.SettingsBindFlags.GET);
             configHandler.settings.bind('refresh-rate', this, 'refresh-rate', Gio.SettingsBindFlags.GET);
             configHandler.settings.bind('show-icons', this.icon, 'visible', Gio.SettingsBindFlags.GET);
+            configHandler.settings.bind('use-adwaita-icon', this, 'use-adwaita-icon', Gio.SettingsBindFlags.GET);
             configHandler.settings.bind('meter-fg-color', this, 'meter-fg-color', Gio.SettingsBindFlags.GET);
             configHandler.settings.bind('meter-bar-width', this, 'meter-bar-width', Gio.SettingsBindFlags.GET);
             configHandler.settings.bind('show-animations', this, 'show-animation', Gio.SettingsBindFlags.GET);
             configHandler.settings.bind('mem-display', this, 'visualization', Gio.SettingsBindFlags.GET);
 
-            let id = this.connect('notify::visible', () => {
-                if (this.visible) {
-                    this._startTimers();
-                } else {
-                    this._stopTimers();
-                }
-            });
-            this._signals.push(id);
+            this._set_icon();
+            let id;
+            for (const s of ["use-adwaita-icon", "visible"]) {
+             id = this.connect(`notify::${s}`, () => {
+                    if (this.visible) {
+                        this._set_icon();
+                        this._startTimers();
+                    } else {
+                        this._stopTimers();
+                    }
+                });
+                this._signals.push(id);
+            }
             id = this.connect('notify::refresh-rate', () => {
                 this._stopTimers();
                 this._startTimers();
@@ -188,6 +195,14 @@ export const MemMonitor = GObject.registerClass(
             this._buildMeter();
             this._buildMenu();
             this._startTimers();
+        }
+
+        _set_icon() {
+            if (this.use_adwaita_icon) {
+                this.icon.gicon = this.gicon_adwaita
+            } else {
+                this.icon.gicon = this.gicon
+            }
         }
 
         _startTimers() {
@@ -228,12 +243,12 @@ export const MemMonitor = GObject.registerClass(
         }
 
         _buildMenu() {
-            let label = new St.Label({text: _('Memory usage'), style_class: 'menu-header'});
+            let label = new St.Label({ text: _('Memory usage'), style_class: 'menu-header' });
             this.addMenuRow(label, 0, 2, 1);
 
-            label = new St.Label({text: _('RAM used:'), style_class: 'menu-label'});
+            label = new St.Label({ text: _('RAM used:'), style_class: 'menu-label' });
             this.addMenuRow(label, 0, 1, 1);
-            this.menuMemUsage = new St.Label({text: '0%', style_class: 'menu-value'});
+            this.menuMemUsage = new St.Label({ text: '0%', style_class: 'menu-value' });
             this.addMenuRow(this.menuMemUsage, 1, 1, 1);
             this.menuMemSize = new St.Label({
                 text: _('size n/a'),
@@ -241,9 +256,9 @@ export const MemMonitor = GObject.registerClass(
             });
             this.addMenuRow(this.menuMemSize, 0, 2, 1);
 
-            label = new St.Label({text: _('Swap used:'), style_class: 'menu-label'});
+            label = new St.Label({ text: _('Swap used:'), style_class: 'menu-label' });
             this.addMenuRow(label, 0, 1, 1);
-            this.menuSwapUsage = new St.Label({text: '0%', style_class: 'menu-value'});
+            this.menuSwapUsage = new St.Label({ text: '0%', style_class: 'menu-value' });
             this.addMenuRow(this.menuSwapUsage, 1, 1, 1);
             this.menuSwapSize = new St.Label({
                 text: _('size n/a'),
@@ -253,37 +268,37 @@ export const MemMonitor = GObject.registerClass(
 
             // Create a grid layout for the history chart
             let grid = new St.Widget({
-                layout_manager: new Clutter.GridLayout({orientation: Clutter.Orientation.VERTICAL}),
+                layout_manager: new Clutter.GridLayout({ orientation: Clutter.Orientation.VERTICAL }),
             });
             this.historyGrid = grid.layout_manager;
             this.addMenuRow(grid, 0, 2, 1);
 
-            this.historyChart = new St.DrawingArea({style_class: 'chart', x_expand: true});
+            this.historyChart = new St.DrawingArea({ style_class: 'chart', x_expand: true });
             this.historyChart.connect('repaint', () => this._repaintHistory());
             this.historyGrid.attach(this.historyChart, 0, 0, 2, 3);
 
-            label = new St.Label({text: '100%', y_align: Clutter.ActorAlign.START, style_class: 'chart-label'});
+            label = new St.Label({ text: '100%', y_align: Clutter.ActorAlign.START, style_class: 'chart-label' });
             this.historyGrid.attach(label, 2, 0, 1, 1);
-            label = new St.Label({text: '50%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label'});
+            label = new St.Label({ text: '50%', y_align: Clutter.ActorAlign.CENTER, style_class: 'chart-label' });
             this.historyGrid.attach(label, 2, 1, 1, 1);
-            label = new St.Label({text: '0', y_align: Clutter.ActorAlign.END, style_class: 'chart-label'});
+            label = new St.Label({ text: '0', y_align: Clutter.ActorAlign.END, style_class: 'chart-label' });
             this.historyGrid.attach(label, 2, 2, 1, 1);
 
             let limitInMins = Config.HISTORY_MAX_SIZE / 60;
             let startLabel = ngettext('%d min ago', '%d mins ago', limitInMins).format(limitInMins);
-            label = new St.Label({text: startLabel, style_class: 'chart-label-then'});
+            label = new St.Label({ text: startLabel, style_class: 'chart-label-then' });
             this.historyGrid.attach(label, 0, 3, 1, 1);
-            label = new St.Label({text: _('now'), style_class: 'chart-label-now'});
+            label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
             this.historyGrid.attach(label, 1, 3, 1, 1);
 
-            label = new St.Label({text: _('Top processes'), style_class: 'menu-header'});
+            label = new St.Label({ text: _('Top processes'), style_class: 'menu-header' });
             this.addMenuRow(label, 0, 2, 1);
 
             this.topProcesses = [];
             for (let i = 0; i < Config.N_TOP_PROCESSES; i++) {
-                let cmd = new St.Label({text: '', style_class: 'menu-cmd-name'});
+                let cmd = new St.Label({ text: '', style_class: 'menu-cmd-name' });
                 this.addMenuRow(cmd, 0, 1, 1);
-                let usage = new St.Label({text: '', style_class: 'menu-mem-usage'});
+                let usage = new St.Label({ text: '', style_class: 'menu-mem-usage' });
                 this.addMenuRow(usage, 1, 1, 1);
                 let p = new Shared.TopProcess(cmd, usage);
                 this.topProcesses.push(p);

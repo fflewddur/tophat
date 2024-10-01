@@ -59,6 +59,13 @@ export const TopHatMonitor = GObject.registerClass({
             GObject.ParamFlags.READWRITE,
             ''
         ),
+        'use-adwaita-icon': GObject.ParamSpec.boolean(
+            'use-adwaita-icon',
+            'Use Adwaita icon',
+            "Use adwaita's built-in icons",
+            GObject.ParamFlags.READWRITE,
+            false
+        ),
         'show-animation': GObject.ParamSpec.boolean(
             'show-animation',
             'Show animation',
