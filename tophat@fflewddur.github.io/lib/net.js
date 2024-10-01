@@ -155,16 +155,15 @@ export const NetMonitor = GObject.registerClass({
 
         label = new St.Label({text: _('Receiving:'), style_class: 'menu-label'});
         this.addMenuRow(label, 0, 1, 1);
-        this.menuNetDown = new St.Label({text: '', style_class: 'menu-value'});
+        this.menuNetDown = new St.Label({text: '', style_class: 'menu-value menu-section-end'});
         this.addMenuRow(this.menuNetDown, 1, 1, 1);
 
-        // Add total sent and received values to the panel menu.
-        label = new St.Label({text: _('Total Sent:'), style_class: 'menu-label'});
+        label = new St.Label({text: _('Total sent:'), style_class: 'menu-label'});
         this.addMenuRow(label, 0, 1, 1);
         this.menuTotalUp = new St.Label({text: '', style_class: 'menu-value'});
         this.addMenuRow(this.menuTotalUp, 1, 1, 1);
 
-        label = new St.Label({text: _('Total Received:'), style_class: 'menu-label'});
+        label = new St.Label({text: _('Total received:'), style_class: 'menu-label'});
         this.addMenuRow(label, 0, 1, 1);
         this.menuTotalDown = new St.Label({text: '', style_class: 'menu-value menu-section-end'});
         this.addMenuRow(this.menuTotalDown, 1, 1, 1);

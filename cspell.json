@@ -47,6 +47,7 @@
         "rtime",
         "schemadir",
         "Sergey",
+        "Sonkusare",
         "swyknox",
         "sysinfo",
         "Tctl",
@@ -57,6 +58,7 @@
         "txelu",
         "typelib",
         "user",
+        "Vaibhav",
         "valign",
         "vbox",
         "vfunc",
@@ -68,7 +70,8 @@
         "Wunsz",
         "xalign",
         "xcpu",
-        "yakushabb"
+        "yakushabb",
+        "yuhldr"
     ],
     "enableFiletypes": [
         "!yaml"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-21 20:54-0800\n"
+"POT-Creation-Date: 2024-09-30 18:37-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,7 +130,7 @@ msgid "Available storage"
 msgstr ""
 
 #: tophat@fflewddur.github.io/prefs.js:78
-#: tophat@fflewddur.github.io/lib/fs.js:268
+#: tophat@fflewddur.github.io/lib/fs.js:269
 msgid "Disk activity"
 msgstr ""
 
@@ -170,142 +170,150 @@ msgstr ""
 msgid "Measurement unit"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:223
+#: tophat@fflewddur.github.io/lib/cpu.js:224
 msgid "Processor usage"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:226
+#: tophat@fflewddur.github.io/lib/cpu.js:227
 msgid "Processor utilization:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:254
-#: tophat@fflewddur.github.io/lib/fs.js:303
-#: tophat@fflewddur.github.io/lib/mem.js:272
-#: tophat@fflewddur.github.io/lib/net.js:180
+#: tophat@fflewddur.github.io/lib/cpu.js:255
+#: tophat@fflewddur.github.io/lib/fs.js:304
+#: tophat@fflewddur.github.io/lib/mem.js:273
+#: tophat@fflewddur.github.io/lib/net.js:191
 #, javascript-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:257
-#: tophat@fflewddur.github.io/lib/fs.js:306
-#: tophat@fflewddur.github.io/lib/mem.js:275
-#: tophat@fflewddur.github.io/lib/net.js:183
+#: tophat@fflewddur.github.io/lib/cpu.js:258
+#: tophat@fflewddur.github.io/lib/fs.js:307
+#: tophat@fflewddur.github.io/lib/mem.js:276
+#: tophat@fflewddur.github.io/lib/net.js:194
 msgid "now"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:260
-#: tophat@fflewddur.github.io/lib/fs.js:309
-#: tophat@fflewddur.github.io/lib/mem.js:278
+#: tophat@fflewddur.github.io/lib/cpu.js:261
+#: tophat@fflewddur.github.io/lib/fs.js:310
+#: tophat@fflewddur.github.io/lib/mem.js:279
 msgid "Top processes"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:277
+#: tophat@fflewddur.github.io/lib/cpu.js:278
 msgid "System uptime"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:314
+#: tophat@fflewddur.github.io/lib/cpu.js:315
 msgid "model n/a"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:323
+#: tophat@fflewddur.github.io/lib/cpu.js:324
 msgid "Frequency:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:329
-#: tophat@fflewddur.github.io/lib/cpu.js:343
-#: tophat@fflewddur.github.io/lib/fs.js:273
-#: tophat@fflewddur.github.io/lib/fs.js:279
+#: tophat@fflewddur.github.io/lib/cpu.js:330
+#: tophat@fflewddur.github.io/lib/cpu.js:344
+#: tophat@fflewddur.github.io/lib/fs.js:274
+#: tophat@fflewddur.github.io/lib/fs.js:280
 msgid "n/a"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:337
+#: tophat@fflewddur.github.io/lib/cpu.js:338
 msgid "Temperature:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:598
+#: tophat@fflewddur.github.io/lib/cpu.js:599
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:601
+#: tophat@fflewddur.github.io/lib/cpu.js:602
 #, javascript-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: tophat@fflewddur.github.io/lib/cpu.js:603
+#: tophat@fflewddur.github.io/lib/cpu.js:604
 #, javascript-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: tophat@fflewddur.github.io/lib/fs.js:271
+#: tophat@fflewddur.github.io/lib/fs.js:272
 msgid "Writing:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/fs.js:277
+#: tophat@fflewddur.github.io/lib/fs.js:278
 msgid "Reading:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/fs.js:294
+#: tophat@fflewddur.github.io/lib/fs.js:295
 msgid "Write"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/fs.js:299
+#: tophat@fflewddur.github.io/lib/fs.js:300
 msgid "Read"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/fs.js:315
+#: tophat@fflewddur.github.io/lib/fs.js:316
 msgid "Writing"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/fs.js:317
+#: tophat@fflewddur.github.io/lib/fs.js:318
 msgid "Reading"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/fs.js:333
+#: tophat@fflewddur.github.io/lib/fs.js:334
 msgid "Filesystem usage"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:230
+#: tophat@fflewddur.github.io/lib/mem.js:231
 msgid "Memory usage"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:233
+#: tophat@fflewddur.github.io/lib/mem.js:234
 msgid "RAM used:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:238
-#: tophat@fflewddur.github.io/lib/mem.js:248
+#: tophat@fflewddur.github.io/lib/mem.js:239
+#: tophat@fflewddur.github.io/lib/mem.js:249
 msgid "size n/a"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/mem.js:243
+#: tophat@fflewddur.github.io/lib/mem.js:244
 msgid "Swap used:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/net.js:147
+#: tophat@fflewddur.github.io/lib/net.js:148
 msgid "Network activity"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/net.js:150
+#: tophat@fflewddur.github.io/lib/net.js:151
 msgid "Sending:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/net.js:155
+#: tophat@fflewddur.github.io/lib/net.js:156
 msgid "Receiving:"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/net.js:171
+#: tophat@fflewddur.github.io/lib/net.js:161
+msgid "Total sent:"
+msgstr ""
+
+#: tophat@fflewddur.github.io/lib/net.js:166
+msgid "Total received:"
+msgstr ""
+
+#: tophat@fflewddur.github.io/lib/net.js:182
 msgid "Send"
 msgstr ""
 
-#: tophat@fflewddur.github.io/lib/net.js:176
+#: tophat@fflewddur.github.io/lib/net.js:187
 msgid "Recv"
 msgstr ""

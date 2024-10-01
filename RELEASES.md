@@ -3,10 +3,13 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## TopHat 15 - Not yet released
+## TopHat 15 - September 30, 2024
 
 - Ported to GNOME 47
-- Added Simplified Chinese translation (from [yuhldr](https://github.com/yuhldr))
+- Added Simplified Chinese translation (from
+  [yuhldr](https://github.com/yuhldr))
+- Added running total of network traffic to the network monitor menu (from
+  [Vaibhav-Sonkusare](https://github.com/Vaibhav-Sonkusare))
 
 ## TopHat 14 - March 24, 2024
 
@@ -16,23 +19,28 @@ based on [Keep a Changelog].
 
 ## TopHat 13 - November 21, 2023
 
-- Ported to GNOME 45 (based on initial port from [enecciara](https://github.com/enecciari))
+- Ported to GNOME 45 (based on initial port from
+  [enecciara](https://github.com/enecciari))
 - Added Portuguese translation (from [@swyknox](https://github.com/swyknox))
 - Updated Czech translation (from [@Amereyeu](https://github.com/Amereyeu))
 
 ## TopHat 11 - June 10, 2023
 
-- Added option to show disk activity instead of (or in addition to) available storage
+- Added option to show disk activity instead of (or in addition to) available
+  storage
 - Added y-axis scales to the activity over time charts
 - Added system uptime to the CPU monitor menu
 
 ## TopHat 10 - May 29, 2023
 
 - Added option to adjust refresh speed
-- Added option to display numeric values instead of (or in addition to) usage meters
-- Fixed panel icons to follow system theme (from [@hrqmonteiro](https://github.com/hrqmonteiro))
+- Added option to display numeric values instead of (or in addition to) usage
+  meters
+- Fixed panel icons to follow system theme (from
+  [@hrqmonteiro](https://github.com/hrqmonteiro))
 - Added Czech translation (from [@Amereyeu](https://github.com/Amereyeu))
-- Updated Turkish translation (from [@nxjosephofficial](https://github.com/nxjosephofficial))
+- Updated Turkish translation (from
+  [@nxjosephofficial](https://github.com/nxjosephofficial))
 
 ## TopHat 9 - March 19, 2023
 
