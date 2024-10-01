@@ -155,8 +155,19 @@ export const NetMonitor = GObject.registerClass({
 
         label = new St.Label({text: _('Receiving:'), style_class: 'menu-label'});
         this.addMenuRow(label, 0, 1, 1);
-        this.menuNetDown = new St.Label({text: '', style_class: 'menu-value menu-section-end'});
+        this.menuNetDown = new St.Label({text: '', style_class: 'menu-value'});
         this.addMenuRow(this.menuNetDown, 1, 1, 1);
+
+        // Add total sent and received values to the panel menu.
+        label = new St.Label({text: _('Total Sent:'), style_class: 'menu-label'});
+        this.addMenuRow(label, 0, 1, 1);
+        this.menuTotalUp = new St.Label({text: '', style_class: 'menu-value'});
+        this.addMenuRow(this.menuTotalUp, 1, 1, 1);
+
+        label = new St.Label({text: _('Total Received:'), style_class: 'menu-label'});
+        this.addMenuRow(label, 0, 1, 1);
+        this.menuTotalDown = new St.Label({text: '', style_class: 'menu-value menu-section-end'});
+        this.addMenuRow(this.menuTotalDown, 1, 1, 1);
 
         // Create a grid layout for the history chart
         let grid = new St.Widget({
@@ -220,6 +231,9 @@ export const NetMonitor = GObject.registerClass({
         this.valueNetUp.text = `${netOut}/s`;
         this.menuNetDown.text = `${netIn}/s`;
         this.menuNetUp.text = `${netOut}/s`;
+        // Update the total sent and received values.
+        this.menuTotalDown.text = `${Shared.bytesToHumanString(bytesIn, this.network_unit)}`;
+        this.menuTotalUp.text = `${Shared.bytesToHumanString(bytesOut, this.network_unit)}`;
         // console.debug(`[TopHat] Net: bytes_in=${(bytesInDelta / timeDelta).toFixed(2)}/s bytes_out=${(bytesOutDelta / timeDelta).toFixed(2)}/s time=${timeDelta}`);
 
         while (this.history.length >= this.historyLimit) {
