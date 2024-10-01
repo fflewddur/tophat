@@ -1,0 +1,311 @@
+# Chinese translations for TopHat package
+# TopHat 软件包的简体中文翻译.
+# Copyright (C) 2024 Todd Kulesza
+# This file is distributed under the same license as the TopHat package.
+# 余航 <yuhldr@139.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: TopHat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-21 20:54-0800\n"
+"PO-Revision-Date: 2024-04-24 14:40+0800\n"
+"Last-Translator: 余航 <yuhldr@139.com>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: tophat@fflewddur.github.io/prefs.js:36
+msgid "General"
+msgstr "通用"
+
+#: tophat@fflewddur.github.io/prefs.js:40
+msgid "Left edge"
+msgstr "左侧边缘"
+
+#: tophat@fflewddur.github.io/prefs.js:41
+msgid "Left"
+msgstr "左侧"
+
+#: tophat@fflewddur.github.io/prefs.js:42
+msgid "Center"
+msgstr "中间"
+
+#: tophat@fflewddur.github.io/prefs.js:43
+msgid "Right"
+msgstr "右侧"
+
+#: tophat@fflewddur.github.io/prefs.js:44
+msgid "Right edge"
+msgstr "右侧边缘"
+
+#: tophat@fflewddur.github.io/prefs.js:45
+msgid "Position in panel"
+msgstr "面板中的位置"
+
+#: tophat@fflewddur.github.io/prefs.js:47
+msgid "Slow"
+msgstr "缓慢"
+
+#: tophat@fflewddur.github.io/prefs.js:48
+msgid "Medium"
+msgstr "中等"
+
+#: tophat@fflewddur.github.io/prefs.js:49
+msgid "Fast"
+msgstr "快速"
+
+#: tophat@fflewddur.github.io/prefs.js:50
+msgid "Refresh speed"
+msgstr "刷新速度"
+
+#: tophat@fflewddur.github.io/prefs.js:51
+msgid "Meter color"
+msgstr "图表颜色"
+
+#: tophat@fflewddur.github.io/prefs.js:52
+msgid "Show icons beside monitors"
+msgstr "在监视器旁边显示图标"
+
+#: tophat@fflewddur.github.io/prefs.js:53
+msgid "Show animations"
+msgstr "显示动画"
+
+#: tophat@fflewddur.github.io/prefs.js:55
+msgid "Processor"
+msgstr "进程"
+
+#: tophat@fflewddur.github.io/prefs.js:56
+msgid "Show the CPU monitor"
+msgstr "显示CPU监视器"
+
+#: tophat@fflewddur.github.io/prefs.js:58
+#: tophat@fflewddur.github.io/prefs.js:68
+#: tophat@fflewddur.github.io/prefs.js:82
+msgid "Usage meter"
+msgstr "使用图表"
+
+#: tophat@fflewddur.github.io/prefs.js:59
+#: tophat@fflewddur.github.io/prefs.js:69
+#: tophat@fflewddur.github.io/prefs.js:83
+msgid "Numeric value"
+msgstr "数值"
+
+#: tophat@fflewddur.github.io/prefs.js:60
+#: tophat@fflewddur.github.io/prefs.js:70
+#: tophat@fflewddur.github.io/prefs.js:84
+msgid "Both meter and value"
+msgstr "图表和数值"
+
+#: tophat@fflewddur.github.io/prefs.js:61
+#: tophat@fflewddur.github.io/prefs.js:71
+msgid "Show as"
+msgstr "显示为"
+
+#: tophat@fflewddur.github.io/prefs.js:62
+msgid "Show each core"
+msgstr "显示每个核心"
+
+#: tophat@fflewddur.github.io/prefs.js:65
+msgid "Memory"
+msgstr "内存"
+
+#: tophat@fflewddur.github.io/prefs.js:66
+msgid "Show the memory monitor"
+msgstr "显示内存监视器"
+
+#: tophat@fflewddur.github.io/prefs.js:74
+msgid "Disk"
+msgstr "磁盘"
+
+#: tophat@fflewddur.github.io/prefs.js:75
+msgid "Show the disk monitor"
+msgstr "显示磁盘监视器"
+
+#: tophat@fflewddur.github.io/prefs.js:77
+msgid "Available storage"
+msgstr "可用存储"
+
+#: tophat@fflewddur.github.io/prefs.js:78
+#: tophat@fflewddur.github.io/lib/fs.js:268
+msgid "Disk activity"
+msgstr "磁盘活动"
+
+#: tophat@fflewddur.github.io/prefs.js:79
+msgid "Storage and activity"
+msgstr "存储和活动"
+
+#: tophat@fflewddur.github.io/prefs.js:80
+msgid "Monitor shows"
+msgstr "监视器显示"
+
+#: tophat@fflewddur.github.io/prefs.js:85
+msgid "Show available storage as"
+msgstr "将可用存储显示为"
+
+#: tophat@fflewddur.github.io/prefs.js:92
+msgid "Filesystem to monitor"
+msgstr "要监视的文件系统"
+
+#: tophat@fflewddur.github.io/prefs.js:95
+msgid "Network"
+msgstr "网络"
+
+#: tophat@fflewddur.github.io/prefs.js:96
+msgid "Show the network monitor"
+msgstr "显示网络监视器"
+
+#: tophat@fflewddur.github.io/prefs.js:98
+msgid "Bytes"
+msgstr "字节"
+
+#: tophat@fflewddur.github.io/prefs.js:99
+msgid "Bits"
+msgstr "比特"
+
+#: tophat@fflewddur.github.io/prefs.js:100
+msgid "Measurement unit"
+msgstr "测量单位"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:223
+msgid "Processor usage"
+msgstr "处理器使用情况"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:226
+msgid "Processor utilization:"
+msgstr "处理器利用率："
+
+#: tophat@fflewddur.github.io/lib/cpu.js:254
+#: tophat@fflewddur.github.io/lib/fs.js:303
+#: tophat@fflewddur.github.io/lib/mem.js:272
+#: tophat@fflewddur.github.io/lib/net.js:180
+#, javascript-format
+msgid "%d min ago"
+msgid_plural "%d mins ago"
+msgstr[0] "%d 分钟前"
+msgstr[1] "%d 分钟前"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:257
+#: tophat@fflewddur.github.io/lib/fs.js:306
+#: tophat@fflewddur.github.io/lib/mem.js:275
+#: tophat@fflewddur.github.io/lib/net.js:183
+msgid "now"
+msgstr "现在"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:260
+#: tophat@fflewddur.github.io/lib/fs.js:309
+#: tophat@fflewddur.github.io/lib/mem.js:278
+msgid "Top processes"
+msgstr "Top进程"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:277
+msgid "System uptime"
+msgstr "系统正常运行时间"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:314
+msgid "model n/a"
+msgstr "模式 n/a"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:323
+msgid "Frequency:"
+msgstr "频率："
+
+#: tophat@fflewddur.github.io/lib/cpu.js:329
+#: tophat@fflewddur.github.io/lib/cpu.js:343
+#: tophat@fflewddur.github.io/lib/fs.js:273
+#: tophat@fflewddur.github.io/lib/fs.js:279
+msgid "n/a"
+msgstr "n/a"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:337
+msgid "Temperature:"
+msgstr "温度："
+
+#: tophat@fflewddur.github.io/lib/cpu.js:598
+#, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d 天"
+msgstr[1] "%d 天"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:601
+#, javascript-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d 小时"
+msgstr[1] "%d 小时"
+
+#: tophat@fflewddur.github.io/lib/cpu.js:603
+#, javascript-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d 分钟"
+msgstr[1] "%d 分钟"
+
+#: tophat@fflewddur.github.io/lib/fs.js:271
+msgid "Writing:"
+msgstr "写入中："
+
+#: tophat@fflewddur.github.io/lib/fs.js:277
+msgid "Reading:"
+msgstr "读取中："
+
+#: tophat@fflewddur.github.io/lib/fs.js:294
+msgid "Write"
+msgstr "写"
+
+#: tophat@fflewddur.github.io/lib/fs.js:299
+msgid "Read"
+msgstr "读"
+
+#: tophat@fflewddur.github.io/lib/fs.js:315
+msgid "Writing"
+msgstr "写入中"
+
+#: tophat@fflewddur.github.io/lib/fs.js:317
+msgid "Reading"
+msgstr "读取中"
+
+#: tophat@fflewddur.github.io/lib/fs.js:333
+msgid "Filesystem usage"
+msgstr "文件系统使用"
+
+#: tophat@fflewddur.github.io/lib/mem.js:230
+msgid "Memory usage"
+msgstr "内存使用"
+
+#: tophat@fflewddur.github.io/lib/mem.js:233
+msgid "RAM used:"
+msgstr "RAM已使用："
+
+#: tophat@fflewddur.github.io/lib/mem.js:238
+#: tophat@fflewddur.github.io/lib/mem.js:248
+msgid "size n/a"
+msgstr "大小 n/a"
+
+#: tophat@fflewddur.github.io/lib/mem.js:243
+msgid "Swap used:"
+msgstr "交换内存已使用："
+
+#: tophat@fflewddur.github.io/lib/net.js:147
+msgid "Network activity"
+msgstr "网络活动"
+
+#: tophat@fflewddur.github.io/lib/net.js:150
+msgid "Sending:"
+msgstr "发送中："
+
+#: tophat@fflewddur.github.io/lib/net.js:155
+msgid "Receiving:"
+msgstr "接收中："
+
+#: tophat@fflewddur.github.io/lib/net.js:171
+msgid "Send"
+msgstr "发送"
+
+#: tophat@fflewddur.github.io/lib/net.js:176
+msgid "Recv"
+msgstr "接收"
