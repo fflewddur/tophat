@@ -6,6 +6,7 @@ based on [Keep a Changelog].
 ## TopHat 15 - Not yet released
 
 - Ported to GNOME 47
+- Added Simplified Chinese translation (from [yuhldr](https://github.com/yuhldr))
 
 ## TopHat 14 - March 24, 2024
 
