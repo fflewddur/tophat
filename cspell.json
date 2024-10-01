@@ -17,6 +17,7 @@
         "gicon",
         "glibtop",
         "gsettings",
+        "gtkclutter",
         "gtop",
         "guntur",
         "hbox",

@@ -22,29 +22,29 @@ import St from 'gi://St';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
 export const TopHatContainer = GObject.registerClass(
-class TopHatContainer extends PanelMenu.Button {
-    _init(menuAlignment, nameText, dontCreateMenu) {
-        super._init({
-            menuAlignment,
-            nameText,
-            dontCreateMenu,
-        });
-        this.monitors = [];
-        this.box = new St.BoxLayout();
-        this.add_child(this.box);
-        this.remove_style_class_name('panel-button');
-    }
+    class TopHatContainer extends PanelMenu.Button {
+        _init(menuAlignment, nameText, dontCreateMenu) {
+            super._init({
+                menuAlignment,
+                nameText,
+                dontCreateMenu,
+            });
+            this.monitors = [];
+            this.box = new St.BoxLayout();
+            this.add_child(this.box);
+            this.remove_style_class_name('panel-button');
+        }
 
-    addMonitor(monitor) {
-        // console.debug(`[TopHat] addMonitor(${monitor.name})`);
-        this.monitors.push(monitor);
-        this.box.add_child(monitor);
-    }
+        addMonitor(monitor) {
+            // console.debug(`[TopHat] addMonitor(${monitor.name})`);
+            this.monitors.push(monitor);
+            this.box.add_child(monitor);
+        }
 
-    _onDestroy() {
-        this.monitors.forEach(monitor => {
-            monitor.destroy();
-        });
-        super._onDestroy();
-    }
-});
+        _onDestroy() {
+            this.monitors.forEach(monitor => {
+                monitor.destroy();
+            });
+            super._onDestroy();
+        }
+    });
