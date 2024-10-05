@@ -1,5 +1,9 @@
 # the packaged extension
 /tophat@fflewddur.github.io.*.shell-extension.zip
+/dist
 
 # node stuff
 /node_modules
+
+# yarn stuff
+/.yarn/*

@@ -6,6 +6,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
-      run: npm install eslint
+      run: yarn install
     - name: Run ESLint
-      run: ./node_modules/eslint/bin/eslint.js . --ext .js
+      run: yarn eslint .
