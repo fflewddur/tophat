@@ -71,6 +71,13 @@ Contributions to improve TopHat are welcome! To avoid duplicate work, check
 [the issue tracker](https://github.com/fflewddur/tophat/issues) first. If an
 issue doesn't already exist for your idea, please create one.
 
+TopHat uses Yarn to manage dependencies and define development tasks. Learn
+how to install Yarn at https://yarnpkg.com/getting-started/install.
+
+`yarn`: Install project dependencies.
+`yarn build`: Build the project.
+`yarn clean`: Clean up intermediate and distribution files.
+
 To keep the code format consistent, please use `eslint` before submitting a
 PR. You can install eslint by running the command `npm install eslint` from
 the TopHat repo directory. To run the linter, use the command
