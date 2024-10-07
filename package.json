@@ -15,6 +15,7 @@
     "typescript-eslint": "^8.8.0"
   },
   "scripts": {
-    "build": "tsc && cp ./metadata.json ./dist/"
+    "build": "tsc && cp ./metadata.json ./dist/",
+    "lint": "eslint"
   }
 }

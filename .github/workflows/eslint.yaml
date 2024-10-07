@@ -8,4 +8,4 @@ jobs:
     - name: Install modules
       run: corepack enable && yarn install
     - name: Run ESLint
-      run: yarn eslint .
+      run: yarn lint
