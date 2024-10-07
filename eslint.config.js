@@ -9,6 +9,7 @@ export default tseslint.config({
   extends: [
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
+    ...tseslint.configs.strict,
     eslintPluginPrettierRecommended,
   ],
   rules: {},
