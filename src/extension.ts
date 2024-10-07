@@ -40,14 +40,14 @@ export default class TopHat extends Extension {
     console.log(`[TopHat] enabling version ${this.metadata.version}`);
     this.cpu.start();
 
-    console.log('[TopHat] enabled()');
+    console.log('[TopHat] enabled');
   }
 
   public disable() {
     console.log(`[TopHat] disabling version ${this.metadata.version}`);
     this.cpu.stop();
 
-    console.log('[TopHat] disabled()');
+    console.log('[TopHat] disabled');
   }
 
   private parseCpuOverview(cpuinfo: string): CpuModel {
