@@ -16,7 +16,7 @@ included in each release.
 Install TopHat from the [GNOME Shell extensions
 page](https://extensions.gnome.org/extension/5219/tophat/).
 
-Most Debian-based systems (including Ubuntu and Pop!_OS) will also need
+Most Debian-based systems (including Ubuntu and Pop!\_OS) will also need
 'gir1.2-gtop-2.0' and 'gir1.2-gtkclutter-1.0' to be installed. Usually this
 means running the command `sudo apt install gir1.2-gtop-2.0
 gir1.2-gtkclutter-1.0` followed by a system restart.
@@ -55,15 +55,15 @@ GNOME Shell extensions, you can manually install TopHat by following these
 steps. You may need to install the `unzip` and `gnome-extensions-app`
 utilities first.
 
-1) Download the latest TopHat release from
+1. Download the latest TopHat release from
    https://github.com/fflewddur/tophat/releases.
-2) Ensure your local extension directory exists by running the command `mkdir
-   -p ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io`.
-3) Extract the TopHat ZIP file into your local extension directory with the
+2. Ensure your local extension directory exists by running the command `mkdir
+-p ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io`.
+3. Extract the TopHat ZIP file into your local extension directory with the
    command `unzip [path-to-tophat.zip] -d
-   ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io`
-4) Log out of your computer and log back in (or restart your system).
-5) Enable TopHat in the `gnome-extensions-app`.
+~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io`
+4. Log out of your computer and log back in (or restart your system).
+5. Enable TopHat in the `gnome-extensions-app`.
 
 ## Contributing
 
@@ -124,7 +124,7 @@ icons/disk.svg: [guntur cahya](https://thenounproject.com/gunturcahya05/)
 icons/logo.svg: [Sergey Krivoy](https://thenounproject.com/krivoydesigner/)
 icons/mem.svg: [Loudoun Design
 Co.](https://thenonproject.com/LoudounDesignCo/)  
-icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)  
+icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)
 
 All icons were edited to make them more legible at small sizes.
 

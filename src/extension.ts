@@ -17,55 +17,58 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 //import GLib from 'gi://GLib';
-import { Extension, ExtensionMetadata } from 'resource:///org/gnome/shell/extensions/extension.js';
-import { CpuMonitor, CpuModel } from './cpu.js'
+import {
+  Extension,
+  ExtensionMetadata,
+} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { CpuMonitor, CpuModel } from './cpu.js';
 import { File } from './file.js';
 
 export default class TopHat extends Extension {
-    private cpu: CpuMonitor;
+  private cpu: CpuMonitor;
 
-    constructor(metadata: ExtensionMetadata) {
-        super(metadata);
+  constructor(metadata: ExtensionMetadata) {
+    super(metadata);
 
-        const f = new File('/proc/cpuinfo');
-        const cpuModel = this.parseCpuOverview(f.readSync());
+    const f = new File('/proc/cpuinfo');
+    const cpuModel = this.parseCpuOverview(f.readSync());
 
-        this.cpu = new CpuMonitor(cpuModel);
-    }
+    this.cpu = new CpuMonitor(cpuModel);
+  }
 
-    public enable() {
-        console.log(`[TopHat] enabling version ${this.metadata.version}`);
-        this.cpu.start();
+  public enable() {
+    console.log(`[TopHat] enabling version ${this.metadata.version}`);
+    this.cpu.start();
 
-        console.log("[TopHat] enabled()");
-    }
+    console.log('[TopHat] enabled()');
+  }
 
-    public disable() {
-        console.log(`[TopHat] disabling version ${this.metadata.version}`);
-        this.cpu.stop();
+  public disable() {
+    console.log(`[TopHat] disabling version ${this.metadata.version}`);
+    this.cpu.stop();
 
-        console.log("[TopHat] disabled()");
-    }
+    console.log('[TopHat] disabled()');
+  }
 
-    private parseCpuOverview(cpuinfo: string): CpuModel {
-        const lines = cpuinfo.split('\n');
-        const modelRE = /^model name\s*:\s*(.*)$/;
-        const coreRE = /^processor\s*:\s*(\d+)$/;
+  private parseCpuOverview(cpuinfo: string): CpuModel {
+    const lines = cpuinfo.split('\n');
+    const modelRE = /^model name\s*:\s*(.*)$/;
+    const coreRE = /^processor\s*:\s*(\d+)$/;
 
-        let model = '';
-        let cores = 0;
+    let model = '';
+    let cores = 0;
 
-        lines.forEach((line) => {
-            let m = !model && line.match(modelRE);
-            if (m) {
-                model = m[1];
-            }
-            m = line.match(coreRE);
-            if (m) {
-                cores++;
-            }
-        });
+    lines.forEach((line) => {
+      let m = !model && line.match(modelRE);
+      if (m) {
+        model = m[1];
+      }
+      m = line.match(coreRE);
+      if (m) {
+        cores++;
+      }
+    });
 
-        return new CpuModel(model, cores);
-    }
+    return new CpuModel(model, cores);
+  }
 }
