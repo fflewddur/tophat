@@ -16,19 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-//import GLib from 'gi://GLib';
+import GLib from 'gi://GLib';
 import {
   Extension,
   ExtensionMetadata,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
+
 import { CpuMonitor, CpuModel } from './cpu.js';
 import { File } from './file.js';
+import { Vitals } from './vitals.js';
 
 export default class TopHat extends Extension {
+  private loop = 0;
+  private vitals: Vitals;
   private cpu: CpuMonitor;
 
   constructor(metadata: ExtensionMetadata) {
     super(metadata);
+
+    this.vitals = new Vitals();
 
     const f = new File('/proc/cpuinfo');
     const cpuModel = this.parseCpuOverview(f.readSync());
@@ -39,14 +45,21 @@ export default class TopHat extends Extension {
   public enable() {
     console.log(`[TopHat] enabling version ${this.metadata.version}`);
     this.cpu.start();
-
+    if (this.loop === 0) {
+      this.loop = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () =>
+        this.readVitals()
+      );
+    }
     console.log('[TopHat] enabled');
   }
 
   public disable() {
     console.log(`[TopHat] disabling version ${this.metadata.version}`);
     this.cpu.stop();
-
+    if (this.loop > 0) {
+      GLib.source_remove(this.loop);
+      this.loop = 0;
+    }
     console.log('[TopHat] disabled');
   }
 
@@ -70,5 +83,10 @@ export default class TopHat extends Extension {
     });
 
     return new CpuModel(model, cores);
+  }
+
+  private readVitals(): boolean {
+    this.vitals.read();
+    return true;
   }
 }

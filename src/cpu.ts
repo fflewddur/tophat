@@ -50,8 +50,8 @@ export class CpuMonitor {
 
   private runLoop() {
     // console.log(`[TopHat] runLoop() for ${this.model.name} w/ ${this.model.cores} logical cores`);
-    const f = new File('/proc/stat');
-    f.read().then((contents) => {
+    const stat = new File('/proc/stat');
+    stat.read().then((contents) => {
       this.parseStat(contents);
     });
     return true;

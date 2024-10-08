@@ -3,7 +3,7 @@
   "compilerOptions": {
     "module": "ES2022",
     "moduleResolution": "Bundler",
-    "target": "ES2022",
+    "target": "ES2023",
     "outDir": "./dist"
   },
   "include": ["src"],
