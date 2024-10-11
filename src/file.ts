@@ -24,6 +24,10 @@ export class File {
     this.file = Gio.File.new_for_path(path);
   }
 
+  name(): null | string {
+    return this.file.get_parse_name();
+  }
+
   read(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {

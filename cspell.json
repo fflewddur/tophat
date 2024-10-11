@@ -39,16 +39,19 @@
     "netlist",
     "netload",
     "ngettext",
+    "NOFOLLOW",
     "noirbizarre",
     "nxjosephofficial",
     "pango",
     "Prefs",
     "proclist",
+    "procs",
     "rbytes",
     "rtime",
     "schemadir",
     "Sergey",
     "Sonkusare",
+    "stime",
     "swyknox",
     "sysinfo",
     "Tctl",
@@ -60,6 +63,7 @@
     "txelu",
     "typelib",
     "user",
+    "utime",
     "Vaibhav",
     "valign",
     "vbox",
@@ -67,6 +71,7 @@
     "virbr",
     "Vistaus",
     "vnet",
+    "vsize",
     "wbytes",
     "workarea",
     "Wunsz",
@@ -75,5 +80,7 @@
     "yakushabb",
     "yuhldr"
   ],
-  "enableFiletypes": ["!yaml"]
+  "enableFiletypes": [
+    "!yaml"
+  ]
 }
