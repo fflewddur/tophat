@@ -7,12 +7,13 @@ export class Vitals {
   private procs = new Map<string, Process>();
 
   public read() {
-    // Because /proc is a virtual FS, maybe we can get away with sync IO
+    // Because /proc is a virtual FS, maybe we can get away with sync IO?
     console.time('read /proc/');
-    // console.log('Vitals.read()');
+    // TODO: load /proc/uptime
+    // TODO: load /proc/stat
+    // TODO: load /proc/meminfo
+    // TODO: load /proc/[id]/statm for memory info
     this.loadProcessList();
-    // console.log(`ps len=${ps.length}`);
-    // console.log(`ps: ${ps.join(', ')}`);
     console.timeEnd('read /proc/');
   }
 

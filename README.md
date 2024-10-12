@@ -6,6 +6,17 @@ displays CPU, memory, disk, and network activity in the GNOME top bar.
 <img src="./screenshots/tophat.png?raw=true" width="1080px" alt="Screenshot of
 TopHat">
 
+## News
+
+This is the current development branch of TopHat. I'm in the process of
+re-writing this extension with the following goals:
+
+- Port to TypeScript to improve reliability
+- Remove glibtop as a required dependency
+- Generally cleanup the code to improve maintainability
+
+As of today, this branch does not create a useful extension.
+
 ## Release notes
 
 See [RELEASES.md](RELEASES.md) for the list of fixes and new functionality
@@ -16,32 +27,17 @@ included in each release.
 Install TopHat from the [GNOME Shell extensions
 page](https://extensions.gnome.org/extension/5219/tophat/).
 
-Most Debian-based systems (including Ubuntu and Pop!\_OS) will also need
-'gir1.2-gtop-2.0' and 'gir1.2-gtkclutter-1.0' to be installed. Usually this
-means running the command `sudo apt install gir1.2-gtop-2.0
-gir1.2-gtkclutter-1.0` followed by a system restart.
-
 ### Requirements
 
 - GNOME 45 or newer (older releases of TopHat are available for GNOME 3.32 -
   44 in the legacy branch at https://github.com/fflewddur/tophat/tree/legacy)
-- The gtop system monitoring library (e.g., 'libgtop' on Debian-based systems,
-  likely already installed as part of GNOME)
-- GIRepository (gir) bindings for the gtop system monitoring library (e.g.,
-  'gir1.2-gtop-2.0' on Debian-based systems)
-- GIRepository (gir) bindings for Clutter (e.g., 'gir1.2-gtkclutter-1.0' on
-  Debian-based systems)
+- A modestly recent release of the Linux kernel (anything >= 5.0 should work)
 
 ### Compatibility
 
 The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
-- Fedora 40 (first install clutter package)
-- Ubuntu 24.04 (first install gir1.2-gtop-2.0 and gir1.2-gtkclutter-1.0
-  packages)
-- Ubuntu 24.10 (first install gir1.2-gtop-2.0 and gir1.2-gtkclutter-1.0
-  packages)
 
 Even if your system is not in this list, as long as it meets the
 requirements mentioned above, you should be able to run TopHat. If not, please
@@ -76,13 +72,13 @@ how to install Yarn at https://yarnpkg.com/getting-started/install.
 
 `yarn`: Install project dependencies.
 `yarn build`: Build the project.
-`yarn clean`: Clean up intermediate and distribution files.
+`yarn lint`: Check for common problems.
+`yarn lint:fix`: Fix common problems found by ESLint.
+`yarn format`: Run Prettier to keep the project's coding style consistent.
 
-To keep the code format consistent, please use `eslint` before submitting a
-PR. You can install eslint by running the command `npm install eslint` from
-the TopHat repo directory. To run the linter, use the command
-`./node_modules/eslint/bin/eslint.js . --ext .js`; alternatively, the ESLint
-plugin for VS Code will automatically run the linter for you.
+To keep the code format consistent, please use run `yarn lint` and `yarn
+format` before submitting a PR. If you use VS Code, I recommend installing the
+ESLint and Prettier extensions to automatically run these tools for you.
 
 ### Useful development commands
 
@@ -96,8 +92,9 @@ To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
 
 To test the development version:
 
+    yarn build
     mkdir -p ~/.local/share/gnome-shell/extensions/
-    ln -s [path to tophat repository]/tophat@fflewddur.github.io ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io
+    ln -s [path to tophat repository]/tophat@fflewddur.github.io ~/.local/share/gnome-shell/extensions/dist
 
 ## License
 
