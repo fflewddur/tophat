@@ -81,7 +81,5 @@
     "yakushabb",
     "yuhldr"
   ],
-  "enableFiletypes": [
-    "!yaml"
-  ]
+  "enableFiletypes": ["!yaml"]
 }

@@ -4,6 +4,7 @@ import Gio from 'gi://Gio';
 import { File } from './file.js';
 
 const MAX_HISTORY = 100;
+const reMemInfo = /:\s+(\d+)\s+/;
 
 export class Vitals {
   private procs = new Map<string, Process>();
@@ -11,10 +12,12 @@ export class Vitals {
   private cpuModel: CpuModel;
   private cpuUsageHistory = new Array<CpuUsage>(MAX_HISTORY);
   private cpuState: CpuState;
+  private memInfo: MemInfo;
 
   constructor(model: CpuModel) {
     this.cpuModel = model;
     this.cpuState = new CpuState(model.cores);
+    this.memInfo = new MemInfo();
   }
 
   public read() {
@@ -22,7 +25,7 @@ export class Vitals {
     console.time('read /proc/');
     this.loadUptime();
     this.loadStat();
-    // TODO: load /proc/meminfo
+    this.loadMeminfo();
     // TODO: load /proc/[id]/statm for memory info
     this.loadProcessList();
     console.timeEnd('read /proc/');
@@ -32,6 +35,7 @@ export class Vitals {
     const f = new File('/proc/uptime');
     const contents = f.readSync();
     this.uptime = parseInt(contents.substring(0, contents.indexOf(' ')));
+    console.log(`[TopHat] uptime = ${this.uptime}`);
   }
 
   private loadStat() {
@@ -80,6 +84,35 @@ export class Vitals {
       }
     });
     console.log(`CPU usage: ${usage}`);
+  }
+
+  private loadMeminfo() {
+    const f = new File('/proc/meminfo');
+    const contents = f.readSync();
+    const lines = contents.split('\n');
+    lines.forEach((line: string) => {
+      if (line.startsWith('MemTotal:')) {
+        this.memInfo.total = this.readKb(line);
+      } else if (line.startsWith('MemAvailable:')) {
+        this.memInfo.available = this.readKb(line);
+      } else if (line.startsWith('SwapTotal:')) {
+        this.memInfo.swapTotal = this.readKb(line);
+      } else if (line.startsWith('SwapFree:')) {
+        this.memInfo.swapAvailable = this.readKb(line);
+      }
+    });
+    console.log(
+      `Mem total: ${this.memInfo.total / 1000 / 1000} GB available: ${this.memInfo.available / 1000 / 1000}`
+    );
+  }
+
+  private readKb(line: string): number {
+    const m = line.match(reMemInfo);
+    let kb = 0;
+    if (m) {
+      kb = parseInt(m[1]);
+    }
+    return kb;
   }
 
   private loadProcessList() {
@@ -209,6 +242,13 @@ export class CpuModel {
     this.name = name;
     this.cores = cores;
   }
+}
+
+class MemInfo {
+  public total = 0;
+  public available = 0;
+  public swapTotal = 0;
+  public swapAvailable = 0;
 }
 
 class Process {
