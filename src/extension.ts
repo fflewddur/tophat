@@ -22,9 +22,9 @@ import {
   ExtensionMetadata,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { CpuMonitor, CpuModel } from './cpu.js';
+import { CpuMonitor } from './cpu.js';
 import { File } from './file.js';
-import { Vitals } from './vitals.js';
+import { Vitals, CpuModel } from './vitals.js';
 
 export default class TopHat extends Extension {
   private loop = 0;
@@ -34,12 +34,11 @@ export default class TopHat extends Extension {
   constructor(metadata: ExtensionMetadata) {
     super(metadata);
 
-    this.vitals = new Vitals();
-
     const f = new File('/proc/cpuinfo');
     const cpuModel = this.parseCpuOverview(f.readSync());
 
-    this.cpu = new CpuMonitor(cpuModel);
+    this.vitals = new Vitals(cpuModel);
+    this.cpu = new CpuMonitor();
   }
 
   public enable() {

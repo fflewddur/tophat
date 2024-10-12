@@ -3,18 +3,83 @@ import Gio from 'gi://Gio';
 
 import { File } from './file.js';
 
+const MAX_HISTORY = 100;
+
 export class Vitals {
   private procs = new Map<string, Process>();
+  private uptime = 0;
+  private cpuModel: CpuModel;
+  private cpuUsageHistory = new Array<CpuUsage>(MAX_HISTORY);
+  private cpuState: CpuState;
+
+  constructor(model: CpuModel) {
+    this.cpuModel = model;
+    this.cpuState = new CpuState(model.cores);
+  }
 
   public read() {
     // Because /proc is a virtual FS, maybe we can get away with sync IO?
     console.time('read /proc/');
-    // TODO: load /proc/uptime
-    // TODO: load /proc/stat
+    this.loadUptime();
+    this.loadStat();
     // TODO: load /proc/meminfo
     // TODO: load /proc/[id]/statm for memory info
     this.loadProcessList();
     console.timeEnd('read /proc/');
+  }
+
+  private loadUptime() {
+    const f = new File('/proc/uptime');
+    const contents = f.readSync();
+    this.uptime = parseInt(contents.substring(0, contents.indexOf(' ')));
+  }
+
+  private loadStat() {
+    const f = new File('/proc/stat');
+    const contents = f.readSync();
+    const lines = contents.split('\n');
+    const usage = new CpuUsage(this.cpuModel.cores);
+    lines.forEach((line: string) => {
+      if (line.startsWith('cpu')) {
+        const re =
+          /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+        const m = line.match(re);
+        if (m && !m[1]) {
+          // These are aggregate CPU statistics
+          const usedTime =
+            parseInt(m[2]) +
+            parseInt(m[3]) +
+            parseInt(m[4]) +
+            parseInt(m[6]) +
+            parseInt(m[7]) +
+            parseInt(m[8]) +
+            parseInt(m[9]) +
+            parseInt(m[10]);
+          const idleTime = parseInt(m[5]);
+          this.cpuState.update(usedTime, idleTime);
+          usage.aggregate = this.cpuState.usage();
+        } else if (m) {
+          // These are per-core statistics
+          const core = parseInt(m[1]);
+          const usedTime =
+            parseInt(m[2]) +
+            parseInt(m[3]) +
+            parseInt(m[4]) +
+            parseInt(m[6]) +
+            parseInt(m[7]) +
+            parseInt(m[8]) +
+            parseInt(m[9]) +
+            parseInt(m[10]);
+          const idleTime = parseInt(m[5]);
+          this.cpuState.updateCore(core, usedTime, idleTime);
+          usage.core[core] = this.cpuState.coreUsage(core);
+        }
+      }
+      if (this.cpuUsageHistory.unshift(usage) > MAX_HISTORY) {
+        this.cpuUsageHistory.pop();
+      }
+    });
+    console.log(`CPU usage: ${usage}`);
   }
 
   private loadProcessList() {
@@ -53,11 +118,96 @@ export class Vitals {
         p.id = name;
         p.parseStat(contents);
         this.procs.set(p.id, p);
-        console.log(
-          `[TopHat] ${p.id} ${p.cmd} cpu:${p.cpu} cpuPrev:${p.cpuPrev} vsize:${p.vsize} rss:${p.rss}`
-        );
+        // console.log(
+        //   `[TopHat] ${p.id} ${p.cmd} cpu:${p.cpu} cpuPrev:${p.cpuPrev} vsize:${p.vsize} rss:${p.rss}`
+        // );
       }
     }
+  }
+}
+
+class CpuState {
+  public usedTime: number;
+  public usedTimePrev: number;
+  public idleTime: number;
+  public idleTimePrev: number;
+  public coreUsedTime: Array<number>;
+  public coreUsedTimePrev: Array<number>;
+  public coreIdleTime: Array<number>;
+  public coreIdleTimePrev: Array<number>;
+
+  constructor(cores: number, usedTime = 0, idleTime = 0) {
+    this.usedTime = usedTime;
+    this.usedTimePrev = 0;
+    this.idleTime = idleTime;
+    this.idleTimePrev = 0;
+    this.coreUsedTime = new Array<number>(cores);
+    this.coreUsedTimePrev = new Array<number>(cores);
+    this.coreIdleTime = new Array<number>(cores);
+    this.coreIdleTimePrev = new Array<number>(cores);
+    for (let i = 0; i < cores; i++) {
+      this.coreUsedTime[i] = 0;
+      this.coreIdleTime[i] = 0;
+      this.coreUsedTimePrev[i] = 0;
+      this.coreIdleTimePrev[i] = 0;
+    }
+  }
+
+  public update(usedTime: number, idleTime: number) {
+    this.usedTimePrev = this.usedTime;
+    this.usedTime = usedTime;
+    this.idleTimePrev = this.idleTime;
+    this.idleTime = idleTime;
+  }
+
+  public updateCore(core: number, usedTime: number, idleTime: number) {
+    this.coreUsedTimePrev[core] = this.coreUsedTime[core];
+    this.coreUsedTime[core] = usedTime;
+    this.coreIdleTimePrev[core] = this.coreIdleTime[core];
+    this.coreIdleTime[core] = idleTime;
+  }
+
+  public usage(): number {
+    const usedTimeDelta = this.usedTime - this.usedTimePrev;
+    const idleTimeDelta = this.idleTime - this.idleTimePrev;
+    return usedTimeDelta / (usedTimeDelta + idleTimeDelta);
+  }
+
+  public coreUsage(core: number): number {
+    const usedTimeDelta = this.coreUsedTime[core] - this.coreUsedTimePrev[core];
+    const idleTimeDelta = this.coreIdleTime[core] - this.coreIdleTimePrev[core];
+    return usedTimeDelta / (usedTimeDelta + idleTimeDelta);
+  }
+}
+
+class CpuUsage {
+  public aggregate: number;
+  public core: Array<number>;
+
+  constructor(cores: number) {
+    this.aggregate = 0;
+    this.core = new Array<number>(cores);
+    for (let i = 0; i < cores; i++) {
+      this.core[i] = 0;
+    }
+  }
+
+  public toString(): string {
+    let s = `aggregate: ${this.aggregate.toFixed(2)}`;
+    this.core.forEach((usage, index) => {
+      s += ` core[${index}]: ${this.core[index].toFixed(2)}`;
+    });
+    return s;
+  }
+}
+
+export class CpuModel {
+  public name: string;
+  public cores: number;
+
+  constructor(name = 'Unknown', cores = 1) {
+    this.name = name;
+    this.cores = cores;
   }
 }
 
