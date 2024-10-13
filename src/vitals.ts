@@ -26,7 +26,6 @@ export class Vitals {
     this.loadUptime();
     this.loadStat();
     this.loadMeminfo();
-    // TODO: load /proc/[id]/statm for memory info
     this.loadProcessList();
     console.timeEnd('read /proc/');
   }
@@ -141,21 +140,35 @@ export class Vitals {
         name[0] == '8' ||
         name[0] == '9'
       ) {
-        const f = new File('/proc/' + name + '/stat');
-        const contents = f.readSync();
-        // console.log(`[TopHat] contents for ${f.name()}: ${contents}`);
-        let p = this.procs.get(name);
-        if (p === undefined) {
-          p = new Process();
-        }
-        p.id = name;
-        p.parseStat(contents);
+        const p = this.loadProcessStat(name);
         this.procs.set(p.id, p);
+        this.loadProcessStatm(p);
+
         // console.log(
         //   `[TopHat] ${p.id} ${p.cmd} cpu:${p.cpu} cpuPrev:${p.cpuPrev} vsize:${p.vsize} rss:${p.rss}`
         // );
       }
     }
+  }
+
+  private loadProcessStat(name: string): Process {
+    const f = new File('/proc/' + name + '/stat');
+    const contents = f.readSync();
+    // console.log(`[TopHat] contents for ${f.name()}: ${contents}`);
+    let p = this.procs.get(name);
+    if (p === undefined) {
+      p = new Process();
+    }
+    p.id = name;
+    p.parseStat(contents);
+
+    return p;
+  }
+
+  private loadProcessStatm(p: Process): void {
+    const f = new File('/proc/' + p.id + '/statm');
+    const contents = f.readSync();
+    p.parseStatm(contents);
   }
 }
 
@@ -259,6 +272,7 @@ class Process {
   public guest_time = 0;
   public vsize = 0;
   public rss = 0;
+  public data = 0;
   public cpu = 0;
   public cpuPrev = 0;
 
@@ -276,5 +290,12 @@ class Process {
     this.rss = parseInt(fields[21]);
     this.cpuPrev = this.cpu;
     this.cpu = this.utime + this.stime + this.guest_time;
+  }
+
+  parseStatm(statm: string) {
+    const fields = statm.split(' ');
+    this.vsize = parseInt(fields[0]);
+    this.rss = parseInt(fields[1]);
+    this.data = parseInt(fields[5]);
   }
 }
