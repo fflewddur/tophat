@@ -1,5 +1,4 @@
 import Gio from 'gi://Gio';
-// import GLib from 'gi://GLib';
 
 import { File } from './file.js';
 
@@ -13,6 +12,7 @@ export class Vitals {
   private cpuUsageHistory = new Array<CpuUsage>(MAX_HISTORY);
   private cpuState: CpuState;
   private memInfo: MemInfo;
+  private memUsageHistory = new Array<MemUsage>(MAX_HISTORY);
 
   constructor(model: CpuModel) {
     this.cpuModel = model;
@@ -89,29 +89,30 @@ export class Vitals {
     const f = new File('/proc/meminfo');
     const contents = f.readSync();
     const lines = contents.split('\n');
+    const usage = new MemUsage();
     lines.forEach((line: string) => {
       if (line.startsWith('MemTotal:')) {
-        this.memInfo.total = this.readKb(line);
+        this.memInfo.total = readKb(line);
       } else if (line.startsWith('MemAvailable:')) {
-        this.memInfo.available = this.readKb(line);
+        this.memInfo.available = readKb(line);
       } else if (line.startsWith('SwapTotal:')) {
-        this.memInfo.swapTotal = this.readKb(line);
+        this.memInfo.swapTotal = readKb(line);
       } else if (line.startsWith('SwapFree:')) {
-        this.memInfo.swapAvailable = this.readKb(line);
+        this.memInfo.swapAvailable = readKb(line);
       }
     });
-    console.log(
-      `Mem total: ${this.memInfo.total / 1000 / 1000} GB available: ${this.memInfo.available / 1000 / 1000}`
-    );
-  }
-
-  private readKb(line: string): number {
-    const m = line.match(reMemInfo);
-    let kb = 0;
-    if (m) {
-      kb = parseInt(m[1]);
+    usage.usedMem =
+      (this.memInfo.total - this.memInfo.available) / this.memInfo.total;
+    usage.usedSwap =
+      (this.memInfo.swapTotal - this.memInfo.swapAvailable) /
+      this.memInfo.swapTotal;
+    if (this.memUsageHistory.unshift(usage) > MAX_HISTORY) {
+      this.memUsageHistory.pop();
     }
-    return kb;
+    console.log(
+      `Mem usage: ${usage.usedMem.toFixed(2)} of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
+        `Swap usage: ${usage.usedSwap.toFixed(2)} of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
+    );
   }
 
   private loadProcessList() {
@@ -142,11 +143,7 @@ export class Vitals {
       ) {
         const p = this.loadProcessStat(name);
         this.procs.set(p.id, p);
-        this.loadProcessStatm(p);
-
-        // console.log(
-        //   `[TopHat] ${p.id} ${p.cmd} cpu:${p.cpu} cpuPrev:${p.cpuPrev} vsize:${p.vsize} rss:${p.rss}`
-        // );
+        this.loadProcessSmapsRollup(p);
       }
     }
   }
@@ -165,10 +162,41 @@ export class Vitals {
     return p;
   }
 
-  private loadProcessStatm(p: Process): void {
-    const f = new File('/proc/' + p.id + '/statm');
-    const contents = f.readSync();
-    p.parseStatm(contents);
+  private loadProcessSmapsRollup(p: Process): void {
+    const f = new File('/proc/' + p.id + '/smaps_rollup');
+    const contents = f.readSync(false);
+    p.parseSmapsRollup(contents);
+  }
+
+  public getTopCpuProcs(n: number) {
+    log('Top CPU processes:');
+    let top = Array.from(this.procs.values());
+    top = top.sort((x, y) => {
+      return x.cpuUsage() - y.cpuUsage();
+    });
+    top = top.reverse();
+    for (let i = 0; i < n; i++) {
+      console.log(
+        `  ${top[i].cmd} (${top[i].id}) ` +
+          `usage: ${((top[i].cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
+      );
+    }
+    //TODO: return list of details for UI
+  }
+
+  public getTopMemProcs(n: number) {
+    log('Top memory processes:');
+    let top = Array.from(this.procs.values());
+    top = top.sort((x, y) => {
+      return x.memUsage() - y.memUsage();
+    });
+    top = top.reverse();
+    for (let i = 0; i < n; i++) {
+      console.log(
+        `  ${top[i].cmd} (${top[i].id}) usage: ${(top[i].memUsage() / 1000).toFixed(0)} MB`
+      );
+    }
+    // TODO: return list of details for UI
   }
 }
 
@@ -224,6 +252,12 @@ class CpuState {
     const idleTimeDelta = this.coreIdleTime[core] - this.coreIdleTimePrev[core];
     return usedTimeDelta / (usedTimeDelta + idleTimeDelta);
   }
+
+  public totalTime(): number {
+    return (
+      this.usedTime - this.usedTimePrev + (this.idleTime - this.idleTimePrev)
+    );
+  }
 }
 
 class CpuUsage {
@@ -264,19 +298,34 @@ class MemInfo {
   public swapAvailable = 0;
 }
 
+class MemUsage {
+  public usedMem = 0;
+  public usedSwap = 0;
+
+  public toString(): string {
+    return `Memory usage: ${this.usedMem.toFixed(2)} Swap usage: ${this.usedSwap.toFixed(2)}`;
+  }
+}
+
 class Process {
   public id = '';
   public cmd = '';
   public utime = 0;
   public stime = 0;
   public guest_time = 0;
-  public vsize = 0;
-  public rss = 0;
-  public data = 0;
+  public pss = 0;
   public cpu = 0;
   public cpuPrev = 0;
 
-  parseStat(stat: string) {
+  public cpuUsage(): number {
+    return this.cpu - this.cpuPrev;
+  }
+
+  public memUsage(): number {
+    return this.pss;
+  }
+
+  public parseStat(stat: string) {
     const open = stat.indexOf('(');
     const close = stat.indexOf(')');
     if (open > 0 && close > 0) {
@@ -286,16 +335,25 @@ class Process {
     this.utime = parseInt(fields[11]);
     this.stime = parseInt(fields[12]);
     this.guest_time = parseInt(fields[40]);
-    this.vsize = parseInt(fields[20]);
-    this.rss = parseInt(fields[21]);
     this.cpuPrev = this.cpu;
     this.cpu = this.utime + this.stime + this.guest_time;
   }
 
-  parseStatm(statm: string) {
-    const fields = statm.split(' ');
-    this.vsize = parseInt(fields[0]);
-    this.rss = parseInt(fields[1]);
-    this.data = parseInt(fields[5]);
+  public parseSmapsRollup(content: string) {
+    const lines = content.split('\n');
+    lines.forEach((line) => {
+      if (line.startsWith('Pss:')) {
+        this.pss = readKb(line);
+      }
+    });
   }
+}
+
+function readKb(line: string): number {
+  const m = line.match(reMemInfo);
+  let kb = 0;
+  if (m) {
+    kb = parseInt(m[1]);
+  }
+  return kb;
 }

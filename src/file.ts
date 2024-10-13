@@ -55,14 +55,16 @@ export class File {
     });
   }
 
-  readSync(): string {
+  readSync(reportErrs = true): string {
     let contents = '';
     try {
       const bytes = this.file.load_contents(null)[1];
       const decoder = new TextDecoder('utf-8');
       contents = decoder.decode(bytes).trim();
     } catch (e: unknown) {
-      console.error(`[TopHat] Error reading ${this.file.get_path()}: ${e}`);
+      if (reportErrs) {
+        console.error(`[TopHat] Error reading ${this.file.get_path()}: ${e}`);
+      }
     }
     return contents;
   }

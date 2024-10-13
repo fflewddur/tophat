@@ -50,6 +50,7 @@
     "rtime",
     "schemadir",
     "Sergey",
+    "Smaps",
     "Sonkusare",
     "statm",
     "stime",
@@ -81,5 +82,7 @@
     "yakushabb",
     "yuhldr"
   ],
-  "enableFiletypes": ["!yaml"]
+  "enableFiletypes": [
+    "!yaml"
+  ]
 }

@@ -86,6 +86,8 @@ export default class TopHat extends Extension {
 
   private readVitals(): boolean {
     this.vitals.read();
+    this.vitals.getTopCpuProcs(5);
+    this.vitals.getTopMemProcs(5);
     return true;
   }
 }
