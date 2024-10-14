@@ -17,6 +17,8 @@
 
 import Gio from 'gi://Gio';
 
+const decoder = new TextDecoder('utf-8');
+
 export class File {
   private file: Gio.File;
 
@@ -34,7 +36,6 @@ export class File {
         this.file.load_contents_async(null, (file, res) => {
           try {
             const bytes = file?.load_contents_finish(res)[1];
-            const decoder = new TextDecoder('utf-8');
             const contents = decoder.decode(bytes).trim();
             resolve(contents);
           } catch (e: unknown) {
@@ -59,7 +60,6 @@ export class File {
     let contents = '';
     try {
       const bytes = this.file.load_contents(null)[1];
-      const decoder = new TextDecoder('utf-8');
       contents = decoder.decode(bytes).trim();
     } catch (e: unknown) {
       if (reportErrs) {

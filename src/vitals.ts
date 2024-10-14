@@ -3,7 +3,7 @@ import Gio from 'gi://Gio';
 import { File } from './file.js';
 
 const MAX_HISTORY = 100;
-const reMemInfo = /:\s+(\d+)\s+/;
+const reMemInfo = /:\s+(\d+)/;
 
 export class Vitals {
   private procs = new Map<string, Process>();
@@ -110,8 +110,8 @@ export class Vitals {
       this.memUsageHistory.pop();
     }
     console.log(
-      `Mem usage: ${usage.usedMem.toFixed(2)} of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
-        `Swap usage: ${usage.usedSwap.toFixed(2)} of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
+      `Mem usage: ${(usage.usedMem * 100).toFixed(0)}% of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
+        `Swap usage: ${(usage.usedSwap * 100).toFixed(0)}% of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
     );
   }
 
@@ -143,7 +143,8 @@ export class Vitals {
       ) {
         const p = this.loadProcessStat(name);
         this.procs.set(p.id, p);
-        this.loadProcessSmapsRollup(p);
+        this.loadSmapsRollupForProcess(p);
+        this.loadIoForProcess(p);
       }
     }
   }
@@ -162,10 +163,16 @@ export class Vitals {
     return p;
   }
 
-  private loadProcessSmapsRollup(p: Process): void {
+  private loadSmapsRollupForProcess(p: Process): void {
     const f = new File('/proc/' + p.id + '/smaps_rollup');
     const contents = f.readSync(false);
     p.parseSmapsRollup(contents);
+  }
+
+  private loadIoForProcess(p: Process): void {
+    const f = new File('/proc/' + p.id + '/io');
+    const contents = f.readSync(false);
+    p.parseIo(contents);
   }
 
   public getTopCpuProcs(n: number) {
@@ -174,13 +181,15 @@ export class Vitals {
     top = top.sort((x, y) => {
       return x.cpuUsage() - y.cpuUsage();
     });
-    top = top.reverse();
-    for (let i = 0; i < n; i++) {
-      console.log(
-        `  ${top[i].cmd} (${top[i].id}) ` +
-          `usage: ${((top[i].cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
-      );
-    }
+    top = top.reverse().slice(0, n);
+    top.forEach((p) => {
+      if (p.cpuUsage() > 0) {
+        console.log(
+          `  ${p.cmd} (${p.id}) ` +
+            `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
+        );
+      }
+    });
     //TODO: return list of details for UI
   }
 
@@ -190,12 +199,29 @@ export class Vitals {
     top = top.sort((x, y) => {
       return x.memUsage() - y.memUsage();
     });
-    top = top.reverse();
-    for (let i = 0; i < n; i++) {
+    top = top.reverse().slice(0, n);
+    top.forEach((p) => {
       console.log(
-        `  ${top[i].cmd} (${top[i].id}) usage: ${(top[i].memUsage() / 1000).toFixed(0)} MB`
+        `  ${p.cmd} (${p.id}) usage: ${(p.memUsage() / 1000).toFixed(0)} MB`
       );
-    }
+    });
+    // TODO: return list of details for UI
+  }
+
+  public getTopDiskProcs(n: number) {
+    log('Top disk processes:');
+    let top = Array.from(this.procs.values());
+    top = top.sort((x, y) => {
+      return x.diskReads() + x.diskWrites() - (y.diskReads() + y.diskWrites());
+    });
+    top = top.reverse().slice(0, n);
+    top.forEach((p) => {
+      if (p.diskReads() + p.diskWrites() > 0) {
+        console.log(
+          `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
+        );
+      }
+    });
     // TODO: return list of details for UI
   }
 }
@@ -316,6 +342,10 @@ class Process {
   public pss = 0;
   public cpu = 0;
   public cpuPrev = 0;
+  public diskRead = 0;
+  public diskWrite = 0;
+  public diskReadPrev = 0;
+  public diskWritePrev = 0;
 
   public cpuUsage(): number {
     return this.cpu - this.cpuPrev;
@@ -323,6 +353,14 @@ class Process {
 
   public memUsage(): number {
     return this.pss;
+  }
+
+  public diskReads(): number {
+    return this.diskRead - this.diskReadPrev;
+  }
+
+  public diskWrites(): number {
+    return this.diskWrite - this.diskWritePrev;
   }
 
   public parseStat(stat: string) {
@@ -344,6 +382,19 @@ class Process {
     lines.forEach((line) => {
       if (line.startsWith('Pss:')) {
         this.pss = readKb(line);
+      }
+    });
+  }
+
+  public parseIo(content: string) {
+    const lines = content.split('\n');
+    lines.forEach((line) => {
+      if (line.startsWith('read_bytes:')) {
+        this.diskReadPrev = this.diskRead;
+        this.diskRead = readKb(line);
+      } else if (line.startsWith('write_bytes')) {
+        this.diskWritePrev = this.diskWrite;
+        this.diskWrite = readKb(line);
       }
     });
   }

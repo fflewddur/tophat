@@ -88,6 +88,7 @@ export default class TopHat extends Extension {
     this.vitals.read();
     this.vitals.getTopCpuProcs(5);
     this.vitals.getTopMemProcs(5);
+    this.vitals.getTopDiskProcs(5);
     return true;
   }
 }
