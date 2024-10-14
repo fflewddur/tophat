@@ -3,7 +3,7 @@ import Gio from 'gi://Gio';
 import { File } from './file.js';
 
 const MAX_HISTORY = 100;
-const reMemInfo = /:\s+(\d+)/;
+const RE_MEM_INFO = /:\s+(\d+)/;
 
 export class Vitals {
   private procs = new Map<string, Process>();
@@ -401,7 +401,7 @@ class Process {
 }
 
 function readKb(line: string): number {
-  const m = line.match(reMemInfo);
+  const m = line.match(RE_MEM_INFO);
   let kb = 0;
   if (m) {
     kb = parseInt(m[1]);
