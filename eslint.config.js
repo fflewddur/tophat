@@ -13,4 +13,5 @@ export default tseslint.config({
     eslintPluginPrettierRecommended,
   ],
   rules: {},
+  ignores: ['./dist'],
 });

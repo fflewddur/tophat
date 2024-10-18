@@ -18,6 +18,7 @@
     "gicon",
     "girs",
     "glibtop",
+    "gobject",
     "gsettings",
     "gtkclutter",
     "gtop",

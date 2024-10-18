@@ -21,15 +21,18 @@ import {
   Extension,
   ExtensionMetadata,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import { CpuMonitor } from './cpu.js';
+// import { CpuMonitor } from './cpu.js';
 import { File } from './file.js';
 import { Vitals, CpuModel } from './vitals.js';
+import { TopHatContainer } from './container.js';
+import { TopHatMeter } from './meter.js';
 
 export default class TopHat extends Extension {
   private loop = 0;
   private vitals: Vitals;
-  private cpu: CpuMonitor;
+  private container: TopHatContainer | null;
 
   constructor(metadata: ExtensionMetadata) {
     super(metadata);
@@ -38,12 +41,17 @@ export default class TopHat extends Extension {
     const cpuModel = this.parseCpuOverview(f.readSync());
 
     this.vitals = new Vitals(cpuModel);
-    this.cpu = new CpuMonitor();
+    this.container = null;
   }
 
   public enable() {
     console.log(`[TopHat] enabling version ${this.metadata.version}`);
-    this.cpu.start();
+    this.container = new TopHatContainer(1, 'TopHat');
+    this.container.addMeter(new TopHatMeter('CPU Meter'));
+    this.container.addMeter(new TopHatMeter('Memory Meter'));
+    this.container.addMeter(new TopHatMeter('Disk Meter'));
+    this.container.addMeter(new TopHatMeter('Network Meter'));
+    this.addToPanel();
     if (this.loop === 0) {
       this.loop = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () =>
         this.readVitals()
@@ -54,11 +62,11 @@ export default class TopHat extends Extension {
 
   public disable() {
     console.log(`[TopHat] disabling version ${this.metadata.version}`);
-    this.cpu.stop();
     if (this.loop > 0) {
       GLib.source_remove(this.loop);
       this.loop = 0;
     }
+    this.container?.destroy();
     console.log('[TopHat] disabled');
   }
 
@@ -82,6 +90,27 @@ export default class TopHat extends Extension {
     });
 
     return new CpuModel(model, cores);
+  }
+
+  private addToPanel() {
+    if (this.container === null) {
+      console.error('TopHat cannot be added to panel; main container is null');
+      return;
+    }
+    // let pref = this._getPreferredPanelBoxAndPosition();
+
+    Main.panel.addToStatusArea(
+      'TopHat',
+      this.container
+      // pref.position,
+      // pref.box
+    );
+
+    // this.container.monitors.forEach((monitor) => {
+    //   // console.debug(`Adding menu to manager for ${monitor.name}`);
+    //   Main.panel.menuManager.addMenu(monitor.menu);
+    //   monitor.refresh();
+    // });
   }
 
   private readVitals(): boolean {
