@@ -17,6 +17,8 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
+
 import {
   Extension,
   ExtensionMetadata,
@@ -30,9 +32,10 @@ import { TopHatContainer } from './container.js';
 import { TopHatMeter } from './meter.js';
 
 export default class TopHat extends Extension {
+  private gsettings?: Gio.Settings;
   private loop = 0;
   private vitals: Vitals;
-  private container: TopHatContainer | null;
+  private container?: TopHatContainer;
 
   constructor(metadata: ExtensionMetadata) {
     super(metadata);
@@ -41,11 +44,11 @@ export default class TopHat extends Extension {
     const cpuModel = this.parseCpuOverview(f.readSync());
 
     this.vitals = new Vitals(cpuModel);
-    this.container = null;
   }
 
   public enable() {
     console.log(`[TopHat] enabling version ${this.metadata.version}`);
+    this.gsettings = this.getSettings();
     this.container = new TopHatContainer(1, 'TopHat');
     this.container.addMeter(new TopHatMeter('CPU Meter'));
     this.container.addMeter(new TopHatMeter('Memory Meter'));
@@ -67,6 +70,8 @@ export default class TopHat extends Extension {
       this.loop = 0;
     }
     this.container?.destroy();
+    this.container = undefined;
+    this.gsettings = undefined;
     console.log('[TopHat] disabled');
   }
 
@@ -93,8 +98,10 @@ export default class TopHat extends Extension {
   }
 
   private addToPanel() {
-    if (this.container === null) {
-      console.error('TopHat cannot be added to panel; main container is null');
+    if (this.container === undefined) {
+      console.error(
+        'TopHat cannot be added to panel; main container is undefined'
+      );
       return;
     }
     const pref = this.getPreferredPanelAttributes();

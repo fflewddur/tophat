@@ -18,7 +18,8 @@
     "typescript-eslint": "^8.10.0"
   },
   "scripts": {
-    "build": "tsc && cp ./metadata.json ./dist/",
+    "build": "tsc && cp ./metadata.json ./dist/ && touch ./dist/schemas && rm -rf ./dist/schemas && mkdir ./dist/schemas/ && glib-compile-schemas ./resources/schemas && mv ./resources/schemas/gschemas.compiled ./dist/schemas/",
+    "clean": "rm -rf ./dist ./node_modules",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "format": "prettier . --write"

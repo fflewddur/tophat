@@ -35,11 +35,6 @@ export class TopHatContainer extends PanelMenu.Button {
     this.box = new St.BoxLayout();
     this.add_child(this.box);
     this.remove_style_class_name('panel-button');
-
-    const label = new St.Label({
-      text: 'Hello, world!',
-    });
-    this.box.add_child(label);
   }
 
   public addMeter(meter: TopHatMeter): void {
