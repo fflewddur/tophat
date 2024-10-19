@@ -97,13 +97,13 @@ export default class TopHat extends Extension {
       console.error('TopHat cannot be added to panel; main container is null');
       return;
     }
-    // let pref = this._getPreferredPanelBoxAndPosition();
+    const pref = this.getPreferredPanelAttributes();
 
     Main.panel.addToStatusArea(
       'TopHat',
-      this.container
-      // pref.position,
-      // pref.box
+      this.container,
+      pref.position,
+      pref.box
     );
 
     // this.container.monitors.forEach((monitor) => {
@@ -111,6 +111,13 @@ export default class TopHat extends Extension {
     //   Main.panel.menuManager.addMenu(monitor.menu);
     //   monitor.refresh();
     // });
+  }
+
+  private getPreferredPanelAttributes() {
+    const box = 'right';
+    const position = 0;
+    // TODO: read this from gsettings
+    return { box, position };
   }
 
   private readVitals(): boolean {

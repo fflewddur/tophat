@@ -19,8 +19,8 @@
   },
   "scripts": {
     "build": "tsc && cp ./metadata.json ./dist/",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "format": "prettier . --write"
   }
 }
