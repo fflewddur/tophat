@@ -19,10 +19,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
-import {
-  Extension,
-  ExtensionMetadata,
-} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 // import { CpuMonitor } from './cpu.js';
@@ -31,35 +28,38 @@ import { Vitals, CpuModel } from './vitals.js';
 import { TopHatContainer } from './container.js';
 import { TopHatMeter } from './meter.js';
 
+enum MenuPosition {
+  LeftEdge,
+  Left,
+  Center,
+  Right,
+  RightEdge,
+}
+
 export default class TopHat extends Extension {
   private gsettings?: Gio.Settings;
   private loop = 0;
-  private vitals: Vitals;
+  private signals = new Array<number>();
+  private vitals?: Vitals;
   private container?: TopHatContainer;
-
-  constructor(metadata: ExtensionMetadata) {
-    super(metadata);
-
-    const f = new File('/proc/cpuinfo');
-    const cpuModel = this.parseCpuOverview(f.readSync());
-
-    this.vitals = new Vitals(cpuModel);
-  }
 
   public enable() {
     console.log(`[TopHat] enabling version ${this.metadata.version}`);
     this.gsettings = this.getSettings();
-    this.container = new TopHatContainer(1, 'TopHat');
-    this.container.addMeter(new TopHatMeter('CPU Meter'));
-    this.container.addMeter(new TopHatMeter('Memory Meter'));
-    this.container.addMeter(new TopHatMeter('Disk Meter'));
-    this.container.addMeter(new TopHatMeter('Network Meter'));
+    const f = new File('/proc/cpuinfo');
+    const cpuModel = this.parseCpuOverview(f.readSync());
+    this.vitals = new Vitals(cpuModel);
     this.addToPanel();
     if (this.loop === 0) {
       this.loop = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () =>
         this.readVitals()
       );
     }
+    const id = this.gsettings.connect('changed::position-in-panel', () => {
+      console.log('[TopHat] position-in-panel changed');
+      this.addToPanel();
+    });
+    this.signals.push(id);
     console.log('[TopHat] enabled');
   }
 
@@ -71,6 +71,10 @@ export default class TopHat extends Extension {
     }
     this.container?.destroy();
     this.container = undefined;
+    this.signals.forEach((s) => {
+      this.gsettings?.disconnect(s);
+    });
+    this.vitals = undefined;
     this.gsettings = undefined;
     console.log('[TopHat] disabled');
   }
@@ -98,15 +102,20 @@ export default class TopHat extends Extension {
   }
 
   private addToPanel() {
-    if (this.container === undefined) {
-      console.error(
-        'TopHat cannot be added to panel; main container is undefined'
-      );
-      return;
-    }
+    this.container?.destroy();
+    this.container = new TopHatContainer(1, 'TopHat');
+    this.container.addMeter(new TopHatMeter('CPU Meter'));
+    this.container.addMeter(new TopHatMeter('Memory Meter'));
+    this.container.addMeter(new TopHatMeter('Disk Meter'));
+    this.container.addMeter(new TopHatMeter('Network Meter'));
+    // if (this.container === undefined) {
+    //   console.error(
+    //     'TopHat cannot be added to panel; main container is undefined'
+    //   );
+    //   return;
+    // }
     const pref = this.getPreferredPanelAttributes();
-
-    Main.panel.addToStatusArea(
+    this.container = Main.panel.addToStatusArea(
       'TopHat',
       this.container,
       pref.position,
@@ -121,17 +130,42 @@ export default class TopHat extends Extension {
   }
 
   private getPreferredPanelAttributes() {
-    const box = 'right';
-    const position = 0;
-    // TODO: read this from gsettings
+    let box = 'right';
+    let position = 0;
+    switch (this.gsettings?.get_enum('position-in-panel')) {
+      case MenuPosition.LeftEdge:
+        box = 'left';
+        position = 0;
+        break;
+      case MenuPosition.Left:
+        box = 'left';
+        position = -1;
+        break;
+      case MenuPosition.Center:
+        box = 'center';
+        position = 1;
+        break;
+      case MenuPosition.Right:
+        box = 'right';
+        position = 0;
+        break;
+      case MenuPosition.RightEdge:
+        box = 'right';
+        position = -1;
+        break;
+      default:
+        console.warn('[TopHat] Unknown value for position-in-panel');
+    }
     return { box, position };
   }
 
   private readVitals(): boolean {
-    this.vitals.read();
-    this.vitals.getTopCpuProcs(5);
-    this.vitals.getTopMemProcs(5);
-    this.vitals.getTopDiskProcs(5);
+    if (this.vitals) {
+      this.vitals.read();
+      this.vitals.getTopCpuProcs(5);
+      this.vitals.getTopMemProcs(5);
+      this.vitals.getTopDiskProcs(5);
+    }
     return true;
   }
 }
