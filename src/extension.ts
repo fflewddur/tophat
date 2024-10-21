@@ -56,7 +56,6 @@ export default class TopHat extends Extension {
       );
     }
     const id = this.gsettings.connect('changed::position-in-panel', () => {
-      console.log('[TopHat] position-in-panel changed');
       this.addToPanel();
     });
     this.signals.push(id);
