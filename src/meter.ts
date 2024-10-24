@@ -16,30 +16,34 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 import Atk from 'gi://Atk';
+import GObject from 'gi://GObject';
 import St from 'gi://St';
-import { registerGObjectClass } from './helpers.js';
 
-@registerGObjectClass
-export class TopHatMeter extends St.Widget {
-  private meterName;
-  private box;
+export const TopHatMeter = GObject.registerClass(
+  class TopHatMeter extends St.Widget {
+    private meterName;
+    private box;
 
-  constructor(name: string) {
-    super({
-      reactive: true,
-      can_focus: true,
-      track_hover: true,
-      style_class: 'tophat-monitor panel-button',
-      accessible_name: name,
-      accessible_role: Atk.Role.MENU,
-      x_expand: true,
-      y_expand: true,
-    });
-    this.meterName = name;
-    this.box = new St.BoxLayout();
-    this.add_child(this.box);
+    constructor(name: string) {
+      super({
+        reactive: true,
+        can_focus: true,
+        track_hover: true,
+        style_class: 'tophat-monitor panel-button',
+        accessible_name: name,
+        accessible_role: Atk.Role.MENU,
+        x_expand: true,
+        y_expand: true,
+      });
+      console.log('TopHatMeter constructor');
+      this.meterName = name;
+      this.box = new St.BoxLayout();
+      this.add_child(this.box);
 
-    // for testing
-    this.box.add_child(new St.Label({ text: this.meterName }));
+      // for testing
+      this.box.add_child(new St.Label({ text: this.meterName }));
+    }
   }
-}
+);
+
+export type TopHatMeter = InstanceType<typeof TopHatMeter>;

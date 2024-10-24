@@ -15,35 +15,40 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import GObject from 'gi://GObject';
 import St from 'gi://St';
+
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
-import { registerGObjectClass } from './helpers.js';
+
 import { TopHatMeter } from './meter.js';
 
-@registerGObjectClass
-export class TopHatContainer extends PanelMenu.Button {
-  private box;
-  private meters;
+export const TopHatContainer = GObject.registerClass(
+  class TopHatContainer extends PanelMenu.Button {
+    private box;
+    private meters;
 
-  constructor(
-    menuAlignment: number,
-    nameText: string,
-    dontCreateMenu?: boolean
-  ) {
-    super(menuAlignment, nameText, dontCreateMenu);
-    this.meters = new Array<TopHatMeter>();
-    this.box = new St.BoxLayout();
-    this.add_child(this.box);
-    this.remove_style_class_name('panel-button');
-  }
+    constructor(
+      menuAlignment: number,
+      nameText: string,
+      dontCreateMenu?: boolean
+    ) {
+      super(menuAlignment, nameText, dontCreateMenu);
+      this.meters = new Array<TopHatMeter>();
+      this.box = new St.BoxLayout();
+      this.add_child(this.box);
+      this.remove_style_class_name('panel-button');
+    }
 
-  public addMeter(meter: TopHatMeter): void {
-    this.meters.push(meter);
-    this.box.add_child(meter);
-  }
+    public addMeter(meter: TopHatMeter): void {
+      this.meters.push(meter);
+      this.box.add_child(meter);
+    }
 
-  override destroy(): void {
-    this.box.destroy();
-    super.destroy();
+    override destroy(): void {
+      this.box.destroy();
+      super.destroy();
+    }
   }
-}
+);
+
+export type TopHatContainer = InstanceType<typeof TopHatContainer>;
