@@ -102,7 +102,7 @@ export default class TopHat extends Extension {
 
   private addToPanel() {
     this.container?.destroy();
-    this.container = new TopHatContainer(1, 'TopHat');
+    this.container = new TopHatContainer(0.5, 'TopHat');
     this.container.addMeter(new TopHatMeter('CPU Meter'));
     this.container.addMeter(new TopHatMeter('Memory Meter'));
     this.container.addMeter(new TopHatMeter('Disk Meter'));
@@ -121,11 +121,11 @@ export default class TopHat extends Extension {
       pref.box
     );
 
-    // this.container.monitors.forEach((monitor) => {
-    //   // console.debug(`Adding menu to manager for ${monitor.name}`);
-    //   Main.panel.menuManager.addMenu(monitor.menu);
-    //   monitor.refresh();
-    // });
+    this.container?.meters.forEach((m) => {
+      // console.debug(`Adding menu to manager for ${monitor.name}`);
+      Main.panel._onMenuSet(m);
+      // monitor.refresh();
+    });
   }
 
   private getPreferredPanelAttributes() {

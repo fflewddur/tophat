@@ -25,7 +25,7 @@ import { TopHatMeter } from './meter.js';
 export const TopHatContainer = GObject.registerClass(
   class TopHatContainer extends PanelMenu.Button {
     private box;
-    private meters;
+    public meters;
 
     constructor(
       menuAlignment: number,
