@@ -1,0 +1,31 @@
+.tophat-panel-icon {
+  margin: 0 0.03em;
+  padding: 0;
+}
+
+.tophat-panel-icon-net {
+  margin: 0.1em;
+}
+
+.tophat-menu-button-box {
+  padding: 1em 0 0 0;
+  spacing: 2em;
+}
+
+.tophat-menu-button-box > StButton {
+  border-radius: 2em;
+  margin: 0;
+  padding: 0.7em;
+  min-height: 0.5em;
+  min-width: 0.5em;
+}
+
+.tophat-menu-button-box > StButton > StIcon {
+  icon-size: 1.25em;
+}
+
+.menu-grid {
+  margin: 0.25em 0.25em 1em 0.25em;
+  padding: 0;
+  min-width: 18em;
+}

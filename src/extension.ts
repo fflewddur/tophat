@@ -22,7 +22,7 @@ import Gio from 'gi://Gio';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-// import { CpuMonitor } from './cpu.js';
+import { CpuMonitor } from './cpu.js';
 import { File } from './file.js';
 import { Vitals, CpuModel } from './vitals.js';
 import { TopHatContainer } from './container.js';
@@ -103,16 +103,10 @@ export default class TopHat extends Extension {
   private addToPanel() {
     this.container?.destroy();
     this.container = new TopHatContainer(0.5, 'TopHat');
-    this.container.addMeter(new TopHatMeter('CPU Meter'));
-    this.container.addMeter(new TopHatMeter('Memory Meter'));
-    this.container.addMeter(new TopHatMeter('Disk Meter'));
-    this.container.addMeter(new TopHatMeter('Network Meter'));
-    // if (this.container === undefined) {
-    //   console.error(
-    //     'TopHat cannot be added to panel; main container is undefined'
-    //   );
-    //   return;
-    // }
+    this.container.addMeter(new CpuMonitor(this.metadata));
+    this.container.addMeter(new TopHatMeter('Memory Meter', this.metadata));
+    this.container.addMeter(new TopHatMeter('Disk Meter', this.metadata));
+    this.container.addMeter(new TopHatMeter('Network Meter', this.metadata));
     const pref = this.getPreferredPanelAttributes();
     this.container = Main.panel.addToStatusArea(
       'TopHat',
@@ -122,9 +116,7 @@ export default class TopHat extends Extension {
     );
 
     this.container?.meters.forEach((m) => {
-      // console.debug(`Adding menu to manager for ${monitor.name}`);
       Main.panel._onMenuSet(m);
-      // monitor.refresh();
     });
   }
 

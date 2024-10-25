@@ -15,26 +15,66 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
+import Clutter from 'gi://Clutter';
+import St from 'gi://St';
 
-export class CpuMonitor {
-  private loop = 0;
+import {
+  ExtensionMetadata,
+  gettext as _,
+} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-  public start() {
-    console.log(`[TopHat] Starting CPU monitor`);
-    this.loop = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () =>
-      this.runLoop()
-    );
+import { TopHatMeter } from './meter.js';
+
+export const CpuMonitor = GObject.registerClass(
+  class CpuMonitor extends TopHatMeter {
+    private icon;
+    private usage;
+    private menuCpuUsage?: St.Label;
+
+    constructor(metadata: ExtensionMetadata) {
+      super('CPU Monitor', metadata);
+
+      const gicon = Gio.icon_new_for_string(
+        `${this.metadata.path}/icons/cpu-icon-symbolic.svg`
+      );
+      this.icon = new St.Icon({
+        gicon,
+        style_class: 'system-status-icon tophat-panel-icon',
+      });
+      this.add_child(this.icon);
+
+      this.usage = new St.Label({
+        text: '',
+        style_class: 'tophat-panel-usage',
+        y_align: Clutter.ActorAlign.CENTER,
+      });
+      this.add_child(this.usage);
+
+      this.buildMenu();
+      this.addMenuButtons();
+    }
+
+    private buildMenu() {
+      let label = new St.Label({
+        text: _('Processor usage'),
+        style_class: 'menu-header',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+
+      label = new St.Label({
+        text: _('Processor utilization:'),
+        style_class: 'menu-label menu-section-end',
+      });
+      this.addMenuRow(label, 0, 1, 1);
+      this.menuCpuUsage = new St.Label({
+        text: '0%',
+        style_class: 'menu-value menu-section-end',
+      });
+      this.addMenuRow(this.menuCpuUsage, 1, 1, 1);
+    }
   }
+);
 
-  public stop() {
-    console.log('[TopHat] Stopping CPU monitor');
-    GLib.source_remove(this.loop);
-    this.loop = 0;
-  }
-
-  private runLoop() {
-    // console.log(`[TopHat] runLoop() for ${this.model.name} w/ ${this.model.cores} logical cores`);
-    return true;
-  }
-}
+export type CpuMonitor = InstanceType<typeof CpuMonitor>;
