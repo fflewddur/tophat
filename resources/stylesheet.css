@@ -24,8 +24,52 @@
   icon-size: 1.25em;
 }
 
+.tophat-panel-usage {
+  text-align: right;
+  min-width: 2em;
+  margin: 0 0 0 6px;
+}
+
+.tophat-panel-usage-stacked {
+  font-size: 0.7em;
+  text-align: right;
+  min-width: 5em;
+}
+
 .menu-grid {
   margin: 0.25em 0.25em 1em 0.25em;
   padding: 0;
   min-width: 18em;
+}
+
+.menu-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9em;
+  padding: 0.5em;
+}
+
+.menu-subheader {
+  text-align: center;
+  font-size: 0.8em;
+}
+
+.menu-label {
+  font-size: 1em;
+  padding: 0.25em 0.5em;
+  text-align: left;
+}
+
+.menu-value {
+  font-size: 1em;
+  padding: 0.25em 0.5em;
+  text-align: right;
+}
+
+.menu-details {
+  font-size: 0.8em;
+}
+
+.menu-section-end {
+  margin-bottom: 0.5em;
 }

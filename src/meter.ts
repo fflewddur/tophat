@@ -29,6 +29,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const MENU_COLUMNS = 2;
+export const MeterNoVal = 'n/a';
 
 export const TopHatMeter = GObject.registerClass(
   class TopHatMeter extends PanelMenu.Button {
@@ -37,7 +38,7 @@ export const TopHatMeter = GObject.registerClass(
     private menuLayout?: Clutter.LayoutManager;
     private menuRow = 0;
     private menuCol = 0;
-    private menuNumCols = 0;
+    protected menuNumCols = 0;
     protected metadata: ExtensionMetadata;
 
     constructor(nameText: string, metadata: ExtensionMetadata) {
@@ -51,7 +52,6 @@ export const TopHatMeter = GObject.registerClass(
       const box = new St.BoxLayout();
       this.add_child(box);
       this.box = box;
-      this.box.add_child(new St.Label({ text: this.meterName }));
       this.menuLayout = this.buildMenuBase();
     }
 

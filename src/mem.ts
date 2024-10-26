@@ -27,17 +27,17 @@ import {
 
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
-export const CpuMonitor = GObject.registerClass(
-  class CpuMonitor extends TopHatMeter {
+export const MemMonitor = GObject.registerClass(
+  class MemMonitor extends TopHatMeter {
     private icon;
     private usage;
-    private menuCpuUsage?: St.Label;
+    private menuMemUsage?: St.Label;
 
     constructor(metadata: ExtensionMetadata) {
-      super('CPU Monitor', metadata);
+      super('Memory Monitor', metadata);
 
       const gicon = Gio.icon_new_for_string(
-        `${this.metadata.path}/icons/cpu-icon-symbolic.svg`
+        `${this.metadata.path}/icons/mem-icon-symbolic.svg`
       );
       this.icon = new St.Icon({
         gicon,
@@ -58,23 +58,23 @@ export const CpuMonitor = GObject.registerClass(
 
     private buildMenu() {
       let label = new St.Label({
-        text: _('Processor usage'),
+        text: _('Memory usage'),
         style_class: 'menu-header',
       });
       this.addMenuRow(label, 0, 2, 1);
 
       label = new St.Label({
-        text: _('Processor utilization:'),
+        text: _('RAM used:'),
         style_class: 'menu-label menu-section-end',
       });
       this.addMenuRow(label, 0, 1, 1);
-      this.menuCpuUsage = new St.Label({
+      this.menuMemUsage = new St.Label({
         text: MeterNoVal,
         style_class: 'menu-value menu-section-end',
       });
-      this.addMenuRow(this.menuCpuUsage, 1, 1, 1);
+      this.addMenuRow(this.menuMemUsage, 1, 1, 1);
     }
   }
 );
 
-export type CpuMonitor = InstanceType<typeof CpuMonitor>;
+export type MemMonitor = InstanceType<typeof MemMonitor>;

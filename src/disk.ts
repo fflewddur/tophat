@@ -27,17 +27,19 @@ import {
 
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
-export const CpuMonitor = GObject.registerClass(
-  class CpuMonitor extends TopHatMeter {
+export const DiskMonitor = GObject.registerClass(
+  class DiskMonitor extends TopHatMeter {
     private icon;
-    private usage;
-    private menuCpuUsage?: St.Label;
+    private valueRead: St.Label;
+    private valueWrite: St.Label;
+    private menuDiskWrites?: St.Label;
+    private menuDiskReads?: St.Label;
 
     constructor(metadata: ExtensionMetadata) {
-      super('CPU Monitor', metadata);
+      super('Disk Monitor', metadata);
 
       const gicon = Gio.icon_new_for_string(
-        `${this.metadata.path}/icons/cpu-icon-symbolic.svg`
+        `${this.metadata.path}/icons/disk-icon-symbolic.svg`
       );
       this.icon = new St.Icon({
         gicon,
@@ -45,36 +47,65 @@ export const CpuMonitor = GObject.registerClass(
       });
       this.add_child(this.icon);
 
-      this.usage = new St.Label({
-        text: MeterNoVal,
-        style_class: 'tophat-panel-usage',
-        y_align: Clutter.ActorAlign.CENTER,
+      const vbox = new St.BoxLayout({ vertical: true });
+      vbox.connect('notify::vertical', (obj) => {
+        obj.vertical = true;
       });
-      this.add_child(this.usage);
+      this.add_child(vbox);
+
+      const valueRead = new St.Label({
+        text: MeterNoVal,
+        style_class: 'tophat-panel-usage-stacked',
+        y_expand: true,
+        y_align: Clutter.ActorAlign.END,
+      });
+      vbox.add_child(valueRead);
+      this.valueRead = valueRead;
+      const valueWrite = new St.Label({
+        text: MeterNoVal,
+        style_class: 'tophat-panel-usage-stacked',
+        y_expand: true,
+        y_align: Clutter.ActorAlign.START,
+      });
+      vbox.add_child(valueWrite);
+      this.valueWrite = valueWrite;
 
       this.buildMenu();
       this.addMenuButtons();
     }
 
     private buildMenu() {
+      this.menuNumCols = 3;
+
       let label = new St.Label({
-        text: _('Processor usage'),
+        text: _('Disk activity'),
         style_class: 'menu-header',
       });
-      this.addMenuRow(label, 0, 2, 1);
+      this.addMenuRow(label, 0, 3, 1);
 
       label = new St.Label({
-        text: _('Processor utilization:'),
-        style_class: 'menu-label menu-section-end',
+        text: _('Writing:'),
+        style_class: 'menu-label',
       });
-      this.addMenuRow(label, 0, 1, 1);
-      this.menuCpuUsage = new St.Label({
+      this.addMenuRow(label, 0, 2, 1);
+      this.menuDiskWrites = new St.Label({
+        text: MeterNoVal,
+        style_class: 'menu-value',
+      });
+      this.addMenuRow(this.menuDiskWrites, 2, 1, 1);
+
+      label = new St.Label({
+        text: _('Reading:'),
+        style_class: 'menu-label',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+      this.menuDiskReads = new St.Label({
         text: MeterNoVal,
         style_class: 'menu-value menu-section-end',
       });
-      this.addMenuRow(this.menuCpuUsage, 1, 1, 1);
+      this.addMenuRow(this.menuDiskReads, 2, 1, 1);
     }
   }
 );
 
-export type CpuMonitor = InstanceType<typeof CpuMonitor>;
+export type DiskMonitor = InstanceType<typeof DiskMonitor>;

@@ -22,11 +22,14 @@ import Gio from 'gi://Gio';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import { CpuMonitor } from './cpu.js';
 import { File } from './file.js';
 import { Vitals, CpuModel } from './vitals.js';
 import { TopHatContainer } from './container.js';
-import { TopHatMeter } from './meter.js';
+// import { TopHatMeter } from './meter.js';
+import { CpuMonitor } from './cpu.js';
+import { MemMonitor } from './mem.js';
+import { DiskMonitor } from './disk.js';
+import { NetMonitor } from './net.js';
 
 enum MenuPosition {
   LeftEdge,
@@ -104,9 +107,9 @@ export default class TopHat extends Extension {
     this.container?.destroy();
     this.container = new TopHatContainer(0.5, 'TopHat');
     this.container.addMeter(new CpuMonitor(this.metadata));
-    this.container.addMeter(new TopHatMeter('Memory Meter', this.metadata));
-    this.container.addMeter(new TopHatMeter('Disk Meter', this.metadata));
-    this.container.addMeter(new TopHatMeter('Network Meter', this.metadata));
+    this.container.addMeter(new MemMonitor(this.metadata));
+    this.container.addMeter(new DiskMonitor(this.metadata));
+    this.container.addMeter(new NetMonitor(this.metadata));
     const pref = this.getPreferredPanelAttributes();
     this.container = Main.panel.addToStatusArea(
       'TopHat',
