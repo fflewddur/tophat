@@ -25,6 +25,7 @@ import {
   gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
 export const NetMonitor = GObject.registerClass(
@@ -32,8 +33,8 @@ export const NetMonitor = GObject.registerClass(
     private icon;
     private valueNetUp: St.Label;
     private valueNetDown: St.Label;
-    private menuNetUp?: St.Label;
-    private menuNetDown?: St.Label;
+    private menuNetUp: St.Label;
+    private menuNetDown: St.Label;
 
     constructor(metadata: ExtensionMetadata) {
       super('Net Monitor', metadata);
@@ -71,6 +72,9 @@ export const NetMonitor = GObject.registerClass(
       vbox.add_child(valueNetDown);
       this.valueNetDown = valueNetDown;
 
+      this.menuNetUp = new St.Label();
+      this.menuNetDown = new St.Label();
+
       this.buildMenu();
       this.addMenuButtons();
     }
@@ -87,10 +91,8 @@ export const NetMonitor = GObject.registerClass(
         style_class: 'menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
-      this.menuNetUp = new St.Label({
-        text: MeterNoVal,
-        style_class: 'menu-value',
-      });
+      this.menuNetUp.text = MeterNoVal;
+      this.menuNetUp.add_style_class_name('menu-value');
       this.addMenuRow(this.menuNetUp, 1, 1, 1);
 
       label = new St.Label({
@@ -98,11 +100,22 @@ export const NetMonitor = GObject.registerClass(
         style_class: 'menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
-      this.menuNetDown = new St.Label({
-        text: MeterNoVal,
-        style_class: 'menu-value menu-section-end',
-      });
+      this.menuNetDown.text = MeterNoVal;
+      this.menuNetDown.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuNetDown, 1, 1, 1);
+    }
+
+    public override bindVitals(vitals: Vitals): void {
+      vitals.connect('notify::net-send', () => {
+        const s = MeterNoVal;
+        this.valueNetUp.text = s;
+        this.menuNetUp.text = s;
+      });
+      vitals.connect('notify::net-recv', () => {
+        const s = MeterNoVal;
+        this.valueNetDown.text = s;
+        this.menuNetDown.text = s;
+      });
     }
   }
 );

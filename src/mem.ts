@@ -25,13 +25,15 @@ import {
   gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
 export const MemMonitor = GObject.registerClass(
   class MemMonitor extends TopHatMeter {
     private icon;
     private usage;
-    private menuMemUsage?: St.Label;
+    private menuMemUsage;
+    private menuSwapUsage;
 
     constructor(metadata: ExtensionMetadata) {
       super('Memory Monitor', metadata);
@@ -52,6 +54,9 @@ export const MemMonitor = GObject.registerClass(
       });
       this.add_child(this.usage);
 
+      this.menuMemUsage = new St.Label();
+      this.menuSwapUsage = new St.Label();
+
       this.buildMenu();
       this.addMenuButtons();
     }
@@ -65,14 +70,33 @@ export const MemMonitor = GObject.registerClass(
 
       label = new St.Label({
         text: _('RAM used:'),
+        style_class: 'menu-label',
+      });
+      this.addMenuRow(label, 0, 1, 1);
+      this.menuMemUsage.text = MeterNoVal;
+      this.menuMemUsage.add_style_class_name('menu-value');
+      this.addMenuRow(this.menuMemUsage, 1, 1, 1);
+
+      label = new St.Label({
+        text: _('Swap used:'),
         style_class: 'menu-label menu-section-end',
       });
       this.addMenuRow(label, 0, 1, 1);
-      this.menuMemUsage = new St.Label({
-        text: MeterNoVal,
-        style_class: 'menu-value menu-section-end',
+      this.menuSwapUsage.text = MeterNoVal;
+      this.menuSwapUsage.add_style_class_name('menu-value menu-section-end');
+      this.addMenuRow(this.menuSwapUsage, 1, 1, 1);
+    }
+
+    public override bindVitals(vitals: Vitals): void {
+      vitals.connect('notify::ram-usage', () => {
+        const s = (vitals.ram_usage * 100).toFixed(0) + '%';
+        this.usage.text = s;
+        this.menuMemUsage.text = s;
       });
-      this.addMenuRow(this.menuMemUsage, 1, 1, 1);
+      vitals.connect('notify::swap-usage', () => {
+        const s = (vitals.swap_usage * 100).toFixed(0) + '%';
+        this.menuSwapUsage.text = s;
+      });
     }
   }
 );

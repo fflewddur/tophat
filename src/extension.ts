@@ -25,7 +25,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { File } from './file.js';
 import { Vitals, CpuModel } from './vitals.js';
 import { TopHatContainer } from './container.js';
-// import { TopHatMeter } from './meter.js';
 import { CpuMonitor } from './cpu.js';
 import { MemMonitor } from './mem.js';
 import { DiskMonitor } from './disk.js';
@@ -119,7 +118,10 @@ export default class TopHat extends Extension {
     );
 
     this.container?.meters.forEach((m) => {
-      Main.panel._onMenuSet(m);
+      if (this.vitals) {
+        m.bindVitals(this.vitals);
+        Main.panel._onMenuSet(m);
+      }
     });
   }
 

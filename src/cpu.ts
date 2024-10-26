@@ -25,13 +25,14 @@ import {
   gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMeter {
     private icon;
     private usage;
-    private menuCpuUsage?: St.Label;
+    private menuCpuUsage;
 
     constructor(metadata: ExtensionMetadata) {
       super('CPU Monitor', metadata);
@@ -52,6 +53,8 @@ export const CpuMonitor = GObject.registerClass(
       });
       this.add_child(this.usage);
 
+      this.menuCpuUsage = new St.Label();
+
       this.buildMenu();
       this.addMenuButtons();
     }
@@ -68,11 +71,17 @@ export const CpuMonitor = GObject.registerClass(
         style_class: 'menu-label menu-section-end',
       });
       this.addMenuRow(label, 0, 1, 1);
-      this.menuCpuUsage = new St.Label({
-        text: MeterNoVal,
-        style_class: 'menu-value menu-section-end',
-      });
+      this.menuCpuUsage.text = MeterNoVal;
+      this.menuCpuUsage.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuCpuUsage, 1, 1, 1);
+    }
+
+    public override bindVitals(vitals: Vitals): void {
+      vitals.connect('notify::cpu-usage', () => {
+        const s = (vitals.cpu_usage * 100).toFixed(0) + '%';
+        this.usage.text = s;
+        this.menuCpuUsage.text = s;
+      });
     }
   }
 );

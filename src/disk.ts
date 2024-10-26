@@ -25,15 +25,16 @@ import {
   gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
 export const DiskMonitor = GObject.registerClass(
   class DiskMonitor extends TopHatMeter {
     private icon;
-    private valueRead: St.Label;
-    private valueWrite: St.Label;
-    private menuDiskWrites?: St.Label;
-    private menuDiskReads?: St.Label;
+    private valueRead;
+    private valueWrite;
+    private menuDiskWrites;
+    private menuDiskReads;
 
     constructor(metadata: ExtensionMetadata) {
       super('Disk Monitor', metadata);
@@ -70,6 +71,9 @@ export const DiskMonitor = GObject.registerClass(
       vbox.add_child(valueWrite);
       this.valueWrite = valueWrite;
 
+      this.menuDiskWrites = new St.Label();
+      this.menuDiskReads = new St.Label();
+
       this.buildMenu();
       this.addMenuButtons();
     }
@@ -88,10 +92,8 @@ export const DiskMonitor = GObject.registerClass(
         style_class: 'menu-label',
       });
       this.addMenuRow(label, 0, 2, 1);
-      this.menuDiskWrites = new St.Label({
-        text: MeterNoVal,
-        style_class: 'menu-value',
-      });
+      this.menuDiskWrites.text = MeterNoVal;
+      this.add_style_class_name('menu-value');
       this.addMenuRow(this.menuDiskWrites, 2, 1, 1);
 
       label = new St.Label({
@@ -99,11 +101,22 @@ export const DiskMonitor = GObject.registerClass(
         style_class: 'menu-label',
       });
       this.addMenuRow(label, 0, 2, 1);
-      this.menuDiskReads = new St.Label({
-        text: MeterNoVal,
-        style_class: 'menu-value menu-section-end',
-      });
+      this.menuDiskReads.text = MeterNoVal;
+      this.menuDiskReads.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuDiskReads, 2, 1, 1);
+    }
+
+    public override bindVitals(vitals: Vitals): void {
+      vitals.connect('notify::disk-write', () => {
+        const s = MeterNoVal;
+        this.valueRead.text = s;
+        this.menuDiskReads.text = s;
+      });
+      vitals.connect('notify::disk-read', () => {
+        const s = MeterNoVal;
+        this.valueWrite.text = s;
+        this.menuDiskWrites.text = s;
+      });
     }
   }
 );

@@ -28,6 +28,8 @@ import {
   ExtensionMetadata,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { Vitals } from './vitals.js';
+
 const MENU_COLUMNS = 2;
 export const MeterNoVal = 'n/a';
 
@@ -151,6 +153,11 @@ export const TopHatMeter = GObject.registerClass(
         this.menuRow++;
         this.menuCol = 0;
       }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public bindVitals(vitals: Vitals) {
+      throw new Error('Must implement bindVitals()');
     }
   }
 );

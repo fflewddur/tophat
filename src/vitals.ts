@@ -1,230 +1,312 @@
 import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
 
 import { File } from './file.js';
 
 const MAX_HISTORY = 100;
 const RE_MEM_INFO = /:\s+(\d+)/;
 
-export class Vitals {
-  private procs = new Map<string, Process>();
-  private uptime = 0;
-  private cpuModel: CpuModel;
-  private cpuUsageHistory = new Array<CpuUsage>(MAX_HISTORY);
-  private cpuState: CpuState;
-  private memInfo: MemInfo;
-  private memUsageHistory = new Array<MemUsage>(MAX_HISTORY);
+export const Vitals = GObject.registerClass(
+  {
+    GTypeName: 'Vitals',
+    Properties: {
+      'cpu-usage': GObject.ParamSpec.int(
+        'cpu-usage',
+        'CPU usage',
+        'Proportion of CPU usage as a value between 0 - 100',
+        GObject.ParamFlags.READWRITE,
+        0,
+        100,
+        0
+      ),
+      'ram-usage': GObject.ParamSpec.int(
+        'ram-usage',
+        'RAM usage',
+        'Proportion of RAM usage as a value between 0 - 100',
+        GObject.ParamFlags.READWRITE,
+        0,
+        100,
+        0
+      ),
+      'swap-usage': GObject.ParamSpec.int(
+        'swap-usage',
+        'Swap usage',
+        'Proportion of swap usage as a value between 0 - 100',
+        GObject.ParamFlags.READWRITE,
+        0,
+        100,
+        0
+      ),
+    },
+  },
+  class Vitals extends GObject.Object {
+    private procs = new Map<string, Process>();
+    private uptime = 0;
+    private cpuModel: CpuModel;
+    private cpuUsageHistory = new Array<CpuUsage>(MAX_HISTORY);
+    private cpuState: CpuState;
+    private memInfo: MemInfo;
+    private memUsageHistory = new Array<MemUsage>(MAX_HISTORY);
+    private _cpu_usage = 0;
+    private _ram_usage = 0;
+    private _swap_usage = 0;
 
-  constructor(model: CpuModel) {
-    this.cpuModel = model;
-    this.cpuState = new CpuState(model.cores);
-    this.memInfo = new MemInfo();
-  }
+    constructor(model: CpuModel) {
+      super();
+      this.cpuModel = model;
+      this.cpuState = new CpuState(model.cores);
+      this.memInfo = new MemInfo();
+    }
 
-  public read() {
-    // Because /proc is a virtual FS, maybe we can get away with sync IO?
-    console.time('read /proc/');
-    this.loadUptime();
-    this.loadStat();
-    this.loadMeminfo();
-    this.loadProcessList();
-    console.timeEnd('read /proc/');
-  }
+    public get cpu_usage(): number {
+      return this._cpu_usage;
+    }
 
-  private loadUptime() {
-    const f = new File('/proc/uptime');
-    const contents = f.readSync();
-    this.uptime = parseInt(contents.substring(0, contents.indexOf(' ')));
-    console.log(`[TopHat] uptime = ${this.uptime}`);
-  }
+    private set cpu_usage(v: number) {
+      if (this.cpu_usage === v) {
+        return;
+      }
+      this._cpu_usage = v;
+      this.notify('cpu-usage');
+    }
 
-  private loadStat() {
-    const f = new File('/proc/stat');
-    const contents = f.readSync();
-    const lines = contents.split('\n');
-    const usage = new CpuUsage(this.cpuModel.cores);
-    lines.forEach((line: string) => {
-      if (line.startsWith('cpu')) {
-        const re =
-          /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
-        const m = line.match(re);
-        if (m && !m[1]) {
-          // These are aggregate CPU statistics
-          const usedTime =
-            parseInt(m[2]) +
-            parseInt(m[3]) +
-            parseInt(m[4]) +
-            parseInt(m[6]) +
-            parseInt(m[7]) +
-            parseInt(m[8]) +
-            parseInt(m[9]) +
-            parseInt(m[10]);
-          const idleTime = parseInt(m[5]);
-          this.cpuState.update(usedTime, idleTime);
-          usage.aggregate = this.cpuState.usage();
-        } else if (m) {
-          // These are per-core statistics
-          const core = parseInt(m[1]);
-          const usedTime =
-            parseInt(m[2]) +
-            parseInt(m[3]) +
-            parseInt(m[4]) +
-            parseInt(m[6]) +
-            parseInt(m[7]) +
-            parseInt(m[8]) +
-            parseInt(m[9]) +
-            parseInt(m[10]);
-          const idleTime = parseInt(m[5]);
-          this.cpuState.updateCore(core, usedTime, idleTime);
-          usage.core[core] = this.cpuState.coreUsage(core);
+    public get ram_usage(): number {
+      return this._ram_usage;
+    }
+
+    private set ram_usage(v: number) {
+      if (this.ram_usage === v) {
+        return;
+      }
+      this._ram_usage = v;
+      this.notify('ram-usage');
+    }
+
+    public get swap_usage(): number {
+      return this._swap_usage;
+    }
+
+    private set swap_usage(v: number) {
+      if (this.swap_usage === v) {
+        return;
+      }
+      this._swap_usage = v;
+      this.notify('swap-usage');
+    }
+
+    public read() {
+      // Because /proc is a virtual FS, maybe we can get away with sync IO?
+      console.time('read /proc/');
+      this.loadUptime();
+      this.loadStat();
+      this.loadMeminfo();
+      this.loadProcessList();
+      console.timeEnd('read /proc/');
+    }
+
+    private loadUptime() {
+      const f = new File('/proc/uptime');
+      const contents = f.readSync();
+      this.uptime = parseInt(contents.substring(0, contents.indexOf(' ')));
+      console.log(`[TopHat] uptime = ${this.uptime}`);
+    }
+
+    private loadStat() {
+      const f = new File('/proc/stat');
+      const contents = f.readSync();
+      const lines = contents.split('\n');
+      const usage = new CpuUsage(this.cpuModel.cores);
+      lines.forEach((line: string) => {
+        if (line.startsWith('cpu')) {
+          const re =
+            /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+          const m = line.match(re);
+          if (m && !m[1]) {
+            // These are aggregate CPU statistics
+            const usedTime =
+              parseInt(m[2]) +
+              parseInt(m[3]) +
+              parseInt(m[4]) +
+              parseInt(m[6]) +
+              parseInt(m[7]) +
+              parseInt(m[8]) +
+              parseInt(m[9]) +
+              parseInt(m[10]);
+            const idleTime = parseInt(m[5]);
+            this.cpuState.update(usedTime, idleTime);
+            usage.aggregate = this.cpuState.usage();
+          } else if (m) {
+            // These are per-core statistics
+            const core = parseInt(m[1]);
+            const usedTime =
+              parseInt(m[2]) +
+              parseInt(m[3]) +
+              parseInt(m[4]) +
+              parseInt(m[6]) +
+              parseInt(m[7]) +
+              parseInt(m[8]) +
+              parseInt(m[9]) +
+              parseInt(m[10]);
+            const idleTime = parseInt(m[5]);
+            this.cpuState.updateCore(core, usedTime, idleTime);
+            usage.core[core] = this.cpuState.coreUsage(core);
+          }
+        }
+        if (this.cpuUsageHistory.unshift(usage) > MAX_HISTORY) {
+          this.cpuUsageHistory.pop();
+        }
+      });
+      this.cpu_usage = usage.aggregate;
+      // console.log(`CPU usage: ${usage}`);
+    }
+
+    private loadMeminfo() {
+      const f = new File('/proc/meminfo');
+      const contents = f.readSync();
+      const lines = contents.split('\n');
+      const usage = new MemUsage();
+      lines.forEach((line: string) => {
+        if (line.startsWith('MemTotal:')) {
+          this.memInfo.total = readKb(line);
+        } else if (line.startsWith('MemAvailable:')) {
+          this.memInfo.available = readKb(line);
+        } else if (line.startsWith('SwapTotal:')) {
+          this.memInfo.swapTotal = readKb(line);
+        } else if (line.startsWith('SwapFree:')) {
+          this.memInfo.swapAvailable = readKb(line);
+        }
+      });
+      usage.usedMem =
+        (this.memInfo.total - this.memInfo.available) / this.memInfo.total;
+      usage.usedSwap =
+        (this.memInfo.swapTotal - this.memInfo.swapAvailable) /
+        this.memInfo.swapTotal;
+      if (this.memUsageHistory.unshift(usage) > MAX_HISTORY) {
+        this.memUsageHistory.pop();
+      }
+      this.ram_usage = usage.usedMem;
+      this.swap_usage = usage.usedSwap;
+      // console.log(
+      //   `Mem usage: ${(usage.usedMem * 100).toFixed(0)}% of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
+      //     `Swap usage: ${(usage.usedSwap * 100).toFixed(0)}% of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
+      // );
+    }
+
+    private loadProcessList() {
+      const directory = Gio.File.new_for_path('/proc/');
+      // console.log('enumerating children...');
+      const iter = directory.enumerate_children(
+        'standard::*',
+        Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+        null
+      );
+      while (true) {
+        const fileInfo = iter.next_file(null);
+        if (fileInfo === null) {
+          break;
+        }
+        const name = fileInfo.get_name();
+        if (
+          name[0] == '0' ||
+          name[0] == '1' ||
+          name[0] == '2' ||
+          name[0] == '3' ||
+          name[0] == '4' ||
+          name[0] == '5' ||
+          name[0] == '6' ||
+          name[0] == '7' ||
+          name[0] == '8' ||
+          name[0] == '9'
+        ) {
+          const p = this.loadProcessStat(name);
+          this.procs.set(p.id, p);
+          this.loadSmapsRollupForProcess(p);
+          this.loadIoForProcess(p);
         }
       }
-      if (this.cpuUsageHistory.unshift(usage) > MAX_HISTORY) {
-        this.cpuUsageHistory.pop();
-      }
-    });
-    console.log(`CPU usage: ${usage}`);
-  }
-
-  private loadMeminfo() {
-    const f = new File('/proc/meminfo');
-    const contents = f.readSync();
-    const lines = contents.split('\n');
-    const usage = new MemUsage();
-    lines.forEach((line: string) => {
-      if (line.startsWith('MemTotal:')) {
-        this.memInfo.total = readKb(line);
-      } else if (line.startsWith('MemAvailable:')) {
-        this.memInfo.available = readKb(line);
-      } else if (line.startsWith('SwapTotal:')) {
-        this.memInfo.swapTotal = readKb(line);
-      } else if (line.startsWith('SwapFree:')) {
-        this.memInfo.swapAvailable = readKb(line);
-      }
-    });
-    usage.usedMem =
-      (this.memInfo.total - this.memInfo.available) / this.memInfo.total;
-    usage.usedSwap =
-      (this.memInfo.swapTotal - this.memInfo.swapAvailable) /
-      this.memInfo.swapTotal;
-    if (this.memUsageHistory.unshift(usage) > MAX_HISTORY) {
-      this.memUsageHistory.pop();
     }
-    console.log(
-      `Mem usage: ${(usage.usedMem * 100).toFixed(0)}% of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
-        `Swap usage: ${(usage.usedSwap * 100).toFixed(0)}% of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
-    );
-  }
 
-  private loadProcessList() {
-    const directory = Gio.File.new_for_path('/proc/');
-    // console.log('enumerating children...');
-    const iter = directory.enumerate_children(
-      'standard::*',
-      Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-      null
-    );
-    while (true) {
-      const fileInfo = iter.next_file(null);
-      if (fileInfo === null) {
-        break;
+    private loadProcessStat(name: string): Process {
+      const f = new File('/proc/' + name + '/stat');
+      const contents = f.readSync();
+      // console.log(`[TopHat] contents for ${f.name()}: ${contents}`);
+      let p = this.procs.get(name);
+      if (p === undefined) {
+        p = new Process();
       }
-      const name = fileInfo.get_name();
-      if (
-        name[0] == '0' ||
-        name[0] == '1' ||
-        name[0] == '2' ||
-        name[0] == '3' ||
-        name[0] == '4' ||
-        name[0] == '5' ||
-        name[0] == '6' ||
-        name[0] == '7' ||
-        name[0] == '8' ||
-        name[0] == '9'
-      ) {
-        const p = this.loadProcessStat(name);
-        this.procs.set(p.id, p);
-        this.loadSmapsRollupForProcess(p);
-        this.loadIoForProcess(p);
-      }
+      p.id = name;
+      p.parseStat(contents);
+
+      return p;
     }
-  }
 
-  private loadProcessStat(name: string): Process {
-    const f = new File('/proc/' + name + '/stat');
-    const contents = f.readSync();
-    // console.log(`[TopHat] contents for ${f.name()}: ${contents}`);
-    let p = this.procs.get(name);
-    if (p === undefined) {
-      p = new Process();
+    private loadSmapsRollupForProcess(p: Process): void {
+      const f = new File('/proc/' + p.id + '/smaps_rollup');
+      const contents = f.readSync(false);
+      p.parseSmapsRollup(contents);
     }
-    p.id = name;
-    p.parseStat(contents);
 
-    return p;
-  }
+    private loadIoForProcess(p: Process): void {
+      const f = new File('/proc/' + p.id + '/io');
+      const contents = f.readSync(false);
+      p.parseIo(contents);
+    }
 
-  private loadSmapsRollupForProcess(p: Process): void {
-    const f = new File('/proc/' + p.id + '/smaps_rollup');
-    const contents = f.readSync(false);
-    p.parseSmapsRollup(contents);
-  }
+    public getTopCpuProcs(n: number) {
+      log('Top CPU processes:');
+      let top = Array.from(this.procs.values());
+      top = top.sort((x, y) => {
+        return x.cpuUsage() - y.cpuUsage();
+      });
+      top = top.reverse().slice(0, n);
+      top.forEach((p) => {
+        if (p.cpuUsage() > 0) {
+          console.log(
+            `  ${p.cmd} (${p.id}) ` +
+              `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
+          );
+        }
+      });
+      //TODO: return list of details for UI
+    }
 
-  private loadIoForProcess(p: Process): void {
-    const f = new File('/proc/' + p.id + '/io');
-    const contents = f.readSync(false);
-    p.parseIo(contents);
-  }
-
-  public getTopCpuProcs(n: number) {
-    log('Top CPU processes:');
-    let top = Array.from(this.procs.values());
-    top = top.sort((x, y) => {
-      return x.cpuUsage() - y.cpuUsage();
-    });
-    top = top.reverse().slice(0, n);
-    top.forEach((p) => {
-      if (p.cpuUsage() > 0) {
+    public getTopMemProcs(n: number) {
+      log('Top memory processes:');
+      let top = Array.from(this.procs.values());
+      top = top.sort((x, y) => {
+        return x.memUsage() - y.memUsage();
+      });
+      top = top.reverse().slice(0, n);
+      top.forEach((p) => {
         console.log(
-          `  ${p.cmd} (${p.id}) ` +
-            `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
+          `  ${p.cmd} (${p.id}) usage: ${(p.memUsage() / 1000).toFixed(0)} MB`
         );
-      }
-    });
-    //TODO: return list of details for UI
-  }
+      });
+      // TODO: return list of details for UI
+    }
 
-  public getTopMemProcs(n: number) {
-    log('Top memory processes:');
-    let top = Array.from(this.procs.values());
-    top = top.sort((x, y) => {
-      return x.memUsage() - y.memUsage();
-    });
-    top = top.reverse().slice(0, n);
-    top.forEach((p) => {
-      console.log(
-        `  ${p.cmd} (${p.id}) usage: ${(p.memUsage() / 1000).toFixed(0)} MB`
-      );
-    });
-    // TODO: return list of details for UI
-  }
-
-  public getTopDiskProcs(n: number) {
-    log('Top disk processes:');
-    let top = Array.from(this.procs.values());
-    top = top.sort((x, y) => {
-      return x.diskReads() + x.diskWrites() - (y.diskReads() + y.diskWrites());
-    });
-    top = top.reverse().slice(0, n);
-    top.forEach((p) => {
-      if (p.diskReads() + p.diskWrites() > 0) {
-        console.log(
-          `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
+    public getTopDiskProcs(n: number) {
+      log('Top disk processes:');
+      let top = Array.from(this.procs.values());
+      top = top.sort((x, y) => {
+        return (
+          x.diskReads() + x.diskWrites() - (y.diskReads() + y.diskWrites())
         );
-      }
-    });
-    // TODO: return list of details for UI
+      });
+      top = top.reverse().slice(0, n);
+      top.forEach((p) => {
+        if (p.diskReads() + p.diskWrites() > 0) {
+          console.log(
+            `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
+          );
+        }
+      });
+      // TODO: return list of details for UI
+    }
   }
-}
+);
+
+export type Vitals = InstanceType<typeof Vitals>;
 
 class CpuState {
   public usedTime: number;
