@@ -51,6 +51,7 @@ export default class TopHat extends Extension {
     const f = new File('/proc/cpuinfo');
     const cpuModel = this.parseCpuOverview(f.readSync());
     this.vitals = new Vitals(cpuModel);
+    setTimeout(() => this.readVitals(), 0);
     this.addToPanel();
     if (this.loop === 0) {
       this.loop = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () =>
@@ -75,6 +76,7 @@ export default class TopHat extends Extension {
     this.signals.forEach((s) => {
       this.gsettings?.disconnect(s);
     });
+    this.vitals?.run_dispose();
     this.vitals = undefined;
     this.gsettings = undefined;
     console.log('[TopHat] disabled');
