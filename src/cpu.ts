@@ -23,6 +23,7 @@ import St from 'gi://St';
 import {
   ExtensionMetadata,
   gettext as _,
+  ngettext,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Vitals } from './vitals.js';
@@ -33,6 +34,7 @@ export const CpuMonitor = GObject.registerClass(
     private icon;
     private usage;
     private menuCpuUsage;
+    private menuUptime;
 
     constructor(metadata: ExtensionMetadata) {
       super('CPU Monitor', metadata);
@@ -54,6 +56,7 @@ export const CpuMonitor = GObject.registerClass(
       this.add_child(this.usage);
 
       this.menuCpuUsage = new St.Label();
+      this.menuUptime = new St.Label();
 
       this.buildMenu();
       this.addMenuButtons();
@@ -74,6 +77,15 @@ export const CpuMonitor = GObject.registerClass(
       this.menuCpuUsage.text = MeterNoVal;
       this.menuCpuUsage.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuCpuUsage, 1, 1, 1);
+
+      label = new St.Label({
+        text: _('System uptime'),
+        style_class: 'menu-header',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+      this.menuUptime.text = MeterNoVal;
+      this.menuUptime.add_style_class_name('menu-uptime menu-section-end');
+      this.addMenuRow(this.menuUptime, 0, 2, 1);
     }
 
     public override bindVitals(vitals: Vitals): void {
@@ -82,6 +94,28 @@ export const CpuMonitor = GObject.registerClass(
         this.usage.text = s;
         this.menuCpuUsage.text = s;
       });
+      vitals.connect('notify::uptime', () => {
+        const s = this.formatUptime(vitals.uptime);
+        this.menuUptime.text = s;
+      });
+    }
+
+    private formatUptime(seconds: number): string {
+      let days = 0,
+        hours = 0,
+        mins = 0;
+      mins = Math.floor((seconds % 3600) / 60);
+      hours = Math.floor((seconds % 86400) / 3600);
+      days = Math.floor(seconds / 86400);
+      const parts = [];
+      if (days > 0) {
+        parts.push(ngettext('%d day', '%d days', days).format(days));
+      }
+      if (days > 0 || hours > 0) {
+        parts.push(ngettext('%d hour', '%d hours', hours).format(hours));
+      }
+      parts.push(ngettext('%d minute', '%d minutes', mins).format(mins));
+      return parts.join(' ');
     }
   }
 );

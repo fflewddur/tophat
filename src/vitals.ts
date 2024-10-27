@@ -10,6 +10,15 @@ export const Vitals = GObject.registerClass(
   {
     GTypeName: 'Vitals',
     Properties: {
+      uptime: GObject.ParamSpec.int(
+        'uptime',
+        'System uptime',
+        'System uptime in seconds',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
       'cpu-usage': GObject.ParamSpec.int(
         'cpu-usage',
         'CPU usage',
@@ -41,12 +50,12 @@ export const Vitals = GObject.registerClass(
   },
   class Vitals extends GObject.Object {
     private procs = new Map<string, Process>();
-    private uptime = 0;
-    private cpuModel: CpuModel;
+    public cpuModel: CpuModel;
     private cpuUsageHistory = new Array<CpuUsage>(MAX_HISTORY);
     private cpuState: CpuState;
-    private memInfo: MemInfo;
+    public memInfo: MemInfo;
     private memUsageHistory = new Array<MemUsage>(MAX_HISTORY);
+    private _uptime = 0;
     private _cpu_usage = 0;
     private _ram_usage = 0;
     private _swap_usage = 0;
@@ -92,6 +101,18 @@ export const Vitals = GObject.registerClass(
       }
       this._swap_usage = v;
       this.notify('swap-usage');
+    }
+
+    public get uptime(): number {
+      return this._uptime;
+    }
+
+    private set uptime(v: number) {
+      if (this.uptime === v) {
+        return;
+      }
+      this._uptime = v;
+      this.notify('uptime');
     }
 
     public read() {

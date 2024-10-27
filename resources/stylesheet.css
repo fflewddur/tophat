@@ -73,3 +73,8 @@
 .menu-section-end {
   margin-bottom: 0.5em;
 }
+
+.menu-uptime {
+  font-size: 0.8em;
+  text-align: center;
+}
