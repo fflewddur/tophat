@@ -5,6 +5,9 @@ import { File } from './file.js';
 
 const MAX_HISTORY = 100;
 const RE_MEM_INFO = /:\s+(\d+)/;
+const RE_NET_DEV = /^\s*(\w+):/;
+const RE_NET_ACTIVITY =
+  /:\s*(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+)/;
 
 export const Vitals = GObject.registerClass(
   {
@@ -46,6 +49,24 @@ export const Vitals = GObject.registerClass(
         100,
         0
       ),
+      'net-recv': GObject.ParamSpec.int(
+        'net-recv',
+        'Network bytes recieved',
+        'Number of bytes recently received via network interfaces',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
+      'net-sent': GObject.ParamSpec.int(
+        'net-sent',
+        'Network bytes sent',
+        'Number of bytes recently sent via network interfaces',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
     },
   },
   class Vitals extends GObject.Object {
@@ -55,16 +76,21 @@ export const Vitals = GObject.registerClass(
     private cpuState: CpuState;
     public memInfo: MemInfo;
     private memUsageHistory = new Array<MemUsage>(MAX_HISTORY);
+    private netState: NetDevState;
+    private netActivityHistory = new Array<NetActivity>(MAX_HISTORY);
     private _uptime = 0;
     private _cpu_usage = 0;
     private _ram_usage = 0;
     private _swap_usage = -1;
+    private _net_recv = 0;
+    private _net_sent = 0;
 
     constructor(model: CpuModel) {
       super();
       this.cpuModel = model;
       this.cpuState = new CpuState(model.cores);
       this.memInfo = new MemInfo();
+      this.netState = new NetDevState();
     }
 
     public get cpu_usage(): number {
@@ -103,6 +129,30 @@ export const Vitals = GObject.registerClass(
       this.notify('swap-usage');
     }
 
+    public get net_recv() {
+      return this._net_recv;
+    }
+
+    private set net_recv(v: number) {
+      if (this.net_recv === v) {
+        return;
+      }
+      this._net_recv = v;
+      this.notify('net-recv');
+    }
+
+    public get net_sent() {
+      return this._net_sent;
+    }
+
+    private set net_sent(v: number) {
+      if (this.net_sent === v) {
+        return;
+      }
+      this._net_sent = v;
+      this.notify('net-sent');
+    }
+
     public get uptime(): number {
       return this._uptime;
     }
@@ -121,6 +171,7 @@ export const Vitals = GObject.registerClass(
       this.loadUptime();
       this.loadStat();
       this.loadMeminfo();
+      this.loadNetDev();
       this.loadProcessList();
       console.timeEnd('read /proc/');
     }
@@ -129,7 +180,7 @@ export const Vitals = GObject.registerClass(
       const f = new File('/proc/uptime');
       const contents = f.readSync();
       this.uptime = parseInt(contents.substring(0, contents.indexOf(' ')));
-      console.log(`[TopHat] uptime = ${this.uptime}`);
+      // console.log(`[TopHat] uptime = ${this.uptime}`);
     }
 
     private loadStat() {
@@ -213,6 +264,37 @@ export const Vitals = GObject.registerClass(
       // );
     }
 
+    private loadNetDev() {
+      const f = new File('/proc/net/dev');
+      const contents = f.readSync();
+      const lines = contents.split('\n');
+      let bytesRecv = 0;
+      let bytesSent = 0;
+
+      lines.forEach((line) => {
+        let m = line.match(RE_NET_DEV);
+        if (m) {
+          const dev = m[1];
+          if (dev !== 'lo') {
+            m = line.match(RE_NET_ACTIVITY);
+            if (m) {
+              bytesRecv += parseInt(m[1]);
+              bytesSent += parseInt(m[2]);
+            }
+          }
+        }
+      });
+      this.netState.update(bytesRecv, bytesSent);
+      const netActivity = new NetActivity();
+      netActivity.bytesRecv = this.netState.recvActivity();
+      netActivity.bytesSent = this.netState.sentActivity();
+      if (this.netActivityHistory.unshift(netActivity) > MAX_HISTORY) {
+        this.netActivityHistory.pop();
+      }
+      this.net_recv = netActivity.bytesRecv;
+      this.net_sent = netActivity.bytesSent;
+    }
+
     private loadProcessList() {
       const directory = Gio.File.new_for_path('/proc/');
       // console.log('enumerating children...');
@@ -282,10 +364,10 @@ export const Vitals = GObject.registerClass(
       top = top.reverse().slice(0, n);
       top.forEach((p) => {
         if (p.cpuUsage() > 0) {
-          console.log(
-            `  ${p.cmd} (${p.id}) ` +
-              `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
-          );
+          // console.log(
+          //   `  ${p.cmd} (${p.id}) ` +
+          //     `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
+          // );
         }
       });
       //TODO: return list of details for UI
@@ -317,9 +399,9 @@ export const Vitals = GObject.registerClass(
       top = top.reverse().slice(0, n);
       top.forEach((p) => {
         if (p.diskReads() + p.diskWrites() > 0) {
-          console.log(
-            `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
-          );
+          // console.log(
+          //   `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
+          // );
         }
       });
       // TODO: return list of details for UI
@@ -434,6 +516,33 @@ class MemUsage {
   public toString(): string {
     return `Memory usage: ${this.usedMem.toFixed(2)} Swap usage: ${this.usedSwap.toFixed(2)}`;
   }
+}
+
+class NetDevState {
+  public bytesRecv = 0;
+  public bytesRecvPrev = 0;
+  public bytesSent = 0;
+  public bytesSentPrev = 0;
+
+  public update(bytesRecv: number, bytesSent: number) {
+    this.bytesRecvPrev = this.bytesRecv;
+    this.bytesRecv = bytesRecv;
+    this.bytesSentPrev = this.bytesSent;
+    this.bytesSent = bytesSent;
+  }
+
+  public recvActivity() {
+    return this.bytesRecv - this.bytesRecvPrev;
+  }
+
+  public sentActivity() {
+    return this.bytesSent - this.bytesSentPrev;
+  }
+}
+
+class NetActivity {
+  public bytesRecv = 0;
+  public bytesSent = 0;
 }
 
 class Process {

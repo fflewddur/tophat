@@ -27,6 +27,7 @@ import {
 
 import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
+import { bytesToHumanString } from './helpers.js';
 
 export const NetMonitor = GObject.registerClass(
   class NetMonitor extends TopHatMeter {
@@ -106,13 +107,15 @@ export const NetMonitor = GObject.registerClass(
     }
 
     public override bindVitals(vitals: Vitals): void {
-      vitals.connect('notify::net-send', () => {
-        const s = MeterNoVal;
+      vitals.connect('notify::net-sent', () => {
+        const s = bytesToHumanString(vitals.net_sent);
+        console.log(`net-sent: ${vitals.net_sent} formatted: ${s}`);
         this.valueNetUp.text = s;
         this.menuNetUp.text = s;
       });
       vitals.connect('notify::net-recv', () => {
-        const s = MeterNoVal;
+        const s = bytesToHumanString(vitals.net_recv);
+        console.log(`net-recv: ${vitals.net_recv} formatted: ${s}`);
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
       });
