@@ -58,7 +58,7 @@ export const Vitals = GObject.registerClass(
     private _uptime = 0;
     private _cpu_usage = 0;
     private _ram_usage = 0;
-    private _swap_usage = 0;
+    private _swap_usage = -1;
 
     constructor(model: CpuModel) {
       super();
