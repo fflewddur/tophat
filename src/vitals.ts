@@ -8,6 +8,10 @@ const RE_MEM_INFO = /:\s+(\d+)/;
 const RE_NET_DEV = /^\s*(\w+):/;
 const RE_NET_ACTIVITY =
   /:\s*(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+)/;
+const RE_DISK_STATS =
+  /^\s*\d+\s+\d+\s+(\w+)\s+\d+\s+\d+\s+(\d+)\s+\d+\s+\d+\s+\d+\s+(\d+)/;
+const RE_NVME_DEV = /^nvme\d+n\d+$/;
+const RE_BLOCK_DEV = /^[^\d]+$/;
 
 export const Vitals = GObject.registerClass(
   {
@@ -67,6 +71,24 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'disk-read': GObject.ParamSpec.int(
+        'disk-read',
+        'Bytes read from disk',
+        'Number of bytes recently read from disk',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
+      'disk-wrote': GObject.ParamSpec.int(
+        'disk-wrote',
+        'Bytes written to disk',
+        'Number of bytes recently written to disk',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
     },
   },
   class Vitals extends GObject.Object {
@@ -78,12 +100,16 @@ export const Vitals = GObject.registerClass(
     private memUsageHistory = new Array<MemUsage>(MAX_HISTORY);
     private netState: NetDevState;
     private netActivityHistory = new Array<NetActivity>(MAX_HISTORY);
+    private diskState: DiskState;
+    private diskActivityHistory = new Array<DiskActivity>(MAX_HISTORY);
     private _uptime = 0;
     private _cpu_usage = 0;
     private _ram_usage = 0;
     private _swap_usage = -1;
     private _net_recv = 0;
     private _net_sent = 0;
+    private _disk_read = 0;
+    private _disk_wrote = 0;
 
     constructor(model: CpuModel) {
       super();
@@ -91,6 +117,7 @@ export const Vitals = GObject.registerClass(
       this.cpuState = new CpuState(model.cores);
       this.memInfo = new MemInfo();
       this.netState = new NetDevState();
+      this.diskState = new DiskState();
     }
 
     public get cpu_usage(): number {
@@ -153,6 +180,30 @@ export const Vitals = GObject.registerClass(
       this.notify('net-sent');
     }
 
+    public get disk_read() {
+      return this._disk_read;
+    }
+
+    private set disk_read(v: number) {
+      if (this.disk_read === v) {
+        return;
+      }
+      this._disk_read = v;
+      this.notify('disk-read');
+    }
+
+    public get disk_wrote() {
+      return this._disk_wrote;
+    }
+
+    private set disk_wrote(v: number) {
+      if (this.disk_wrote === v) {
+        return;
+      }
+      this._disk_wrote = v;
+      this.notify('disk-wrote');
+    }
+
     public get uptime(): number {
       return this._uptime;
     }
@@ -172,7 +223,8 @@ export const Vitals = GObject.registerClass(
       this.loadStat();
       this.loadMeminfo();
       this.loadNetDev();
-      this.loadProcessList();
+      this.loadDiskstats();
+      // this.loadProcessList();
       console.timeEnd('read /proc/');
     }
 
@@ -295,6 +347,52 @@ export const Vitals = GObject.registerClass(
       this.net_sent = netActivity.bytesSent;
     }
 
+    private loadDiskstats() {
+      const f = new File('/proc/diskstats');
+      const contents = f.readSync();
+      const lines = contents.split('\n');
+      let bytesRead = 0;
+      let bytesWritten = 0;
+
+      lines.forEach((line) => {
+        // console.log(`line: ${line}`);
+        const m = line.match(RE_DISK_STATS);
+        if (m) {
+          const dev = m[1];
+          // console.log(`disk: ${dev}`);
+          if (dev.startsWith('loop')) {
+            return;
+          }
+          if (dev.startsWith('nvme')) {
+            // console.log('process nvme device');
+            const dm = dev.match(RE_NVME_DEV);
+            if (dm) {
+              bytesRead += parseInt(m[2]) * 512;
+              bytesWritten += parseInt(m[3]) * 512;
+              // console.log('this is a device, not a partition');
+            }
+          } else {
+            const dm = dev.match(RE_BLOCK_DEV);
+            if (dm) {
+              bytesRead += parseInt(m[2]) * 512;
+              bytesWritten += parseInt(m[3]) * 512;
+              // console.log('this is a device, not a partition');
+            }
+            // console.log(`process ${dev}`);
+          }
+        }
+      });
+      this.diskState.update(bytesRead, bytesWritten);
+      const diskActivity = new DiskActivity();
+      diskActivity.bytesRead = this.diskState.readActivity();
+      diskActivity.bytesWritten = this.diskState.writeActivity();
+      if (this.diskActivityHistory.unshift(diskActivity) > MAX_HISTORY) {
+        this.diskActivityHistory.pop();
+      }
+      this.disk_read = diskActivity.bytesRead;
+      this.disk_wrote = diskActivity.bytesWritten;
+    }
+
     private loadProcessList() {
       const directory = Gio.File.new_for_path('/proc/');
       // console.log('enumerating children...');
@@ -356,40 +454,40 @@ export const Vitals = GObject.registerClass(
     }
 
     public getTopCpuProcs(n: number) {
-      log('Top CPU processes:');
+      // log('Top CPU processes:');
       let top = Array.from(this.procs.values());
       top = top.sort((x, y) => {
         return x.cpuUsage() - y.cpuUsage();
       });
       top = top.reverse().slice(0, n);
-      top.forEach((p) => {
-        if (p.cpuUsage() > 0) {
-          // console.log(
-          //   `  ${p.cmd} (${p.id}) ` +
-          //     `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
-          // );
-        }
-      });
-      //TODO: return list of details for UI
+      // top.forEach((p) => {
+      //   if (p.cpuUsage() > 0) {
+      //     // console.log(
+      //     //   `  ${p.cmd} (${p.id}) ` +
+      //     //     `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
+      //     // );
+      //   }
+      // });
+      return top;
     }
 
     public getTopMemProcs(n: number) {
-      log('Top memory processes:');
+      // log('Top memory processes:');
       let top = Array.from(this.procs.values());
       top = top.sort((x, y) => {
         return x.memUsage() - y.memUsage();
       });
       top = top.reverse().slice(0, n);
-      top.forEach((p) => {
-        console.log(
-          `  ${p.cmd} (${p.id}) usage: ${(p.memUsage() / 1000).toFixed(0)} MB`
-        );
-      });
-      // TODO: return list of details for UI
+      // top.forEach((p) => {
+      //   console.log(
+      //     `  ${p.cmd} (${p.id}) usage: ${(p.memUsage() / 1000).toFixed(0)} MB`
+      //   );
+      // });
+      return top;
     }
 
     public getTopDiskProcs(n: number) {
-      log('Top disk processes:');
+      // log('Top disk processes:');
       let top = Array.from(this.procs.values());
       top = top.sort((x, y) => {
         return (
@@ -397,14 +495,14 @@ export const Vitals = GObject.registerClass(
         );
       });
       top = top.reverse().slice(0, n);
-      top.forEach((p) => {
-        if (p.diskReads() + p.diskWrites() > 0) {
-          // console.log(
-          //   `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
-          // );
-        }
-      });
-      // TODO: return list of details for UI
+      // top.forEach((p) => {
+      //   if (p.diskReads() + p.diskWrites() > 0) {
+      //     // console.log(
+      //     //   `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
+      //     // );
+      //   }
+      // });
+      return top;
     }
   }
 );
@@ -524,7 +622,7 @@ class NetDevState {
   public bytesSent = 0;
   public bytesSentPrev = 0;
 
-  public update(bytesRecv: number, bytesSent: number) {
+  public update(bytesRecv: number, bytesSent: number): void {
     this.bytesRecvPrev = this.bytesRecv;
     this.bytesRecv = bytesRecv;
     this.bytesSentPrev = this.bytesSent;
@@ -543,6 +641,33 @@ class NetDevState {
 class NetActivity {
   public bytesRecv = 0;
   public bytesSent = 0;
+}
+
+class DiskState {
+  public bytesRead = 0;
+  public bytesReadPrev = 0;
+  public bytesWritten = 0;
+  public bytesWrittenPrev = 0;
+
+  public update(bytesRead: number, bytesWritten: number): void {
+    this.bytesReadPrev = this.bytesRead;
+    this.bytesRead = bytesRead;
+    this.bytesWrittenPrev = this.bytesWritten;
+    this.bytesWritten = bytesWritten;
+  }
+
+  public readActivity(): number {
+    return this.bytesRead - this.bytesReadPrev;
+  }
+
+  public writeActivity(): number {
+    return this.bytesWritten - this.bytesWrittenPrev;
+  }
+}
+
+class DiskActivity {
+  public bytesRead = 0;
+  public bytesWritten = 0;
 }
 
 class Process {

@@ -109,13 +109,11 @@ export const NetMonitor = GObject.registerClass(
     public override bindVitals(vitals: Vitals): void {
       vitals.connect('notify::net-sent', () => {
         const s = bytesToHumanString(vitals.net_sent);
-        console.log(`net-sent: ${vitals.net_sent} formatted: ${s}`);
         this.valueNetUp.text = s;
         this.menuNetUp.text = s;
       });
       vitals.connect('notify::net-recv', () => {
         const s = bytesToHumanString(vitals.net_recv);
-        console.log(`net-recv: ${vitals.net_recv} formatted: ${s}`);
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
       });

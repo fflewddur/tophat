@@ -27,6 +27,7 @@ import {
 
 import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
+import { bytesToHumanString } from './helpers.js';
 
 export const DiskMonitor = GObject.registerClass(
   class DiskMonitor extends TopHatMeter {
@@ -88,32 +89,32 @@ export const DiskMonitor = GObject.registerClass(
       this.addMenuRow(label, 0, 3, 1);
 
       label = new St.Label({
-        text: _('Writing:'),
-        style_class: 'menu-label',
-      });
-      this.addMenuRow(label, 0, 2, 1);
-      this.menuDiskWrites.text = MeterNoVal;
-      this.add_style_class_name('menu-value');
-      this.addMenuRow(this.menuDiskWrites, 2, 1, 1);
-
-      label = new St.Label({
         text: _('Reading:'),
         style_class: 'menu-label',
       });
       this.addMenuRow(label, 0, 2, 1);
       this.menuDiskReads.text = MeterNoVal;
-      this.menuDiskReads.add_style_class_name('menu-value menu-section-end');
+      this.menuDiskReads.add_style_class_name('menu-value');
       this.addMenuRow(this.menuDiskReads, 2, 1, 1);
+
+      label = new St.Label({
+        text: _('Writing:'),
+        style_class: 'menu-label',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+      this.menuDiskWrites.text = MeterNoVal;
+      this.menuDiskWrites.add_style_class_name('menu-value menu-section-end');
+      this.addMenuRow(this.menuDiskWrites, 2, 1, 1);
     }
 
     public override bindVitals(vitals: Vitals): void {
-      vitals.connect('notify::disk-write', () => {
-        const s = MeterNoVal;
+      vitals.connect('notify::disk-read', () => {
+        const s = bytesToHumanString(vitals.disk_read);
         this.valueRead.text = s;
         this.menuDiskReads.text = s;
       });
-      vitals.connect('notify::disk-read', () => {
-        const s = MeterNoVal;
+      vitals.connect('notify::disk-wrote', () => {
+        const s = bytesToHumanString(vitals.disk_wrote);
         this.valueWrite.text = s;
         this.menuDiskWrites.text = s;
       });
