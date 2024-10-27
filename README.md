@@ -38,6 +38,9 @@ page](https://extensions.gnome.org/extension/5219/tophat/).
 The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
+- Fedora 40
+- Ubuntu 24.04 LTS
+- Ubuntu 24.10
 
 Even if your system is not in this list, as long as it meets the
 requirements mentioned above, you should be able to run TopHat. If not, please
@@ -92,9 +95,10 @@ To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
 
 To test the development version:
 
+    cd [path to tophat repo]
     yarn build
     mkdir -p ~/.local/share/gnome-shell/extensions/
-    ln -s [path to tophat repository]/tophat@fflewddur.github.io ~/.local/share/gnome-shell/extensions/dist
+    ln -s [path to tophat repo]/dist ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io
 
 ## License
 
