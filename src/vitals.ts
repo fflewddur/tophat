@@ -159,7 +159,6 @@ export const Vitals = GObject.registerClass(
       this.loadMeminfo();
       this.loadNetDev();
       this.loadDiskstats();
-      this.loadTemps();
       console.timeEnd('readSummaries()');
       return true;
     }
@@ -167,6 +166,8 @@ export const Vitals = GObject.registerClass(
     public readDetails(): boolean {
       // Because /proc is a virtual FS, maybe we can get away with sync IO?
       console.time('readDetails()');
+      this.loadTemps();
+      this.loadFreqs();
       this.loadProcessList();
       console.timeEnd('readDetails()');
       return true;
@@ -334,6 +335,34 @@ export const Vitals = GObject.registerClass(
     private loadTemps() {
       this.cpuModel.tempMonitors.forEach((file, i) => {
         this.cpuState.temps[i] = parseInt(new File(file).readSync());
+      });
+    }
+
+    private loadFreqs() {
+      const freqs = new Map<number, number>();
+      const f = new File('/proc/cpuinfo');
+      const lines = f.readSync();
+      const blocks = lines.split('\n\n');
+      for (const block of blocks) {
+        let id = 0,
+          freq = 0;
+        let m = block.match(/physical id\s*:\s*(\d+)/);
+        if (m) {
+          id = parseInt(m[1]);
+        }
+        const f = freqs.get(id);
+        if (f !== undefined) {
+          freq = f;
+        }
+        m = block.match(/cpu MHz\s*:\s*(\d+)/);
+        if (m) {
+          freq += parseInt(m[1]);
+          freqs.set(id, freq);
+        }
+      }
+      freqs.forEach((val, i) => {
+        this.cpuState.freqs[i] = val;
+        console.log(`CPU ${i} frequency: ${val / this.cpuModel.cores}`);
       });
     }
 
