@@ -1,9 +1,11 @@
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
 
 import { File } from './file.js';
 
 const MAX_HISTORY = 100;
+const SECTOR_SIZE = 512; // in bytes
 const RE_MEM_INFO = /:\s+(\d+)/;
 const RE_NET_DEV = /^\s*(\w+):/;
 const RE_NET_ACTIVITY =
@@ -110,6 +112,8 @@ export const Vitals = GObject.registerClass(
     private _net_sent = 0;
     private _disk_read = 0;
     private _disk_wrote = 0;
+    private summaryLoop = 0;
+    private detailsLoop = 0;
 
     constructor(model: CpuModel) {
       super();
@@ -120,112 +124,51 @@ export const Vitals = GObject.registerClass(
       this.diskState = new DiskState();
     }
 
-    public get cpu_usage(): number {
-      return this._cpu_usage;
-    }
-
-    private set cpu_usage(v: number) {
-      if (this.cpu_usage === v) {
-        return;
+    public start(): void {
+      setTimeout(() => this.readSummaries(), 0);
+      if (this.summaryLoop === 0) {
+        this.summaryLoop = GLib.timeout_add_seconds(
+          GLib.PRIORITY_DEFAULT,
+          3,
+          () => this.readSummaries()
+        );
+        this.summaryLoop = GLib.timeout_add_seconds(
+          GLib.PRIORITY_DEFAULT,
+          10,
+          () => this.readDetails()
+        );
       }
-      this._cpu_usage = v;
-      this.notify('cpu-usage');
     }
 
-    public get ram_usage(): number {
-      return this._ram_usage;
-    }
-
-    private set ram_usage(v: number) {
-      if (this.ram_usage === v) {
-        return;
+    public stop(): void {
+      if (this.summaryLoop > 0) {
+        GLib.source_remove(this.summaryLoop);
+        this.summaryLoop = 0;
       }
-      this._ram_usage = v;
-      this.notify('ram-usage');
-    }
-
-    public get swap_usage(): number {
-      return this._swap_usage;
-    }
-
-    private set swap_usage(v: number) {
-      if (this.swap_usage === v) {
-        return;
+      if (this.detailsLoop > 0) {
+        GLib.source_remove(this.detailsLoop);
+        this.detailsLoop = 0;
       }
-      this._swap_usage = v;
-      this.notify('swap-usage');
     }
 
-    public get net_recv() {
-      return this._net_recv;
-    }
-
-    private set net_recv(v: number) {
-      if (this.net_recv === v) {
-        return;
-      }
-      this._net_recv = v;
-      this.notify('net-recv');
-    }
-
-    public get net_sent() {
-      return this._net_sent;
-    }
-
-    private set net_sent(v: number) {
-      if (this.net_sent === v) {
-        return;
-      }
-      this._net_sent = v;
-      this.notify('net-sent');
-    }
-
-    public get disk_read() {
-      return this._disk_read;
-    }
-
-    private set disk_read(v: number) {
-      if (this.disk_read === v) {
-        return;
-      }
-      this._disk_read = v;
-      this.notify('disk-read');
-    }
-
-    public get disk_wrote() {
-      return this._disk_wrote;
-    }
-
-    private set disk_wrote(v: number) {
-      if (this.disk_wrote === v) {
-        return;
-      }
-      this._disk_wrote = v;
-      this.notify('disk-wrote');
-    }
-
-    public get uptime(): number {
-      return this._uptime;
-    }
-
-    private set uptime(v: number) {
-      if (this.uptime === v) {
-        return;
-      }
-      this._uptime = v;
-      this.notify('uptime');
-    }
-
-    public read() {
+    public readSummaries(): boolean {
       // Because /proc is a virtual FS, maybe we can get away with sync IO?
-      console.time('read /proc/');
+      console.time('readSummaries()');
       this.loadUptime();
       this.loadStat();
       this.loadMeminfo();
       this.loadNetDev();
       this.loadDiskstats();
-      // this.loadProcessList();
-      console.timeEnd('read /proc/');
+      console.timeEnd('readSummaries()');
+      return true;
+    }
+
+    public readDetails(): boolean {
+      // Because /proc is a virtual FS, maybe we can get away with sync IO?
+      console.time('readDetails()');
+      this.loadProcessList();
+      console.timeEnd('readDetails()');
+      return true;
     }
 
     private loadUptime() {
@@ -355,30 +298,24 @@ export const Vitals = GObject.registerClass(
       let bytesWritten = 0;
 
       lines.forEach((line) => {
-        // console.log(`line: ${line}`);
         const m = line.match(RE_DISK_STATS);
         if (m) {
           const dev = m[1];
-          // console.log(`disk: ${dev}`);
           if (dev.startsWith('loop')) {
             return;
           }
           if (dev.startsWith('nvme')) {
-            // console.log('process nvme device');
             const dm = dev.match(RE_NVME_DEV);
             if (dm) {
-              bytesRead += parseInt(m[2]) * 512;
-              bytesWritten += parseInt(m[3]) * 512;
-              // console.log('this is a device, not a partition');
+              bytesRead += parseInt(m[2]) * SECTOR_SIZE;
+              bytesWritten += parseInt(m[3]) * SECTOR_SIZE;
             }
           } else {
             const dm = dev.match(RE_BLOCK_DEV);
             if (dm) {
-              bytesRead += parseInt(m[2]) * 512;
-              bytesWritten += parseInt(m[3]) * 512;
-              // console.log('this is a device, not a partition');
+              bytesRead += parseInt(m[2]) * SECTOR_SIZE;
+              bytesWritten += parseInt(m[3]) * SECTOR_SIZE;
             }
-            // console.log(`process ${dev}`);
           }
         }
       });
@@ -395,7 +332,6 @@ export const Vitals = GObject.registerClass(
 
     private loadProcessList() {
       const directory = Gio.File.new_for_path('/proc/');
-      // console.log('enumerating children...');
       const iter = directory.enumerate_children(
         'standard::*',
         Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
@@ -503,6 +439,104 @@ export const Vitals = GObject.registerClass(
       //   }
       // });
       return top;
+    }
+
+    // Properties
+
+    public get cpu_usage(): number {
+      return this._cpu_usage;
+    }
+
+    private set cpu_usage(v: number) {
+      if (this.cpu_usage === v) {
+        return;
+      }
+      this._cpu_usage = v;
+      this.notify('cpu-usage');
+    }
+
+    public get ram_usage(): number {
+      return this._ram_usage;
+    }
+
+    private set ram_usage(v: number) {
+      if (this.ram_usage === v) {
+        return;
+      }
+      this._ram_usage = v;
+      this.notify('ram-usage');
+    }
+
+    public get swap_usage(): number {
+      return this._swap_usage;
+    }
+
+    private set swap_usage(v: number) {
+      if (this.swap_usage === v) {
+        return;
+      }
+      this._swap_usage = v;
+      this.notify('swap-usage');
+    }
+
+    public get net_recv() {
+      return this._net_recv;
+    }
+
+    private set net_recv(v: number) {
+      if (this.net_recv === v) {
+        return;
+      }
+      this._net_recv = v;
+      this.notify('net-recv');
+    }
+
+    public get net_sent() {
+      return this._net_sent;
+    }
+
+    private set net_sent(v: number) {
+      if (this.net_sent === v) {
+        return;
+      }
+      this._net_sent = v;
+      this.notify('net-sent');
+    }
+
+    public get disk_read() {
+      return this._disk_read;
+    }
+
+    private set disk_read(v: number) {
+      if (this.disk_read === v) {
+        return;
+      }
+      this._disk_read = v;
+      this.notify('disk-read');
+    }
+
+    public get disk_wrote() {
+      return this._disk_wrote;
+    }
+
+    private set disk_wrote(v: number) {
+      if (this.disk_wrote === v) {
+        return;
+      }
+      this._disk_wrote = v;
+      this.notify('disk-wrote');
+    }
+
+    public get uptime(): number {
+      return this._uptime;
+    }
+
+    private set uptime(v: number) {
+      if (this.uptime === v) {
+        return;
+      }
+      this._uptime = v;
+      this.notify('uptime');
     }
   }
 );

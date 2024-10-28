@@ -51,13 +51,8 @@ export default class TopHat extends Extension {
     const f = new File('/proc/cpuinfo');
     const cpuModel = this.parseCpuOverview(f.readSync());
     this.vitals = new Vitals(cpuModel);
-    setTimeout(() => this.readVitals(), 0);
+    this.vitals.start();
     this.addToPanel();
-    if (this.loop === 0) {
-      this.loop = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () =>
-        this.readVitals()
-      );
-    }
     const id = this.gsettings.connect('changed::position-in-panel', () => {
       this.addToPanel();
     });
@@ -67,18 +62,15 @@ export default class TopHat extends Extension {
 
   public disable() {
     console.log(`[TopHat] disabling version ${this.metadata.version}`);
-    if (this.loop > 0) {
-      GLib.source_remove(this.loop);
-      this.loop = 0;
-    }
     this.container?.destroy();
     this.container = undefined;
     this.signals.forEach((s) => {
       this.gsettings?.disconnect(s);
     });
+    this.gsettings = undefined;
+    this.vitals?.stop();
     this.vitals?.run_dispose();
     this.vitals = undefined;
-    this.gsettings = undefined;
     console.log('[TopHat] disabled');
   }
 
@@ -159,10 +151,10 @@ export default class TopHat extends Extension {
 
   private readVitals(): boolean {
     if (this.vitals) {
-      this.vitals.read();
-      this.vitals.getTopCpuProcs(5);
-      this.vitals.getTopMemProcs(5);
-      this.vitals.getTopDiskProcs(5);
+      this.vitals.readSummaries();
+      // this.vitals.getTopCpuProcs(5);
+      // this.vitals.getTopMemProcs(5);
+      // this.vitals.getTopDiskProcs(5);
     }
     return true;
   }
