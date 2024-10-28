@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -75,13 +74,59 @@ export default class TopHat extends Extension {
   }
 
   private parseCpuOverview(cpuinfo: string): CpuModel {
+    const cpus = new Set();
+    const tempMonitors = new Map();
+
+    // Count the number of physical CPUs
+    const blocks = cpuinfo.split('\n\n');
+    for (const block of blocks) {
+      const m = block.match(/physical id\s*:\s*(\d+)/);
+      if (m) {
+        const id = parseInt(m[1]);
+        cpus.add(id);
+      }
+    }
+
+    // Find the temperature sensor for each CPU
+    const base = '/sys/class/hwmon/';
+    const hwmon = new File(base);
+    hwmon.list().forEach((filename) => {
+      console.log(`found ${base}${filename}`);
+      const name = new File(`${base}${filename}/name`).readSync();
+      if (name === 'coretemp') {
+        // Intel CPUs
+        const prefix = new File(`${base}${filename}/temp1_label`).readSync();
+        let id = 0;
+        if (prefix) {
+          const m = prefix.match(/Package id\s*(\d+)/);
+          if (m) {
+            id = parseInt(m[1]);
+          }
+        }
+        const inputPath = `${base}${filename}/temp1_input`;
+        if (new File(inputPath).exists()) {
+          tempMonitors.set(id, inputPath);
+        }
+      } else if (name === 'k10temp') {
+        // AMD CPUs
+        // temp2 is Tdie, temp1 is Tctl
+        let inputPath = `${base}${filename}/temp2_input`;
+        const f = new File(inputPath);
+        if (!f.exists()) {
+          inputPath = `${base}${filename}/temp1_input`;
+        }
+        // FIXME: Instead of key=0 here, try to figure out which physical CPU
+        // this monitor represents
+        tempMonitors.set(0, inputPath);
+      }
+    });
+
+    // Get the model name and core count
     const lines = cpuinfo.split('\n');
     const modelRE = /^model name\s*:\s*(.*)$/;
     const coreRE = /^processor\s*:\s*(\d+)$/;
-
     let model = '';
     let cores = 0;
-
     lines.forEach((line) => {
       let m = !model && line.match(modelRE);
       if (m) {
@@ -93,7 +138,7 @@ export default class TopHat extends Extension {
       }
     });
 
-    return new CpuModel(model, cores);
+    return new CpuModel(model, cores, tempMonitors);
   }
 
   private addToPanel() {

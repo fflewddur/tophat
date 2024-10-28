@@ -30,6 +30,16 @@ export class File {
     return this.file.get_parse_name();
   }
 
+  exists() {
+    let exists = false;
+    try {
+      exists = this.file.query_exists(null);
+    } catch (err) {
+      console.error(`[TopHat] Error reading ${this.file.get_path()}: ${err}`);
+    }
+    return exists;
+  }
+
   read(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
@@ -67,5 +77,23 @@ export class File {
       }
     }
     return contents;
+  }
+
+  list(): string[] {
+    const children = new Array<string>();
+    const iter = this.file.enumerate_children(
+      Gio.FILE_ATTRIBUTE_STANDARD_NAME,
+      Gio.FileQueryInfoFlags.NONE,
+      null
+    );
+    while (true) {
+      const fileInfo = iter.next_file(null);
+      if (fileInfo === null) {
+        break;
+      }
+      const name = fileInfo.get_name();
+      children.push(name);
+    }
+    return children;
   }
 }

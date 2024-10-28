@@ -118,7 +118,7 @@ export const Vitals = GObject.registerClass(
     constructor(model: CpuModel) {
       super();
       this.cpuModel = model;
-      this.cpuState = new CpuState(model.cores);
+      this.cpuState = new CpuState(model.cores, model.tempMonitors.size);
       this.memInfo = new MemInfo();
       this.netState = new NetDevState();
       this.diskState = new DiskState();
@@ -159,6 +159,7 @@ export const Vitals = GObject.registerClass(
       this.loadMeminfo();
       this.loadNetDev();
       this.loadDiskstats();
+      this.loadTemps();
       console.timeEnd('readSummaries()');
       return true;
     }
@@ -330,10 +331,16 @@ export const Vitals = GObject.registerClass(
       this.disk_wrote = diskActivity.bytesWritten;
     }
 
+    private loadTemps() {
+      this.cpuModel.tempMonitors.forEach((file, i) => {
+        this.cpuState.temps[i] = parseInt(new File(file).readSync());
+      });
+    }
+
     private loadProcessList() {
       const directory = Gio.File.new_for_path('/proc/');
       const iter = directory.enumerate_children(
-        'standard::*',
+        Gio.FILE_ATTRIBUTE_STANDARD_NAME,
         Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
         null
       );
@@ -552,8 +559,10 @@ class CpuState {
   public coreUsedTimePrev: Array<number>;
   public coreIdleTime: Array<number>;
   public coreIdleTimePrev: Array<number>;
+  public freqs: Array<number>;
+  public temps: Array<number>;
 
-  constructor(cores: number, usedTime = 0, idleTime = 0) {
+  constructor(cores: number, sockets: number, usedTime = 0, idleTime = 0) {
     this.usedTime = usedTime;
     this.usedTimePrev = 0;
     this.idleTime = idleTime;
@@ -567,6 +576,12 @@ class CpuState {
       this.coreIdleTime[i] = 0;
       this.coreUsedTimePrev[i] = 0;
       this.coreIdleTimePrev[i] = 0;
+    }
+    this.freqs = [];
+    this.temps = [];
+    for (let i = 0; i < sockets; i++) {
+      this.freqs.push(0);
+      this.temps.push(0);
     }
   }
 
@@ -627,10 +642,12 @@ class CpuUsage {
 export class CpuModel {
   public name: string;
   public cores: number;
+  public tempMonitors: Map<number, string>;
 
-  constructor(name = 'Unknown', cores = 1) {
+  constructor(name = 'Unknown', cores = 1, tempMonitors: Map<number, string>) {
     this.name = name;
     this.cores = cores;
+    this.tempMonitors = tempMonitors;
   }
 }
 
