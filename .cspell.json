@@ -8,6 +8,7 @@
     "cahya",
     "Cogl",
     "coretemp",
+    "diskstats",
     "dontCreateMenu",
     "enecciara",
     "esalvati",
@@ -86,7 +87,5 @@
     "yakushabb",
     "yuhldr"
   ],
-  "enableFiletypes": [
-    "!yaml"
-  ]
+  "enableFiletypes": ["!yaml"]
 }
