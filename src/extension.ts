@@ -39,7 +39,6 @@ enum MenuPosition {
 
 export default class TopHat extends Extension {
   private gsettings?: Gio.Settings;
-  private loop = 0;
   private signals = new Array<number>();
   private vitals?: Vitals;
   private container?: TopHatContainer;
@@ -74,8 +73,8 @@ export default class TopHat extends Extension {
   }
 
   private parseCpuOverview(cpuinfo: string): CpuModel {
-    const cpus = new Set();
-    const tempMonitors = new Map();
+    const cpus = new Set<number>();
+    const tempMonitors = new Map<number, string>();
 
     // Count the number of physical CPUs
     const blocks = cpuinfo.split('\n\n');
@@ -91,7 +90,7 @@ export default class TopHat extends Extension {
     const base = '/sys/class/hwmon/';
     const hwmon = new File(base);
     hwmon.list().forEach((filename) => {
-      console.log(`found ${base}${filename}`);
+      // console.log(`found ${base}${filename}`);
       const name = new File(`${base}${filename}/name`).readSync();
       if (name === 'coretemp') {
         // Intel CPUs
@@ -138,7 +137,7 @@ export default class TopHat extends Extension {
       }
     });
 
-    return new CpuModel(model, cores, tempMonitors);
+    return new CpuModel(model, cores, cpus.size, tempMonitors);
   }
 
   private addToPanel() {

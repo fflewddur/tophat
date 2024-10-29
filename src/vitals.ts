@@ -37,6 +37,24 @@ export const Vitals = GObject.registerClass(
         100,
         0
       ),
+      'cpu-freq': GObject.ParamSpec.int(
+        'cpu-freq',
+        'CPU frequency',
+        'Average CPU frequency across all cores',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
+      'cpu-temp': GObject.ParamSpec.int(
+        'cpu-temp',
+        'CPU temperature',
+        'CPU temperature in degrees Celsius',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
       'ram-usage': GObject.ParamSpec.int(
         'ram-usage',
         'RAM usage',
@@ -57,7 +75,7 @@ export const Vitals = GObject.registerClass(
       ),
       'net-recv': GObject.ParamSpec.int(
         'net-recv',
-        'Network bytes recieved',
+        'Network bytes received',
         'Number of bytes recently received via network interfaces',
         GObject.ParamFlags.READWRITE,
         0,
@@ -106,6 +124,8 @@ export const Vitals = GObject.registerClass(
     private diskActivityHistory = new Array<DiskActivity>(MAX_HISTORY);
     private _uptime = 0;
     private _cpu_usage = 0;
+    private _cpu_freq = 0;
+    private _cpu_temp = 0;
     private _ram_usage = 0;
     private _swap_usage = -1;
     private _net_recv = 0;
@@ -335,6 +355,9 @@ export const Vitals = GObject.registerClass(
     private loadTemps() {
       this.cpuModel.tempMonitors.forEach((file, i) => {
         this.cpuState.temps[i] = parseInt(new File(file).readSync());
+        if (i === 0) {
+          this.cpu_temp = this.cpuState.temps[i];
+        }
       });
     }
 
@@ -364,6 +387,10 @@ export const Vitals = GObject.registerClass(
         this.cpuState.freqs[i] = val;
         console.log(`CPU ${i} frequency: ${val / this.cpuModel.cores}`);
       });
+      const sum_cpu_freq = freqs.get(0);
+      if (sum_cpu_freq) {
+        this.cpu_freq = sum_cpu_freq / this.cpuModel.cores;
+      }
     }
 
     private loadProcessList() {
@@ -489,6 +516,30 @@ export const Vitals = GObject.registerClass(
       }
       this._cpu_usage = v;
       this.notify('cpu-usage');
+    }
+
+    public get cpu_freq(): number {
+      return this._cpu_freq;
+    }
+
+    private set cpu_freq(v: number) {
+      if (this.cpu_freq === v) {
+        return;
+      }
+      this._cpu_freq = v;
+      this.notify('cpu-freq');
+    }
+
+    public get cpu_temp(): number {
+      return this._cpu_temp;
+    }
+
+    private set cpu_temp(v: number) {
+      if (this.cpu_temp === v) {
+        return;
+      }
+      this._cpu_temp = v;
+      this.notify('cpu-temp');
     }
 
     public get ram_usage(): number {
@@ -671,11 +722,18 @@ class CpuUsage {
 export class CpuModel {
   public name: string;
   public cores: number;
+  public sockets: number;
   public tempMonitors: Map<number, string>;
 
-  constructor(name = 'Unknown', cores = 1, tempMonitors: Map<number, string>) {
+  constructor(
+    name = 'Unknown',
+    cores = 1,
+    sockets = 1,
+    tempMonitors: Map<number, string>
+  ) {
     this.name = name;
     this.cores = cores;
+    this.sockets = sockets;
     this.tempMonitors = tempMonitors;
   }
 }

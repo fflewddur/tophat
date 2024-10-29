@@ -34,6 +34,9 @@ export const CpuMonitor = GObject.registerClass(
     private icon;
     private usage;
     private menuCpuUsage;
+    private menuCpuModel;
+    private menuCpuFreq;
+    private menuCpuTemp;
     private menuUptime;
 
     constructor(metadata: ExtensionMetadata) {
@@ -56,6 +59,9 @@ export const CpuMonitor = GObject.registerClass(
       this.add_child(this.usage);
 
       this.menuCpuUsage = new St.Label();
+      this.menuCpuModel = new St.Label();
+      this.menuCpuFreq = new St.Label();
+      this.menuCpuTemp = new St.Label();
       this.menuUptime = new St.Label();
 
       this.buildMenu();
@@ -78,6 +84,30 @@ export const CpuMonitor = GObject.registerClass(
       this.menuCpuUsage.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuCpuUsage, 1, 1, 1);
 
+      // TODO: if we have multiple sockets, create a section for each
+      this.menuCpuModel.text = _(`model ${MeterNoVal}`);
+      this.menuCpuModel.add_style_class_name('menu-label menu-details');
+      this.menuCpuModel.set_x_expand(true);
+      this.addMenuRow(this.menuCpuModel, 0, 2, 1);
+      label = new St.Label({
+        text: _('Frequency:'),
+        style_class: 'menu-label menu-details',
+      });
+      this.addMenuRow(label, 0, 1, 1);
+      this.menuCpuFreq.text = MeterNoVal;
+      this.menuCpuFreq.add_style_class_name('menu-value menu-details');
+      this.addMenuRow(this.menuCpuFreq, 1, 1, 1);
+      label = new St.Label({
+        text: _('Temperature:'),
+        style_class: 'menu-label menu-details menu-section-end',
+      });
+      this.addMenuRow(label, 0, 1, 1);
+      this.menuCpuTemp.text = MeterNoVal;
+      this.menuCpuTemp.add_style_class_name(
+        'menu-value menu-details menu-section-end'
+      );
+      this.addMenuRow(this.menuCpuTemp, 1, 1, 1);
+
       label = new St.Label({
         text: _('System uptime'),
         style_class: 'menu-header',
@@ -93,6 +123,12 @@ export const CpuMonitor = GObject.registerClass(
         const s = (vitals.cpu_usage * 100).toFixed(0) + '%';
         this.usage.text = s;
         this.menuCpuUsage.text = s;
+      });
+      vitals.connect('notify::cpu-freq', () => {
+        console.log('cpu-freq updated');
+      });
+      vitals.connect('notify::cpu-temp', () => {
+        console.log('cpu-temp updated');
       });
       vitals.connect('notify::uptime', () => {
         const s = this.formatUptime(vitals.uptime);
