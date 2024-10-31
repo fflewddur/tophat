@@ -15,7 +15,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.11.0"
+    "typescript-eslint": "^8.12.2"
   },
   "scripts": {
     "build": "tsc && cp ./resources/metadata.json ./dist/ && touch ./dist/schemas && rm -rf ./dist/schemas && mkdir ./dist/schemas/ && glib-compile-schemas ./resources/schemas && mv ./resources/schemas/gschemas.compiled ./dist/schemas/ && cp ./resources/stylesheet.css ./dist/ && touch ./dist/icons && rm -rf ./dist/icons && mkdir ./dist/icons/ && cp ./resources/icons/*.svg ./dist/icons/",
