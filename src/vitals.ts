@@ -109,6 +109,24 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'net-recv-total': GObject.ParamSpec.int(
+        'net-recv-total',
+        'Total network bytes received',
+        'Number of bytes received via network interfaces',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
+      'net-sent-total': GObject.ParamSpec.int(
+        'net-sent-total',
+        'Total network bytes sent',
+        'Number of bytes sent via network interfaces',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
       'disk-read': GObject.ParamSpec.int(
         'disk-read',
         'Bytes read from disk',
@@ -150,6 +168,8 @@ export const Vitals = GObject.registerClass(
     private _swap_size = -1;
     private _net_recv = 0;
     private _net_sent = 0;
+    private _net_recv_total = 0;
+    private _net_sent_total = 0;
     private _disk_read = 0;
     private _disk_wrote = 0;
     private summaryLoop = 0;
@@ -326,6 +346,8 @@ export const Vitals = GObject.registerClass(
         }
       });
       this.netState.update(bytesRecv, bytesSent);
+      this.net_recv_total = bytesRecv;
+      this.net_sent_total = bytesSent;
       const netActivity = new NetActivity();
       netActivity.bytesRecv = this.netState.recvActivity();
       netActivity.bytesSent = this.netState.sentActivity();
@@ -636,6 +658,30 @@ export const Vitals = GObject.registerClass(
       }
       this._net_sent = v;
       this.notify('net-sent');
+    }
+
+    public get net_recv_total() {
+      return this._net_recv_total;
+    }
+
+    private set net_recv_total(v: number) {
+      if (this.net_recv_total === v) {
+        return;
+      }
+      this._net_recv_total = v;
+      this.notify('net-recv-total');
+    }
+
+    public get net_sent_total() {
+      return this._net_sent_total;
+    }
+
+    private set net_sent_total(v: number) {
+      if (this.net_sent_total === v) {
+        return;
+      }
+      this._net_sent_total = v;
+      this.notify('net-sent-total');
     }
 
     public get disk_read() {

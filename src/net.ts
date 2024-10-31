@@ -36,6 +36,8 @@ export const NetMonitor = GObject.registerClass(
     private valueNetDown: St.Label;
     private menuNetUp: St.Label;
     private menuNetDown: St.Label;
+    private menuNetUpTotal: St.Label;
+    private menuNetDownTotal: St.Label;
 
     constructor(metadata: ExtensionMetadata) {
       super('Net Monitor', metadata);
@@ -75,6 +77,8 @@ export const NetMonitor = GObject.registerClass(
 
       this.menuNetUp = new St.Label();
       this.menuNetDown = new St.Label();
+      this.menuNetUpTotal = new St.Label();
+      this.menuNetDownTotal = new St.Label();
 
       this.buildMenu();
       this.addMenuButtons();
@@ -104,6 +108,24 @@ export const NetMonitor = GObject.registerClass(
       this.menuNetDown.text = MeterNoVal;
       this.menuNetDown.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuNetDown, 1, 1, 1);
+
+      label = new St.Label({
+        text: _('Total sent:'),
+        style_class: 'menu-label',
+      });
+      this.addMenuRow(label, 0, 1, 1);
+      this.menuNetUpTotal.text = MeterNoVal;
+      this.menuNetUpTotal.add_style_class_name('menu-value');
+      this.addMenuRow(this.menuNetUpTotal, 1, 1, 1);
+
+      label = new St.Label({
+        text: _('Total received:'),
+        style_class: 'menu-label',
+      });
+      this.addMenuRow(label, 0, 1, 1);
+      this.menuNetDownTotal.text = MeterNoVal;
+      this.menuNetDownTotal.add_style_class_name('menu-value');
+      this.addMenuRow(this.menuNetDownTotal, 1, 1, 1);
     }
 
     public override bindVitals(vitals: Vitals): void {
@@ -116,6 +138,14 @@ export const NetMonitor = GObject.registerClass(
         const s = bytesToHumanString(vitals.net_recv);
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
+      });
+      vitals.connect('notify::net-sent-total', () => {
+        const s = bytesToHumanString(vitals.net_sent_total);
+        this.menuNetUpTotal.text = s;
+      });
+      vitals.connect('notify::net-recv-total', () => {
+        const s = bytesToHumanString(vitals.net_recv_total);
+        this.menuNetDownTotal.text = s;
       });
     }
   }
