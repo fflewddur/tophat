@@ -64,6 +64,15 @@ export const Vitals = GObject.registerClass(
         100,
         0
       ),
+      'ram-size': GObject.ParamSpec.int(
+        'ram-size',
+        'RAM size',
+        'Size of system memory in GB',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
       'swap-usage': GObject.ParamSpec.int(
         'swap-usage',
         'Swap usage',
@@ -71,6 +80,15 @@ export const Vitals = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         0,
         100,
+        0
+      ),
+      'swap-size': GObject.ParamSpec.int(
+        'swap-size',
+        'Swap size',
+        'Size of swap space in GB',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
         0
       ),
       'net-recv': GObject.ParamSpec.int(
@@ -127,7 +145,9 @@ export const Vitals = GObject.registerClass(
     private _cpu_freq = 0;
     private _cpu_temp = 0;
     private _ram_usage = 0;
+    private _ram_size = 0;
     private _swap_usage = -1;
+    private _swap_size = -1;
     private _net_recv = 0;
     private _net_sent = 0;
     private _disk_read = 0;
@@ -276,7 +296,9 @@ export const Vitals = GObject.registerClass(
         this.memUsageHistory.pop();
       }
       this.ram_usage = usage.usedMem;
+      this.ram_size = this.memInfo.total * 1024;
       this.swap_usage = usage.usedSwap;
+      this.swap_size = this.memInfo.swapTotal * 1024;
       // console.log(
       //   `Mem usage: ${(usage.usedMem * 100).toFixed(0)}% of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
       //     `Swap usage: ${(usage.usedSwap * 100).toFixed(0)}% of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
@@ -387,7 +409,7 @@ export const Vitals = GObject.registerClass(
       }
       freqs.forEach((val, i) => {
         this.cpuState.freqs[i] = val;
-        console.log(`CPU ${i} frequency: ${val / this.cpuModel.cores}`);
+        // console.log(`CPU ${i} frequency: ${val / this.cpuModel.cores}`);
       });
       const sum_cpu_freq = freqs.get(0);
       if (sum_cpu_freq) {
@@ -556,6 +578,18 @@ export const Vitals = GObject.registerClass(
       this.notify('ram-usage');
     }
 
+    public get ram_size(): number {
+      return this._ram_size;
+    }
+
+    private set ram_size(v: number) {
+      if (this.ram_size === v) {
+        return;
+      }
+      this._ram_size = v;
+      this.notify('ram-size');
+    }
+
     public get swap_usage(): number {
       return this._swap_usage;
     }
@@ -566,6 +600,18 @@ export const Vitals = GObject.registerClass(
       }
       this._swap_usage = v;
       this.notify('swap-usage');
+    }
+
+    public get swap_size(): number {
+      return this._swap_size;
+    }
+
+    private set swap_size(v: number) {
+      if (this.swap_size === v) {
+        return;
+      }
+      this._swap_size = v;
+      this.notify('swap-size');
     }
 
     public get net_recv() {

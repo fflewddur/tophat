@@ -27,13 +27,16 @@ import {
 
 import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
+import { bytesToHumanString } from './helpers.js';
 
 export const MemMonitor = GObject.registerClass(
   class MemMonitor extends TopHatMeter {
     private icon;
     private usage;
     private menuMemUsage;
+    private menuMemSize;
     private menuSwapUsage;
+    private menuSwapSize;
 
     constructor(metadata: ExtensionMetadata) {
       super('Memory Monitor', metadata);
@@ -55,7 +58,9 @@ export const MemMonitor = GObject.registerClass(
       this.add_child(this.usage);
 
       this.menuMemUsage = new St.Label();
+      this.menuMemSize = new St.Label();
       this.menuSwapUsage = new St.Label();
+      this.menuSwapSize = new St.Label();
 
       this.buildMenu();
       this.addMenuButtons();
@@ -77,21 +82,41 @@ export const MemMonitor = GObject.registerClass(
       this.menuMemUsage.add_style_class_name('menu-value');
       this.addMenuRow(this.menuMemUsage, 1, 1, 1);
 
+      this.menuMemSize.text = _(`size ${MeterNoVal}`);
+      this.menuMemSize.add_style_class_name(
+        'menu-value menu-details menu-section-end'
+      );
+      this.addMenuRow(this.menuMemSize, 0, 2, 1);
+
       label = new St.Label({
         text: _('Swap used:'),
-        style_class: 'menu-label menu-section-end',
+        style_class: 'menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuSwapUsage.text = MeterNoVal;
-      this.menuSwapUsage.add_style_class_name('menu-value menu-section-end');
+      this.menuSwapUsage.add_style_class_name('menu-value');
       this.addMenuRow(this.menuSwapUsage, 1, 1, 1);
+
+      this.menuSwapSize.text = _(`size ${MeterNoVal}`);
+      this.menuSwapSize.add_style_class_name(
+        'menu-value menu-details menu-section-end'
+      );
+      this.addMenuRow(this.menuSwapSize, 0, 2, 1);
     }
 
     public override bindVitals(vitals: Vitals): void {
+      vitals.connect('notify::ram-size', () => {
+        const s = bytesToHumanString(vitals.ram_size);
+        this.menuMemSize.text = s;
+      });
       vitals.connect('notify::ram-usage', () => {
         const s = (vitals.ram_usage * 100).toFixed(0) + '%';
         this.usage.text = s;
         this.menuMemUsage.text = s;
+      });
+      vitals.connect('notify::swap-size', () => {
+        const s = bytesToHumanString(vitals.swap_size);
+        this.menuSwapSize.text = s;
       });
       vitals.connect('notify::swap-usage', () => {
         const s = (vitals.swap_usage * 100).toFixed(0) + '%';

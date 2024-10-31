@@ -125,10 +125,12 @@ export const CpuMonitor = GObject.registerClass(
         this.menuCpuUsage.text = s;
       });
       vitals.connect('notify::cpu-freq', () => {
-        console.log('cpu-freq updated');
+        const s = vitals.cpu_freq.toString();
+        this.menuCpuFreq.text = s;
       });
       vitals.connect('notify::cpu-temp', () => {
-        console.log('cpu-temp updated');
+        const s = vitals.cpu_temp.toString();
+        this.menuCpuTemp.text = s;
       });
       vitals.connect('notify::uptime', () => {
         const s = this.formatUptime(vitals.uptime);
