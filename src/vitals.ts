@@ -55,6 +55,13 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'cpu-top-procs': GObject.ParamSpec.string(
+        'cpu-top-procs',
+        'CPU top processes',
+        'Top CPU-consuming processes',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
       'ram-usage': GObject.ParamSpec.int(
         'ram-usage',
         'RAM usage',
@@ -162,6 +169,7 @@ export const Vitals = GObject.registerClass(
     private _cpu_usage = 0;
     private _cpu_freq = 0;
     private _cpu_temp = 0;
+    private _cpu_top_procs = '';
     private _ram_usage = 0;
     private _ram_size = 0;
     private _swap_usage = -1;
@@ -231,6 +239,8 @@ export const Vitals = GObject.registerClass(
       this.loadTemps();
       this.loadFreqs();
       this.loadProcessList();
+      // FIXME: Compute a hash from the top CPU processes instead of using a random number to trigger the UI refresh
+      this.cpu_top_procs = Math.random().toFixed(8);
       console.timeEnd('readDetails()');
       return true;
     }
@@ -586,6 +596,18 @@ export const Vitals = GObject.registerClass(
       }
       this._cpu_temp = v;
       this.notify('cpu-temp');
+    }
+
+    public get cpu_top_procs() {
+      return this._cpu_top_procs;
+    }
+
+    private set cpu_top_procs(v: string) {
+      if (this.cpu_top_procs === v) {
+        return;
+      }
+      this._cpu_top_procs = v;
+      this.notify('cpu-top-procs');
     }
 
     public get ram_usage(): number {

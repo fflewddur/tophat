@@ -78,3 +78,16 @@
   font-size: 0.8em;
   text-align: center;
 }
+
+.menu-cmd-name {
+  font-size: 0.8em;
+  text-align: left;
+  padding: 0.25em 0.25em 0.25em 0.5em;
+  width: 160px;
+}
+
+.menu-cmd-usage {
+  font-size: 0.8em;
+  text-align: right;
+  padding: 0.25em 0.5em 0.25em 0;
+}

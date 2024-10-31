@@ -29,6 +29,18 @@ import {
 import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
+const NumTopProcs = 10;
+
+class TopProc {
+  public cmd: St.Label;
+  public usage: St.Label;
+
+  constructor() {
+    this.cmd = new St.Label();
+    this.usage = new St.Label();
+  }
+}
+
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMeter {
     private icon;
@@ -38,6 +50,7 @@ export const CpuMonitor = GObject.registerClass(
     private menuCpuFreq;
     private menuCpuTemp;
     private menuUptime;
+    private topProcs: TopProc[];
 
     constructor(metadata: ExtensionMetadata) {
       super('CPU Monitor', metadata);
@@ -63,6 +76,10 @@ export const CpuMonitor = GObject.registerClass(
       this.menuCpuFreq = new St.Label();
       this.menuCpuTemp = new St.Label();
       this.menuUptime = new St.Label();
+      this.topProcs = new Array<TopProc>(NumTopProcs);
+      for (let i = 0; i < NumTopProcs; i++) {
+        this.topProcs[i] = new TopProc();
+      }
 
       this.buildMenu();
       this.addMenuButtons();
@@ -109,6 +126,21 @@ export const CpuMonitor = GObject.registerClass(
       this.addMenuRow(this.menuCpuTemp, 1, 1, 1);
 
       label = new St.Label({
+        text: _('Top processes'),
+        style_class: 'menu-header',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+      for (let i = 0; i < NumTopProcs; i++) {
+        this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
+        this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
+        this.topProcs[i].usage.set_style_class_name('menu-cmd-usage');
+        if (i === NumTopProcs - 1) {
+          this.topProcs[i].usage.add_style_class_name('menu-section-end');
+        }
+        this.addMenuRow(this.topProcs[i].usage, 1, 1, 1);
+      }
+
+      label = new St.Label({
         text: _('System uptime'),
         style_class: 'menu-header',
       });
@@ -131,6 +163,13 @@ export const CpuMonitor = GObject.registerClass(
       vitals.connect('notify::cpu-temp', () => {
         const s = vitals.cpu_temp.toString();
         this.menuCpuTemp.text = s;
+      });
+      vitals.connect('notify::cpu-top-procs', () => {
+        const procs = vitals.getTopCpuProcs(NumTopProcs);
+        for (let i = 0; i < NumTopProcs; i++) {
+          this.topProcs[i].cmd.text = procs[i].cmd;
+          this.topProcs[i].usage.text = procs[i].cpuUsage().toFixed(2);
+        }
       });
       vitals.connect('notify::uptime', () => {
         const s = this.formatUptime(vitals.uptime);
