@@ -28,6 +28,7 @@ import { CpuMonitor } from './cpu.js';
 import { MemMonitor } from './mem.js';
 import { DiskMonitor } from './disk.js';
 import { NetMonitor } from './net.js';
+import { TopHatMeter } from './meter.js';
 
 enum MenuPosition {
   LeftEdge,
@@ -155,12 +156,14 @@ export default class TopHat extends Extension {
       pref.box
     );
 
-    this.container?.meters.forEach((m) => {
+    this.container?.meters.forEach((m: TopHatMeter) => {
       if (this.vitals) {
         m.bindVitals(this.vitals);
         Main.panel._onMenuSet(m);
       }
     });
+
+    this.vitals?.notify('cpu-model');
   }
 
   private getPreferredPanelAttributes() {

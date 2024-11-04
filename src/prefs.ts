@@ -26,6 +26,7 @@ import {
 export default class TopHatPrefs extends ExtensionPreferences {
   private gsettings?: Gio.Settings;
 
+  // @ts-expect-error Expects different return type
   fillPreferencesWindow(window: Adw.PreferencesWindow) {
     this.gsettings = this.getSettings();
 

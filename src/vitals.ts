@@ -37,6 +37,13 @@ export const Vitals = GObject.registerClass(
         100,
         0
       ),
+      'cpu-model': GObject.ParamSpec.string(
+        'cpu-model',
+        'CPU model',
+        'CPU model',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
       'cpu-freq': GObject.ParamSpec.int(
         'cpu-freq',
         'CPU frequency',
@@ -574,6 +581,10 @@ export const Vitals = GObject.registerClass(
       this.notify('cpu-usage');
     }
 
+    public get cpu_model(): string {
+      return this.cpuModel.name;
+    }
+
     public get cpu_freq(): number {
       return this._cpu_freq;
     }
@@ -851,6 +862,7 @@ export class CpuModel {
     this.cores = cores;
     this.sockets = sockets;
     this.tempMonitors = tempMonitors;
+    console.log(`CpuModel(${name}, ${cores}), ${sockets})`);
   }
 }
 

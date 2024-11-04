@@ -156,6 +156,10 @@ export const CpuMonitor = GObject.registerClass(
         this.usage.text = s;
         this.menuCpuUsage.text = s;
       });
+      vitals.connect('notify::cpu-model', () => {
+        const s = vitals.cpu_model;
+        this.menuCpuModel.text = s;
+      });
       vitals.connect('notify::cpu-freq', () => {
         const s = vitals.cpu_freq.toString();
         this.menuCpuFreq.text = s;
