@@ -163,6 +163,7 @@ export default class TopHat extends Extension {
       }
     });
 
+    // Trigger notifications for properties that were set during init and will not change
     this.vitals?.notify('cpu-model');
   }
 

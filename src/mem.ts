@@ -128,7 +128,7 @@ export const MemMonitor = GObject.registerClass(
       vitals.connect('notify::swap-size-free', () => {
         const total = bytesToHumanString(vitals.swap_size);
         const free = bytesToHumanString(vitals.swap_size_free);
-        this.menuMemSize.text = _(`${free} available of ${total}`);
+        this.menuSwapSize.text = _(`${free} available of ${total}`);
       });
       vitals.connect('notify::swap-usage', () => {
         const s = (vitals.swap_usage * 100).toFixed(0) + '%';

@@ -690,7 +690,7 @@ export const Vitals = GObject.registerClass(
     }
 
     public set swap_size_free(v: number) {
-      if (this._swap_size_free === v) {
+      if (this.swap_size_free === v) {
         return;
       }
       this._swap_size_free = v;
