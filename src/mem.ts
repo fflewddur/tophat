@@ -106,8 +106,14 @@ export const MemMonitor = GObject.registerClass(
 
     public override bindVitals(vitals: Vitals): void {
       vitals.connect('notify::ram-size', () => {
-        const s = bytesToHumanString(vitals.ram_size);
-        this.menuMemSize.text = s;
+        const total = bytesToHumanString(vitals.ram_size);
+        const free = bytesToHumanString(vitals.ram_size_free);
+        this.menuMemSize.text = _(`${free} available of ${total}`);
+      });
+      vitals.connect('notify::ram-size-free', () => {
+        const total = bytesToHumanString(vitals.ram_size);
+        const free = bytesToHumanString(vitals.ram_size_free);
+        this.menuMemSize.text = _(`${free} available of ${total}`);
       });
       vitals.connect('notify::ram-usage', () => {
         const s = (vitals.ram_usage * 100).toFixed(0) + '%';
@@ -115,8 +121,14 @@ export const MemMonitor = GObject.registerClass(
         this.menuMemUsage.text = s;
       });
       vitals.connect('notify::swap-size', () => {
-        const s = bytesToHumanString(vitals.swap_size);
-        this.menuSwapSize.text = s;
+        const total = bytesToHumanString(vitals.swap_size);
+        const free = bytesToHumanString(vitals.swap_size_free);
+        this.menuMemSize.text = _(`${free} available of ${total}`);
+      });
+      vitals.connect('notify::swap-size-free', () => {
+        const total = bytesToHumanString(vitals.swap_size);
+        const free = bytesToHumanString(vitals.swap_size_free);
+        this.menuMemSize.text = _(`${free} available of ${total}`);
       });
       vitals.connect('notify::swap-usage', () => {
         const s = (vitals.swap_usage * 100).toFixed(0) + '%';

@@ -87,6 +87,15 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'ram-size-free': GObject.ParamSpec.int(
+        'ram-size-free',
+        'RAM size free',
+        'Size of available system memory in GB',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
       'swap-usage': GObject.ParamSpec.int(
         'swap-usage',
         'Swap usage',
@@ -100,6 +109,15 @@ export const Vitals = GObject.registerClass(
         'swap-size',
         'Swap size',
         'Size of swap space in GB',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
+      'swap-size-free': GObject.ParamSpec.int(
+        'swap-size-free',
+        'Swap size free',
+        'Size of available swap space in GB',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -179,8 +197,10 @@ export const Vitals = GObject.registerClass(
     private _cpu_top_procs = '';
     private _ram_usage = 0;
     private _ram_size = 0;
+    private _ram_size_free = 0;
     private _swap_usage = -1;
     private _swap_size = -1;
+    private _swap_size_free = 0;
     private _net_recv = 0;
     private _net_sent = 0;
     private _net_recv_total = 0;
@@ -334,8 +354,10 @@ export const Vitals = GObject.registerClass(
       }
       this.ram_usage = usage.usedMem;
       this.ram_size = this.memInfo.total * 1024;
+      this.ram_size_free = this.memInfo.available * 1024;
       this.swap_usage = usage.usedSwap;
       this.swap_size = this.memInfo.swapTotal * 1024;
+      this.swap_size_free = this.memInfo.swapAvailable * 1024;
       // console.log(
       //   `Mem usage: ${(usage.usedMem * 100).toFixed(0)}% of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
       //     `Swap usage: ${(usage.usedSwap * 100).toFixed(0)}% of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
@@ -627,6 +649,18 @@ export const Vitals = GObject.registerClass(
       this.notify('ram-size');
     }
 
+    public get ram_size_free(): number {
+      return this._ram_size_free;
+    }
+
+    public set ram_size_free(v: number) {
+      if (this._ram_size_free === v) {
+        return;
+      }
+      this._ram_size_free = v;
+      this.notify('ram-size-free');
+    }
+
     public get swap_usage(): number {
       return this._swap_usage;
     }
@@ -649,6 +683,18 @@ export const Vitals = GObject.registerClass(
       }
       this._swap_size = v;
       this.notify('swap-size');
+    }
+
+    public get swap_size_free(): number {
+      return this._swap_size_free;
+    }
+
+    public set swap_size_free(v: number) {
+      if (this._swap_size_free === v) {
+        return;
+      }
+      this._swap_size_free = v;
+      this.notify('swap-size-free');
     }
 
     public get net_recv() {
@@ -844,7 +890,6 @@ export class CpuModel {
     this.cores = cores;
     this.sockets = sockets;
     this.tempMonitors = tempMonitors;
-    console.log(`CpuModel(${name}, ${cores}), ${sockets})`);
   }
 }
 
