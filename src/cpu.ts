@@ -29,7 +29,7 @@ import {
 import { Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal } from './meter.js';
 
-const NumTopProcs = 10;
+const NumTopProcs = 8;
 
 class TopProc {
   public cmd: St.Label;
@@ -161,11 +161,11 @@ export const CpuMonitor = GObject.registerClass(
         this.menuCpuModel.text = s;
       });
       vitals.connect('notify::cpu-freq', () => {
-        const s = vitals.cpu_freq.toString();
+        const s = (vitals.cpu_freq / 1000).toFixed(1) + ' GHz';
         this.menuCpuFreq.text = s;
       });
       vitals.connect('notify::cpu-temp', () => {
-        const s = vitals.cpu_temp.toString();
+        const s = (vitals.cpu_temp / 1000).toFixed(0) + ' °C';
         this.menuCpuTemp.text = s;
       });
       vitals.connect('notify::cpu-top-procs', () => {

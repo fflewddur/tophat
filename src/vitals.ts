@@ -425,35 +425,17 @@ export const Vitals = GObject.registerClass(
     }
 
     private loadFreqs() {
-      const freqs = new Map<number, number>();
       const f = new File('/proc/cpuinfo');
       const lines = f.readSync();
       const blocks = lines.split('\n\n');
+      let freq = 0;
       for (const block of blocks) {
-        let id = 0,
-          freq = 0;
-        let m = block.match(/physical id\s*:\s*(\d+)/);
-        if (m) {
-          id = parseInt(m[1]);
-        }
-        const f = freqs.get(id);
-        if (f !== undefined) {
-          freq = f;
-        }
-        m = block.match(/cpu MHz\s*:\s*(\d+)/);
+        const m = block.match(/cpu MHz\s*:\s*(\d+)/);
         if (m) {
           freq += parseInt(m[1]);
-          freqs.set(id, freq);
         }
       }
-      freqs.forEach((val, i) => {
-        this.cpuState.freqs[i] = val;
-        // console.log(`CPU ${i} frequency: ${val / this.cpuModel.cores}`);
-      });
-      const sum_cpu_freq = freqs.get(0);
-      if (sum_cpu_freq) {
-        this.cpu_freq = sum_cpu_freq / this.cpuModel.cores;
-      }
+      this.cpu_freq = freq / this.cpuModel.cores;
     }
 
     private loadProcessList() {
