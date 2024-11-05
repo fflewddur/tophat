@@ -27,19 +27,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Vitals } from './vitals.js';
-import { TopHatMeter, MeterNoVal } from './meter.js';
-
-const NumTopProcs = 8;
-
-class TopProc {
-  public cmd: St.Label;
-  public usage: St.Label;
-
-  constructor() {
-    this.cmd = new St.Label();
-    this.usage = new St.Label();
-  }
-}
+import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './meter.js';
 
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMeter {

@@ -32,6 +32,17 @@ import { Vitals } from './vitals.js';
 
 const MENU_COLUMNS = 2;
 export const MeterNoVal = 'n/a';
+export const NumTopProcs = 8;
+
+export class TopProc {
+  public cmd: St.Label;
+  public usage: St.Label;
+
+  constructor() {
+    this.cmd = new St.Label();
+    this.usage = new St.Label();
+  }
+}
 
 export const TopHatMeter = GObject.registerClass(
   class TopHatMeter extends PanelMenu.Button {

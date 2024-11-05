@@ -123,6 +123,13 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'mem-top-procs': GObject.ParamSpec.string(
+        'mem-top-procs',
+        'Memory top processes',
+        'Top memory-consuming processes',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
       'net-recv': GObject.ParamSpec.int(
         'net-recv',
         'Network bytes received',
@@ -201,6 +208,7 @@ export const Vitals = GObject.registerClass(
     private _swap_usage = -1;
     private _swap_size = -1;
     private _swap_size_free = 0;
+    private _mem_top_procs = '';
     private _net_recv = 0;
     private _net_sent = 0;
     private _net_recv_total = 0;
@@ -268,6 +276,7 @@ export const Vitals = GObject.registerClass(
       this.loadProcessList();
       // FIXME: Compute a hash from the top CPU processes instead of using a random number to trigger the UI refresh
       this.cpu_top_procs = Math.random().toFixed(8);
+      this.mem_top_procs = Math.random().toFixed(8);
       console.timeEnd('readDetails()');
       return true;
     }
@@ -461,6 +470,7 @@ export const Vitals = GObject.registerClass(
     }
 
     private loadProcessList() {
+      const curProcs = new Map<string, Process>();
       const directory = Gio.File.new_for_path('/proc/');
       const iter = directory.enumerate_children(
         Gio.FILE_ATTRIBUTE_STANDARD_NAME,
@@ -486,11 +496,12 @@ export const Vitals = GObject.registerClass(
           name[0] == '9'
         ) {
           const p = this.loadProcessStat(name);
-          this.procs.set(p.id, p);
+          curProcs.set(p.id, p);
           this.loadSmapsRollupForProcess(p);
           this.loadIoForProcess(p);
         }
       }
+      this.procs = curProcs;
     }
 
     private loadProcessStat(name: string): Process {
@@ -695,6 +706,18 @@ export const Vitals = GObject.registerClass(
       }
       this._swap_size_free = v;
       this.notify('swap-size-free');
+    }
+
+    public get mem_top_procs() {
+      return this._mem_top_procs;
+    }
+
+    private set mem_top_procs(v: string) {
+      if (this.mem_top_procs === v) {
+        return;
+      }
+      this._mem_top_procs = v;
+      this.notify('mem-top-procs');
     }
 
     public get net_recv() {
@@ -1011,7 +1034,7 @@ class Process {
     const lines = content.split('\n');
     lines.forEach((line) => {
       if (line.startsWith('Pss:')) {
-        this.pss = readKb(line);
+        this.pss = readKb(line) * 1024;
       }
     });
   }

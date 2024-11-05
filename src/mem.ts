@@ -26,7 +26,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Vitals } from './vitals.js';
-import { TopHatMeter, MeterNoVal } from './meter.js';
+import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './meter.js';
 import { bytesToHumanString } from './helpers.js';
 
 export const MemMonitor = GObject.registerClass(
@@ -37,6 +37,7 @@ export const MemMonitor = GObject.registerClass(
     private menuMemSize;
     private menuSwapUsage;
     private menuSwapSize;
+    private topProcs: TopProc[];
 
     constructor(metadata: ExtensionMetadata) {
       super('Memory Monitor', metadata);
@@ -61,6 +62,10 @@ export const MemMonitor = GObject.registerClass(
       this.menuMemSize = new St.Label();
       this.menuSwapUsage = new St.Label();
       this.menuSwapSize = new St.Label();
+      this.topProcs = new Array<TopProc>(NumTopProcs);
+      for (let i = 0; i < NumTopProcs; i++) {
+        this.topProcs[i] = new TopProc();
+      }
 
       this.buildMenu();
       this.addMenuButtons();
@@ -102,6 +107,21 @@ export const MemMonitor = GObject.registerClass(
         'menu-value menu-details menu-section-end'
       );
       this.addMenuRow(this.menuSwapSize, 0, 2, 1);
+
+      label = new St.Label({
+        text: _('Top processes'),
+        style_class: 'menu-header',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+      for (let i = 0; i < NumTopProcs; i++) {
+        this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
+        this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
+        this.topProcs[i].usage.set_style_class_name('menu-cmd-usage');
+        if (i === NumTopProcs - 1) {
+          this.topProcs[i].usage.add_style_class_name('menu-section-end');
+        }
+        this.addMenuRow(this.topProcs[i].usage, 1, 1, 1);
+      }
     }
 
     public override bindVitals(vitals: Vitals): void {
@@ -133,6 +153,13 @@ export const MemMonitor = GObject.registerClass(
       vitals.connect('notify::swap-usage', () => {
         const s = (vitals.swap_usage * 100).toFixed(0) + '%';
         this.menuSwapUsage.text = s;
+      });
+      vitals.connect('notify::mem-top-procs', () => {
+        const procs = vitals.getTopMemProcs(NumTopProcs);
+        for (let i = 0; i < NumTopProcs; i++) {
+          this.topProcs[i].cmd.text = procs[i].cmd;
+          this.topProcs[i].usage.text = bytesToHumanString(procs[i].memUsage());
+        }
       });
     }
   }
