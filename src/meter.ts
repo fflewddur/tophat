@@ -32,7 +32,7 @@ import { Vitals } from './vitals.js';
 
 const MENU_COLUMNS = 2;
 export const MeterNoVal = 'n/a';
-export const NumTopProcs = 8;
+export const NumTopProcs = 6;
 
 export class TopProc {
   public cmd: St.Label;

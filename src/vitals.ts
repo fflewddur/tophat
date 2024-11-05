@@ -239,7 +239,7 @@ export const Vitals = GObject.registerClass(
       if (this.detailsLoop === 0) {
         this.detailsLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_DEFAULT,
-          10,
+          5,
           () => this.readDetails()
         );
       }
@@ -273,8 +273,9 @@ export const Vitals = GObject.registerClass(
       console.time('readDetails()');
       this.loadTemps();
       this.loadFreqs();
+      this.loadStatDetails();
       this.loadProcessList();
-      // FIXME: Compute a hash from the top CPU processes instead of using a random number to trigger the UI refresh
+      // FIXME: Compute a hash from the top processes instead of using a random number to trigger the UI refresh
       this.cpu_top_procs = Math.random().toFixed(8);
       this.mem_top_procs = Math.random().toFixed(8);
       console.timeEnd('readDetails()');
@@ -295,35 +296,18 @@ export const Vitals = GObject.registerClass(
       const usage = new CpuUsage(this.cpuModel.cores);
       lines.forEach((line: string) => {
         if (line.startsWith('cpu')) {
-          const re =
-            /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+          const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
           const m = line.match(re);
           if (m && !m[1]) {
             // These are aggregate CPU statistics
-            const usedTime =
-              parseInt(m[2]) +
-              parseInt(m[3]) +
-              parseInt(m[4]) +
-              parseInt(m[6]) +
-              parseInt(m[7]) +
-              parseInt(m[8]) +
-              parseInt(m[9]) +
-              parseInt(m[10]);
+            const usedTime = parseInt(m[2]) + parseInt(m[4]);
             const idleTime = parseInt(m[5]);
             this.cpuState.update(usedTime, idleTime);
             usage.aggregate = this.cpuState.usage();
           } else if (m) {
             // These are per-core statistics
             const core = parseInt(m[1]);
-            const usedTime =
-              parseInt(m[2]) +
-              parseInt(m[3]) +
-              parseInt(m[4]) +
-              parseInt(m[6]) +
-              parseInt(m[7]) +
-              parseInt(m[8]) +
-              parseInt(m[9]) +
-              parseInt(m[10]);
+            const usedTime = parseInt(m[2]) + parseInt(m[4]);
             const idleTime = parseInt(m[5]);
             this.cpuState.updateCore(core, usedTime, idleTime);
             usage.core[core] = this.cpuState.coreUsage(core);
@@ -335,6 +319,24 @@ export const Vitals = GObject.registerClass(
       });
       this.cpu_usage = usage.aggregate;
       // console.log(`CPU usage: ${usage}`);
+    }
+
+    private loadStatDetails() {
+      const f = new File('/proc/stat');
+      const contents = f.readSync();
+      const lines = contents.split('\n');
+      lines.forEach((line: string) => {
+        if (line.startsWith('cpu')) {
+          const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+          const m = line.match(re);
+          if (m && !m[1]) {
+            // These are aggregate CPU statistics
+            const usedTime = parseInt(m[2]) + parseInt(m[4]);
+            const idleTime = parseInt(m[5]);
+            this.cpuState.updateDetails(usedTime + idleTime);
+          }
+        }
+      });
     }
 
     private loadMeminfo() {
@@ -497,6 +499,9 @@ export const Vitals = GObject.registerClass(
         ) {
           const p = this.loadProcessStat(name);
           curProcs.set(p.id, p);
+          p.setTotalTime(
+            this.cpuState.totalTimeDetails - this.cpuState.totalTimeDetailsPrev
+          );
           this.loadSmapsRollupForProcess(p);
           this.loadIoForProcess(p);
         }
@@ -819,12 +824,16 @@ class CpuState {
   public coreIdleTimePrev: Array<number>;
   public freqs: Array<number>;
   public temps: Array<number>;
+  public totalTimeDetails: number; // track for the details loop
+  public totalTimeDetailsPrev: number;
 
   constructor(cores: number, sockets: number, usedTime = 0, idleTime = 0) {
     this.usedTime = usedTime;
     this.usedTimePrev = 0;
     this.idleTime = idleTime;
     this.idleTimePrev = 0;
+    this.totalTimeDetails = 0;
+    this.totalTimeDetailsPrev = 0;
     this.coreUsedTime = new Array<number>(cores);
     this.coreUsedTimePrev = new Array<number>(cores);
     this.coreIdleTime = new Array<number>(cores);
@@ -855,6 +864,11 @@ class CpuState {
     this.coreUsedTime[core] = usedTime;
     this.coreIdleTimePrev[core] = this.coreIdleTime[core];
     this.coreIdleTime[core] = idleTime;
+  }
+
+  public updateDetails(totalTime: number) {
+    this.totalTimeDetailsPrev = this.totalTimeDetails;
+    this.totalTimeDetails = totalTime;
   }
 
   public usage(): number {
@@ -995,13 +1009,14 @@ class Process {
   public pss = 0;
   public cpu = 0;
   public cpuPrev = 0;
+  public cpuTotal = 0;
   public diskRead = 0;
   public diskWrite = 0;
   public diskReadPrev = 0;
   public diskWritePrev = 0;
 
   public cpuUsage(): number {
-    return this.cpu - this.cpuPrev;
+    return (this.cpu - this.cpuPrev) / this.cpuTotal;
   }
 
   public memUsage(): number {
@@ -1016,6 +1031,10 @@ class Process {
     return this.diskWrite - this.diskWritePrev;
   }
 
+  public setTotalTime(t: number) {
+    this.cpuTotal = t;
+  }
+
   public parseStat(stat: string) {
     const open = stat.indexOf('(');
     const close = stat.indexOf(')');
@@ -1025,9 +1044,8 @@ class Process {
     const fields = stat.substring(close + 2).split(' ');
     this.utime = parseInt(fields[11]);
     this.stime = parseInt(fields[12]);
-    this.guest_time = parseInt(fields[40]);
     this.cpuPrev = this.cpu;
-    this.cpu = this.utime + this.stime + this.guest_time;
+    this.cpu = this.utime + this.stime;
   }
 
   public parseSmapsRollup(content: string) {

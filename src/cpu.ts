@@ -159,8 +159,14 @@ export const CpuMonitor = GObject.registerClass(
       vitals.connect('notify::cpu-top-procs', () => {
         const procs = vitals.getTopCpuProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
-          this.topProcs[i].cmd.text = procs[i].cmd;
-          this.topProcs[i].usage.text = procs[i].cpuUsage().toFixed(2);
+          const cpu = procs[i].cpuUsage();
+          if (cpu > 0.001) {
+            this.topProcs[i].cmd.text = procs[i].cmd;
+            this.topProcs[i].usage.text = (cpu * 100).toFixed(1) + '%';
+          } else {
+            this.topProcs[i].cmd.text = '';
+            this.topProcs[i].usage.text = '';
+          }
         }
       });
       vitals.connect('notify::uptime', () => {
