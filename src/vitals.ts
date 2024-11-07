@@ -64,17 +64,17 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
-      'cpu-top-procs': GObject.ParamSpec.string(
-        'cpu-top-procs',
-        'CPU top processes',
-        'Top CPU-consuming processes',
-        GObject.ParamFlags.READWRITE,
-        ''
-      ),
       'cpu-history': GObject.ParamSpec.string(
         'cpu-history',
         'CPU usage history',
         'CPU usage history',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
+      'cpu-top-procs': GObject.ParamSpec.string(
+        'cpu-top-procs',
+        'CPU top processes',
+        'Top CPU-consuming processes',
         GObject.ParamFlags.READWRITE,
         ''
       ),
@@ -131,6 +131,13 @@ export const Vitals = GObject.registerClass(
         0,
         0,
         0
+      ),
+      'mem-history': GObject.ParamSpec.string(
+        'mem-history',
+        'Memory usage history',
+        'Memory usage history',
+        GObject.ParamFlags.READWRITE,
+        ''
       ),
       'mem-top-procs': GObject.ParamSpec.string(
         'mem-top-procs',
@@ -217,14 +224,15 @@ export const Vitals = GObject.registerClass(
     private _cpu_usage = 0;
     private _cpu_freq = 0;
     private _cpu_temp = 0;
-    private _cpu_top_procs = '';
     private _cpu_history = '';
+    private _cpu_top_procs = '';
     private _ram_usage = 0;
     private _ram_size = 0;
     private _ram_size_free = 0;
     private _swap_usage = -1;
     private _swap_size = -1;
     private _swap_size_free = 0;
+    private _mem_history = '';
     private _mem_top_procs = '';
     private _net_recv = 0;
     private _net_sent = 0;
@@ -257,7 +265,7 @@ export const Vitals = GObject.registerClass(
       if (this.detailsLoop === 0) {
         this.detailsLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_DEFAULT,
-          5,
+          9,
           () => this.readDetails()
         );
       }
@@ -274,6 +282,7 @@ export const Vitals = GObject.registerClass(
       }
     }
 
+    // readSummaries queries all of the info needed by the topbar widgets
     public readSummaries(): boolean {
       // Because /proc is a virtual FS, maybe we can get away with sync IO?
       console.time('readSummaries()');
@@ -286,6 +295,7 @@ export const Vitals = GObject.registerClass(
       return true;
     }
 
+    // readDetails queries the info needed by the monitor menus
     public readDetails(): boolean {
       // Because /proc is a virtual FS, maybe we can get away with sync IO?
       console.time('readDetails()');
@@ -339,7 +349,6 @@ export const Vitals = GObject.registerClass(
       this.cpu_usage = usage.aggregate;
       // FIXME: Compute a hash of the history array instead of using a random number
       this.cpu_history = Math.random().toFixed(8);
-      // console.log(`CPU usage: ${usage}`);
     }
 
     private loadStatDetails() {
@@ -391,10 +400,8 @@ export const Vitals = GObject.registerClass(
       this.swap_usage = usage.usedSwap;
       this.swap_size = this.memInfo.swapTotal * 1024;
       this.swap_size_free = this.memInfo.swapAvailable * 1024;
-      // console.log(
-      //   `Mem usage: ${(usage.usedMem * 100).toFixed(0)}% of ${(this.memInfo.total / 1000 / 1000).toFixed(1)} GB\n` +
-      //     `Swap usage: ${(usage.usedSwap * 100).toFixed(0)}% of ${(this.memInfo.swapTotal / 1000 / 1000).toFixed(1)} GB`
-      // );
+      // FIXME: Compute a hash of the history array instead of using a random number
+      this.mem_history = Math.random().toFixed(8);
     }
 
     private loadNetDev() {
@@ -745,6 +752,18 @@ export const Vitals = GObject.registerClass(
       }
       this._swap_size_free = v;
       this.notify('swap-size-free');
+    }
+
+    public get mem_history() {
+      return this._mem_history;
+    }
+
+    private set mem_history(v: string) {
+      if (this.mem_history === v) {
+        return;
+      }
+      this._mem_history = v;
+      this.notify('mem-history');
     }
 
     public get mem_top_procs() {

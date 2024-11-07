@@ -196,14 +196,4 @@ export default class TopHat extends Extension {
     }
     return { box, position };
   }
-
-  private readVitals(): boolean {
-    if (this.vitals) {
-      this.vitals.readSummaries();
-      // this.vitals.getTopCpuProcs(5);
-      // this.vitals.getTopMemProcs(5);
-      // this.vitals.getTopDiskProcs(5);
-    }
-    return true;
-  }
 }
