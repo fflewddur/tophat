@@ -98,3 +98,38 @@
   padding: 0.25em 0.5em 0.25em 0;
   width: 5em;
 }
+
+.chart {
+  margin: 0.5em 0.25em 0.5em 0.5em;
+  /* border: solid 1px #555; */
+  border-right: solid 1px #999;
+  border-bottom: solid 1px #999;
+  height: 6em;
+}
+
+.chart-label {
+  font-size: 0.8em;
+  padding: 0.5em 0;
+  color: #999;
+}
+
+.chart-label-then {
+  font-size: 0.7em;
+  color: #999;
+  text-align: left;
+  padding: 0 0.5em 1em 0.5em;
+}
+
+.chart-label-now {
+  font-size: 0.7em;
+  color: #999;
+  text-align: right;
+  padding: 0 0.5em 1em 0.5em;
+}
+
+.chart-bar {
+  background-color: rgb(0, 133, 221);
+  min-width: 4px;
+  min-height: 2px;
+  margin-right: 1px;
+}

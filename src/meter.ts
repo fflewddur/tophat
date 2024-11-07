@@ -52,7 +52,7 @@ export const TopHatMeter = GObject.registerClass(
   class TopHatMeter extends PanelMenu.Button {
     private meterName;
     private box: St.BoxLayout;
-    private menuLayout?: Clutter.LayoutManager;
+    private menuLayout?: Clutter.GridLayout;
     private menuRow = 0;
     private menuCol = 0;
     protected menuNumCols = 0;
@@ -97,7 +97,7 @@ export const TopHatMeter = GObject.registerClass(
       this.menuNumCols = MENU_COLUMNS;
       statusMenu.box.add_child(grid);
       this.menu.addMenuItem(statusMenu);
-      return grid.layout_manager;
+      return grid.layout_manager as Clutter.GridLayout;
     }
 
     protected addMenuButtons() {
@@ -161,7 +161,6 @@ export const TopHatMeter = GObject.registerClass(
       colSpan: number,
       rowSpan: number
     ) {
-      // @ts-expect-error attach() doesn't exist on Clutter.LayoutManager
       this.menuLayout?.attach(widget, col, this.menuRow, colSpan, rowSpan);
       this.menuCol += colSpan;
       if (this.menuCol >= this.menuNumCols) {

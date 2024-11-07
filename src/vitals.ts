@@ -4,7 +4,9 @@ import GLib from 'gi://GLib';
 
 import { File } from './file.js';
 
-const MAX_HISTORY = 100;
+export const SummaryInterval = 3;
+export const MaxHistoryLen = 50;
+
 const SECTOR_SIZE = 512; // in bytes
 const RE_MEM_INFO = /:\s+(\d+)/;
 const RE_NET_DEV = /^\s*(\w+):/;
@@ -66,6 +68,13 @@ export const Vitals = GObject.registerClass(
         'cpu-top-procs',
         'CPU top processes',
         'Top CPU-consuming processes',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
+      'cpu-history': GObject.ParamSpec.string(
+        'cpu-history',
+        'CPU usage history',
+        'CPU usage history',
         GObject.ParamFlags.READWRITE,
         ''
       ),
@@ -196,19 +205,20 @@ export const Vitals = GObject.registerClass(
   class Vitals extends GObject.Object {
     private procs = new Map<string, Process>();
     public cpuModel: CpuModel;
-    private cpuUsageHistory = new Array<CpuUsage>(MAX_HISTORY);
+    private cpuUsageHistory = new Array<CpuUsage>(MaxHistoryLen);
     private cpuState: CpuState;
     public memInfo: MemInfo;
-    private memUsageHistory = new Array<MemUsage>(MAX_HISTORY);
+    private memUsageHistory = new Array<MemUsage>(MaxHistoryLen);
     private netState: NetDevState;
-    private netActivityHistory = new Array<NetActivity>(MAX_HISTORY);
+    private netActivityHistory = new Array<NetActivity>(MaxHistoryLen);
     private diskState: DiskState;
-    private diskActivityHistory = new Array<DiskActivity>(MAX_HISTORY);
+    private diskActivityHistory = new Array<DiskActivity>(MaxHistoryLen);
     private _uptime = 0;
     private _cpu_usage = 0;
     private _cpu_freq = 0;
     private _cpu_temp = 0;
     private _cpu_top_procs = '';
+    private _cpu_history = '';
     private _ram_usage = 0;
     private _ram_size = 0;
     private _ram_size_free = 0;
@@ -240,7 +250,7 @@ export const Vitals = GObject.registerClass(
       if (this.summaryLoop === 0) {
         this.summaryLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_DEFAULT,
-          3,
+          SummaryInterval,
           () => this.readSummaries()
         );
       }
@@ -322,11 +332,13 @@ export const Vitals = GObject.registerClass(
             usage.core[core] = this.cpuState.coreUsage(core);
           }
         }
-        if (this.cpuUsageHistory.unshift(usage) > MAX_HISTORY) {
+        if (this.cpuUsageHistory.unshift(usage) > MaxHistoryLen) {
           this.cpuUsageHistory.pop();
         }
       });
       this.cpu_usage = usage.aggregate;
+      // FIXME: Compute a hash of the history array instead of using a random number
+      this.cpu_history = Math.random().toFixed(8);
       // console.log(`CPU usage: ${usage}`);
     }
 
@@ -370,7 +382,7 @@ export const Vitals = GObject.registerClass(
       usage.usedSwap =
         (this.memInfo.swapTotal - this.memInfo.swapAvailable) /
         this.memInfo.swapTotal;
-      if (this.memUsageHistory.unshift(usage) > MAX_HISTORY) {
+      if (this.memUsageHistory.unshift(usage) > MaxHistoryLen) {
         this.memUsageHistory.pop();
       }
       this.ram_usage = usage.usedMem;
@@ -411,7 +423,7 @@ export const Vitals = GObject.registerClass(
       const netActivity = new NetActivity();
       netActivity.bytesRecv = this.netState.recvActivity();
       netActivity.bytesSent = this.netState.sentActivity();
-      if (this.netActivityHistory.unshift(netActivity) > MAX_HISTORY) {
+      if (this.netActivityHistory.unshift(netActivity) > MaxHistoryLen) {
         this.netActivityHistory.pop();
       }
       this.net_recv = netActivity.bytesRecv;
@@ -451,7 +463,7 @@ export const Vitals = GObject.registerClass(
       const diskActivity = new DiskActivity();
       diskActivity.bytesRead = this.diskState.readActivity();
       diskActivity.bytesWritten = this.diskState.writeActivity();
-      if (this.diskActivityHistory.unshift(diskActivity) > MAX_HISTORY) {
+      if (this.diskActivityHistory.unshift(diskActivity) > MaxHistoryLen) {
         this.diskActivityHistory.pop();
       }
       this.disk_read = diskActivity.bytesRead;
@@ -649,6 +661,18 @@ export const Vitals = GObject.registerClass(
       }
       this._cpu_top_procs = v;
       this.notify('cpu-top-procs');
+    }
+
+    public get cpu_history() {
+      return this._cpu_history;
+    }
+
+    private set cpu_history(v: string) {
+      if (this.cpu_history === v) {
+        return;
+      }
+      this._cpu_history = v;
+      this.notify('cpu-history');
     }
 
     public get ram_usage(): number {

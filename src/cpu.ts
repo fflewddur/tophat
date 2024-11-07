@@ -26,7 +26,7 @@ import {
   ngettext,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { Vitals } from './vitals.js';
+import { MaxHistoryLen, SummaryInterval, Vitals } from './vitals.js';
 import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './meter.js';
 
 export const CpuMonitor = GObject.registerClass(
@@ -37,7 +37,9 @@ export const CpuMonitor = GObject.registerClass(
     private menuCpuModel;
     private menuCpuFreq;
     private menuCpuTemp;
+    private menuHistGrid: St.Widget;
     private menuUptime;
+    private histBars: St.Widget[];
     private topProcs: TopProc[];
 
     constructor(metadata: ExtensionMetadata) {
@@ -64,6 +66,21 @@ export const CpuMonitor = GObject.registerClass(
       this.menuCpuFreq = new St.Label();
       this.menuCpuTemp = new St.Label();
       this.menuUptime = new St.Label();
+      this.menuHistGrid = new St.Widget({
+        layout_manager: new Clutter.GridLayout({
+          orientation: Clutter.Orientation.VERTICAL,
+        }),
+      });
+      this.histBars = new Array<St.Widget>(MaxHistoryLen);
+      for (let i = 0; i < MaxHistoryLen; i++) {
+        this.histBars[i] = new St.Widget({
+          x_expand: true,
+          y_expand: false,
+          y_align: Clutter.ActorAlign.END,
+          style_class: 'chart-bar',
+          height: 0,
+        });
+      }
       this.topProcs = new Array<TopProc>(NumTopProcs);
       for (let i = 0; i < NumTopProcs; i++) {
         this.topProcs[i] = new TopProc();
@@ -113,6 +130,49 @@ export const CpuMonitor = GObject.registerClass(
       );
       this.addMenuRow(this.menuCpuTemp, 1, 1, 1);
 
+      // Add the grid layout for the history chart
+      this.addMenuRow(this.menuHistGrid, 0, 2, 1);
+      const lm = this.menuHistGrid.layout_manager as Clutter.GridLayout;
+
+      const chart = new St.BoxLayout({ style_class: 'chart' });
+      lm.attach(chart, 0, 0, 2, 3);
+      for (const bar of this.histBars) {
+        chart.add_child(bar);
+      }
+
+      label = new St.Label({
+        text: '100%',
+        y_align: Clutter.ActorAlign.START,
+        style_class: 'chart-label',
+      });
+      lm.attach(label, 2, 0, 1, 1);
+      label = new St.Label({
+        text: '50%',
+        y_align: Clutter.ActorAlign.CENTER,
+        style_class: 'chart-label',
+      });
+      lm.attach(label, 2, 1, 1, 1);
+      label = new St.Label({
+        text: '0',
+        y_align: Clutter.ActorAlign.END,
+        style_class: 'chart-label',
+      });
+      lm.attach(label, 2, 2, 1, 1);
+
+      const limitInMins = (MaxHistoryLen * SummaryInterval) / 60;
+      const startLabel = ngettext(
+        '%d min ago',
+        '%d mins ago',
+        limitInMins
+      ).format(limitInMins);
+      label = new St.Label({
+        text: startLabel,
+        style_class: 'chart-label-then',
+      });
+      lm.attach(label, 0, 3, 1, 1);
+      label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
+      lm.attach(label, 1, 3, 1, 1);
+
       label = new St.Label({
         text: _('Top processes'),
         style_class: 'menu-header',
@@ -140,7 +200,8 @@ export const CpuMonitor = GObject.registerClass(
 
     public override bindVitals(vitals: Vitals): void {
       vitals.connect('notify::cpu-usage', () => {
-        const s = (vitals.cpu_usage * 100).toFixed(0) + '%';
+        const percent = vitals.cpu_usage * 100;
+        const s = percent.toFixed(0) + '%';
         this.usage.text = s;
         this.menuCpuUsage.text = s;
       });
@@ -168,6 +229,13 @@ export const CpuMonitor = GObject.registerClass(
             this.topProcs[i].usage.text = '';
           }
         }
+      });
+      vitals.connect('notify::cpu-history', () => {
+        const height = this.menuHistGrid.height * vitals.cpu_usage;
+        for (let i = 0; i < this.histBars.length - 1; i++) {
+          this.histBars[i].height = this.histBars[i + 1].height;
+        }
+        this.histBars[this.histBars.length - 1].height = Math.round(height);
       });
       vitals.connect('notify::uptime', () => {
         const s = this.formatUptime(vitals.uptime);
