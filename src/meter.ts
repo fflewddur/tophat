@@ -37,10 +37,14 @@ export const NumTopProcs = 6;
 export class TopProc {
   public cmd: St.Label;
   public usage: St.Label;
+  public in: St.Label;
+  public out: St.Label;
 
   constructor() {
     this.cmd = new St.Label();
     this.usage = new St.Label();
+    this.in = new St.Label();
+    this.out = new St.Label();
   }
 }
 

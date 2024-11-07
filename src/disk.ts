@@ -26,7 +26,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Vitals } from './vitals.js';
-import { TopHatMeter, MeterNoVal } from './meter.js';
+import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './meter.js';
 import { bytesToHumanString } from './helpers.js';
 
 export const DiskMonitor = GObject.registerClass(
@@ -36,6 +36,7 @@ export const DiskMonitor = GObject.registerClass(
     private valueWrite;
     private menuDiskWrites;
     private menuDiskReads;
+    private topProcs: TopProc[];
 
     constructor(metadata: ExtensionMetadata) {
       super('Disk Monitor', metadata);
@@ -75,6 +76,11 @@ export const DiskMonitor = GObject.registerClass(
       this.menuDiskWrites = new St.Label();
       this.menuDiskReads = new St.Label();
 
+      this.topProcs = new Array<TopProc>(NumTopProcs);
+      for (let i = 0; i < NumTopProcs; i++) {
+        this.topProcs[i] = new TopProc();
+      }
+
       this.buildMenu();
       this.addMenuButtons();
     }
@@ -105,6 +111,37 @@ export const DiskMonitor = GObject.registerClass(
       this.menuDiskWrites.text = MeterNoVal;
       this.menuDiskWrites.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuDiskWrites, 2, 1, 1);
+
+      label = new St.Label({
+        text: _('Top processes'),
+        style_class: 'menu-header',
+      });
+      this.addMenuRow(label, 0, 3, 1);
+
+      label = new St.Label({ text: '' });
+      this.addMenuRow(label, 0, 1, 1);
+      label = new St.Label({
+        text: _('Writing'),
+        style_class: 'menu-subheader',
+      });
+      this.addMenuRow(label, 1, 1, 1);
+      label = new St.Label({
+        text: _('Reading'),
+        style_class: 'menu-subheader',
+      });
+      this.addMenuRow(label, 2, 1, 1);
+
+      for (let i = 0; i < NumTopProcs; i++) {
+        this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
+        this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
+        this.topProcs[i].in.set_style_class_name('menu-cmd-activity');
+        this.addMenuRow(this.topProcs[i].in, 1, 1, 1);
+        this.topProcs[i].out.set_style_class_name('menu-cmd-activity');
+        if (i === NumTopProcs - 1) {
+          this.topProcs[i].out.add_style_class_name('menu-section-end');
+        }
+        this.addMenuRow(this.topProcs[i].out, 2, 1, 1);
+      }
     }
 
     public override bindVitals(vitals: Vitals): void {
@@ -117,6 +154,22 @@ export const DiskMonitor = GObject.registerClass(
         const s = bytesToHumanString(vitals.disk_wrote);
         this.valueWrite.text = s;
         this.menuDiskWrites.text = s;
+      });
+      vitals.connect('notify::disk-top-procs', () => {
+        const procs = vitals.getTopDiskProcs(NumTopProcs);
+        for (let i = 0; i < NumTopProcs; i++) {
+          const w = procs[i].diskWrites();
+          const r = procs[i].diskReads();
+          if (w > 0 || r > 0) {
+            this.topProcs[i].cmd.text = procs[i].cmd;
+            this.topProcs[i].in.text = bytesToHumanString(w);
+            this.topProcs[i].out.text = bytesToHumanString(r);
+          } else {
+            this.topProcs[i].cmd.text = '';
+            this.topProcs[i].in.text = '';
+            this.topProcs[i].out.text = '';
+          }
+        }
       });
     }
   }

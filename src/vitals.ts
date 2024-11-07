@@ -184,6 +184,13 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'disk-top-procs': GObject.ParamSpec.string(
+        'disk-top-procs',
+        'Disk activity top processes',
+        'Top processes in terms of disk activity',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
     },
   },
   class Vitals extends GObject.Object {
@@ -215,6 +222,7 @@ export const Vitals = GObject.registerClass(
     private _net_sent_total = 0;
     private _disk_read = 0;
     private _disk_wrote = 0;
+    private _disk_top_procs = '';
     private summaryLoop = 0;
     private detailsLoop = 0;
 
@@ -278,6 +286,7 @@ export const Vitals = GObject.registerClass(
       // FIXME: Compute a hash from the top processes instead of using a random number to trigger the UI refresh
       this.cpu_top_procs = Math.random().toFixed(8);
       this.mem_top_procs = Math.random().toFixed(8);
+      this.disk_top_procs = Math.random().toFixed(8);
       console.timeEnd('readDetails()');
       return true;
     }
@@ -325,7 +334,7 @@ export const Vitals = GObject.registerClass(
       const f = new File('/proc/stat');
       const contents = f.readSync();
       const lines = contents.split('\n');
-      lines.forEach((line: string) => {
+      for (const line of lines) {
         if (line.startsWith('cpu')) {
           const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
           const m = line.match(re);
@@ -334,9 +343,10 @@ export const Vitals = GObject.registerClass(
             const usedTime = parseInt(m[2]) + parseInt(m[4]);
             const idleTime = parseInt(m[5]);
             this.cpuState.updateDetails(usedTime + idleTime);
+            break;
           }
         }
-      });
+      }
     }
 
     private loadMeminfo() {
@@ -795,6 +805,18 @@ export const Vitals = GObject.registerClass(
       }
       this._disk_wrote = v;
       this.notify('disk-wrote');
+    }
+
+    public get disk_top_procs() {
+      return this._disk_top_procs;
+    }
+
+    private set disk_top_procs(v: string) {
+      if (this.disk_top_procs === v) {
+        return;
+      }
+      this._disk_top_procs = v;
+      this.notify('disk-top-procs');
     }
 
     public get uptime(): number {
