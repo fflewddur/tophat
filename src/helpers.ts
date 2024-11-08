@@ -74,7 +74,7 @@ export function bytesToHumanString(
  */
 export function roundMax(bytes: number) {
   let result = Math.pow(10, Math.ceil(Math.log10(bytes)));
-  while (result / 2 > bytes && result > 200) {
+  while (result / 2 > bytes && result > 20000) {
     result /= 2;
   }
   return result;

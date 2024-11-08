@@ -141,3 +141,7 @@
   min-height: 2px;
   margin-right: 1px;
 }
+
+.chart-bar-alt {
+  background-color: rgb(255, 190, 110);
+}

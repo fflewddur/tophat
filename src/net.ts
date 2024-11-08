@@ -102,7 +102,7 @@ export const NetMonitor = GObject.registerClass(
           x_expand: true,
           y_expand: false,
           y_align: Clutter.ActorAlign.END,
-          style_class: 'chart-bar',
+          style_class: 'chart-bar chart-bar-alt',
           height: i,
         });
       }
