@@ -107,7 +107,7 @@ export const MemMonitor = GObject.registerClass(
 
       this.menuMemSize.text = _(`size ${MeterNoVal}`);
       this.menuMemSize.add_style_class_name(
-        'menu-value menu-details menu-section-end'
+        'menu-details align-right menu-section-end'
       );
       this.addMenuRow(this.menuMemSize, 0, 2, 1);
 
@@ -122,7 +122,7 @@ export const MemMonitor = GObject.registerClass(
 
       this.menuSwapSize.text = _(`size ${MeterNoVal}`);
       this.menuSwapSize.add_style_class_name(
-        'menu-value menu-details menu-section-end'
+        'menu-details align-right menu-section-end'
       );
       this.addMenuRow(this.menuSwapSize, 0, 2, 1);
 
@@ -213,11 +213,16 @@ export const MemMonitor = GObject.registerClass(
         this.menuSwapUsage.text = s;
       });
       vitals.connect('notify::mem-history', () => {
-        const height = this.menuHistGrid.height * vitals.ram_usage;
+        const chartHeight = this.histBars[0].get_parent()?.height;
+        if (!chartHeight) {
+          return;
+        }
         for (let i = 0; i < this.histBars.length - 1; i++) {
           this.histBars[i].height = this.histBars[i + 1].height;
         }
-        this.histBars[this.histBars.length - 1].height = Math.round(height);
+        this.histBars[this.histBars.length - 1].height = Math.round(
+          chartHeight * vitals.ram_usage
+        );
       });
       vitals.connect('notify::mem-top-procs', () => {
         const procs = vitals.getTopMemProcs(NumTopProcs);

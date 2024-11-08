@@ -99,7 +99,7 @@ export const CpuMonitor = GObject.registerClass(
 
       label = new St.Label({
         text: _('Processor utilization:'),
-        style_class: 'menu-label menu-section-end',
+        style_class: 'menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuCpuUsage.text = MeterNoVal;
@@ -228,11 +228,16 @@ export const CpuMonitor = GObject.registerClass(
         }
       });
       vitals.connect('notify::cpu-history', () => {
-        const height = this.menuHistGrid.height * vitals.cpu_usage;
+        const chartHeight = this.histBars[0].get_parent()?.height;
+        if (!chartHeight) {
+          return;
+        }
         for (let i = 0; i < this.histBars.length - 1; i++) {
           this.histBars[i].height = this.histBars[i + 1].height;
         }
-        this.histBars[this.histBars.length - 1].height = Math.round(height);
+        this.histBars[this.histBars.length - 1].height = Math.round(
+          chartHeight * vitals.cpu_usage
+        );
       });
       vitals.connect('notify::uptime', () => {
         const s = this.formatUptime(vitals.uptime);

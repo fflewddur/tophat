@@ -103,7 +103,7 @@ export const NetMonitor = GObject.registerClass(
           y_expand: false,
           y_align: Clutter.ActorAlign.END,
           style_class: 'chart-bar chart-bar-alt',
-          height: i,
+          height: 0,
         });
       }
       this.histLabelIn = new St.Label({
@@ -118,7 +118,7 @@ export const NetMonitor = GObject.registerClass(
           y_expand: false,
           y_align: Clutter.ActorAlign.START,
           style_class: 'chart-bar',
-          height: i,
+          height: 0,
         });
       }
 

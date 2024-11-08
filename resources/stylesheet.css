@@ -61,7 +61,8 @@
 }
 
 .menu-value {
-  font-size: 1em;
+  font-size: 0.9em;
+  font-weight: bold;
   padding: 0.25em 0.5em;
   text-align: right;
 }
@@ -143,5 +144,9 @@
 }
 
 .chart-bar-alt {
-  background-color: rgb(255, 190, 110);
+  background-color: rgb(219, 146, 104);
+}
+
+.align-right {
+  text-align: right;
 }
