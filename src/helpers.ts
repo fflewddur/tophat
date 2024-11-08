@@ -66,3 +66,16 @@ export function bytesToHumanString(
     return `${(quantity / ONE_TB_IN_B).toFixed(0)} T${suffix}`;
   }
 }
+
+/**
+ * Round up to the nearest power of 10 (or half that).
+ *
+ * @param {number} bytes - Value of bytes to round
+ */
+export function roundMax(bytes: number) {
+  let result = Math.pow(10, Math.ceil(Math.log10(bytes)));
+  while (result / 2 > bytes && result > 200) {
+    result /= 2;
+  }
+  return result;
+}

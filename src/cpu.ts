@@ -133,13 +133,11 @@ export const CpuMonitor = GObject.registerClass(
       // Add the grid layout for the history chart
       this.addMenuRow(this.menuHistGrid, 0, 2, 1);
       const lm = this.menuHistGrid.layout_manager as Clutter.GridLayout;
-
       const chart = new St.BoxLayout({ style_class: 'chart' });
       lm.attach(chart, 0, 0, 2, 3);
       for (const bar of this.histBars) {
         chart.add_child(bar);
       }
-
       label = new St.Label({
         text: '100%',
         y_align: Clutter.ActorAlign.START,
@@ -158,7 +156,6 @@ export const CpuMonitor = GObject.registerClass(
         style_class: 'chart-label',
       });
       lm.attach(label, 2, 2, 1, 1);
-
       const limitInMins = (MaxHistoryLen * SummaryInterval) / 60;
       const startLabel = ngettext(
         '%d min ago',

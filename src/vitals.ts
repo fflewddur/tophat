@@ -182,6 +182,13 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'net-history': GObject.ParamSpec.string(
+        'net-history',
+        'Network activity history',
+        'Network activity history',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
       'disk-read': GObject.ParamSpec.int(
         'disk-read',
         'Bytes read from disk',
@@ -238,6 +245,7 @@ export const Vitals = GObject.registerClass(
     private _net_sent = 0;
     private _net_recv_total = 0;
     private _net_sent_total = 0;
+    private _net_history = '';
     private _disk_read = 0;
     private _disk_wrote = 0;
     private _disk_top_procs = '';
@@ -250,6 +258,9 @@ export const Vitals = GObject.registerClass(
       this.cpuState = new CpuState(model.cores, model.tempMonitors.size);
       this.memInfo = new MemInfo();
       this.netState = new NetDevState();
+      for (let i = 0; i < this.netActivityHistory.length; i++) {
+        this.netActivityHistory[i] = new NetActivity();
+      }
       this.diskState = new DiskState();
     }
 
@@ -435,6 +446,8 @@ export const Vitals = GObject.registerClass(
       }
       this.net_recv = netActivity.bytesRecv;
       this.net_sent = netActivity.bytesSent;
+      // FIXME: Compute a hash of the history array instead of using a random number
+      this.net_history = Math.random().toFixed(8);
     }
 
     private loadDiskstats() {
@@ -614,6 +627,10 @@ export const Vitals = GObject.registerClass(
       //   }
       // });
       return top;
+    }
+
+    public getNetActivity() {
+      return this.netActivityHistory;
     }
 
     // Properties
@@ -824,6 +841,18 @@ export const Vitals = GObject.registerClass(
       }
       this._net_sent_total = v;
       this.notify('net-sent-total');
+    }
+
+    public get net_history() {
+      return this._net_history;
+    }
+
+    private set net_history(v: string) {
+      if (this.net_history === v) {
+        return;
+      }
+      this._net_history = v;
+      this.notify('net-history');
     }
 
     public get disk_read() {

@@ -26,7 +26,7 @@
 
 .tophat-panel-usage {
   text-align: right;
-  min-width: 2em;
+  min-width: 2.1em;
   margin: 0 0 0 6px;
 }
 
@@ -101,10 +101,18 @@
 
 .chart {
   margin: 0.5em 0.25em 0.5em 0.5em;
-  /* border: solid 1px #555; */
-  border-right: solid 1px #999;
-  border-bottom: solid 1px #999;
+  border: solid 1px #555;
   height: 6em;
+}
+
+.chart-stacked-top {
+  margin-bottom: 1px;
+  height: 3em;
+}
+
+.chart-stacked-bottom {
+  margin-top: 1px;
+  height: 3em;
 }
 
 .chart-label {
