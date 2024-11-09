@@ -207,6 +207,13 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'disk-history': GObject.ParamSpec.string(
+        'disk-history',
+        'Disk activity history',
+        'Disk activity history',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
       'disk-top-procs': GObject.ParamSpec.string(
         'disk-top-procs',
         'Disk activity top processes',
@@ -248,6 +255,7 @@ export const Vitals = GObject.registerClass(
     private _net_history = '';
     private _disk_read = 0;
     private _disk_wrote = 0;
+    private _disk_history = '';
     private _disk_top_procs = '';
     private summaryLoop = 0;
     private detailsLoop = 0;
@@ -262,6 +270,9 @@ export const Vitals = GObject.registerClass(
         this.netActivityHistory[i] = new NetActivity();
       }
       this.diskState = new DiskState();
+      for (let i = 0; i < this.diskActivityHistory.length; i++) {
+        this.diskActivityHistory[i] = new DiskActivity();
+      }
     }
 
     public start(): void {
@@ -488,6 +499,8 @@ export const Vitals = GObject.registerClass(
       }
       this.disk_read = diskActivity.bytesRead;
       this.disk_wrote = diskActivity.bytesWritten;
+      // FIXME: Compute a hash of the history array instead of using a random number
+      this.disk_history = Math.random().toFixed(8);
     }
 
     private loadTemps() {
@@ -631,6 +644,10 @@ export const Vitals = GObject.registerClass(
 
     public getNetActivity() {
       return this.netActivityHistory;
+    }
+
+    public getDiskActivity() {
+      return this.diskActivityHistory;
     }
 
     // Properties
@@ -877,6 +894,18 @@ export const Vitals = GObject.registerClass(
       }
       this._disk_wrote = v;
       this.notify('disk-wrote');
+    }
+
+    public get disk_history() {
+      return this._disk_history;
+    }
+
+    private set disk_history(v: string) {
+      if (this.disk_history === v) {
+        return;
+      }
+      this._disk_history = v;
+      this.notify('disk-history');
     }
 
     public get disk_top_procs() {

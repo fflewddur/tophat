@@ -186,7 +186,6 @@ export const NetMonitor = GObject.registerClass(
       for (const bar of this.histBarsIn) {
         chartIn.add_child(bar);
       }
-
       lm.attach(this.histLabelOut, 2, 0, 1, 1);
       label = new St.Label({
         text: '0',
