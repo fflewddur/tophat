@@ -1070,10 +1070,10 @@ class MemUsage {
 }
 
 class NetDevState {
-  public bytesRecv = 0;
-  public bytesRecvPrev = 0;
-  public bytesSent = 0;
-  public bytesSentPrev = 0;
+  public bytesRecv = -1;
+  public bytesRecvPrev = -1;
+  public bytesSent = -1;
+  public bytesSentPrev = -1;
 
   public update(bytesRecv: number, bytesSent: number): void {
     this.bytesRecvPrev = this.bytesRecv;
@@ -1083,10 +1083,16 @@ class NetDevState {
   }
 
   public recvActivity() {
+    if (this.bytesRecvPrev < 0) {
+      return 0;
+    }
     return this.bytesRecv - this.bytesRecvPrev;
   }
 
   public sentActivity() {
+    if (this.bytesSentPrev < 0) {
+      return 0;
+    }
     return this.bytesSent - this.bytesSentPrev;
   }
 }
@@ -1097,10 +1103,10 @@ class NetActivity {
 }
 
 class DiskState {
-  public bytesRead = 0;
-  public bytesReadPrev = 0;
-  public bytesWritten = 0;
-  public bytesWrittenPrev = 0;
+  public bytesRead = -1;
+  public bytesReadPrev = -1;
+  public bytesWritten = -1;
+  public bytesWrittenPrev = -1;
 
   public update(bytesRead: number, bytesWritten: number): void {
     this.bytesReadPrev = this.bytesRead;
@@ -1110,10 +1116,16 @@ class DiskState {
   }
 
   public readActivity(): number {
+    if (this.bytesReadPrev < 0) {
+      return 0;
+    }
     return this.bytesRead - this.bytesReadPrev;
   }
 
   public writeActivity(): number {
+    if (this.bytesWrittenPrev < 0) {
+      return 0;
+    }
     return this.bytesWritten - this.bytesWrittenPrev;
   }
 }
