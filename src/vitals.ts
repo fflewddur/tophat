@@ -1142,15 +1142,18 @@ class Process {
   public stime = 0;
   public guest_time = 0;
   public pss = 0;
-  public cpu = 0;
-  public cpuPrev = 0;
+  public cpu = -1;
+  public cpuPrev = -1;
   public cpuTotal = 0;
-  public diskRead = 0;
-  public diskWrite = 0;
-  public diskReadPrev = 0;
-  public diskWritePrev = 0;
+  public diskRead = -1;
+  public diskWrite = -1;
+  public diskReadPrev = -1;
+  public diskWritePrev = -1;
 
   public cpuUsage(): number {
+    if (this.cpuPrev < 0) {
+      return 0;
+    }
     return (this.cpu - this.cpuPrev) / this.cpuTotal;
   }
 
@@ -1159,10 +1162,16 @@ class Process {
   }
 
   public diskReads(): number {
+    if (this.diskReadPrev < 0) {
+      return 0;
+    }
     return this.diskRead - this.diskReadPrev;
   }
 
   public diskWrites(): number {
+    if (this.diskWritePrev < 0) {
+      return 0;
+    }
     return this.diskWrite - this.diskWritePrev;
   }
 
