@@ -142,12 +142,16 @@ export default class TopHat extends Extension {
   }
 
   private addToPanel() {
+    if (!this.gsettings) {
+      console.warn('[TopHat] error in addToPanel(): gsettings does not exist');
+      return;
+    }
     this.container?.destroy();
     this.container = new TopHatContainer(0.5, 'TopHat');
-    this.container.addMeter(new CpuMonitor(this.metadata));
-    this.container.addMeter(new MemMonitor(this.metadata));
-    this.container.addMeter(new DiskMonitor(this.metadata));
-    this.container.addMeter(new NetMonitor(this.metadata));
+    this.container.addMeter(new CpuMonitor(this.metadata, this.gsettings));
+    this.container.addMeter(new MemMonitor(this.metadata, this.gsettings));
+    this.container.addMeter(new DiskMonitor(this.metadata, this.gsettings));
+    this.container.addMeter(new NetMonitor(this.metadata, this.gsettings));
     const pref = this.getPreferredPanelAttributes();
     this.container = Main.panel.addToStatusArea(
       'TopHat',

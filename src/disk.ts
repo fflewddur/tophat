@@ -32,7 +32,6 @@ import { bytesToHumanString, roundMax } from './helpers.js';
 
 export const DiskMonitor = GObject.registerClass(
   class DiskMonitor extends TopHatMeter {
-    private icon;
     private valueRead;
     private valueWrite;
     private menuDiskWrites;
@@ -44,17 +43,13 @@ export const DiskMonitor = GObject.registerClass(
     private histLabelOut: St.Label;
     private topProcs: TopProc[];
 
-    constructor(metadata: ExtensionMetadata) {
-      super('Disk Monitor', metadata);
+    constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
+      super('Disk Monitor', metadata, gsettings);
 
       const gicon = Gio.icon_new_for_string(
         `${this.metadata.path}/icons/disk-icon-symbolic.svg`
       );
-      this.icon = new St.Icon({
-        gicon,
-        style_class: 'system-status-icon tophat-panel-icon',
-      });
-      this.add_child(this.icon);
+      this.icon.set_gicon(gicon);
 
       const vbox = new St.BoxLayout({ vertical: true });
       vbox.connect('notify::vertical', (obj) => {

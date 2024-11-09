@@ -32,7 +32,6 @@ import { bytesToHumanString } from './helpers.js';
 
 export const MemMonitor = GObject.registerClass(
   class MemMonitor extends TopHatMeter {
-    private icon;
     private usage;
     private menuMemUsage;
     private menuMemSize;
@@ -42,17 +41,13 @@ export const MemMonitor = GObject.registerClass(
     private histBars: St.Widget[];
     private topProcs: TopProc[];
 
-    constructor(metadata: ExtensionMetadata) {
-      super('Memory Monitor', metadata);
+    constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
+      super('Memory Monitor', metadata, gsettings);
 
       const gicon = Gio.icon_new_for_string(
         `${this.metadata.path}/icons/mem-icon-symbolic.svg`
       );
-      this.icon = new St.Icon({
-        gicon,
-        style_class: 'system-status-icon tophat-panel-icon',
-      });
-      this.add_child(this.icon);
+      this.icon.set_gicon(gicon);
 
       this.usage = new St.Label({
         text: MeterNoVal,

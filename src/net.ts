@@ -32,7 +32,6 @@ import { bytesToHumanString, roundMax } from './helpers.js';
 
 export const NetMonitor = GObject.registerClass(
   class NetMonitor extends TopHatMeter {
-    private icon;
     private valueNetUp: St.Label;
     private valueNetDown: St.Label;
     private menuNetUp: St.Label;
@@ -45,18 +44,14 @@ export const NetMonitor = GObject.registerClass(
     private histLabelIn: St.Label;
     private histLabelOut: St.Label;
 
-    constructor(metadata: ExtensionMetadata) {
-      super('Net Monitor', metadata);
+    constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
+      super('Net Monitor', metadata, gsettings);
 
       const gicon = Gio.icon_new_for_string(
         `${this.metadata.path}/icons/net-icon-symbolic.svg`
       );
-      this.icon = new St.Icon({
-        gicon,
-        style_class:
-          'system-status-icon tophat-panel-icon tophat-panel-icon-net',
-      });
-      this.add_child(this.icon);
+      this.icon.set_gicon(gicon);
+      this.icon.add_style_class_name('tophat-panel-icon-net');
 
       const vbox = new St.BoxLayout({ vertical: true });
       vbox.connect('notify::vertical', (obj) => {

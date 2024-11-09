@@ -16,6 +16,7 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
@@ -51,17 +52,24 @@ export class TopProc {
 export const TopHatMeter = GObject.registerClass(
   class TopHatMeter extends PanelMenu.Button {
     private meterName;
+    private gsettings;
     private box: St.BoxLayout;
+    protected icon: St.Icon;
     private menuLayout?: Clutter.GridLayout;
     private menuRow = 0;
     private menuCol = 0;
     protected menuNumCols = 0;
     protected metadata: ExtensionMetadata;
 
-    constructor(nameText: string, metadata: ExtensionMetadata) {
+    constructor(
+      nameText: string,
+      metadata: ExtensionMetadata,
+      gsettings: Gio.Settings
+    ) {
       super(0.5, nameText, false);
       this.meterName = nameText;
       this.metadata = metadata;
+      this.gsettings = gsettings;
       this.add_style_class_name('tophat-monitor');
       // We need to add the box as a child to `this` before
       // assigning it to this.box
@@ -70,6 +78,18 @@ export const TopHatMeter = GObject.registerClass(
       this.add_child(box);
       this.box = box;
       this.menuLayout = this.buildMenuBase();
+
+      this.icon = new St.Icon({
+        style_class: 'system-status-icon tophat-panel-icon',
+      });
+      this.add_child(this.icon);
+
+      this.gsettings.bind(
+        'show-icons',
+        this.icon,
+        'visible',
+        Gio.SettingsBindFlags.GET
+      );
     }
 
     public override add_child(w: St.Widget) {

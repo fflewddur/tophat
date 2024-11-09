@@ -31,7 +31,6 @@ import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './meter.js';
 
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMeter {
-    private icon;
     private usage;
     private menuCpuUsage;
     private menuCpuModel;
@@ -42,17 +41,13 @@ export const CpuMonitor = GObject.registerClass(
     private histBars: St.Widget[];
     private topProcs: TopProc[];
 
-    constructor(metadata: ExtensionMetadata) {
-      super('CPU Monitor', metadata);
+    constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
+      super('CPU Monitor', metadata, gsettings);
 
       const gicon = Gio.icon_new_for_string(
         `${this.metadata.path}/icons/cpu-icon-symbolic.svg`
       );
-      this.icon = new St.Icon({
-        gicon,
-        style_class: 'system-status-icon tophat-panel-icon',
-      });
-      this.add_child(this.icon);
+      this.icon.set_gicon(gicon);
 
       this.usage = new St.Label({
         text: MeterNoVal,

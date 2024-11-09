@@ -591,40 +591,24 @@ export const Vitals = GObject.registerClass(
     }
 
     public getTopCpuProcs(n: number) {
-      // log('Top CPU processes:');
       let top = Array.from(this.procs.values());
       top = top.sort((x, y) => {
         return x.cpuUsage() - y.cpuUsage();
       });
       top = top.reverse().slice(0, n);
-      // top.forEach((p) => {
-      //   if (p.cpuUsage() > 0) {
-      //     // console.log(
-      //     //   `  ${p.cmd} (${p.id}) ` +
-      //     //     `usage: ${((p.cpuUsage() / this.cpuState.totalTime()) * 100).toFixed(0)}%`
-      //     // );
-      //   }
-      // });
       return top;
     }
 
     public getTopMemProcs(n: number) {
-      // log('Top memory processes:');
       let top = Array.from(this.procs.values());
       top = top.sort((x, y) => {
         return x.memUsage() - y.memUsage();
       });
       top = top.reverse().slice(0, n);
-      // top.forEach((p) => {
-      //   console.log(
-      //     `  ${p.cmd} (${p.id}) usage: ${(p.memUsage() / 1000).toFixed(0)} MB`
-      //   );
-      // });
       return top;
     }
 
     public getTopDiskProcs(n: number) {
-      // log('Top disk processes:');
       let top = Array.from(this.procs.values());
       top = top.sort((x, y) => {
         return (
@@ -632,13 +616,6 @@ export const Vitals = GObject.registerClass(
         );
       });
       top = top.reverse().slice(0, n);
-      // top.forEach((p) => {
-      //   if (p.diskReads() + p.diskWrites() > 0) {
-      //     // console.log(
-      //     //   `  ${p.cmd} (${p.id}) read: ${(p.diskReads() / 1000).toFixed(0)} KB written: ${(p.diskWrites() / 1000).toFixed(0)} KB`
-      //     // );
-      //   }
-      // });
       return top;
     }
 
