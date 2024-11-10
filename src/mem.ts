@@ -27,11 +27,11 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { MaxHistoryLen, SummaryInterval, Vitals } from './vitals.js';
-import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
+import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 import { bytesToHumanString } from './helpers.js';
 
 export const MemMonitor = GObject.registerClass(
-  class MemMonitor extends TopHatMeter {
+  class MemMonitor extends TopHatMonitor {
     private usage;
     private menuMemUsage;
     private menuMemSize;

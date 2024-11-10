@@ -20,12 +20,12 @@ import St from 'gi://St';
 
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
-import { TopHatMeter } from './monitor.js';
+import { TopHatMonitor } from './monitor.js';
 
 export const TopHatContainer = GObject.registerClass(
   class TopHatContainer extends PanelMenu.Button {
     private box;
-    public meters;
+    public monitors;
 
     constructor(
       menuAlignment: number,
@@ -33,15 +33,15 @@ export const TopHatContainer = GObject.registerClass(
       dontCreateMenu?: boolean
     ) {
       super(menuAlignment, nameText, dontCreateMenu);
-      this.meters = new Array<TopHatMeter>();
+      this.monitors = new Array<TopHatMonitor>();
       this.box = new St.BoxLayout();
       this.add_child(this.box);
       this.remove_style_class_name('panel-button');
     }
 
-    public addMeter(meter: TopHatMeter): void {
-      this.meters.push(meter);
-      this.box.add_child(meter);
+    public addMonitor(m: TopHatMonitor): void {
+      this.monitors.push(m);
+      this.box.add_child(m);
     }
 
     override destroy(): void {

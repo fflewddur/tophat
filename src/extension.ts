@@ -28,7 +28,7 @@ import { CpuMonitor } from './cpu.js';
 import { MemMonitor } from './mem.js';
 import { DiskMonitor } from './disk.js';
 import { NetMonitor } from './net.js';
-import { TopHatMeter } from './monitor.js';
+import { TopHatMonitor } from './monitor.js';
 
 enum MenuPosition {
   LeftEdge,
@@ -148,10 +148,10 @@ export default class TopHat extends Extension {
     }
     this.container?.destroy();
     this.container = new TopHatContainer(0.5, 'TopHat');
-    this.container.addMeter(new CpuMonitor(this.metadata, this.gsettings));
-    this.container.addMeter(new MemMonitor(this.metadata, this.gsettings));
-    this.container.addMeter(new DiskMonitor(this.metadata, this.gsettings));
-    this.container.addMeter(new NetMonitor(this.metadata, this.gsettings));
+    this.container.addMonitor(new CpuMonitor(this.metadata, this.gsettings));
+    this.container.addMonitor(new MemMonitor(this.metadata, this.gsettings));
+    this.container.addMonitor(new DiskMonitor(this.metadata, this.gsettings));
+    this.container.addMonitor(new NetMonitor(this.metadata, this.gsettings));
     const pref = this.getPreferredPanelAttributes();
     this.container = Main.panel.addToStatusArea(
       'TopHat',
@@ -160,7 +160,7 @@ export default class TopHat extends Extension {
       pref.box
     );
 
-    this.container?.meters.forEach((m: TopHatMeter) => {
+    this.container?.monitors.forEach((m: TopHatMonitor) => {
       if (this.vitals) {
         m.bindVitals(this.vitals);
         Main.panel._onMenuSet(m);

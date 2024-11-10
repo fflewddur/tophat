@@ -49,9 +49,9 @@ export class TopProc {
   }
 }
 
-export const TopHatMeter = GObject.registerClass(
-  class TopHatMeter extends PanelMenu.Button {
-    private meterName;
+export const TopHatMonitor = GObject.registerClass(
+  class TopHatMonitor extends PanelMenu.Button {
+    private monitorName;
     private gsettings;
     private box: St.BoxLayout;
     protected icon: St.Icon;
@@ -67,7 +67,7 @@ export const TopHatMeter = GObject.registerClass(
       gsettings: Gio.Settings
     ) {
       super(0.5, nameText, false);
-      this.meterName = nameText;
+      this.monitorName = nameText;
       this.metadata = metadata;
       this.gsettings = gsettings;
       this.add_style_class_name('tophat-monitor');
@@ -196,4 +196,4 @@ export const TopHatMeter = GObject.registerClass(
   }
 );
 
-export type TopHatMeter = InstanceType<typeof TopHatMeter>;
+export type TopHatMonitor = InstanceType<typeof TopHatMonitor>;
