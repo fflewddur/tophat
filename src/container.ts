@@ -20,7 +20,7 @@ import St from 'gi://St';
 
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
-import { TopHatMeter } from './meter.js';
+import { TopHatMeter } from './monitor.js';
 
 export const TopHatContainer = GObject.registerClass(
   class TopHatContainer extends PanelMenu.Button {

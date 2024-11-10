@@ -27,7 +27,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { MaxHistoryLen, SummaryInterval, Vitals } from './vitals.js';
-import { TopHatMeter, MeterNoVal } from './meter.js';
+import { TopHatMeter, MeterNoVal } from './monitor.js';
 import { bytesToHumanString, roundMax } from './helpers.js';
 
 export const NetMonitor = GObject.registerClass(

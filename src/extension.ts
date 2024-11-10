@@ -28,7 +28,7 @@ import { CpuMonitor } from './cpu.js';
 import { MemMonitor } from './mem.js';
 import { DiskMonitor } from './disk.js';
 import { NetMonitor } from './net.js';
-import { TopHatMeter } from './meter.js';
+import { TopHatMeter } from './monitor.js';
 
 enum MenuPosition {
   LeftEdge,

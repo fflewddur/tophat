@@ -27,7 +27,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { MaxHistoryLen, SummaryInterval, Vitals } from './vitals.js';
-import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './meter.js';
+import { TopHatMeter, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMeter {
