@@ -1,5 +1,9 @@
 @import url('stylesheet.css');
 
+.chart {
+  border: solid 1px #ccc;
+}
+
 .chart-label,
 .chart-label-then,
 .chart-label-now {

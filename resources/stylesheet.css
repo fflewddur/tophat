@@ -72,7 +72,7 @@
 }
 
 .menu-section-end {
-  margin-bottom: 0.5em;
+  margin-bottom: 1em;
 }
 
 .menu-uptime {
@@ -102,7 +102,7 @@
 
 .chart {
   margin: 0.5em 0.25em 0.5em 0.5em;
-  border: solid 1px #555;
+  border: solid 1px #333;
   height: 6em;
 }
 
