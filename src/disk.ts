@@ -36,6 +36,8 @@ export const DiskMonitor = GObject.registerClass(
     private valueWrite;
     private menuDiskWrites;
     private menuDiskReads;
+    private menuDiskWritesTotal;
+    private menuDiskReadsTotal;
     private menuHistGrid: St.Widget;
     private histBarsIn: St.Widget[];
     private histBarsOut: St.Widget[];
@@ -76,6 +78,8 @@ export const DiskMonitor = GObject.registerClass(
 
       this.menuDiskWrites = new St.Label();
       this.menuDiskReads = new St.Label();
+      this.menuDiskWritesTotal = new St.Label();
+      this.menuDiskReadsTotal = new St.Label();
 
       this.topProcs = new Array<TopProc>(NumTopProcs);
       for (let i = 0; i < NumTopProcs; i++) {
@@ -148,6 +152,26 @@ export const DiskMonitor = GObject.registerClass(
       this.menuDiskWrites.text = MeterNoVal;
       this.menuDiskWrites.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuDiskWrites, 2, 1, 1);
+
+      label = new St.Label({
+        text: _('Total read:'),
+        style_class: 'menu-label',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+      this.menuDiskReadsTotal.text = MeterNoVal;
+      this.menuDiskReadsTotal.add_style_class_name('menu-value');
+      this.addMenuRow(this.menuDiskReadsTotal, 2, 1, 1);
+
+      label = new St.Label({
+        text: _('Total written:'),
+        style_class: 'menu-label',
+      });
+      this.addMenuRow(label, 0, 2, 1);
+      this.menuDiskWritesTotal.text = MeterNoVal;
+      this.menuDiskWritesTotal.add_style_class_name(
+        'menu-value menu-section-end'
+      );
+      this.addMenuRow(this.menuDiskWritesTotal, 2, 1, 1);
 
       // Add the grid layout for the history chart
       this.addMenuRow(this.menuHistGrid, 0, 3, 1);
@@ -229,6 +253,14 @@ export const DiskMonitor = GObject.registerClass(
         const s = bytesToHumanString(vitals.disk_wrote) + '/s';
         this.valueWrite.text = s;
         this.menuDiskWrites.text = s;
+      });
+      vitals.connect('notify::disk-read-total', () => {
+        const s = bytesToHumanString(vitals.disk_read_total);
+        this.menuDiskReadsTotal.text = s;
+      });
+      vitals.connect('notify::disk-wrote-total', () => {
+        const s = bytesToHumanString(vitals.disk_wrote_total);
+        this.menuDiskWritesTotal.text = s;
       });
       vitals.connect('notify::disk-history', () => {
         const history = vitals.getDiskActivity();

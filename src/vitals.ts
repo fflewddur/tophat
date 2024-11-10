@@ -208,6 +208,24 @@ export const Vitals = GObject.registerClass(
         0,
         0
       ),
+      'disk-read-total': GObject.ParamSpec.int(
+        'disk-read-total',
+        'Total bytes read from disk',
+        'Number of bytes read from disk since system start',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
+      'disk-wrote-total': GObject.ParamSpec.int(
+        'disk-wrote-total',
+        'Total bytes written to disk',
+        'Number of bytes written to disk since system start',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
       'disk-history': GObject.ParamSpec.string(
         'disk-history',
         'Disk activity history',
@@ -256,6 +274,8 @@ export const Vitals = GObject.registerClass(
     private _net_history = '';
     private _disk_read = 0;
     private _disk_wrote = 0;
+    private _disk_read_total = 0;
+    private _disk_wrote_total = 0;
     private _disk_history = '';
     private _disk_top_procs = '';
     private summaryLoop = 0;
@@ -500,6 +520,8 @@ export const Vitals = GObject.registerClass(
       }
       this.disk_read = diskActivity.bytesRead;
       this.disk_wrote = diskActivity.bytesWritten;
+      this.disk_read_total = bytesRead;
+      this.disk_wrote_total = bytesWritten;
       // FIXME: Compute a hash of the history array instead of using a random number
       this.disk_history = Math.random().toFixed(8);
     }
@@ -872,6 +894,30 @@ export const Vitals = GObject.registerClass(
       }
       this._disk_wrote = v;
       this.notify('disk-wrote');
+    }
+
+    public get disk_read_total() {
+      return this._disk_read_total;
+    }
+
+    private set disk_read_total(v: number) {
+      if (this.disk_read_total === v) {
+        return;
+      }
+      this._disk_read_total = v;
+      this.notify('disk-read-total');
+    }
+
+    public get disk_wrote_total() {
+      return this._disk_wrote_total;
+    }
+
+    private set disk_wrote_total(v: number) {
+      if (this.disk_wrote_total === v) {
+        return;
+      }
+      this._disk_wrote_total = v;
+      this.notify('disk-wrote-total');
     }
 
     public get disk_history() {
