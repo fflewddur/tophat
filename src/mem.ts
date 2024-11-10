@@ -27,6 +27,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { MaxHistoryLen, SummaryInterval, Vitals } from './vitals.js';
+import { Orientation } from './meter.js';
 import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 import { bytesToHumanString } from './helpers.js';
 
@@ -55,6 +56,10 @@ export const MemMonitor = GObject.registerClass(
         y_align: Clutter.ActorAlign.CENTER,
       });
       this.add_child(this.usage);
+
+      this.meter.setNumBars(1);
+      this.meter.setOrientation(Orientation.Vertical);
+      this.add_child(this.meter);
 
       this.menuMemUsage = new St.Label();
       this.menuMemSize = new St.Label();
@@ -192,6 +197,7 @@ export const MemMonitor = GObject.registerClass(
         const s = (vitals.ram_usage * 100).toFixed(0) + '%';
         this.usage.text = s;
         this.menuMemUsage.text = s;
+        this.meter.setBarSizes([vitals.ram_usage]);
       });
       vitals.connect('notify::swap-size', () => {
         const total = bytesToHumanString(vitals.swap_size);

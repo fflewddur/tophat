@@ -30,6 +30,7 @@ import {
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Vitals } from './vitals.js';
+import { TopHatMeter } from './meter.js';
 
 const MENU_COLUMNS = 2;
 export const MeterNoVal = 'n/a';
@@ -55,6 +56,7 @@ export const TopHatMonitor = GObject.registerClass(
     private gsettings;
     private box: St.BoxLayout;
     protected icon: St.Icon;
+    protected meter: TopHatMeter;
     private menuLayout?: Clutter.GridLayout;
     private menuRow = 0;
     private menuCol = 0;
@@ -83,6 +85,8 @@ export const TopHatMonitor = GObject.registerClass(
         style_class: 'system-status-icon tophat-panel-icon',
       });
       this.add_child(this.icon);
+
+      this.meter = new TopHatMeter();
 
       this.gsettings.bind(
         'show-icons',

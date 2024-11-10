@@ -28,6 +28,7 @@ import {
 
 import { MaxHistoryLen, SummaryInterval, Vitals } from './vitals.js';
 import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
+import { Orientation } from './meter.js';
 
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMonitor {
@@ -55,6 +56,10 @@ export const CpuMonitor = GObject.registerClass(
         y_align: Clutter.ActorAlign.CENTER,
       });
       this.add_child(this.usage);
+
+      this.meter.setNumBars(1);
+      this.meter.setOrientation(Orientation.Vertical);
+      this.add_child(this.meter);
 
       this.menuCpuUsage = new St.Label();
       this.menuCpuModel = new St.Label();
@@ -196,6 +201,7 @@ export const CpuMonitor = GObject.registerClass(
         const s = percent.toFixed(0) + '%';
         this.usage.text = s;
         this.menuCpuUsage.text = s;
+        this.meter.setBarSizes([vitals.cpu_usage]);
       });
       vitals.connect('notify::cpu-model', () => {
         const s = vitals.cpu_model;
