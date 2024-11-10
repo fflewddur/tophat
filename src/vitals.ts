@@ -5,6 +5,7 @@ import GLib from 'gi://GLib';
 import { File } from './file.js';
 
 export const SummaryInterval = 3;
+export const DetailsInterval = 6;
 export const MaxHistoryLen = 50;
 
 const SECTOR_SIZE = 512; // in bytes
@@ -287,7 +288,7 @@ export const Vitals = GObject.registerClass(
       if (this.detailsLoop === 0) {
         this.detailsLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_DEFAULT,
-          9,
+          DetailsInterval,
           () => this.readDetails()
         );
       }
@@ -1059,18 +1060,22 @@ class NetDevState {
     this.bytesSent = bytesSent;
   }
 
+  // recvActivity returns the number of bytes received per second
+  // during the most recent interval
   public recvActivity() {
     if (this.bytesRecvPrev < 0) {
       return 0;
     }
-    return this.bytesRecv - this.bytesRecvPrev;
+    return (this.bytesRecv - this.bytesRecvPrev) / SummaryInterval;
   }
 
+  // sentActivity return the number of bytes sent per second
+  // during the most recent interval
   public sentActivity() {
     if (this.bytesSentPrev < 0) {
       return 0;
     }
-    return this.bytesSent - this.bytesSentPrev;
+    return (this.bytesSent - this.bytesSentPrev) / SummaryInterval;
   }
 }
 
@@ -1092,18 +1097,22 @@ class DiskState {
     this.bytesWritten = bytesWritten;
   }
 
+  // readActivity returns the number of bytes read per second
+  // during the most recent interval
   public readActivity(): number {
     if (this.bytesReadPrev < 0) {
       return 0;
     }
-    return this.bytesRead - this.bytesReadPrev;
+    return (this.bytesRead - this.bytesReadPrev) / SummaryInterval;
   }
 
+  // writeActivity return the number of bytes written per second
+  // during the most recent interval
   public writeActivity(): number {
     if (this.bytesWrittenPrev < 0) {
       return 0;
     }
-    return this.bytesWritten - this.bytesWrittenPrev;
+    return (this.bytesWritten - this.bytesWrittenPrev) / SummaryInterval;
   }
 }
 
@@ -1142,14 +1151,14 @@ class Process {
     if (this.diskReadPrev < 0) {
       return 0;
     }
-    return this.diskRead - this.diskReadPrev;
+    return (this.diskRead - this.diskReadPrev) / DetailsInterval;
   }
 
   public diskWrites(): number {
     if (this.diskWritePrev < 0) {
       return 0;
     }
-    return this.diskWrite - this.diskWritePrev;
+    return (this.diskWrite - this.diskWritePrev) / DetailsInterval;
   }
 
   public setTotalTime(t: number) {

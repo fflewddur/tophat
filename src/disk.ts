@@ -221,12 +221,12 @@ export const DiskMonitor = GObject.registerClass(
 
     public override bindVitals(vitals: Vitals): void {
       vitals.connect('notify::disk-read', () => {
-        const s = bytesToHumanString(vitals.disk_read);
+        const s = bytesToHumanString(vitals.disk_read) + '/s';
         this.valueRead.text = s;
         this.menuDiskReads.text = s;
       });
       vitals.connect('notify::disk-wrote', () => {
-        const s = bytesToHumanString(vitals.disk_wrote);
+        const s = bytesToHumanString(vitals.disk_wrote) + '/s';
         this.valueWrite.text = s;
         this.menuDiskWrites.text = s;
       });
@@ -268,8 +268,8 @@ export const DiskMonitor = GObject.registerClass(
           const r = procs[i].diskReads();
           if (w > 0 || r > 0) {
             this.topProcs[i].cmd.text = procs[i].cmd;
-            this.topProcs[i].in.text = bytesToHumanString(w);
-            this.topProcs[i].out.text = bytesToHumanString(r);
+            this.topProcs[i].in.text = bytesToHumanString(w) + '/s';
+            this.topProcs[i].out.text = bytesToHumanString(r) + '/s';
           } else {
             this.topProcs[i].cmd.text = '';
             this.topProcs[i].in.text = '';

@@ -161,7 +161,7 @@ export const NetMonitor = GObject.registerClass(
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuNetDownTotal.text = MeterNoVal;
-      this.menuNetDownTotal.add_style_class_name('menu-value');
+      this.menuNetDownTotal.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuNetDownTotal, 1, 1, 1);
 
       // Add the grid layout for the history chart
@@ -206,12 +206,12 @@ export const NetMonitor = GObject.registerClass(
 
     public override bindVitals(vitals: Vitals): void {
       vitals.connect('notify::net-sent', () => {
-        const s = bytesToHumanString(vitals.net_sent);
+        const s = bytesToHumanString(vitals.net_sent) + '/s';
         this.valueNetUp.text = s;
         this.menuNetUp.text = s;
       });
       vitals.connect('notify::net-recv', () => {
-        const s = bytesToHumanString(vitals.net_recv);
+        const s = bytesToHumanString(vitals.net_recv) + '/s';
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
       });
