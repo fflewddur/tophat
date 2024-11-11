@@ -1,6 +1,28 @@
 {
+  "name": "tophat",
+  "type": "module",
+  "private": true,
+  "sideEffects": false,
+  "packageManager": "yarn@4.5.1",
   "devDependencies": {
-    "eslint": "^8.57.1",
-    "eslint-plugin-jsdoc": "^39.3.2"
+    "@eslint/js": "^9.14.0",
+    "@girs/gjs": "^4.0.0-beta.17",
+    "@girs/gnome-shell": "^47.0.0",
+    "@tsconfig/recommended": "^1.0.8",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.12.2"
+  },
+  "scripts": {
+    "build": "tsc && cp ./resources/metadata.json ./dist/ && touch ./dist/schemas && rm -rf ./dist/schemas && mkdir ./dist/schemas/ && glib-compile-schemas ./resources/schemas && mv ./resources/schemas/gschemas.compiled ./dist/schemas/ && cp ./resources/*.css ./dist/ && touch ./dist/icons && rm -rf ./dist/icons && mkdir ./dist/icons/ && cp ./resources/icons/*.svg ./dist/icons/",
+    "clean": "rm -rf ./dist ./node_modules",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "format": "prettier . --write",
+    "translate": "./resources/translate.sh"
   }
 }

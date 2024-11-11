@@ -1,5 +1,12 @@
 # the packaged extension
 /tophat@fflewddur.github.io.*.shell-extension.zip
+/dist
+
+# generated files
+/resources/schemas/gschemas.compiled
 
 # node stuff
 /node_modules
+
+# yarn stuff
+/.yarn/*

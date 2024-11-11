@@ -1,0 +1,24 @@
+@import url('stylesheet.css');
+
+.chart {
+  border: solid 1px #ccc;
+}
+
+.chart-label,
+.chart-label-then,
+.chart-label-now {
+  color: #555;
+}
+
+.tophat-panel-icon {
+  margin: 0;
+}
+
+.tophat-panel-usage {
+  margin: 0;
+}
+
+.tophat-panel-usage-stacked {
+  margin: 0;
+  min-width: 4em;
+}

@@ -1,0 +1,172 @@
+.tophat-panel-icon {
+  margin: 0 0.03em;
+  padding: 0;
+}
+
+.tophat-panel-icon-net {
+  margin: 0.1em;
+}
+
+.tophat-menu-button-box {
+  padding: 1em 0 0 0;
+  spacing: 2em;
+}
+
+.tophat-menu-button-box > StButton {
+  border-radius: 2em;
+  margin: 0;
+  padding: 0.7em;
+  min-height: 0.5em;
+  min-width: 0.5em;
+}
+
+.tophat-menu-button-box > StButton > StIcon {
+  icon-size: 1.25em;
+}
+
+.tophat-panel-usage {
+  text-align: right;
+  min-width: 2.1em;
+  margin: 0 0 0 6px;
+}
+
+.tophat-panel-usage-stacked {
+  font-size: 0.7em;
+  text-align: right;
+  min-width: 5em;
+}
+
+.tophat-meter {
+  border: solid 1px rgba(0, 0, 0, 0.3);
+  height: 1.2em;
+  margin: 0 0 0 6px;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.meter-bar {
+  margin: 0 1px 0 0;
+  padding: 0;
+  background-color: rgb(0, 133, 221);
+  width: 8px;
+  height: 1px;
+}
+
+.meter-bar:last-child {
+  margin-right: 0;
+}
+
+.menu-grid {
+  margin: 0.25em 0.25em 1em 0.25em;
+  padding: 0;
+  min-width: 18em;
+}
+
+.menu-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9em;
+  padding: 0.5em;
+}
+
+.menu-subheader {
+  text-align: center;
+  font-size: 0.8em;
+}
+
+.menu-label {
+  font-size: 1em;
+  padding: 0.25em 0.5em;
+  text-align: left;
+}
+
+.menu-value {
+  font-size: 0.9em;
+  font-weight: bold;
+  padding: 0.25em 0.5em;
+  text-align: right;
+}
+
+.menu-details {
+  font-size: 0.8em;
+}
+
+.menu-section-end {
+  margin-bottom: 1em;
+}
+
+.menu-uptime {
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.menu-cmd-name {
+  font-size: 0.8em;
+  text-align: left;
+  padding: 0.25em 0.25em 0.25em 0.5em;
+  width: 160px;
+}
+
+.menu-cmd-usage {
+  font-size: 0.8em;
+  text-align: right;
+  padding: 0.25em 0.5em 0.25em 0;
+}
+
+.menu-cmd-activity {
+  font-size: 0.8em;
+  text-align: right;
+  padding: 0.25em 0.5em 0.25em 0;
+  width: 5em;
+}
+
+.chart {
+  margin: 0.5em 0.25em 0.5em 0.5em;
+  border: solid 1px #333;
+  height: 6em;
+}
+
+.chart-stacked-top {
+  margin-bottom: 1px;
+  height: 3em;
+}
+
+.chart-stacked-bottom {
+  margin-top: 1px;
+  height: 3em;
+}
+
+.chart-label {
+  font-size: 0.8em;
+  padding: 0.5em 0;
+  color: #999;
+}
+
+.chart-label-then {
+  font-size: 0.7em;
+  color: #999;
+  text-align: left;
+  padding: 0 0.5em 1em 0.5em;
+}
+
+.chart-label-now {
+  font-size: 0.7em;
+  color: #999;
+  text-align: right;
+  padding: 0 0.5em 1em 0.5em;
+}
+
+.chart-bar {
+  background-color: rgb(0, 133, 221);
+  min-width: 4px;
+  min-height: 2px;
+  margin-right: 1px;
+}
+
+.chart-bar-alt {
+  background-color: rgb(219, 146, 104);
+}
+
+.align-right {
+  text-align: right;
+}
