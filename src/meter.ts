@@ -28,6 +28,7 @@ export const TopHatMeter = GObject.registerClass(
   class TopHatMeter extends St.BoxLayout {
     private bars: Array<St.Widget>;
     private orientation: Orientation;
+    private scaleFactor;
 
     constructor() {
       super({
@@ -38,6 +39,16 @@ export const TopHatMeter = GObject.registerClass(
       this.add_style_class_name('tophat-meter');
       this.bars = new Array<St.Widget>(0);
       this.orientation = Orientation.Horizontal;
+
+      const themeContext = St.ThemeContext.get_for_stage(global.get_stage());
+      if (themeContext.get_scale_factor) {
+        this.scaleFactor = themeContext.get_scale_factor();
+        themeContext.connect('notify::scale-factor', (obj) => {
+          this.scaleFactor = obj.get_scale_factor();
+        });
+      } else {
+        this.scaleFactor = 1;
+      }
     }
 
     public getNumBars(): number {
@@ -50,11 +61,13 @@ export const TopHatMeter = GObject.registerClass(
         b.destroy();
       }
       this.bars = new Array<St.Widget>(n);
+      const width = this.computeBarWidth(n);
       for (let i = 0; i < n; i++) {
         this.bars[i] = new St.Widget({
           y_align: Clutter.ActorAlign.END,
           y_expand: false,
           style_class: 'meter-bar',
+          width: width,
         });
         this.add_child(this.bars[i]);
       }
@@ -76,6 +89,16 @@ export const TopHatMeter = GObject.registerClass(
         // );
         this.bars[i].height = this.height * n[i];
       }
+    }
+
+    private computeBarWidth(n: number) {
+      let width = 8;
+      if (n > 8) {
+        width = 4; // Reduce bar width by half when there are many bars
+      } else if (n > 4) {
+        width = 6; // Reduce bar width by 3/4 when there are a few bars
+      }
+      return width * this.scaleFactor;
     }
   }
 );
