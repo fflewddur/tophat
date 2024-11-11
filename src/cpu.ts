@@ -201,7 +201,10 @@ export const CpuMonitor = GObject.registerClass(
         const s = percent.toFixed(0) + '%';
         this.usage.text = s;
         this.menuCpuUsage.text = s;
-        this.meter.setBarSizes([vitals.cpu_usage]);
+        if (this.meter.getNumBars() === 1) {
+          this.meter.setNumBars(vitals.getCpuCoreUsage().length);
+        }
+        this.meter.setBarSizes(vitals.getCpuCoreUsage());
       });
       vitals.connect('notify::cpu-model', () => {
         const s = vitals.cpu_model;

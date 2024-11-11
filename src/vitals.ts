@@ -642,6 +642,14 @@ export const Vitals = GObject.registerClass(
       return top;
     }
 
+    public getCpuCoreUsage() {
+      const usage = new Array<number>(this.cpuModel.cores);
+      for (let i = 0; i < usage.length; i++) {
+        usage[i] = this.cpuState.coreUsage(i);
+      }
+      return usage;
+    }
+
     public getNetActivity() {
       return this.netActivityHistory;
     }
