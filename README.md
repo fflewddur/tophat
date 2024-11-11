@@ -15,7 +15,8 @@ re-writing this extension with the following goals:
 - Remove glibtop as a required dependency
 - Generally cleanup the code to improve maintainability
 
-As of today, this branch does not create a useful extension.
+As of today, this branch is mostly working, but not quite as customizable as
+the current stable release of TopHat.
 
 ## Release notes
 
@@ -39,6 +40,7 @@ The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
 - Fedora 40
+- Fedora 41
 - Ubuntu 24.04 LTS
 - Ubuntu 24.10
 
@@ -79,8 +81,8 @@ how to install Yarn at https://yarnpkg.com/getting-started/install.
 `yarn lint:fix`: Fix common problems found by ESLint.
 `yarn format`: Run Prettier to keep the project's coding style consistent.
 
-To keep the code format consistent, please use run `yarn lint` and `yarn
-format` before submitting a PR. If you use VS Code, I recommend installing the
+To keep the code format consistent, please use run `yarn lint && yarn format`
+before submitting a PR. If you use VS Code, I recommend installing the
 ESLint and Prettier extensions to automatically run these tools for you.
 
 ### Useful development commands

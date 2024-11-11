@@ -3,6 +3,14 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Not yet released
+
+- Complete re-write in TypeScript
+- Removed libgtop and clutter dependencies
+- Fixed crashes during some network file operations
+- More accurate per-process memory reporting
+- Visual refresh
+
 ## TopHat 15 - September 30, 2024
 
 - Ported to GNOME 47
