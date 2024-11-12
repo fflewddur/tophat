@@ -222,7 +222,7 @@ export const CpuMonitor = GObject.registerClass(
         const procs = vitals.getTopCpuProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
           const cpu = procs[i].cpuUsage();
-          if (cpu > 0.001) {
+          if (cpu > 0) {
             this.topProcs[i].cmd.text = procs[i].cmd;
             this.topProcs[i].usage.text = (cpu * 100).toFixed(1) + '%';
           } else {
