@@ -582,6 +582,7 @@ export const Vitals = GObject.registerClass(
           );
           this.loadSmapsRollupForProcess(p);
           this.loadIoForProcess(p);
+          this.loadCmdForProcess(p);
         }
       }
       this.procs = curProcs;
@@ -589,7 +590,7 @@ export const Vitals = GObject.registerClass(
 
     private loadProcessStat(name: string): Process {
       const f = new File('/proc/' + name + '/stat');
-      const contents = f.readSync();
+      const contents = f.readSync(false);
       // console.log(`[TopHat] contents for ${f.name()}: ${contents}`);
       let p = this.procs.get(name);
       if (p === undefined) {
@@ -611,6 +612,15 @@ export const Vitals = GObject.registerClass(
       const f = new File('/proc/' + p.id + '/io');
       const contents = f.readSync(false);
       p.parseIo(contents);
+    }
+
+    private loadCmdForProcess(p: Process): void {
+      if (p.cmdLoaded) {
+        return;
+      }
+      const f = new File('/proc/' + p.id + '/cmdline');
+      const contents = f.readSync(false);
+      p.parseCmd(contents);
     }
 
     public getTopCpuProcs(n: number) {
@@ -1178,9 +1188,9 @@ class DiskActivity {
 class Process {
   public id = '';
   public cmd = '';
+  public cmdLoaded = false;
   public utime = 0;
   public stime = 0;
-  public guest_time = 0;
   public pss = 0;
   public cpu = -1;
   public cpuPrev = -1;
@@ -1222,7 +1232,7 @@ class Process {
   public parseStat(stat: string) {
     const open = stat.indexOf('(');
     const close = stat.indexOf(')');
-    if (open > 0 && close > 0) {
+    if (!this.cmd && open > 0 && close > 0) {
       this.cmd = stat.substring(open + 1, close);
     }
     const fields = stat.substring(close + 2).split(' ');
@@ -1252,6 +1262,21 @@ class Process {
         this.diskWrite = readKb(line);
       }
     });
+  }
+
+  public parseCmd(content: string) {
+    if (content) {
+      this.cmd = content;
+      // If this is an absolute cmd path, remove the path
+      if (content[0] === '/') {
+        const slash = content.lastIndexOf('/');
+        if (slash >= 0) {
+          const cmd = content.substring(slash + 1);
+          this.cmd = cmd;
+        }
+      }
+      this.cmdLoaded = true;
+    }
   }
 }
 
