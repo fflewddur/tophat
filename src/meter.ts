@@ -35,6 +35,7 @@ export const TopHatMeter = GObject.registerClass(
         style_class: 'tophat-meter',
         y_align: Clutter.ActorAlign.CENTER,
         y_expand: true,
+        name: 'TopHatMeter',
       });
       this.add_style_class_name('tophat-meter');
       this.bars = new Array<St.Widget>(0);
@@ -45,6 +46,10 @@ export const TopHatMeter = GObject.registerClass(
         this.scaleFactor = themeContext.get_scale_factor();
         themeContext.connect('notify::scale-factor', (obj) => {
           this.scaleFactor = obj.get_scale_factor();
+          const width = this.computeBarWidth(this.bars.length);
+          for (const b of this.bars) {
+            b.width = width;
+          }
         });
       } else {
         this.scaleFactor = 1;
@@ -68,7 +73,10 @@ export const TopHatMeter = GObject.registerClass(
           y_expand: false,
           style_class: 'meter-bar',
           width: width,
+          name: 'TopHatMeterBar',
         });
+        this.bars[i].save_easing_state();
+        this.bars[i].set_easing_duration(300);
         this.add_child(this.bars[i]);
       }
     }
@@ -83,11 +91,14 @@ export const TopHatMeter = GObject.registerClass(
           `[TopHat] called setBarSizes() with ${n.length} values for ${this.bars.length} bars`
         );
       }
+      const h = this.get_height();
       for (let i = 0; i < n.length; i++) {
+        const fillSize = Math.ceil(n[i] * h) / this.scaleFactor;
         // console.log(
-        //   `set bar[${i}].height to ${n[i]} of container height (${this.height})`
+        //   `set bar[${i}].height from ${this.bars[i].get_height()}px to ${fillSize}px (Meter.height: ${h}px)`
         // );
-        this.bars[i].height = this.height * n[i];
+        const style = `height:${fillSize}px;`;
+        this.bars[i].set_style(style);
       }
     }
 
