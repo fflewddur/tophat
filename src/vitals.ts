@@ -4,6 +4,9 @@ import GLib from 'gi://GLib';
 
 import { File } from './file.js';
 
+Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
+Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
+
 export const SummaryInterval = 2.5;
 export const DetailsInterval = 5;
 export const MaxHistoryLen = 50;
@@ -327,7 +330,6 @@ export const Vitals = GObject.registerClass(
 
     // readSummaries queries all of the info needed by the topbar widgets
     public readSummaries(): boolean {
-      // Because /proc is a virtual FS, maybe we can get away with sync IO?
       console.time('readSummaries()');
       this.loadUptime();
       this.loadStat();
@@ -340,288 +342,365 @@ export const Vitals = GObject.registerClass(
 
     // readDetails queries the info needed by the monitor menus
     public readDetails(): boolean {
-      // TODO(fflewddur): Refactor these to use async IO
       console.time('readDetails()');
       this.loadTemps();
       this.loadFreqs();
       this.loadStatDetails();
       this.loadProcessList();
-      // FIXME: Compute a hash from the top processes instead of using a random number to trigger the UI refresh
-      this.cpu_top_procs = Math.random().toFixed(8);
-      this.mem_top_procs = Math.random().toFixed(8);
-      this.disk_top_procs = Math.random().toFixed(8);
       console.timeEnd('readDetails()');
       return true;
     }
 
     private loadUptime() {
       const f = new File('/proc/uptime');
-      f.read().then((line) => {
-        this.uptime = parseInt(line.substring(0, line.indexOf(' ')));
-        // console.log(`[TopHat] uptime = ${this.uptime}`);
-      });
+      f.read()
+        .then((line) => {
+          this.uptime = parseInt(line.substring(0, line.indexOf(' ')));
+          // console.log(`[TopHat] uptime = ${this.uptime}`);
+        })
+        .catch((e) => {
+          console.warn(`[TopHat] error in loadUptime(): ${e}`);
+        });
     }
 
     private loadStat() {
       const f = new File('/proc/stat');
-      f.read().then((contents) => {
-        const lines = contents.split('\n');
-        const usage = new CpuUsage(this.cpuModel.cores);
-        lines.forEach((line: string) => {
-          if (line.startsWith('cpu')) {
-            const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
-            const m = line.match(re);
-            if (m && !m[1]) {
-              // These are aggregate CPU statistics
-              const usedTime = parseInt(m[2]) + parseInt(m[4]);
-              const idleTime = parseInt(m[5]);
-              this.cpuState.update(usedTime, idleTime);
-              usage.aggregate = this.cpuState.usage();
-            } else if (m) {
-              // These are per-core statistics
-              const core = parseInt(m[1]);
-              const usedTime = parseInt(m[2]) + parseInt(m[4]);
-              const idleTime = parseInt(m[5]);
-              this.cpuState.updateCore(core, usedTime, idleTime);
-              usage.core[core] = this.cpuState.coreUsage(core);
+      f.read()
+        .then((contents) => {
+          const lines = contents.split('\n');
+          const usage = new CpuUsage(this.cpuModel.cores);
+          lines.forEach((line: string) => {
+            if (line.startsWith('cpu')) {
+              const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+              const m = line.match(re);
+              if (m && !m[1]) {
+                // These are aggregate CPU statistics
+                const usedTime = parseInt(m[2]) + parseInt(m[4]);
+                const idleTime = parseInt(m[5]);
+                this.cpuState.update(usedTime, idleTime);
+                usage.aggregate = this.cpuState.usage();
+              } else if (m) {
+                // These are per-core statistics
+                const core = parseInt(m[1]);
+                const usedTime = parseInt(m[2]) + parseInt(m[4]);
+                const idleTime = parseInt(m[5]);
+                this.cpuState.updateCore(core, usedTime, idleTime);
+                usage.core[core] = this.cpuState.coreUsage(core);
+              }
             }
-          }
-          if (this.cpuUsageHistory.unshift(usage) > MaxHistoryLen) {
-            this.cpuUsageHistory.pop();
-          }
+            if (this.cpuUsageHistory.unshift(usage) > MaxHistoryLen) {
+              this.cpuUsageHistory.pop();
+            }
+          });
+          this.cpu_usage = usage.aggregate;
+          // FIXME: Compute a hash of the history array instead of using a random number
+          this.cpu_history = Math.random().toFixed(8);
+        })
+        .catch((e) => {
+          console.warn(`[TopHat] error in loadStat(): ${e}`);
         });
-        this.cpu_usage = usage.aggregate;
-        // FIXME: Compute a hash of the history array instead of using a random number
-        this.cpu_history = Math.random().toFixed(8);
-      });
     }
 
     private loadStatDetails() {
       const f = new File('/proc/stat');
-      f.read().then((contents) => {
-        const lines = contents.split('\n');
-        for (const line of lines) {
-          if (line.startsWith('cpu')) {
-            const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
-            const m = line.match(re);
-            if (m && !m[1]) {
-              // These are aggregate CPU statistics
-              const usedTime = parseInt(m[2]) + parseInt(m[4]);
-              const idleTime = parseInt(m[5]);
-              this.cpuState.updateDetails(usedTime + idleTime);
-              break;
+      f.read()
+        .then((contents) => {
+          const lines = contents.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('cpu')) {
+              const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+              const m = line.match(re);
+              if (m && !m[1]) {
+                // These are aggregate CPU statistics
+                const usedTime = parseInt(m[2]) + parseInt(m[4]);
+                const idleTime = parseInt(m[5]);
+                this.cpuState.updateDetails(usedTime + idleTime);
+                break;
+              }
             }
           }
-        }
-      });
-      // const contents = f.readSync();
+        })
+        .catch((e) => {
+          console.warn(`[TopHat] error in loadStatDetails(): ${e}`);
+        });
     }
 
     private loadMeminfo() {
       const f = new File('/proc/meminfo');
-      f.read().then((contents) => {
-        const lines = contents.split('\n');
-        const usage = new MemUsage();
-        lines.forEach((line: string) => {
-          if (line.startsWith('MemTotal:')) {
-            this.memInfo.total = readKb(line);
-          } else if (line.startsWith('MemAvailable:')) {
-            this.memInfo.available = readKb(line);
-          } else if (line.startsWith('SwapTotal:')) {
-            this.memInfo.swapTotal = readKb(line);
-          } else if (line.startsWith('SwapFree:')) {
-            this.memInfo.swapAvailable = readKb(line);
+      f.read()
+        .then((contents) => {
+          const lines = contents.split('\n');
+          const usage = new MemUsage();
+          lines.forEach((line: string) => {
+            if (line.startsWith('MemTotal:')) {
+              this.memInfo.total = readKb(line);
+            } else if (line.startsWith('MemAvailable:')) {
+              this.memInfo.available = readKb(line);
+            } else if (line.startsWith('SwapTotal:')) {
+              this.memInfo.swapTotal = readKb(line);
+            } else if (line.startsWith('SwapFree:')) {
+              this.memInfo.swapAvailable = readKb(line);
+            }
+          });
+          usage.usedMem =
+            (this.memInfo.total - this.memInfo.available) / this.memInfo.total;
+          usage.usedSwap =
+            (this.memInfo.swapTotal - this.memInfo.swapAvailable) /
+            this.memInfo.swapTotal;
+          if (this.memUsageHistory.unshift(usage) > MaxHistoryLen) {
+            this.memUsageHistory.pop();
           }
+          this.ram_usage = usage.usedMem;
+          this.ram_size = this.memInfo.total * 1024;
+          this.ram_size_free = this.memInfo.available * 1024;
+          this.swap_usage = usage.usedSwap;
+          this.swap_size = this.memInfo.swapTotal * 1024;
+          this.swap_size_free = this.memInfo.swapAvailable * 1024;
+          // FIXME: Compute a hash of the history array instead of using a random number
+          this.mem_history = Math.random().toFixed(8);
+        })
+        .catch((e) => {
+          console.warn(`[TopHat] error in loadMeminfo(): ${e}`);
         });
-        usage.usedMem =
-          (this.memInfo.total - this.memInfo.available) / this.memInfo.total;
-        usage.usedSwap =
-          (this.memInfo.swapTotal - this.memInfo.swapAvailable) /
-          this.memInfo.swapTotal;
-        if (this.memUsageHistory.unshift(usage) > MaxHistoryLen) {
-          this.memUsageHistory.pop();
-        }
-        this.ram_usage = usage.usedMem;
-        this.ram_size = this.memInfo.total * 1024;
-        this.ram_size_free = this.memInfo.available * 1024;
-        this.swap_usage = usage.usedSwap;
-        this.swap_size = this.memInfo.swapTotal * 1024;
-        this.swap_size_free = this.memInfo.swapAvailable * 1024;
-        // FIXME: Compute a hash of the history array instead of using a random number
-        this.mem_history = Math.random().toFixed(8);
-      });
     }
 
     private loadNetDev() {
       const f = new File('/proc/net/dev');
-      f.read().then((contents) => {
-        const lines = contents.split('\n');
-        let bytesRecv = 0;
-        let bytesSent = 0;
+      f.read()
+        .then((contents) => {
+          const lines = contents.split('\n');
+          let bytesRecv = 0;
+          let bytesSent = 0;
 
-        lines.forEach((line) => {
-          let m = line.match(RE_NET_DEV);
-          if (m) {
-            const dev = m[1];
-            if (dev !== 'lo') {
-              m = line.match(RE_NET_ACTIVITY);
-              if (m) {
-                bytesRecv += parseInt(m[1]);
-                bytesSent += parseInt(m[2]);
+          lines.forEach((line) => {
+            let m = line.match(RE_NET_DEV);
+            if (m) {
+              const dev = m[1];
+              if (dev !== 'lo') {
+                m = line.match(RE_NET_ACTIVITY);
+                if (m) {
+                  bytesRecv += parseInt(m[1]);
+                  bytesSent += parseInt(m[2]);
+                }
               }
             }
+          });
+          this.netState.update(bytesRecv, bytesSent);
+          this.net_recv_total = bytesRecv;
+          this.net_sent_total = bytesSent;
+          const netActivity = new NetActivity();
+          netActivity.bytesRecv = this.netState.recvActivity();
+          netActivity.bytesSent = this.netState.sentActivity();
+          if (this.netActivityHistory.unshift(netActivity) > MaxHistoryLen) {
+            this.netActivityHistory.pop();
           }
+          this.net_recv = netActivity.bytesRecv;
+          this.net_sent = netActivity.bytesSent;
+          // FIXME: Compute a hash of the history array instead of using a random number
+          this.net_history = Math.random().toFixed(8);
+        })
+        .catch((e) => {
+          console.warn(`[TopHat] error in loadNetDev(): ${e}`);
         });
-        this.netState.update(bytesRecv, bytesSent);
-        this.net_recv_total = bytesRecv;
-        this.net_sent_total = bytesSent;
-        const netActivity = new NetActivity();
-        netActivity.bytesRecv = this.netState.recvActivity();
-        netActivity.bytesSent = this.netState.sentActivity();
-        if (this.netActivityHistory.unshift(netActivity) > MaxHistoryLen) {
-          this.netActivityHistory.pop();
-        }
-        this.net_recv = netActivity.bytesRecv;
-        this.net_sent = netActivity.bytesSent;
-        // FIXME: Compute a hash of the history array instead of using a random number
-        this.net_history = Math.random().toFixed(8);
-      });
     }
 
     private loadDiskstats() {
       const f = new File('/proc/diskstats');
-      f.read().then((contents) => {
-        const lines = contents.split('\n');
-        let bytesRead = 0;
-        let bytesWritten = 0;
+      f.read()
+        .then((contents) => {
+          const lines = contents.split('\n');
+          let bytesRead = 0;
+          let bytesWritten = 0;
 
-        lines.forEach((line) => {
-          const m = line.match(RE_DISK_STATS);
-          if (m) {
-            const dev = m[1];
-            if (dev.startsWith('loop')) {
-              return;
-            }
-            if (dev.startsWith('nvme')) {
-              const dm = dev.match(RE_NVME_DEV);
-              if (dm) {
-                bytesRead += parseInt(m[2]) * SECTOR_SIZE;
-                bytesWritten += parseInt(m[3]) * SECTOR_SIZE;
+          lines.forEach((line) => {
+            const m = line.match(RE_DISK_STATS);
+            if (m) {
+              const dev = m[1];
+              if (dev.startsWith('loop')) {
+                return;
               }
-            } else {
-              const dm = dev.match(RE_BLOCK_DEV);
-              if (dm) {
-                bytesRead += parseInt(m[2]) * SECTOR_SIZE;
-                bytesWritten += parseInt(m[3]) * SECTOR_SIZE;
+              if (dev.startsWith('nvme')) {
+                const dm = dev.match(RE_NVME_DEV);
+                if (dm) {
+                  bytesRead += parseInt(m[2]) * SECTOR_SIZE;
+                  bytesWritten += parseInt(m[3]) * SECTOR_SIZE;
+                }
+              } else {
+                const dm = dev.match(RE_BLOCK_DEV);
+                if (dm) {
+                  bytesRead += parseInt(m[2]) * SECTOR_SIZE;
+                  bytesWritten += parseInt(m[3]) * SECTOR_SIZE;
+                }
               }
             }
+          });
+          this.diskState.update(bytesRead, bytesWritten);
+          const diskActivity = new DiskActivity();
+          diskActivity.bytesRead = this.diskState.readActivity();
+          diskActivity.bytesWritten = this.diskState.writeActivity();
+          if (this.diskActivityHistory.unshift(diskActivity) > MaxHistoryLen) {
+            this.diskActivityHistory.pop();
           }
+          this.disk_read = diskActivity.bytesRead;
+          this.disk_wrote = diskActivity.bytesWritten;
+          this.disk_read_total = bytesRead;
+          this.disk_wrote_total = bytesWritten;
+          // FIXME: Compute a hash of the history array instead of using a random number
+          this.disk_history = Math.random().toFixed(8);
+        })
+        .catch((e) => {
+          console.warn(`[TopHat] error in loadDiskStats(): ${e}`);
         });
-        this.diskState.update(bytesRead, bytesWritten);
-        const diskActivity = new DiskActivity();
-        diskActivity.bytesRead = this.diskState.readActivity();
-        diskActivity.bytesWritten = this.diskState.writeActivity();
-        if (this.diskActivityHistory.unshift(diskActivity) > MaxHistoryLen) {
-          this.diskActivityHistory.pop();
-        }
-        this.disk_read = diskActivity.bytesRead;
-        this.disk_wrote = diskActivity.bytesWritten;
-        this.disk_read_total = bytesRead;
-        this.disk_wrote_total = bytesWritten;
-        // FIXME: Compute a hash of the history array instead of using a random number
-        this.disk_history = Math.random().toFixed(8);
-      });
     }
 
     private loadTemps() {
       this.cpuModel.tempMonitors.forEach((file, i) => {
         const f = new File(file);
-        f.read().then((contents) => {
-          this.cpuState.temps[i] = parseInt(contents);
-          if (i === 0) {
-            this.cpu_temp = this.cpuState.temps[i];
-          }
-        });
+        f.read()
+          .then((contents) => {
+            this.cpuState.temps[i] = parseInt(contents);
+            if (i === 0) {
+              this.cpu_temp = this.cpuState.temps[i];
+            }
+          })
+          .catch((e) => {
+            console.warn(`[TopHat] error in loadTemp(): ${e}`);
+          });
       });
     }
 
     private loadFreqs() {
       const f = new File('/proc/cpuinfo');
-      const lines = f.readSync();
-      const blocks = lines.split('\n\n');
-      let freq = 0;
-      for (const block of blocks) {
-        const m = block.match(/cpu MHz\s*:\s*(\d+)/);
-        if (m) {
-          freq += parseInt(m[1]);
-        }
-      }
-      this.cpu_freq = freq / this.cpuModel.cores;
+      f.read()
+        .then((contents) => {
+          const blocks = contents.split('\n\n');
+          let freq = 0;
+          for (const block of blocks) {
+            const m = block.match(/cpu MHz\s*:\s*(\d+)/);
+            if (m) {
+              freq += parseInt(m[1]);
+            }
+          }
+          this.cpu_freq = freq / this.cpuModel.cores;
+        })
+        .catch((e) => {
+          console.warn(`[TopHat] error in loadFreqs(): ${e}`);
+        });
     }
 
-    private loadProcessList() {
+    private async loadProcessList() {
       const curProcs = new Map<string, Process>();
       const directory = Gio.File.new_for_path('/proc/');
-      const iter = directory.enumerate_children(
-        Gio.FILE_ATTRIBUTE_STANDARD_NAME,
-        Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-        null
-      );
-      while (true) {
-        const fileInfo = iter.next_file(null);
-        if (fileInfo === null) {
-          break;
+      try {
+        const iter = await directory
+          .enumerate_children_async(
+            Gio.FILE_ATTRIBUTE_STANDARD_NAME,
+            Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+            GLib.PRIORITY_DEFAULT,
+            null
+          )
+          .catch((e) => {
+            console.error(
+              `Error enumerating children in loadProcessList(): ${e}`
+            );
+          });
+        while (iter) {
+          const fileInfos = await iter
+            .next_files_async(10, GLib.PRIORITY_DEFAULT, null)
+            .catch((e) => {
+              console.error(
+                `Error calling next_files_async() in loadProcessList(): ${e}`
+              );
+            });
+          if (!fileInfos || fileInfos.length === 0) {
+            break;
+          }
+          for (const fileInfo of fileInfos) {
+            const name = fileInfo.get_name();
+            if (
+              name[0] == '0' ||
+              name[0] == '1' ||
+              name[0] == '2' ||
+              name[0] == '3' ||
+              name[0] == '4' ||
+              name[0] == '5' ||
+              name[0] == '6' ||
+              name[0] == '7' ||
+              name[0] == '8' ||
+              name[0] == '9'
+            ) {
+              const p = await this.loadProcessStat(name);
+              curProcs.set(p.id, p);
+              p.setTotalTime(
+                this.cpuState.totalTimeDetails -
+                  this.cpuState.totalTimeDetailsPrev
+              );
+              this.loadCmdForProcess(p);
+              await this.loadSmapsRollupForProcess(p);
+              await this.loadIoForProcess(p);
+            }
+          }
         }
-        const name = fileInfo.get_name();
-        if (
-          name[0] == '0' ||
-          name[0] == '1' ||
-          name[0] == '2' ||
-          name[0] == '3' ||
-          name[0] == '4' ||
-          name[0] == '5' ||
-          name[0] == '6' ||
-          name[0] == '7' ||
-          name[0] == '8' ||
-          name[0] == '9'
-        ) {
-          const p = this.loadProcessStat(name);
-          curProcs.set(p.id, p);
-          p.setTotalTime(
-            this.cpuState.totalTimeDetails - this.cpuState.totalTimeDetailsPrev
-          );
-          this.loadSmapsRollupForProcess(p);
-          this.loadIoForProcess(p);
-          this.loadCmdForProcess(p);
-        }
+        this.procs = curProcs;
+        // FIXME: Compute a hash from the top processes instead of using a random number to trigger the UI refresh
+        this.cpu_top_procs = Math.random().toFixed(8);
+        this.mem_top_procs = Math.random().toFixed(8);
+        this.disk_top_procs = Math.random().toFixed(8);
+      } catch (e) {
+        console.error(`[TopHat] Error in loadProcessList(): ${e}`);
       }
-      this.procs = curProcs;
     }
 
-    private loadProcessStat(name: string): Process {
-      const f = new File('/proc/' + name + '/stat');
-      const contents = f.readSync(false);
-      // console.log(`[TopHat] contents for ${f.name()}: ${contents}`);
-      let p = this.procs.get(name);
-      if (p === undefined) {
-        p = new Process();
-      }
-      p.id = name;
-      p.parseStat(contents);
-
-      return p;
+    private async loadProcessStat(name: string): Promise<Process> {
+      return new Promise<Process>((resolve) => {
+        const f = new File('/proc/' + name + '/stat');
+        f.read()
+          .then((contents) => {
+            let p = this.procs.get(name);
+            if (p === undefined) {
+              p = new Process();
+            }
+            p.id = name;
+            p.parseStat(contents);
+            resolve(p);
+          })
+          .catch((e) => {
+            // We expect to be unable to read many of these
+            throw e;
+          });
+      });
+      // return p;
     }
 
-    private loadSmapsRollupForProcess(p: Process): void {
-      const f = new File('/proc/' + p.id + '/smaps_rollup');
-      const contents = f.readSync(false);
-      p.parseSmapsRollup(contents);
+    private async loadSmapsRollupForProcess(p: Process): Promise<void> {
+      return new Promise<void>((resolve) => {
+        const f = new File('/proc/' + p.id + '/smaps_rollup');
+        // const contents = f.readSync(false);
+        f.read()
+          .then((contents) => {
+            p.parseSmapsRollup(contents);
+            resolve();
+          })
+          .catch(() => {
+            // We expect to be unable to read many of these
+            resolve();
+          });
+      });
     }
 
-    private loadIoForProcess(p: Process): void {
-      const f = new File('/proc/' + p.id + '/io');
-      const contents = f.readSync(false);
-      p.parseIo(contents);
+    private async loadIoForProcess(p: Process): Promise<void> {
+      return new Promise<void>((resolve) => {
+        const f = new File('/proc/' + p.id + '/io');
+        f.read()
+          .then((contents) => {
+            p.parseIo(contents);
+            resolve();
+          })
+          .catch(() => {
+            // We expect to be unable to read many of these
+            resolve();
+          });
+      });
     }
 
     private loadCmdForProcess(p: Process): void {
@@ -629,8 +708,9 @@ export const Vitals = GObject.registerClass(
         return;
       }
       const f = new File('/proc/' + p.id + '/cmdline');
-      const contents = f.readSync(false);
-      p.parseCmd(contents);
+      f.read().then((contents) => {
+        p.parseCmd(contents);
+      });
     }
 
     public getTopCpuProcs(n: number) {
