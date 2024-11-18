@@ -76,8 +76,6 @@ export default class TopHat extends Extension {
   private parseCpuOverview(cpuinfo: string): CpuModel {
     const cpus = new Set<number>();
     const tempMonitors = new Map<number, string>();
-    // const procRE = /\bprocessor\s*:\s*(\d+)/;
-    // const coreIdRE = /\bcore id\s*:\s*(\d+)/;
 
     // Count the number of physical CPUs
     const blocks = cpuinfo.split('\n\n');
@@ -86,22 +84,10 @@ export default class TopHat extends Extension {
       if (m) {
         const id = parseInt(m[1]);
         cpus.add(id);
-        // const mProc = block.match(procRE);
-        // if (mProc) {
-        //   const procId = parseInt(mProc[1]);
-        //   console.log(`processor: ${procId}`);
-        //   // const mCoreId = block.match(coreIdRE);
-        //   // if (mCoreId) {
-        //   //   const coreId = parseInt(mCoreId[1]);
-        //   //   console.log(`core ID: ${coreId}`);
-        //   //   procToCoreMap.set(procId, coreId);
-        //   // }
-        // }
       }
     }
-
     const cores = blocks.length;
-    console.log(`Found ${cores} cores`);
+    // console.log(`Found ${cores} cores`);
 
     // Find the temperature sensor for each CPU
     const base = '/sys/class/hwmon/';
