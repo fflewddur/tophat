@@ -664,18 +664,15 @@ export const Vitals = GObject.registerClass(
             p.parseStat(contents);
             resolve(p);
           })
-          .catch((e) => {
+          .catch(() => {
             // We expect to be unable to read many of these
-            throw e;
           });
       });
-      // return p;
     }
 
     private async loadSmapsRollupForProcess(p: Process): Promise<void> {
       return new Promise<void>((resolve) => {
         const f = new File('/proc/' + p.id + '/smaps_rollup');
-        // const contents = f.readSync(false);
         f.read()
           .then((contents) => {
             p.parseSmapsRollup(contents);
@@ -708,9 +705,13 @@ export const Vitals = GObject.registerClass(
         return;
       }
       const f = new File('/proc/' + p.id + '/cmdline');
-      f.read().then((contents) => {
-        p.parseCmd(contents);
-      });
+      f.read()
+        .then((contents) => {
+          p.parseCmd(contents);
+        })
+        .catch(() => {
+          // We expect to be unable to read many of these
+        });
     }
 
     public getTopCpuProcs(n: number) {
