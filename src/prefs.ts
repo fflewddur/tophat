@@ -26,42 +26,44 @@ import {
 export default class TopHatPrefs extends ExtensionPreferences {
   private gsettings?: Gio.Settings;
 
-  // @ts-expect-error Expects different return type
   fillPreferencesWindow(window: Adw.PreferencesWindow) {
-    this.gsettings = this.getSettings();
+    return new Promise<void>((resolve) => {
+      this.gsettings = this.getSettings();
 
-    const page = new Adw.PreferencesPage({
-      title: _('General'),
-      iconName: 'dialog-information-symbolic',
+      const page = new Adw.PreferencesPage({
+        title: _('General'),
+        iconName: 'dialog-information-symbolic',
+      });
+
+      const group = new Adw.PreferencesGroup({ title: _('General') });
+      page.add(group);
+
+      // Position in panel
+      let choices = new Gtk.StringList();
+      choices.append(_('Left edge'));
+      choices.append(_('Left'));
+      choices.append(_('Center'));
+      choices.append(_('Right'));
+      choices.append(_('Right edge'));
+      this.addComboRow(
+        _('Position in panel'),
+        choices,
+        'position-in-panel',
+        group
+      );
+
+      // Refresh speed
+      choices = new Gtk.StringList();
+      choices.append(_('Slow'));
+      choices.append(_('Medium'));
+      choices.append(_('Fast'));
+      this.addComboRow(_('Refresh speed'), choices, 'refresh-rate', group);
+
+      this.addActionRow(_('Show icons beside monitors'), 'show-icons', group);
+
+      window.add(page);
+      resolve();
     });
-
-    const group = new Adw.PreferencesGroup({ title: _('General') });
-    page.add(group);
-
-    // Position in panel
-    let choices = new Gtk.StringList();
-    choices.append(_('Left edge'));
-    choices.append(_('Left'));
-    choices.append(_('Center'));
-    choices.append(_('Right'));
-    choices.append(_('Right edge'));
-    this.addComboRow(
-      _('Position in panel'),
-      choices,
-      'position-in-panel',
-      group
-    );
-
-    // Refresh speed
-    choices = new Gtk.StringList();
-    choices.append(_('Slow'));
-    choices.append(_('Medium'));
-    choices.append(_('Fast'));
-    this.addComboRow(_('Refresh speed'), choices, 'refresh-rate', group);
-
-    this.addActionRow(_('Show icons beside monitors'), 'show-icons', group);
-
-    window.add(page);
   }
 
   private addActionRow(
