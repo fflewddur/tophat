@@ -7,8 +7,8 @@ import { File } from './file.js';
 Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
 Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
 
-export const SummaryInterval = 2.5;
-export const DetailsInterval = 5;
+export const SummaryIntervalDefault = 2.5; // in seconds
+export const DetailsInterval = 5; // in seconds
 export const MaxHistoryLen = 50;
 
 const SECTOR_SIZE = 512; // in bytes
@@ -243,9 +243,19 @@ export const Vitals = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         ''
       ),
+      'summary-interval': GObject.ParamSpec.float(
+        'summary-interval',
+        'Refresh interval for the summary loop',
+        'Refresh interval for the summary loop, in seconds',
+        GObject.ParamFlags.READWRITE,
+        0,
+        0,
+        0
+      ),
     },
   },
   class Vitals extends GObject.Object {
+    private gsettings: Gio.Settings;
     private procs = new Map<string, Process>();
     public cpuModel: CpuModel;
     private cpuUsageHistory = new Array<CpuUsage>(MaxHistoryLen);
@@ -281,11 +291,13 @@ export const Vitals = GObject.registerClass(
     private _disk_wrote_total = 0;
     private _disk_history = '';
     private _disk_top_procs = '';
+    private _summary_interval;
     private summaryLoop = 0;
     private detailsLoop = 0;
 
-    constructor(model: CpuModel) {
+    constructor(model: CpuModel, gsettings: Gio.Settings) {
       super();
+      this.gsettings = gsettings;
       this.cpuModel = model;
       this.cpuState = new CpuState(model.cores, model.tempMonitors.size);
       this.memInfo = new MemInfo();
@@ -297,6 +309,14 @@ export const Vitals = GObject.registerClass(
       for (let i = 0; i < this.diskActivityHistory.length; i++) {
         this.diskActivityHistory[i] = new DiskActivity();
       }
+      this._summary_interval =
+        SummaryIntervalDefault * refreshRateModifier(this.gsettings);
+      this.gsettings.connect('changed::refresh-rate', (settings) => {
+        this.summary_interval =
+          SummaryIntervalDefault * refreshRateModifier(settings);
+        this.stop();
+        this.start();
+      });
     }
 
     public start(): void {
@@ -304,7 +324,7 @@ export const Vitals = GObject.registerClass(
       if (this.summaryLoop === 0) {
         this.summaryLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_DEFAULT,
-          SummaryInterval,
+          this.summary_interval,
           () => this.readSummaries()
         );
       }
@@ -330,24 +350,24 @@ export const Vitals = GObject.registerClass(
 
     // readSummaries queries all of the info needed by the topbar widgets
     public readSummaries(): boolean {
-      console.time('readSummaries()');
+      // console.time('readSummaries()');
       this.loadUptime();
       this.loadStat();
       this.loadMeminfo();
       this.loadNetDev();
       this.loadDiskstats();
-      console.timeEnd('readSummaries()');
+      // console.timeEnd('readSummaries()');
       return true;
     }
 
     // readDetails queries the info needed by the monitor menus
     public readDetails(): boolean {
-      console.time('readDetails()');
+      // console.time('readDetails()');
       this.loadTemps();
       this.loadFreqs();
       this.loadStatDetails();
       this.loadProcessList();
-      console.timeEnd('readDetails()');
+      // console.timeEnd('readDetails()');
       return true;
     }
 
@@ -1064,6 +1084,18 @@ export const Vitals = GObject.registerClass(
       this._uptime = v;
       this.notify('uptime');
     }
+
+    public get summary_interval() {
+      return this._summary_interval;
+    }
+
+    private set summary_interval(v: number) {
+      if (this.summary_interval === v) {
+        return;
+      }
+      this._summary_interval = v;
+      this.notify('summary-interval');
+    }
   }
 );
 
@@ -1221,7 +1253,7 @@ class NetDevState {
     if (this.bytesRecvPrev < 0) {
       return 0;
     }
-    return (this.bytesRecv - this.bytesRecvPrev) / SummaryInterval;
+    return (this.bytesRecv - this.bytesRecvPrev) / SummaryIntervalDefault;
   }
 
   // sentActivity return the number of bytes sent per second
@@ -1230,7 +1262,7 @@ class NetDevState {
     if (this.bytesSentPrev < 0) {
       return 0;
     }
-    return (this.bytesSent - this.bytesSentPrev) / SummaryInterval;
+    return (this.bytesSent - this.bytesSentPrev) / SummaryIntervalDefault;
   }
 }
 
@@ -1258,7 +1290,7 @@ class DiskState {
     if (this.bytesReadPrev < 0) {
       return 0;
     }
-    return (this.bytesRead - this.bytesReadPrev) / SummaryInterval;
+    return (this.bytesRead - this.bytesReadPrev) / SummaryIntervalDefault;
   }
 
   // writeActivity return the number of bytes written per second
@@ -1267,7 +1299,7 @@ class DiskState {
     if (this.bytesWrittenPrev < 0) {
       return 0;
     }
-    return (this.bytesWritten - this.bytesWrittenPrev) / SummaryInterval;
+    return (this.bytesWritten - this.bytesWrittenPrev) / SummaryIntervalDefault;
   }
 }
 
@@ -1378,4 +1410,18 @@ function readKb(line: string): number {
     kb = parseInt(m[1]);
   }
   return kb;
+}
+
+function refreshRateModifier(settings: Gio.Settings): number {
+  const val = settings.get_string('refresh-rate');
+  let modifier = 1.0;
+  switch (val) {
+    case 'slow':
+      modifier = 2.0;
+      break;
+    case 'fast':
+      modifier = 0.5;
+      break;
+  }
+  return modifier;
 }

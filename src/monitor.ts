@@ -27,9 +27,10 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import {
   Extension,
   ExtensionMetadata,
+  ngettext,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { Vitals } from './vitals.js';
+import { MaxHistoryLen, Vitals } from './vitals.js';
 import { TopHatMeter } from './meter.js';
 
 const MENU_COLUMNS = 2;
@@ -53,7 +54,7 @@ export class TopProc {
 export const TopHatMonitor = GObject.registerClass(
   class TopHatMonitor extends PanelMenu.Button {
     private monitorName;
-    private gsettings;
+    protected gsettings;
     private box: St.BoxLayout;
     protected icon: St.Icon;
     protected meter: TopHatMeter;
@@ -61,6 +62,7 @@ export const TopHatMonitor = GObject.registerClass(
     private menuRow = 0;
     private menuCol = 0;
     protected menuNumCols = 0;
+    protected histLabel;
     protected metadata: ExtensionMetadata;
 
     constructor(
@@ -87,6 +89,7 @@ export const TopHatMonitor = GObject.registerClass(
       this.add_child(this.icon);
 
       this.meter = new TopHatMeter();
+      this.histLabel = new St.Label();
 
       this.gsettings.bind(
         'show-icons',
@@ -193,9 +196,21 @@ export const TopHatMonitor = GObject.registerClass(
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public bindVitals(vitals: Vitals) {
-      throw new Error('Must implement bindVitals()');
+      vitals.connect('notify::summary-interval', () => {
+        const then = this.formatChartLimit(vitals.summary_interval);
+        this.histLabel.text = then;
+      });
+    }
+
+    protected formatChartLimit(summaryInterval: number) {
+      const limitInMins = parseInt(
+        ((MaxHistoryLen * summaryInterval) / 60).toFixed(0)
+      );
+      const label = ngettext('%d min ago', '%d mins ago', limitInMins).format(
+        limitInMins
+      );
+      return label;
     }
   }
 );

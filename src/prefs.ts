@@ -38,7 +38,8 @@ export default class TopHatPrefs extends ExtensionPreferences {
     const group = new Adw.PreferencesGroup({ title: _('General') });
     page.add(group);
 
-    const choices = new Gtk.StringList();
+    // Position in panel
+    let choices = new Gtk.StringList();
     choices.append(_('Left edge'));
     choices.append(_('Left'));
     choices.append(_('Center'));
@@ -50,6 +51,13 @@ export default class TopHatPrefs extends ExtensionPreferences {
       'position-in-panel',
       group
     );
+
+    // Refresh speed
+    choices = new Gtk.StringList();
+    choices.append(_('Slow'));
+    choices.append(_('Medium'));
+    choices.append(_('Fast'));
+    this.addComboRow(_('Refresh speed'), choices, 'refresh-rate', group);
 
     this.addActionRow(_('Show icons beside monitors'), 'show-icons', group);
 

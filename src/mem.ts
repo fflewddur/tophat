@@ -23,10 +23,9 @@ import St from 'gi://St';
 import {
   ExtensionMetadata,
   gettext as _,
-  ngettext,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { MaxHistoryLen, SummaryInterval, Vitals } from './vitals.js';
+import { MaxHistoryLen, Vitals } from './vitals.js';
 import { Orientation } from './meter.js';
 import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 import { bytesToHumanString } from './helpers.js';
@@ -152,17 +151,8 @@ export const MemMonitor = GObject.registerClass(
         style_class: 'chart-label',
       });
       lm.attach(label, 2, 2, 1, 1);
-      const limitInMins = (MaxHistoryLen * SummaryInterval) / 60;
-      const startLabel = ngettext(
-        '%d min ago',
-        '%d mins ago',
-        limitInMins
-      ).format(limitInMins);
-      label = new St.Label({
-        text: startLabel,
-        style_class: 'chart-label-then',
-      });
-      lm.attach(label, 0, 3, 1, 1);
+      this.histLabel.add_style_class_name('chart-label-then');
+      lm.attach(this.histLabel, 0, 3, 1, 1);
       label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
       lm.attach(label, 1, 3, 1, 1);
 
@@ -183,6 +173,8 @@ export const MemMonitor = GObject.registerClass(
     }
 
     public override bindVitals(vitals: Vitals): void {
+      super.bindVitals(vitals);
+
       vitals.connect('notify::ram-size', () => {
         const total = bytesToHumanString(vitals.ram_size);
         const free = bytesToHumanString(vitals.ram_size_free);

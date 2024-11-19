@@ -49,7 +49,7 @@ export default class TopHat extends Extension {
     this.gsettings = this.getSettings();
     const f = new File('/proc/cpuinfo');
     const cpuModel = this.parseCpuOverview(f.readSync());
-    this.vitals = new Vitals(cpuModel);
+    this.vitals = new Vitals(cpuModel, this.gsettings);
     this.vitals.start();
     this.addToPanel();
     const id = this.gsettings.connect('changed::position-in-panel', () => {
@@ -166,6 +166,7 @@ export default class TopHat extends Extension {
 
     // Trigger notifications for properties that were set during init and will not change
     this.vitals?.notify('cpu-model');
+    this.vitals?.notify('summary-interval');
   }
 
   private getPreferredPanelAttributes() {
