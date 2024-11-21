@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Gdk from 'gi://Gdk';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
@@ -22,6 +23,9 @@ import {
   ExtensionPreferences,
   gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+// @ts-expect-error "Module exists"
+import * as Config from 'resource:///org/gnome/Shell/Extensions/js/misc/config.js';
+const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export default class TopHatPrefs extends ExtensionPreferences {
   private gsettings?: Gio.Settings;
@@ -69,6 +73,20 @@ export default class TopHatPrefs extends ExtensionPreferences {
     choices.append(_('Medium'));
     choices.append(_('Fast'));
     this.addComboRow(_('Refresh speed'), choices, 'refresh-rate', group);
+
+    // Meter color
+    let control: Gtk.Switch | null;
+    control = null;
+
+    if (GnomeMajorVer >= 47) {
+      const accentRow = this.addActionRow(
+        _('Use system accent color'),
+        'use-system-accent',
+        group
+      );
+      control = accentRow.get_activatable_widget() as Gtk.Switch;
+    }
+    this.addColorRow(_('Meter color'), 'meter-fg-color', group, control);
 
     // Show icons
     this.addActionRow(_('Show icons beside monitors'), 'show-icons', group);
@@ -180,6 +198,36 @@ export default class TopHatPrefs extends ExtensionPreferences {
     );
     row.add_suffix(toggle);
     row.activatable_widget = toggle;
+    return row;
+  }
+
+  private addColorRow(
+    label: string,
+    setting: string,
+    group: Adw.PreferencesGroup,
+    control: Gtk.Switch | null
+  ) {
+    const row = new Adw.ActionRow({ title: label });
+    group.add(row);
+
+    const button = new Gtk.ColorButton();
+    const color = this.gsettings?.get_string(setting);
+    if (color) {
+      const rgba = new Gdk.RGBA();
+      rgba.parse(color);
+      button.set_rgba(rgba);
+    }
+
+    if (control) {
+      row.set_sensitive(!control.active);
+      control.connect('notify::active', (w: Gtk.Switch) => {
+        row.set_sensitive(!w.active);
+        console.log(`notify::active w.active: ${w.active}`);
+      });
+    }
+
+    row.add_suffix(button);
+    row.activatable_widget = button;
   }
 
   private addComboRow(
