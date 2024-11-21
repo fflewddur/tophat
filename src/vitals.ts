@@ -20,6 +20,7 @@ const RE_DISK_STATS =
   /^\s*\d+\s+\d+\s+(\w+)\s+\d+\s+\d+\s+(\d+)\s+\d+\s+\d+\s+\d+\s+(\d+)/;
 const RE_NVME_DEV = /^nvme\d+n\d+$/;
 const RE_BLOCK_DEV = /^[^\d]+$/;
+const RE_CMD = /\/*[^\s]*\/([^\s]*)/;
 
 export const Vitals = GObject.registerClass(
   {
@@ -1392,10 +1393,9 @@ class Process {
       this.cmd = content;
       // If this is an absolute cmd path, remove the path
       if (content[0] === '/') {
-        const slash = content.lastIndexOf('/');
-        if (slash >= 0) {
-          const cmd = content.substring(slash + 1);
-          this.cmd = cmd;
+        const m = content.match(RE_CMD);
+        if (m) {
+          this.cmd = m[1];
         }
       }
       this.cmdLoaded = true;
