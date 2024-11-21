@@ -121,8 +121,9 @@
 }
 
 .chart {
+  background-color: rgba(0, 0, 0, 0.3);
   margin: 0.5em 0.25em 0.5em 0.5em;
-  border: solid 1px #333;
+  /* border: solid 1px #333; */
   height: 6em;
 }
 
