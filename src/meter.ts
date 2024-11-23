@@ -29,6 +29,7 @@ export const TopHatMeter = GObject.registerClass(
     private bars: Array<St.Widget>;
     private orientation: Orientation;
     private scaleFactor;
+    private color: string;
 
     constructor() {
       super({
@@ -42,18 +43,15 @@ export const TopHatMeter = GObject.registerClass(
       this.orientation = Orientation.Horizontal;
 
       const themeContext = St.ThemeContext.get_for_stage(global.get_stage());
-      if (themeContext.get_scale_factor) {
-        this.scaleFactor = themeContext.get_scale_factor();
-        themeContext.connect('notify::scale-factor', (obj) => {
-          this.scaleFactor = obj.get_scale_factor();
-          const width = this.computeBarWidth(this.bars.length);
-          for (const b of this.bars) {
-            b.width = width;
-          }
-        });
-      } else {
-        this.scaleFactor = 1;
-      }
+      this.scaleFactor = themeContext.get_scale_factor();
+      themeContext.connect('notify::scale-factor', (obj: St.ThemeContext) => {
+        this.scaleFactor = obj.get_scale_factor();
+        const width = this.computeBarWidth(this.bars.length);
+        for (const b of this.bars) {
+          b.width = width;
+        }
+      });
+      this.color = '';
     }
 
     public getNumBars(): number {
@@ -94,11 +92,19 @@ export const TopHatMeter = GObject.registerClass(
       const h = this.get_height();
       for (let i = 0; i < n.length; i++) {
         const fillSize = Math.ceil(n[i] * h) / this.scaleFactor;
-        // console.log(
-        //   `set bar[${i}].height from ${this.bars[i].get_height()}px to ${fillSize}px (Meter.height: ${h}px)`
-        // );
-        const style = `height:${fillSize}px;`;
+        const style = `height:${fillSize}px;background-color:${this.color}`;
         this.bars[i].set_style(style);
+      }
+    }
+
+    public setColor(c: string) {
+      if (this.color === c) {
+        return;
+      }
+
+      this.color = c;
+      for (const bar of this.bars) {
+        bar.set_style(`background-color:${this.color}`);
       }
     }
 

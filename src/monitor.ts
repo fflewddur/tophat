@@ -21,7 +21,6 @@ import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
 
-// import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import {
@@ -30,8 +29,10 @@ import {
   ngettext,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { GnomeMajorVer } from './helpers.js';
 import { MaxHistoryLen, Vitals } from './vitals.js';
 import { TopHatMeter } from './meter.js';
+import { HistoryChart } from './history.js';
 
 const MENU_COLUMNS = 2;
 export const MeterNoVal = 'n/a';
@@ -62,8 +63,11 @@ export const TopHatMonitor = GObject.registerClass(
     private menuRow = 0;
     private menuCol = 0;
     protected menuNumCols = 0;
-    protected histLabel;
+    protected historyChart?: HistoryChart;
+    // protected histLabel;
     protected metadata: ExtensionMetadata;
+    protected color: string;
+    protected useAccentColor: boolean;
 
     constructor(
       nameText: string,
@@ -89,7 +93,8 @@ export const TopHatMonitor = GObject.registerClass(
       this.add_child(this.icon);
 
       this.meter = new TopHatMeter();
-      this.histLabel = new St.Label();
+      // this.histLabel = new St.Label();
+      [this.color, this.useAccentColor] = this.updateColor();
 
       this.gsettings.bind(
         'show-icons',
@@ -97,6 +102,17 @@ export const TopHatMonitor = GObject.registerClass(
         'visible',
         Gio.SettingsBindFlags.GET
       );
+      this.gsettings.connect('changed::meter-fg-color', () => {
+        [this.color, this.useAccentColor] = this.updateColor();
+      });
+      this.gsettings.connect('changed::use-system-accent', () => {
+        [this.color, this.useAccentColor] = this.updateColor();
+      });
+
+      const themeContext = St.ThemeContext.get_for_stage(global.get_stage());
+      themeContext.connect('changed', () => {
+        [this.color, this.useAccentColor] = this.updateColor();
+      });
     }
 
     public override add_child(w: St.Widget) {
@@ -199,7 +215,8 @@ export const TopHatMonitor = GObject.registerClass(
     public bindVitals(vitals: Vitals) {
       vitals.connect('notify::summary-interval', () => {
         const then = this.formatChartLimit(vitals.summary_interval);
-        this.histLabel.text = then;
+        this.historyChart?.setThen(then);
+        // this.histLabel.text = then;
       });
     }
 
@@ -211,6 +228,21 @@ export const TopHatMonitor = GObject.registerClass(
         limitInMins
       );
       return label;
+    }
+
+    private updateColor(): [string, boolean] {
+      let fgColor = this.gsettings.get_string('meter-fg-color');
+      const useAccentColor = this.gsettings.get_boolean('use-system-accent');
+      if (useAccentColor && GnomeMajorVer >= 47) {
+        const themeContext = St.ThemeContext.get_for_stage(global.get_stage());
+        const [color, colorAlt] = themeContext.get_accent_color();
+        if (color && colorAlt) {
+          fgColor = `rgb(${color.red},${color.green},${color.blue})`;
+        }
+      }
+      this.meter.setColor(fgColor);
+      this.historyChart?.setColor(fgColor);
+      return [fgColor, useAccentColor];
     }
   }
 );

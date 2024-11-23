@@ -197,8 +197,8 @@ export const DiskMonitor = GObject.registerClass(
       });
       lm.attach(label, 2, 1, 1, 2);
       lm.attach(this.histLabelIn, 2, 3, 1, 1);
-      this.histLabel.add_style_class_name('chart-label-then');
-      lm.attach(this.histLabel, 0, 4, 1, 1);
+      // this.histLabel.add_style_class_name('chart-label-then');
+      // lm.attach(this.histLabel, 0, 4, 1, 1);
       label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
       lm.attach(label, 1, 4, 1, 1);
 

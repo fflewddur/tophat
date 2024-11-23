@@ -15,6 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
+export const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
+
 const ONE_MB_IN_B = 1000000;
 const TEN_MB_IN_B = 10000000;
 const ONE_GB_IN_B = 1000000000;

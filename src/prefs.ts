@@ -217,6 +217,9 @@ export default class TopHatPrefs extends ExtensionPreferences {
       rgba.parse(color);
       button.set_rgba(rgba);
     }
+    button.connect('color-set', (w) => {
+      this.gsettings?.set_string('meter-fg-color', w.get_rgba().to_string());
+    });
 
     if (control) {
       row.set_sensitive(!control.active);
