@@ -25,9 +25,10 @@ import {
   gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { MaxHistoryLen, Vitals } from './vitals.js';
+import { Vitals } from './vitals.js';
 import { TopHatMonitor, MeterNoVal } from './monitor.js';
 import { bytesToHumanString, roundMax } from './helpers.js';
+import { HistoryChart, HistoryStyle } from './history.js';
 
 export const NetMonitor = GObject.registerClass(
   class NetMonitor extends TopHatMonitor {
@@ -37,11 +38,6 @@ export const NetMonitor = GObject.registerClass(
     private menuNetDown: St.Label;
     private menuNetUpTotal: St.Label;
     private menuNetDownTotal: St.Label;
-    private menuHistGrid: St.Widget;
-    private histBarsIn: St.Widget[];
-    private histBarsOut: St.Widget[];
-    private histLabelIn: St.Label;
-    private histLabelOut: St.Label;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Net Monitor', metadata, gsettings);
@@ -79,42 +75,7 @@ export const NetMonitor = GObject.registerClass(
       this.menuNetDown = new St.Label();
       this.menuNetUpTotal = new St.Label();
       this.menuNetDownTotal = new St.Label();
-
-      this.menuHistGrid = new St.Widget({
-        layout_manager: new Clutter.GridLayout({
-          orientation: Clutter.Orientation.VERTICAL,
-        }),
-      });
-      this.histLabelOut = new St.Label({
-        text: _('Send'),
-        y_align: Clutter.ActorAlign.START,
-        style_class: 'chart-label',
-      });
-      this.histBarsOut = new Array<St.Widget>(MaxHistoryLen);
-      for (let i = 0; i < MaxHistoryLen; i++) {
-        this.histBarsOut[i] = new St.Widget({
-          x_expand: true,
-          y_expand: false,
-          y_align: Clutter.ActorAlign.END,
-          style_class: 'chart-bar chart-bar-alt',
-          height: 0,
-        });
-      }
-      this.histLabelIn = new St.Label({
-        text: _('Recv'),
-        y_align: Clutter.ActorAlign.END,
-        style_class: 'chart-label',
-      });
-      this.histBarsIn = new Array<St.Widget>(MaxHistoryLen);
-      for (let i = 0; i < MaxHistoryLen; i++) {
-        this.histBarsIn[i] = new St.Widget({
-          x_expand: true,
-          y_expand: false,
-          y_align: Clutter.ActorAlign.START,
-          style_class: 'chart-bar',
-          height: 0,
-        });
-      }
+      this.historyChart = new HistoryChart(HistoryStyle.DUAL);
 
       this.buildMenu();
       this.addMenuButtons();
@@ -163,35 +124,9 @@ export const NetMonitor = GObject.registerClass(
       this.menuNetDownTotal.add_style_class_name('menu-value menu-section-end');
       this.addMenuRow(this.menuNetDownTotal, 1, 1, 1);
 
-      // Add the grid layout for the history chart
-      this.addMenuRow(this.menuHistGrid, 0, 2, 1);
-      const lm = this.menuHistGrid.layout_manager as Clutter.GridLayout;
-      const chartOut = new St.BoxLayout({
-        style_class: 'chart chart-stacked-top',
-      });
-      lm.attach(chartOut, 0, 0, 2, 2);
-      for (const bar of this.histBarsOut) {
-        chartOut.add_child(bar);
+      if (this.historyChart) {
+        this.addMenuRow(this.historyChart, 0, 3, 1);
       }
-      const chartIn = new St.BoxLayout({
-        style_class: 'chart chart-stacked-bottom',
-      });
-      lm.attach(chartIn, 0, 2, 2, 2);
-      for (const bar of this.histBarsIn) {
-        chartIn.add_child(bar);
-      }
-      lm.attach(this.histLabelOut, 2, 0, 1, 1);
-      label = new St.Label({
-        text: '0',
-        y_align: Clutter.ActorAlign.CENTER,
-        style_class: 'chart-label',
-      });
-      lm.attach(label, 2, 1, 1, 2);
-      lm.attach(this.histLabelIn, 2, 3, 1, 1);
-      // this.histLabel.add_style_class_name('chart-label-then');
-      // lm.attach(this.histLabel, 0, 4, 1, 1);
-      label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
-      lm.attach(label, 1, 4, 1, 1);
     }
 
     public override bindVitals(vitals: Vitals): void {
@@ -231,19 +166,10 @@ export const NetMonitor = GObject.registerClass(
         }
         max = roundMax(max);
         const maxLabel = bytesToHumanString(max) + '/s';
-        this.histLabelIn.text = maxLabel;
-        this.histLabelOut.text = maxLabel;
-        const chartOutHeight = this.histBarsOut[0].get_parent()?.height;
-        const chartInHeight = this.histBarsIn[0].get_parent()?.height;
-        if (!chartOutHeight || !chartInHeight) {
-          return;
-        }
-        for (let i = 0; i < this.histBarsOut.length; i++) {
-          this.histBarsOut[i].height =
-            chartOutHeight * (history[history.length - i - 1].bytesSent / max);
-          this.histBarsIn[i].height =
-            chartInHeight * (history[history.length - i - 1].bytesRecv / max);
-        }
+        this.historyChart?.setYLabelBottom(maxLabel);
+        this.historyChart?.setYLabelMiddle('0');
+        this.historyChart?.setYLabelTop(maxLabel);
+        this.historyChart?.updateAlt(history, max);
       });
     }
   }

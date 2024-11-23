@@ -22,6 +22,11 @@ const RE_NVME_DEV = /^nvme\d+n\d+$/;
 const RE_BLOCK_DEV = /^[^\d]+$/;
 const RE_CMD = /\/*[^\s]*\/([^\s]*)/;
 
+export interface IActivity {
+  val(): number;
+  valAlt(): number;
+}
+
 export const Vitals = GObject.registerClass(
   {
     GTypeName: 'Vitals',
@@ -1267,9 +1272,17 @@ class NetDevState {
   }
 }
 
-class NetActivity {
+class NetActivity implements IActivity {
   public bytesRecv = 0;
   public bytesSent = 0;
+
+  public val() {
+    return this.bytesRecv;
+  }
+
+  public valAlt() {
+    return this.bytesSent;
+  }
 }
 
 class DiskState {
@@ -1304,9 +1317,18 @@ class DiskState {
   }
 }
 
-class DiskActivity {
+class DiskActivity implements IActivity {
+  // TODO(fflewddur): Add a field for the duration of this measurement
   public bytesRead = 0;
   public bytesWritten = 0;
+
+  public val() {
+    return this.bytesWritten;
+  }
+
+  public valAlt() {
+    return this.bytesRead;
+  }
 }
 
 class Process {

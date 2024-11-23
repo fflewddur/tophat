@@ -25,9 +25,10 @@ import {
   gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { MaxHistoryLen, Vitals } from './vitals.js';
+import { Vitals } from './vitals.js';
 import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 import { bytesToHumanString, roundMax } from './helpers.js';
+import { HistoryChart, HistoryStyle } from './history.js';
 
 export const DiskMonitor = GObject.registerClass(
   class DiskMonitor extends TopHatMonitor {
@@ -37,11 +38,6 @@ export const DiskMonitor = GObject.registerClass(
     private menuDiskReads;
     private menuDiskWritesTotal;
     private menuDiskReadsTotal;
-    private menuHistGrid: St.Widget;
-    private histBarsIn: St.Widget[];
-    private histBarsOut: St.Widget[];
-    private histLabelIn: St.Label;
-    private histLabelOut: St.Label;
     private topProcs: TopProc[];
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
@@ -79,46 +75,10 @@ export const DiskMonitor = GObject.registerClass(
       this.menuDiskReads = new St.Label();
       this.menuDiskWritesTotal = new St.Label();
       this.menuDiskReadsTotal = new St.Label();
-
+      this.historyChart = new HistoryChart(HistoryStyle.DUAL);
       this.topProcs = new Array<TopProc>(NumTopProcs);
       for (let i = 0; i < NumTopProcs; i++) {
         this.topProcs[i] = new TopProc();
-      }
-
-      this.menuHistGrid = new St.Widget({
-        layout_manager: new Clutter.GridLayout({
-          orientation: Clutter.Orientation.VERTICAL,
-        }),
-      });
-      this.histLabelOut = new St.Label({
-        text: _('Read'),
-        y_align: Clutter.ActorAlign.START,
-        style_class: 'chart-label',
-      });
-      this.histBarsOut = new Array<St.Widget>(MaxHistoryLen);
-      for (let i = 0; i < MaxHistoryLen; i++) {
-        this.histBarsOut[i] = new St.Widget({
-          x_expand: true,
-          y_expand: false,
-          y_align: Clutter.ActorAlign.END,
-          style_class: 'chart-bar chart-bar-alt',
-          height: 0,
-        });
-      }
-      this.histLabelIn = new St.Label({
-        text: _('Write'),
-        y_align: Clutter.ActorAlign.END,
-        style_class: 'chart-label',
-      });
-      this.histBarsIn = new Array<St.Widget>(MaxHistoryLen);
-      for (let i = 0; i < MaxHistoryLen; i++) {
-        this.histBarsIn[i] = new St.Widget({
-          x_expand: true,
-          y_expand: false,
-          y_align: Clutter.ActorAlign.START,
-          style_class: 'chart-bar',
-          height: 0,
-        });
       }
 
       this.buildMenu();
@@ -172,35 +132,9 @@ export const DiskMonitor = GObject.registerClass(
       );
       this.addMenuRow(this.menuDiskWritesTotal, 2, 1, 1);
 
-      // Add the grid layout for the history chart
-      this.addMenuRow(this.menuHistGrid, 0, 3, 1);
-      const lm = this.menuHistGrid.layout_manager as Clutter.GridLayout;
-      const chartOut = new St.BoxLayout({
-        style_class: 'chart chart-stacked-top',
-      });
-      lm.attach(chartOut, 0, 0, 2, 2);
-      for (const bar of this.histBarsOut) {
-        chartOut.add_child(bar);
+      if (this.historyChart) {
+        this.addMenuRow(this.historyChart, 0, 3, 1);
       }
-      const chartIn = new St.BoxLayout({
-        style_class: 'chart chart-stacked-bottom',
-      });
-      lm.attach(chartIn, 0, 2, 2, 2);
-      for (const bar of this.histBarsIn) {
-        chartIn.add_child(bar);
-      }
-      lm.attach(this.histLabelOut, 2, 0, 1, 1);
-      label = new St.Label({
-        text: '0',
-        y_align: Clutter.ActorAlign.CENTER,
-        style_class: 'chart-label',
-      });
-      lm.attach(label, 2, 1, 1, 2);
-      lm.attach(this.histLabelIn, 2, 3, 1, 1);
-      // this.histLabel.add_style_class_name('chart-label-then');
-      // lm.attach(this.histLabel, 0, 4, 1, 1);
-      label = new St.Label({ text: _('now'), style_class: 'chart-label-now' });
-      lm.attach(label, 1, 4, 1, 1);
 
       label = new St.Label({
         text: _('Top processes'),
@@ -270,20 +204,10 @@ export const DiskMonitor = GObject.registerClass(
         }
         max = roundMax(max);
         const maxLabel = bytesToHumanString(max) + '/s';
-        this.histLabelIn.text = maxLabel;
-        this.histLabelOut.text = maxLabel;
-        const chartOutHeight = this.histBarsOut[0].get_parent()?.height;
-        const chartInHeight = this.histBarsIn[0].get_parent()?.height;
-        if (!chartOutHeight || !chartInHeight) {
-          return;
-        }
-        for (let i = 0; i < this.histBarsOut.length; i++) {
-          this.histBarsOut[i].height =
-            chartOutHeight * (history[history.length - i - 1].bytesRead / max);
-          this.histBarsIn[i].height =
-            chartInHeight *
-            (history[history.length - i - 1].bytesWritten / max);
-        }
+        this.historyChart?.setYLabelBottom(maxLabel);
+        this.historyChart?.setYLabelMiddle('0');
+        this.historyChart?.setYLabelTop(maxLabel);
+        this.historyChart?.updateAlt(history, max);
       });
       vitals.connect('notify::disk-top-procs', () => {
         const procs = vitals.getTopDiskProcs(NumTopProcs);

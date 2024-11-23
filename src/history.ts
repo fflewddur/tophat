@@ -22,7 +22,7 @@ import St from 'gi://St';
 
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { MaxHistoryLen } from './vitals.js';
+import { IActivity, MaxHistoryLen } from './vitals.js';
 
 export enum HistoryStyle {
   SINGLE,
@@ -42,7 +42,7 @@ export const HistoryChart = GObject.registerClass(
     private xLabelNow;
     private xLabelThen;
 
-    constructor(style = HistoryStyle.DUAL) {
+    constructor(style = HistoryStyle.SINGLE) {
       super();
       this.chartStyle = style;
       this.grid = new St.Widget({
@@ -69,7 +69,7 @@ export const HistoryChart = GObject.registerClass(
             x_expand: true,
             y_expand: false,
             y_align: Clutter.ActorAlign.START,
-            style_class: 'chart-bar',
+            style_class: 'chart-bar chart-bar-alt',
             height: 0,
           });
         }
@@ -110,39 +110,78 @@ export const HistoryChart = GObject.registerClass(
       this.bars[this.bars.length - 1].height = Math.round(chartHeight * usage);
     }
 
+    public updateAlt(usage: IActivity[], max: number) {
+      const chartHeight = this.bars[0].get_parent()?.height;
+      if (!chartHeight || !this.barsAlt) {
+        return;
+      }
+      for (let i = 0; i < this.bars.length; i++) {
+        this.bars[i].height =
+          chartHeight * (usage[usage.length - i - 1].valAlt() / max);
+        this.barsAlt[i].height =
+          chartHeight * (usage[usage.length - i - 1].val() / max);
+      }
+    }
+
     public setColor(color: string) {
       for (const bar of this.bars) {
         bar.set_style(`background-color:${color}`);
       }
+      if (this.barsAlt) {
+        for (const barAlt of this.barsAlt) {
+          barAlt.set_style(`background-color:${color}`);
+        }
+      }
     }
 
     private build() {
+      let chartRowSpan = 2;
+      if (this.barsAlt) {
+        chartRowSpan = 1;
+      }
       const chart = new St.BoxLayout({ style_class: 'chart' });
-      this.lm.attach(chart, 0, 0, 2, 3);
+      this.lm.attach(chart, 0, 0, 2, chartRowSpan);
       for (const bar of this.bars) {
         chart.add_child(bar);
       }
+      if (this.barsAlt) {
+        const chartAlt = new St.BoxLayout({
+          style_class: 'chart chart-stacked-bottom',
+        });
+        this.lm.attach(chartAlt, 0, 1, 2, chartRowSpan);
+        for (const bar of this.barsAlt) {
+          chartAlt.add_child(bar);
+        }
+        chart.add_style_class_name('chart-stacked-top');
+      }
+
+      const vbox = new St.BoxLayout({ vertical: true, y_expand: true });
+      this.lm.attach(vbox, 2, 0, 1, 2);
+
       this.yLabelTop.text = '100%';
       this.yLabelTop.y_align = Clutter.ActorAlign.START;
+      this.yLabelTop.y_expand = true;
       this.yLabelTop.add_style_class_name('chart-label');
-      this.lm.attach(this.yLabelTop, 2, 0, 1, 1);
+      vbox.add_child(this.yLabelTop);
 
       this.yLabelMiddle.text = '50%';
       this.yLabelMiddle.y_align = Clutter.ActorAlign.CENTER;
+      this.yLabelMiddle.y_expand = true;
       this.yLabelMiddle.add_style_class_name('chart-label');
-      this.lm.attach(this.yLabelMiddle, 2, 1, 1, 1);
+      vbox.add_child(this.yLabelMiddle);
 
       this.yLabelBottom.text = '0%';
       this.yLabelBottom.y_align = Clutter.ActorAlign.END;
+      this.yLabelBottom.y_expand = true;
       this.yLabelBottom.add_style_class_name('chart-label');
-      this.lm.attach(this.yLabelBottom, 2, 2, 1, 1);
+      vbox.add_child(this.yLabelBottom);
 
       this.xLabelThen.add_style_class_name('chart-label-then');
-      this.lm.attach(this.xLabelThen, 0, 3, 1, 1);
+      this.lm.attach(this.xLabelThen, 0, 2, 1, 1);
 
       this.xLabelNow.text = _('now');
       this.xLabelNow.add_style_class_name('chart-label-now');
-      this.lm.attach(this.xLabelNow, 1, 3, 1, 1);
+      this.lm.attach(this.xLabelNow, 1, 2, 1, 1);
     }
   }
 );
