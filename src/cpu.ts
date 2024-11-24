@@ -40,6 +40,7 @@ export const CpuMonitor = GObject.registerClass(
     private menuCpuTemp;
     private menuUptime;
     private topProcs: TopProc[];
+    private showCores;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('CPU Monitor', metadata, gsettings);
@@ -77,6 +78,13 @@ export const CpuMonitor = GObject.registerClass(
         'visible',
         Gio.SettingsBindFlags.GET
       );
+      this.showCores = this.gsettings.get_boolean('cpu-show-cores');
+      this.gsettings.connect('changed::cpu-show-cores', (settings) => {
+        this.showCores = settings.get_boolean('cpu-show-cores');
+        if (!this.showCores) {
+          this.meter.setNumBars(1);
+        }
+      });
 
       this.buildMenu();
       this.addMenuButtons();
@@ -159,10 +167,19 @@ export const CpuMonitor = GObject.registerClass(
         const s = percent.toFixed(0) + '%';
         this.usage.text = s;
         this.menuCpuUsage.text = s;
-        if (this.meter.getNumBars() === 1) {
-          this.meter.setNumBars(vitals.getCpuCoreUsage().length);
+        if (this.showCores) {
+          if (this.meter.getNumBars() === 1) {
+            this.meter.setNumBars(vitals.getCpuCoreUsage().length);
+          }
+          this.meter.setBarSizes(
+            vitals.getCpuCoreUsage().sort((a, b) => b - a)
+          );
+        } else {
+          if (this.meter.getNumBars() !== 1) {
+            this.meter.setNumBars(1);
+          }
+          this.meter.setBarSizes([vitals.cpu_usage]);
         }
-        this.meter.setBarSizes(vitals.getCpuCoreUsage().sort((a, b) => b - a));
       });
       vitals.connect('notify::cpu-model', () => {
         const s = vitals.cpu_model;

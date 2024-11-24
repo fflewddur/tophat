@@ -73,6 +73,7 @@ export const TopHatMeter = GObject.registerClass(
           width: width,
           name: 'TopHatMeterBar',
         });
+        this.bars[i].set_style(`background-color:${this.color}`);
         this.bars[i].save_easing_state();
         this.bars[i].set_easing_duration(300);
         this.add_child(this.bars[i]);
