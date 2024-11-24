@@ -38,6 +38,7 @@ export const NetMonitor = GObject.registerClass(
     private menuNetDown: St.Label;
     private menuNetUpTotal: St.Label;
     private menuNetDownTotal: St.Label;
+    private usageUnit;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Net Monitor', metadata, gsettings);
@@ -83,6 +84,17 @@ export const NetMonitor = GObject.registerClass(
         'visible',
         Gio.SettingsBindFlags.GET
       );
+      this.usageUnit = this.gsettings.get_string('network-usage-unit');
+      this.gsettings.connect('changed::network-usage-unit', (settings) => {
+        this.usageUnit = settings.get_string('network-usage-unit');
+        let s = bytesToHumanString(0, this.usageUnit) + '/s';
+        this.valueNetUp.text = s;
+        this.menuNetUp.text = s;
+        s = bytesToHumanString(0, this.usageUnit) + '/s';
+        this.valueNetDown.text = s;
+        this.menuNetDown.text = s;
+      });
+
       this.buildMenu();
       this.addMenuButtons();
     }
@@ -131,7 +143,7 @@ export const NetMonitor = GObject.registerClass(
       this.addMenuRow(this.menuNetDownTotal, 1, 1, 1);
 
       if (this.historyChart) {
-        this.addMenuRow(this.historyChart, 0, 3, 1);
+        this.addMenuRow(this.historyChart, 0, 2, 1);
       }
     }
 
@@ -139,12 +151,12 @@ export const NetMonitor = GObject.registerClass(
       super.bindVitals(vitals);
 
       vitals.connect('notify::net-sent', () => {
-        const s = bytesToHumanString(vitals.net_sent) + '/s';
+        const s = bytesToHumanString(vitals.net_sent, this.usageUnit) + '/s';
         this.valueNetUp.text = s;
         this.menuNetUp.text = s;
       });
       vitals.connect('notify::net-recv', () => {
-        const s = bytesToHumanString(vitals.net_recv) + '/s';
+        const s = bytesToHumanString(vitals.net_recv, this.usageUnit) + '/s';
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
       });
@@ -171,7 +183,7 @@ export const NetMonitor = GObject.registerClass(
           }
         }
         max = roundMax(max);
-        const maxLabel = bytesToHumanString(max) + '/s';
+        const maxLabel = bytesToHumanString(max, this.usageUnit) + '/s';
         this.historyChart?.setYLabelBottom(maxLabel);
         this.historyChart?.setYLabelMiddle('0');
         this.historyChart?.setYLabelTop(maxLabel);
