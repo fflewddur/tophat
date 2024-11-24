@@ -71,6 +71,13 @@ export const CpuMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
+      this.gsettings.bind(
+        'show-cpu',
+        this,
+        'visible',
+        Gio.SettingsBindFlags.GET
+      );
+
       this.buildMenu();
       this.addMenuButtons();
     }

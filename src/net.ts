@@ -77,6 +77,12 @@ export const NetMonitor = GObject.registerClass(
       this.menuNetDownTotal = new St.Label();
       this.historyChart = new HistoryChart(HistoryStyle.DUAL);
 
+      this.gsettings.bind(
+        'show-net',
+        this,
+        'visible',
+        Gio.SettingsBindFlags.GET
+      );
       this.buildMenu();
       this.addMenuButtons();
     }

@@ -300,6 +300,10 @@ export const Vitals = GObject.registerClass(
     private _summary_interval;
     private summaryLoop = 0;
     private detailsLoop = 0;
+    private showCpu;
+    private showMem;
+    private showNet;
+    private showDisk;
 
     constructor(model: CpuModel, gsettings: Gio.Settings) {
       super();
@@ -322,6 +326,22 @@ export const Vitals = GObject.registerClass(
           SummaryIntervalDefault * refreshRateModifier(settings);
         this.stop();
         this.start();
+      });
+      this.showCpu = gsettings.get_boolean('show-cpu');
+      this.gsettings.connect('changed::show-cpu', (settings: Gio.Settings) => {
+        this.showCpu = settings.get_boolean('show-cpu');
+      });
+      this.showMem = gsettings.get_boolean('show-mem');
+      this.gsettings.connect('changed::show-mem', (settings) => {
+        this.showMem = settings.get_boolean('show-mem');
+      });
+      this.showNet = gsettings.get_boolean('show-net');
+      this.gsettings.connect('changed::show-net', (settings) => {
+        this.showNet = settings.get_boolean('show-net');
+      });
+      this.showDisk = gsettings.get_boolean('show-disk');
+      this.gsettings.connect('changed::show-disk', (settings) => {
+        this.showDisk = settings.get_boolean('show-disk');
       });
     }
 
@@ -357,11 +377,19 @@ export const Vitals = GObject.registerClass(
     // readSummaries queries all of the info needed by the topbar widgets
     public readSummaries(): boolean {
       // console.time('readSummaries()');
-      this.loadUptime();
-      this.loadStat();
-      this.loadMeminfo();
-      this.loadNetDev();
-      this.loadDiskstats();
+
+      if (this.showCpu) {
+        this.loadStat();
+      }
+      if (this.showMem) {
+        this.loadMeminfo();
+      }
+      if (this.showNet) {
+        this.loadNetDev();
+      }
+      if (this.showDisk) {
+        this.loadDiskstats();
+      }
       // console.timeEnd('readSummaries()');
       return true;
     }
@@ -369,10 +397,15 @@ export const Vitals = GObject.registerClass(
     // readDetails queries the info needed by the monitor menus
     public readDetails(): boolean {
       // console.time('readDetails()');
-      this.loadTemps();
-      this.loadFreqs();
-      this.loadStatDetails();
-      this.loadProcessList();
+      if (this.showCpu) {
+        this.loadUptime();
+        this.loadTemps();
+        this.loadFreqs();
+        this.loadStatDetails();
+      }
+      if (this.showCpu || this.showMem || this.showDisk) {
+        this.loadProcessList();
+      }
       // console.timeEnd('readDetails()');
       return true;
     }
@@ -662,8 +695,12 @@ export const Vitals = GObject.registerClass(
                   this.cpuState.totalTimeDetailsPrev
               );
               this.loadCmdForProcess(p);
-              await this.loadSmapsRollupForProcess(p);
-              await this.loadIoForProcess(p);
+              if (this.showMem) {
+                await this.loadSmapsRollupForProcess(p);
+              }
+              if (this.showDisk) {
+                await this.loadIoForProcess(p);
+              }
             }
           }
         }

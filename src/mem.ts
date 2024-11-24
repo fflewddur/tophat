@@ -69,6 +69,13 @@ export const MemMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
+      this.gsettings.bind(
+        'show-mem',
+        this,
+        'visible',
+        Gio.SettingsBindFlags.GET
+      );
+
       this.buildMenu();
       this.addMenuButtons();
     }

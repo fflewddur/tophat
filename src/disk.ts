@@ -81,6 +81,13 @@ export const DiskMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
+      this.gsettings.bind(
+        'show-disk',
+        this,
+        'visible',
+        Gio.SettingsBindFlags.GET
+      );
+
       this.buildMenu();
       this.addMenuButtons();
     }
