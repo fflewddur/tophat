@@ -28,7 +28,11 @@ import {
 import { Vitals } from './vitals.js';
 import { Orientation } from './meter.js';
 import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
-import { bytesToHumanString } from './helpers.js';
+import {
+  bytesToHumanString,
+  DisplayType,
+  getDisplayTypeSetting,
+} from './helpers.js';
 import { HistoryChart } from './history.js';
 
 export const MemMonitor = GObject.registerClass(
@@ -39,6 +43,7 @@ export const MemMonitor = GObject.registerClass(
     private menuSwapUsage;
     private menuSwapSize;
     private topProcs: TopProc[];
+    private displayType: DisplayType;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Memory Monitor', metadata, gsettings);
@@ -75,9 +80,30 @@ export const MemMonitor = GObject.registerClass(
         'visible',
         Gio.SettingsBindFlags.GET
       );
+      this.gsettings.connect('changed::mem-display', () => {
+        this.updateDisplayType();
+      });
 
+      this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
+    }
+
+    private updateDisplayType() {
+      this.displayType = getDisplayTypeSetting(this.gsettings, 'mem-display');
+      if (this.displayType === DisplayType.Both) {
+        this.usage.show();
+        this.meter.show();
+      } else {
+        if (this.displayType === DisplayType.Chart) {
+          this.usage.hide();
+          this.meter.show();
+        } else {
+          this.usage.show();
+          this.meter.hide();
+        }
+      }
+      return this.displayType;
     }
 
     private buildMenu() {

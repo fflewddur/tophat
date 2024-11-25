@@ -30,6 +30,7 @@ import { Vitals } from './vitals.js';
 import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 import { Orientation } from './meter.js';
 import { HistoryChart } from './history.js';
+import { DisplayType, getDisplayTypeSetting } from './helpers.js';
 
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMonitor {
@@ -41,6 +42,7 @@ export const CpuMonitor = GObject.registerClass(
     private menuUptime;
     private topProcs: TopProc[];
     private showCores;
+    private displayType: DisplayType;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('CPU Monitor', metadata, gsettings);
@@ -85,9 +87,30 @@ export const CpuMonitor = GObject.registerClass(
           this.meter.setNumBars(1);
         }
       });
+      this.gsettings.connect('changed::cpu-display', () => {
+        this.updateDisplayType();
+      });
 
+      this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
+    }
+
+    private updateDisplayType() {
+      this.displayType = getDisplayTypeSetting(this.gsettings, 'cpu-display');
+      if (this.displayType === DisplayType.Both) {
+        this.usage.show();
+        this.meter.show();
+      } else {
+        if (this.displayType === DisplayType.Chart) {
+          this.usage.hide();
+          this.meter.show();
+        } else {
+          this.usage.show();
+          this.meter.hide();
+        }
+      }
+      return this.displayType;
     }
 
     private buildMenu() {

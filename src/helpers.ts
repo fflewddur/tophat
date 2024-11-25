@@ -15,8 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Gio from 'gi://Gio';
+
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 export const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
+
+export enum DisplayType {
+  Chart,
+  Numeric,
+  Both,
+}
 
 const ONE_MB_IN_B = 1000000;
 const TEN_MB_IN_B = 10000000;
@@ -81,4 +89,20 @@ export function roundMax(bytes: number) {
     result /= 2;
   }
   return result;
+}
+
+export function getDisplayTypeSetting(settings: Gio.Settings, key: string) {
+  let t = DisplayType.Both;
+  switch (settings.get_string(key)) {
+    case 'chart':
+      t = DisplayType.Chart;
+      break;
+    case 'numeric':
+      t = DisplayType.Numeric;
+      break;
+    case 'both':
+      t = DisplayType.Both;
+      break;
+  }
+  return t;
 }
