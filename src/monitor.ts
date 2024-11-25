@@ -113,6 +113,10 @@ export const TopHatMonitor = GObject.registerClass(
       themeContext.connect('changed', () => {
         [this.color, this.useAccentColor] = this.updateColor();
       });
+
+      this.meter.connect('notify::vertical', () => {
+        this.meter.reorient();
+      });
     }
 
     public override add_child(w: St.Widget) {

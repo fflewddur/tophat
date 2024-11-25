@@ -29,7 +29,8 @@ export const TopHatMeter = GObject.registerClass(
     private bars: Array<St.Widget>;
     private orientation: Orientation;
     private scaleFactor;
-    private color: string;
+    private color: string; // as rgb(r,g,b)
+    private barWidth: number; // in pixels
 
     constructor() {
       super({
@@ -46,12 +47,15 @@ export const TopHatMeter = GObject.registerClass(
       this.scaleFactor = themeContext.get_scale_factor();
       themeContext.connect('notify::scale-factor', (obj: St.ThemeContext) => {
         this.scaleFactor = obj.get_scale_factor();
-        const width = this.computeBarWidth(this.bars.length);
+        this.barWidth = this.computeBarWidth(this.bars.length);
         for (const b of this.bars) {
-          b.width = width;
+          b.set_style(
+            `background-color:${this.color};width:${this.barWidth}px;margin: 0 1px 0 0;`
+          );
         }
       });
       this.color = '';
+      this.barWidth = 8;
     }
 
     public getNumBars(): number {
@@ -64,20 +68,41 @@ export const TopHatMeter = GObject.registerClass(
         b.destroy();
       }
       this.bars = new Array<St.Widget>(n);
-      const width = this.computeBarWidth(n);
+      this.barWidth = this.computeBarWidth(n);
       for (let i = 0; i < n; i++) {
         this.bars[i] = new St.Widget({
           y_align: Clutter.ActorAlign.END,
           y_expand: false,
           style_class: 'meter-bar',
-          width: width,
+          // width: this.barWidth,
           name: 'TopHatMeterBar',
         });
-        this.bars[i].set_style(`background-color:${this.color}`);
+        this.bars[i].set_style(
+          `background-color:${this.color};width:${this.barWidth}px;margin: 0 1px 0 0;`
+        );
         this.bars[i].save_easing_state();
         this.bars[i].set_easing_duration(300);
         this.add_child(this.bars[i]);
       }
+    }
+
+    private computeBarWidth(n: number, wasVertical = false) {
+      let width = 8;
+
+      if (wasVertical) {
+        // If we're in vertical panel mode, use narrower widths
+        width = 4;
+        if (n > 4) {
+          width = 2;
+        }
+      } else {
+        if (n > 8) {
+          width = 4; // Reduce bar width by half when there are many bars
+        } else if (n > 4) {
+          width = 6; // Reduce bar width by 3/4 when there are a few bars
+        }
+      }
+      return width;
     }
 
     public setOrientation(o: Orientation) {
@@ -93,7 +118,7 @@ export const TopHatMeter = GObject.registerClass(
       const h = this.get_height();
       for (let i = 0; i < n.length; i++) {
         const fillSize = Math.ceil(n[i] * h) / this.scaleFactor;
-        const style = `height:${fillSize}px;background-color:${this.color}`;
+        const style = `height:${fillSize}px;background-color:${this.color};margin:0 1px 0 0;width:${this.barWidth}px`;
         this.bars[i].set_style(style);
       }
     }
@@ -105,18 +130,25 @@ export const TopHatMeter = GObject.registerClass(
 
       this.color = c;
       for (const bar of this.bars) {
-        bar.set_style(`background-color:${this.color}`);
+        bar.set_style(
+          `background-color:${this.color};margin:0 1px 0 0;width:${this.barWidth}px`
+        );
       }
     }
 
-    private computeBarWidth(n: number) {
-      let width = 8;
-      if (n > 8) {
-        width = 4; // Reduce bar width by half when there are many bars
-      } else if (n > 4) {
-        width = 6; // Reduce bar width by 3/4 when there are a few bars
+    public reorient() {
+      // This is to play nice with the dash-to-panel extension
+      const wasVertical = this.vertical;
+      this.set_vertical(false);
+      this.set_x_expand(false);
+      this.set_x_align(Clutter.ActorAlign.CENTER);
+      this.set_y_align(Clutter.ActorAlign.CENTER);
+      this.barWidth = this.computeBarWidth(this.bars.length, wasVertical);
+      for (const b of this.bars) {
+        b.set_style(
+          `background-color:${this.color};margin:0 1px 0 0;width:${this.barWidth}px`
+        );
       }
-      return width * this.scaleFactor;
     }
   }
 );
