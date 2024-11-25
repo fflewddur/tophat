@@ -118,7 +118,12 @@ export const TopHatMeter = GObject.registerClass(
       const h = this.get_height();
       for (let i = 0; i < n.length; i++) {
         const fillSize = Math.ceil(n[i] * h) / this.scaleFactor;
-        const style = `height:${fillSize}px;background-color:${this.color};margin:0 1px 0 0;width:${this.barWidth}px`;
+        let style = `height:${fillSize}px;background-color:${this.color};width:${this.barWidth}px;`;
+        if (i === this.bars.length - 1) {
+          style += 'margin:0;';
+        } else {
+          style += 'margin:0 1px 0 0;';
+        }
         this.bars[i].set_style(style);
       }
     }
@@ -131,7 +136,7 @@ export const TopHatMeter = GObject.registerClass(
       this.color = c;
       for (const bar of this.bars) {
         bar.set_style(
-          `background-color:${this.color};margin:0 1px 0 0;width:${this.barWidth}px`
+          `background-color:${this.color};width:${this.barWidth}px;`
         );
       }
     }
@@ -144,10 +149,14 @@ export const TopHatMeter = GObject.registerClass(
       this.set_x_align(Clutter.ActorAlign.CENTER);
       this.set_y_align(Clutter.ActorAlign.CENTER);
       this.barWidth = this.computeBarWidth(this.bars.length, wasVertical);
-      for (const b of this.bars) {
-        b.set_style(
-          `background-color:${this.color};margin:0 1px 0 0;width:${this.barWidth}px`
-        );
+      for (let i = 0; i < this.bars.length; i++) {
+        let style = `background-color:${this.color};width:${this.barWidth}px;`;
+        if (i === this.bars.length - 1) {
+          style += 'margin:0;';
+        } else {
+          style += 'margin:0 1px 0 0;';
+        }
+        this.bars[i].set_style(style);
       }
     }
   }
