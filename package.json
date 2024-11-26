@@ -18,7 +18,7 @@
     "typescript-eslint": "^8.13.0"
   },
   "scripts": {
-    "build": "tsc && cp ./resources/metadata.json ./dist/ && touch ./dist/schemas && rm -rf ./dist/schemas && mkdir ./dist/schemas/ && glib-compile-schemas ./resources/schemas && mv ./resources/schemas/gschemas.compiled ./dist/schemas/ && cp ./resources/*.css ./dist/ && touch ./dist/icons && rm -rf ./dist/icons && mkdir ./dist/icons/ && cp ./resources/icons/*.svg ./dist/icons/",
+    "build": "tsc && ./resources/dist.sh",
     "clean": "rm -rf ./dist ./node_modules",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
