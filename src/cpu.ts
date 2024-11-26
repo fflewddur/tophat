@@ -48,7 +48,7 @@ export const CpuMonitor = GObject.registerClass(
       super('CPU Monitor', metadata, gsettings);
 
       const gicon = Gio.icon_new_for_string(
-        `${this.metadata.path}/icons/cpu-icon-symbolic.svg`
+        `${this.metadata.path}/icons/hicolor/scalable/actions/cpu-icon-symbolic.svg`
       );
       this.icon.set_gicon(gicon);
 

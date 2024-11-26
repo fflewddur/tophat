@@ -44,7 +44,7 @@ export const NetMonitor = GObject.registerClass(
       super('Net Monitor', metadata, gsettings);
 
       const gicon = Gio.icon_new_for_string(
-        `${this.metadata.path}/icons/net-icon-symbolic.svg`
+        `${this.metadata.path}/icons/hicolor/scalable/actions/net-icon-symbolic.svg`
       );
       this.icon.set_gicon(gicon);
       this.icon.add_style_class_name('tophat-panel-icon-net');

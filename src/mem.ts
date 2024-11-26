@@ -49,7 +49,7 @@ export const MemMonitor = GObject.registerClass(
       super('Memory Monitor', metadata, gsettings);
 
       const gicon = Gio.icon_new_for_string(
-        `${this.metadata.path}/icons/mem-icon-symbolic.svg`
+        `${this.metadata.path}/icons/hicolor/scalable/actions/mem-icon-symbolic.svg`
       );
       this.icon.set_gicon(gicon);
 

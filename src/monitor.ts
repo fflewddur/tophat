@@ -89,11 +89,11 @@ export const TopHatMonitor = GObject.registerClass(
 
       this.icon = new St.Icon({
         style_class: 'system-status-icon tophat-panel-icon',
+        // icon_name: 'emblem-default-symbolic',
       });
       this.add_child(this.icon);
 
       this.meter = new TopHatMeter();
-      // this.histLabel = new St.Label();
       [this.color, this.useAccentColor] = this.updateColor();
 
       this.gsettings.bind(

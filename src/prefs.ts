@@ -33,21 +33,35 @@ export default class TopHatPrefs extends ExtensionPreferences {
   fillPreferencesWindow(window: Adw.PreferencesWindow) {
     return new Promise<void>((resolve) => {
       this.gsettings = this.getSettings();
+      this.loadIconTheme();
 
       window.add(this.buildGeneralPage());
       window.add(this.buildCpuPage());
       window.add(this.buildMemPage());
       window.add(this.buildDiskPage());
       window.add(this.buildNetPage());
-
+      window.set_default_size(750, 400);
       resolve();
     });
+  }
+
+  private loadIconTheme() {
+    const display = Gdk.Display.get_default();
+    if (!display) {
+      console.error('[TopHat] Could not connect to default Gdk.Display');
+      return;
+    }
+    const iconTheme = Gtk.IconTheme.get_for_display(display);
+    const path = `${this.metadata.dir.get_path()}/icons`;
+    if (!iconTheme.get_search_path()?.includes(path)) {
+      iconTheme.add_search_path(path);
+    }
   }
 
   private buildGeneralPage() {
     const page = new Adw.PreferencesPage({
       title: _('General'),
-      // iconName: 'dialog-information-symbolic',
+      iconName: 'preferences-system-symbolic',
     });
 
     const group = new Adw.PreferencesGroup({ title: _('General') });
@@ -97,6 +111,7 @@ export default class TopHatPrefs extends ExtensionPreferences {
   private buildCpuPage() {
     const page = new Adw.PreferencesPage({
       title: _('CPU'),
+      iconName: 'cpu-icon-symbolic',
     });
 
     const group = new Adw.PreferencesGroup({ title: _('CPU') });
@@ -121,6 +136,7 @@ export default class TopHatPrefs extends ExtensionPreferences {
   private buildMemPage() {
     const page = new Adw.PreferencesPage({
       title: _('Memory'),
+      iconName: 'mem-icon-symbolic',
     });
 
     const group = new Adw.PreferencesGroup({ title: _('Memory') });
@@ -142,13 +158,14 @@ export default class TopHatPrefs extends ExtensionPreferences {
   private buildDiskPage() {
     const page = new Adw.PreferencesPage({
       title: _('Disk'),
+      iconName: 'disk-icon-symbolic',
     });
 
     const group = new Adw.PreferencesGroup({ title: _('Disk') });
     page.add(group);
 
     // Enable
-    this.addActionRow(_('Show the disk monitor'), 'show-disk', group);
+    this.addActionRow(_('Show the disk activity monitor'), 'show-disk', group);
 
     return page;
   }
@@ -156,6 +173,7 @@ export default class TopHatPrefs extends ExtensionPreferences {
   private buildNetPage() {
     const page = new Adw.PreferencesPage({
       title: _('Network'),
+      iconName: 'net-icon-symbolic',
     });
 
     const group = new Adw.PreferencesGroup({ title: _('Network') });
@@ -163,6 +181,8 @@ export default class TopHatPrefs extends ExtensionPreferences {
 
     // Enable
     this.addActionRow(_('Show the network monitor'), 'show-net', group);
+
+    // TODO: Select network device
 
     // Bits or bytes?
     const choices = new Gtk.StringList();
