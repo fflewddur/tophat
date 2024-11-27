@@ -36,6 +36,12 @@
   min-width: 5em;
 }
 
+.tophat-panel-inactive {
+  min-width: 2em !important;
+  width: 2em;
+  max-width: 2em;
+}
+
 .tophat-meter {
   border: solid 1px rgba(0, 0, 0, 0.3);
   height: 1.2em;
@@ -121,7 +127,8 @@
 }
 
 .chart {
-  background-color: rgba(0, 0, 0, 0.3);
+  /* background-color: rgba(0, 0, 0, 0.3); */
+  background-color: #222;
   border: solid 1px rgba(0, 0, 0, 0.4);
   margin: 0.5em 0.25em 0.5em 0.5em;
   height: 6em;
@@ -133,7 +140,7 @@
 }
 
 .chart-stacked-bottom {
-  margin-top: 1px;
+  margin-top: 0;
   height: 3em;
 }
 

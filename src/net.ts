@@ -19,6 +19,7 @@ import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
+import NM from 'gi://NM';
 
 import {
   ExtensionMetadata,
@@ -39,6 +40,7 @@ export const NetMonitor = GObject.registerClass(
     private menuNetUpTotal: St.Label;
     private menuNetDownTotal: St.Label;
     private usageUnit;
+    private connectivity?: NM.ConnectivityState;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Net Monitor', metadata, gsettings);
@@ -94,9 +96,54 @@ export const NetMonitor = GObject.registerClass(
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
       });
-
       this.buildMenu();
       this.addMenuButtons();
+
+      NM.Client.new_async(null, (obj, result) => {
+        if (!obj) {
+          console.error('[TopHat] obj is null');
+          return;
+        }
+        const client = NM.Client.new_finish(result);
+        if (!client) {
+          console.error('[TopHat] client is null');
+          return;
+        }
+        client.check_connectivity_async(null, (client, result) => {
+          this.updateConnectivity(client, result);
+        });
+        client.connect('notify::connectivity', () => {
+          client.check_connectivity_async(null, (client, result) => {
+            this.updateConnectivity(client, result);
+          });
+        });
+      });
+    }
+
+    private updateConnectivity(
+      client: NM.Client | null,
+      result: Gio.AsyncResult
+    ) {
+      if (!client) {
+        return;
+      }
+      this.connectivity = client.check_connectivity_finish(result);
+      if (this.connectivity === NM.ConnectivityState.NONE) {
+        this.valueNetUp.add_style_class_name('tophat-panel-inactive');
+        this.valueNetDown.add_style_class_name('tophat-panel-inactive');
+        this.menuNetDown.text = '--';
+        this.menuNetUp.text = '--';
+        this.valueNetDown.text = '--';
+        this.valueNetUp.text = '--';
+      } else {
+        this.valueNetDown.remove_style_class_name('tophat-panel-inactive');
+        this.valueNetUp.remove_style_class_name('tophat-panel-inactive');
+        const s = bytesToHumanString(0, this.usageUnit) + '/s';
+        this.menuNetDown.text = s;
+        this.menuNetUp.text = s;
+        this.valueNetDown.text = s;
+        this.valueNetUp.text = s;
+      }
     }
 
     private buildMenu() {
@@ -151,11 +198,17 @@ export const NetMonitor = GObject.registerClass(
       super.bindVitals(vitals);
 
       vitals.connect('notify::net-sent', () => {
+        if (this.connectivity === NM.ConnectivityState.NONE) {
+          return;
+        }
         const s = bytesToHumanString(vitals.net_sent, this.usageUnit) + '/s';
         this.valueNetUp.text = s;
         this.menuNetUp.text = s;
       });
       vitals.connect('notify::net-recv', () => {
+        if (this.connectivity === NM.ConnectivityState.NONE) {
+          return;
+        }
         const s = bytesToHumanString(vitals.net_recv, this.usageUnit) + '/s';
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
@@ -170,7 +223,7 @@ export const NetMonitor = GObject.registerClass(
       });
       vitals.connect('notify::net-history', () => {
         const history = vitals.getNetActivity();
-        let max = 0.001; // A very small value to prevent division by 0
+        let max = 0;
         for (const na of history) {
           if (!na) {
             break;

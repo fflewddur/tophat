@@ -116,10 +116,14 @@ export const HistoryChart = GObject.registerClass(
         return;
       }
       for (let i = 0; i < this.bars.length; i++) {
-        this.bars[i].height =
-          chartHeight * (usage[usage.length - i - 1].valAlt() / max);
-        this.barsAlt[i].height =
-          chartHeight * (usage[usage.length - i - 1].val() / max);
+        let height = 0;
+        let heightAlt = 0;
+        if (max) {
+          height = chartHeight * (usage[usage.length - i - 1].valAlt() / max);
+          heightAlt = chartHeight * (usage[usage.length - i - 1].val() / max);
+        }
+        this.bars[i].height = height;
+        this.barsAlt[i].height = heightAlt;
       }
     }
 

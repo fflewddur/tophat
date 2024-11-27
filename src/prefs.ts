@@ -19,12 +19,15 @@ import Gdk from 'gi://Gdk';
 import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
+import NM from 'gi://NM';
+
 import {
   ExtensionPreferences,
   gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 // @ts-expect-error "Module exists"
 import * as Config from 'resource:///org/gnome/Shell/Extensions/js/misc/config.js';
+
 const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export default class TopHatPrefs extends ExtensionPreferences {
@@ -179,10 +182,38 @@ export default class TopHatPrefs extends ExtensionPreferences {
     const group = new Adw.PreferencesGroup({ title: _('Network') });
     page.add(group);
 
-    // Enable
+    // Enable network monitor
     this.addActionRow(_('Show the network monitor'), 'show-net', group);
 
-    // TODO: Select network device
+    // Select network device
+    const netDevChoices = new Gtk.StringList();
+    netDevChoices.append(_('Automatic'));
+    NM.Client.new_async(null, (obj, result) => {
+      if (!obj) {
+        console.error('[TopHat] obj is null');
+        return;
+      }
+      const client = NM.Client.new_finish(result);
+      if (!client) {
+        console.error('[TopHat] client is null');
+        return;
+      }
+      const devices = client.get_devices();
+      for (const d of devices) {
+        const iface = d.get_iface();
+        const dt = d.get_device_type();
+        if (dt !== NM.DeviceType.LOOPBACK) {
+          netDevChoices.append(iface);
+        }
+      }
+      this.addComboRow(
+        _('Network device'),
+        netDevChoices,
+        'network-device',
+        group,
+        false
+      );
+    });
 
     // Bits or bytes?
     const choices = new Gtk.StringList();
@@ -245,7 +276,6 @@ export default class TopHatPrefs extends ExtensionPreferences {
       row.set_sensitive(!control.active);
       control.connect('notify::active', (w: Gtk.Switch) => {
         row.set_sensitive(!w.active);
-        console.log(`notify::active w.active: ${w.active}`);
       });
     }
 
@@ -257,17 +287,38 @@ export default class TopHatPrefs extends ExtensionPreferences {
     label: string,
     choices: Gtk.StringList,
     setting: string,
-    group: Adw.PreferencesGroup
+    group: Adw.PreferencesGroup,
+    settingIsEnum = true
   ) {
-    const selected = this.gsettings?.get_enum(setting);
+    if (!this.gsettings) {
+      console.warn('[TopHat] gsettings is null in addComboRow()');
+      return;
+    }
+    let selected = 0;
+    if (settingIsEnum) {
+      selected = this.gsettings.get_enum(setting);
+    } else {
+      const selectedVal = this.gsettings.get_string(setting);
+      for (let i = 0; choices && i < choices.get_n_items(); i++) {
+        if (selectedVal === choices.get_string(i)) {
+          selected = i;
+        }
+      }
+    }
+
     const row = new Adw.ComboRow({
       title: label,
       model: choices,
       selected: selected,
     });
 
-    row.connect('notify::selected', (widget) => {
-      this.gsettings?.set_enum(setting, widget.selected);
+    row.connect('notify::selected', (widget: Adw.ComboRow) => {
+      if (settingIsEnum) {
+        this.gsettings?.set_enum(setting, widget.selected);
+      } else {
+        const item = widget.selectedItem as Gtk.StringObject;
+        this.gsettings?.set_string(setting, item.string);
+      }
     });
 
     group.add(row);

@@ -108,6 +108,11 @@
       <summary>Show a meter bar for each CPU core</summary>
       <description>When true, the CPU monitors will show a meter bar representing each CPU core. When false, one bar will represent all CPU usage.</description>
     </key>
+    <key name="network-device" type="s">
+      <default>''</default>
+      <summary>Network device to monitor</summary>
+      <description>Network device to monitor.</description>
+    </key>
     <key name="network-usage-unit" enum="org.gnome.shell.extensions.tophat.network-unit">
       <default>'bytes'</default>
       <summary>Unit for showing network usage</summary>

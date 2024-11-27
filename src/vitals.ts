@@ -1,6 +1,9 @@
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
+import NM from 'gi://NM';
+
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { File } from './file.js';
 
@@ -272,6 +275,7 @@ export const Vitals = GObject.registerClass(
     private netActivityHistory = new Array<NetActivity>(MaxHistoryLen);
     private diskState: DiskState;
     private diskActivityHistory = new Array<DiskActivity>(MaxHistoryLen);
+    // TODO: Move properties into their own class
     private _uptime = 0;
     private _cpu_usage = 0;
     private _cpu_freq = 0;
@@ -304,6 +308,8 @@ export const Vitals = GObject.registerClass(
     private showMem;
     private showNet;
     private showDisk;
+    private netDev;
+    private netDevs;
 
     constructor(model: CpuModel, gsettings: Gio.Settings) {
       super();
@@ -343,6 +349,43 @@ export const Vitals = GObject.registerClass(
       this.gsettings.connect('changed::show-disk', (settings) => {
         this.showDisk = settings.get_boolean('show-disk');
       });
+      this.netDev = gsettings.get_string('network-device');
+      if (this.netDev === _('Automatic')) {
+        this.netDev = '';
+      }
+      this.gsettings.connect('changed::network-device', (settings) => {
+        this.netDev = settings.get_string('network-device');
+        if (this.netDev === _('Automatic')) {
+          this.netDev = '';
+        }
+      });
+      this.netDevs = new Array<string>();
+      NM.Client.new_async(null, (obj, result) => {
+        if (!obj) {
+          console.error('[TopHat] obj is null');
+          return;
+        }
+        const client = NM.Client.new_finish(result);
+        if (!client) {
+          console.error('[TopHat] client is null');
+          return;
+        }
+        client.connect('notify::devices', () => {
+          this.updateNetDevices(client);
+        });
+        this.updateNetDevices(client);
+      });
+    }
+
+    private updateNetDevices(client: NM.Client) {
+      const devices = client.get_devices();
+      this.netDevs = new Array<string>();
+      for (const d of devices) {
+        const dt = d.get_device_type();
+        if (dt !== NM.DeviceType.BRIDGE && dt !== NM.DeviceType.LOOPBACK) {
+          this.netDevs.push(d.get_iface());
+        }
+      }
     }
 
     public start(): void {
@@ -534,8 +577,12 @@ export const Vitals = GObject.registerClass(
           lines.forEach((line) => {
             let m = line.match(RE_NET_DEV);
             if (m) {
+              // TODO: If a network device is specified, only listen to traffic on it
               const dev = m[1];
-              if (dev !== 'lo') {
+              if (
+                (this.netDev && this.netDev === dev) ||
+                (!this.netDev && this.netDevs.indexOf(dev) >= 0)
+              ) {
                 m = line.match(RE_NET_ACTIVITY);
                 if (m) {
                   bytesRecv += parseInt(m[1]);
@@ -1310,6 +1357,7 @@ class NetDevState {
 }
 
 class NetActivity implements IActivity {
+  // TODO(fflewddur): Add a field for the duration of this measurement
   public bytesRecv = 0;
   public bytesSent = 0;
 

@@ -22,3 +22,9 @@
   margin: 0;
   min-width: 4em;
 }
+
+.tophat-panel-inactive {
+  min-width: 2em !important;
+  width: 2em;
+  max-width: 2em;
+}
