@@ -6,6 +6,7 @@ import NM from 'gi://NM';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { File } from './file.js';
+import { NumTopProcs } from './monitor.js';
 
 Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
 Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
@@ -377,17 +378,6 @@ export const Vitals = GObject.registerClass(
       });
     }
 
-    private updateNetDevices(client: NM.Client) {
-      const devices = client.get_devices();
-      this.netDevs = new Array<string>();
-      for (const d of devices) {
-        const dt = d.get_device_type();
-        if (dt !== NM.DeviceType.BRIDGE && dt !== NM.DeviceType.LOOPBACK) {
-          this.netDevs.push(d.get_iface());
-        }
-      }
-    }
-
     public start(): void {
       setTimeout(() => this.readSummaries(), 0);
       if (this.summaryLoop === 0) {
@@ -495,8 +485,7 @@ export const Vitals = GObject.registerClass(
             }
           });
           this.cpu_usage = usage.aggregate;
-          // FIXME: Compute a hash of the history array instead of using a random number
-          this.cpu_history = Math.random().toFixed(8);
+          this.cpu_history = this.hashCpuHistory();
         })
         .catch((e) => {
           console.warn(`[TopHat] error in loadStat(): ${e}`);
@@ -558,8 +547,7 @@ export const Vitals = GObject.registerClass(
           this.swap_usage = usage.usedSwap;
           this.swap_size = this.memInfo.swapTotal * 1024;
           this.swap_size_free = this.memInfo.swapAvailable * 1024;
-          // FIXME: Compute a hash of the history array instead of using a random number
-          this.mem_history = Math.random().toFixed(8);
+          this.mem_history = this.hashMemHistory();
         })
         .catch((e) => {
           console.warn(`[TopHat] error in loadMeminfo(): ${e}`);
@@ -577,7 +565,6 @@ export const Vitals = GObject.registerClass(
           lines.forEach((line) => {
             let m = line.match(RE_NET_DEV);
             if (m) {
-              // TODO: If a network device is specified, only listen to traffic on it
               const dev = m[1];
               if (
                 (this.netDev && this.netDev === dev) ||
@@ -602,8 +589,7 @@ export const Vitals = GObject.registerClass(
           }
           this.net_recv = netActivity.bytesRecv;
           this.net_sent = netActivity.bytesSent;
-          // FIXME: Compute a hash of the history array instead of using a random number
-          this.net_history = Math.random().toFixed(8);
+          this.net_history = this.hashNetHistory();
         })
         .catch((e) => {
           console.warn(`[TopHat] error in loadNetDev(): ${e}`);
@@ -651,8 +637,7 @@ export const Vitals = GObject.registerClass(
           this.disk_wrote = diskActivity.bytesWritten;
           this.disk_read_total = bytesRead;
           this.disk_wrote_total = bytesWritten;
-          // FIXME: Compute a hash of the history array instead of using a random number
-          this.disk_history = Math.random().toFixed(8);
+          this.disk_history = this.hashDiskHistory();
         })
         .catch((e) => {
           console.warn(`[TopHat] error in loadDiskStats(): ${e}`);
@@ -753,12 +738,48 @@ export const Vitals = GObject.registerClass(
         }
         this.procs = curProcs;
         // FIXME: Compute a hash from the top processes instead of using a random number to trigger the UI refresh
-        this.cpu_top_procs = Math.random().toFixed(8);
-        this.mem_top_procs = Math.random().toFixed(8);
+        this.cpu_top_procs = this.hashTopCpuProcs();
+        this.mem_top_procs = this.hashTopMemProcs();
         this.disk_top_procs = Math.random().toFixed(8);
       } catch (e) {
         console.error(`[TopHat] Error in loadProcessList(): ${e}`);
       }
+    }
+
+    private hashTopCpuProcs() {
+      let toHash = '';
+      for (const p of this.getTopCpuProcs(NumTopProcs)) {
+        if (p) {
+          toHash += `${p.cmd};${p.cpuUsage().toFixed(4)};`;
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
+    }
+
+    private hashTopMemProcs() {
+      let toHash = '';
+      for (const p of this.getTopMemProcs(NumTopProcs)) {
+        if (p) {
+          toHash += `${p.cmd};${p.memUsage().toFixed(0)};`;
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
+    }
+
+    private hashTopDiskProcs() {
+      let toHash = '';
+      for (const p of this.getTopDiskProcs(NumTopProcs)) {
+        if (p) {
+          toHash += `${p.cmd};${p.diskReads().toFixed(0)};${p.diskWrites().toFixed(0)};`;
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
     }
 
     private async loadProcessStat(name: string): Promise<Process> {
@@ -824,6 +845,17 @@ export const Vitals = GObject.registerClass(
         });
     }
 
+    private updateNetDevices(client: NM.Client) {
+      const devices = client.get_devices();
+      this.netDevs = new Array<string>();
+      for (const d of devices) {
+        const dt = d.get_device_type();
+        if (dt !== NM.DeviceType.BRIDGE && dt !== NM.DeviceType.LOOPBACK) {
+          this.netDevs.push(d.get_iface());
+        }
+      }
+    }
+
     public getTopCpuProcs(n: number) {
       let top = Array.from(this.procs.values());
       top = top.sort((x, y) => {
@@ -867,6 +899,54 @@ export const Vitals = GObject.registerClass(
 
     public getDiskActivity() {
       return this.diskActivityHistory;
+    }
+
+    private hashCpuHistory() {
+      let toHash = '';
+      for (const u of this.cpuUsageHistory) {
+        if (u) {
+          toHash += u.aggregate.toFixed(3);
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
+    }
+
+    private hashMemHistory() {
+      let toHash = '';
+      for (const u of this.memUsageHistory) {
+        if (u) {
+          toHash += u.usedMem.toFixed(0);
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
+    }
+
+    private hashNetHistory() {
+      let toHash = '';
+      for (const u of this.netActivityHistory) {
+        if (u) {
+          toHash += `${u.bytesRecv.toFixed(0)};${u.bytesSent.toFixed(0)};`;
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
+    }
+
+    private hashDiskHistory() {
+      let toHash = '';
+      for (const u of this.diskActivityHistory) {
+        if (u) {
+          toHash += `${u.bytesRead.toFixed(0)};${u.bytesWritten.toFixed(0)};`;
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
     }
 
     // Properties
