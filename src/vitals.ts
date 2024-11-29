@@ -737,10 +737,9 @@ export const Vitals = GObject.registerClass(
           }
         }
         this.procs = curProcs;
-        // FIXME: Compute a hash from the top processes instead of using a random number to trigger the UI refresh
         this.cpu_top_procs = this.hashTopCpuProcs();
         this.mem_top_procs = this.hashTopMemProcs();
-        this.disk_top_procs = Math.random().toFixed(8);
+        this.disk_top_procs = this.hashTopDiskProcs();
       } catch (e) {
         console.error(`[TopHat] Error in loadProcessList(): ${e}`);
       }
@@ -1582,6 +1581,7 @@ class Process {
       if (content[0] === '/') {
         const m = content.match(RE_CMD);
         if (m) {
+          // console.log(`parsing '${content}' to '${m[1]}'`);
           this.cmd = m[1];
         }
       }
