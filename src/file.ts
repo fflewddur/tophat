@@ -45,7 +45,16 @@ export class File {
       try {
         this.file.load_contents_async(null, (file, res) => {
           try {
-            const bytes = file?.load_contents_finish(res)[1];
+            let bytes = file?.load_contents_finish(res)[1];
+            if (!bytes) {
+              reject('count not load file');
+              return;
+            }
+            // Somtimes the null terminator appears before bytes.length
+            const end = bytes.indexOf(0);
+            if (end >= 0) {
+              bytes = bytes.slice(0, end);
+            }
             const contents = decoder.decode(bytes).trim();
             resolve(contents);
           } catch (e: unknown) {
