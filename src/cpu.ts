@@ -42,6 +42,7 @@ export const CpuMonitor = GObject.registerClass(
     private menuUptime;
     private topProcs: TopProc[];
     private showCores;
+    private normalizeProcUsage;
     private displayType: DisplayType;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
@@ -86,6 +87,14 @@ export const CpuMonitor = GObject.registerClass(
         if (!this.showCores) {
           this.meter.setNumBars(1);
         }
+      });
+      this.normalizeProcUsage = this.gsettings.get_boolean(
+        'cpu-normalize-proc-use'
+      );
+      this.gsettings.connect('changed::cpu-normalize-proc-use', (settings) => {
+        this.normalizeProcUsage = settings.get_boolean(
+          'cpu-normalize-proc-use'
+        );
       });
       this.gsettings.connect('changed::cpu-display', () => {
         this.updateDisplayType();
@@ -219,8 +228,11 @@ export const CpuMonitor = GObject.registerClass(
       vitals.connect('notify::cpu-top-procs', () => {
         const procs = vitals.getTopCpuProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
-          const cpu = procs[i].cpuUsage();
+          let cpu = procs[i].cpuUsage();
           if (cpu > 0) {
+            if (!this.normalizeProcUsage) {
+              cpu *= vitals.cpuModel.cores;
+            }
             this.topProcs[i].cmd.text = procs[i].cmd;
             this.topProcs[i].usage.text = (cpu * 100).toFixed(1) + '%';
           } else {

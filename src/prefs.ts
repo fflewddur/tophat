@@ -133,6 +133,13 @@ export default class TopHatPrefs extends ExtensionPreferences {
     // Show each core
     this.addActionRow(_('Show each core'), 'cpu-show-cores', group);
 
+    // Normalize process CPU usage
+    this.addActionRow(
+      _('Normalize per-process CPU usage by CPU cores'),
+      'cpu-normalize-proc-use',
+      group
+    );
+
     return page;
   }
 
