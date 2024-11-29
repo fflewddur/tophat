@@ -233,8 +233,12 @@ export const CpuMonitor = GObject.registerClass(
             if (!this.normalizeProcUsage) {
               cpu *= vitals.cpuModel.cores;
             }
+            let precision = 1;
+            if (cpu >= 1) {
+              precision = 0;
+            }
             this.topProcs[i].cmd.text = procs[i].cmd;
-            this.topProcs[i].usage.text = (cpu * 100).toFixed(1) + '%';
+            this.topProcs[i].usage.text = (cpu * 100).toFixed(precision) + '%';
           } else {
             this.topProcs[i].cmd.text = '';
             this.topProcs[i].usage.text = '';
