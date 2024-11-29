@@ -43,7 +43,7 @@ export default class TopHatPrefs extends ExtensionPreferences {
       window.add(this.buildMemPage());
       window.add(this.buildDiskPage());
       window.add(this.buildNetPage());
-      window.set_default_size(750, 400);
+      window.set_default_size(750, 410);
       resolve();
     });
   }
