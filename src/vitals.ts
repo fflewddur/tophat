@@ -276,33 +276,7 @@ export const Vitals = GObject.registerClass(
     private netActivityHistory = new Array<NetActivity>(MaxHistoryLen);
     private diskState: DiskState;
     private diskActivityHistory = new Array<DiskActivity>(MaxHistoryLen);
-    // TODO: Move properties into their own class
-    private _uptime = 0;
-    private _cpu_usage = 0;
-    private _cpu_freq = 0;
-    private _cpu_temp = 0;
-    private _cpu_history = '';
-    private _cpu_top_procs = '';
-    private _ram_usage = 0;
-    private _ram_size = 0;
-    private _ram_size_free = 0;
-    private _swap_usage = -1;
-    private _swap_size = -1;
-    private _swap_size_free = 0;
-    private _mem_history = '';
-    private _mem_top_procs = '';
-    private _net_recv = -1;
-    private _net_sent = -1;
-    private _net_recv_total = 0;
-    private _net_sent_total = 0;
-    private _net_history = '';
-    private _disk_read = -1;
-    private _disk_wrote = -1;
-    private _disk_read_total = 0;
-    private _disk_wrote_total = 0;
-    private _disk_history = '';
-    private _disk_top_procs = '';
-    private _summary_interval;
+    private props = new Properties();
     private summaryLoop = 0;
     private detailsLoop = 0;
     private showCpu;
@@ -326,7 +300,7 @@ export const Vitals = GObject.registerClass(
       for (let i = 0; i < this.diskActivityHistory.length; i++) {
         this.diskActivityHistory[i] = new DiskActivity();
       }
-      this._summary_interval =
+      this.summary_interval =
         SummaryIntervalDefault * refreshRateModifier(this.gsettings);
       this.gsettings.connect('changed::refresh-rate', (settings) => {
         this.summary_interval =
@@ -951,14 +925,14 @@ export const Vitals = GObject.registerClass(
     // Properties
 
     public get cpu_usage(): number {
-      return this._cpu_usage;
+      return this.props.cpu_usage;
     }
 
     private set cpu_usage(v: number) {
       if (this.cpu_usage === v) {
         return;
       }
-      this._cpu_usage = v;
+      this.props.cpu_usage = v;
       this.notify('cpu-usage');
     }
 
@@ -967,306 +941,335 @@ export const Vitals = GObject.registerClass(
     }
 
     public get cpu_freq(): number {
-      return this._cpu_freq;
+      return this.props.cpu_freq;
     }
 
     private set cpu_freq(v: number) {
       if (this.cpu_freq === v) {
         return;
       }
-      this._cpu_freq = v;
+      this.props.cpu_freq = v;
       this.notify('cpu-freq');
     }
 
     public get cpu_temp(): number {
-      return this._cpu_temp;
+      return this.props.cpu_temp;
     }
 
     private set cpu_temp(v: number) {
       if (this.cpu_temp === v) {
         return;
       }
-      this._cpu_temp = v;
+      this.props.cpu_temp = v;
       this.notify('cpu-temp');
     }
 
     public get cpu_top_procs() {
-      return this._cpu_top_procs;
+      return this.props.cpu_top_procs;
     }
 
     private set cpu_top_procs(v: string) {
       if (this.cpu_top_procs === v) {
         return;
       }
-      this._cpu_top_procs = v;
+      this.props.cpu_top_procs = v;
       this.notify('cpu-top-procs');
     }
 
     public get cpu_history() {
-      return this._cpu_history;
+      return this.props.cpu_history;
     }
 
     private set cpu_history(v: string) {
       if (this.cpu_history === v) {
         return;
       }
-      this._cpu_history = v;
+      this.props.cpu_history = v;
       this.notify('cpu-history');
     }
 
     public get ram_usage(): number {
-      return this._ram_usage;
+      return this.props.ram_usage;
     }
 
     private set ram_usage(v: number) {
       if (this.ram_usage === v) {
         return;
       }
-      this._ram_usage = v;
+      this.props.ram_usage = v;
       this.notify('ram-usage');
     }
 
     public get ram_size(): number {
-      return this._ram_size;
+      return this.props.ram_size;
     }
 
     private set ram_size(v: number) {
       if (this.ram_size === v) {
         return;
       }
-      this._ram_size = v;
+      this.props.ram_size = v;
       this.notify('ram-size');
     }
 
     public get ram_size_free(): number {
-      return this._ram_size_free;
+      return this.props.ram_size_free;
     }
 
     public set ram_size_free(v: number) {
-      if (this._ram_size_free === v) {
+      if (this.props.ram_size_free === v) {
         return;
       }
-      this._ram_size_free = v;
+      this.props.ram_size_free = v;
       this.notify('ram-size-free');
     }
 
     public get swap_usage(): number {
-      return this._swap_usage;
+      return this.props.swap_usage;
     }
 
     private set swap_usage(v: number) {
       if (this.swap_usage === v) {
         return;
       }
-      this._swap_usage = v;
+      this.props.swap_usage = v;
       this.notify('swap-usage');
     }
 
     public get swap_size(): number {
-      return this._swap_size;
+      return this.props.swap_size;
     }
 
     private set swap_size(v: number) {
       if (this.swap_size === v) {
         return;
       }
-      this._swap_size = v;
+      this.props.swap_size = v;
       this.notify('swap-size');
     }
 
     public get swap_size_free(): number {
-      return this._swap_size_free;
+      return this.props.swap_size_free;
     }
 
     public set swap_size_free(v: number) {
       if (this.swap_size_free === v) {
         return;
       }
-      this._swap_size_free = v;
+      this.props.swap_size_free = v;
       this.notify('swap-size-free');
     }
 
     public get mem_history() {
-      return this._mem_history;
+      return this.props.mem_history;
     }
 
     private set mem_history(v: string) {
       if (this.mem_history === v) {
         return;
       }
-      this._mem_history = v;
+      this.props.mem_history = v;
       this.notify('mem-history');
     }
 
     public get mem_top_procs() {
-      return this._mem_top_procs;
+      return this.props.mem_top_procs;
     }
 
     private set mem_top_procs(v: string) {
       if (this.mem_top_procs === v) {
         return;
       }
-      this._mem_top_procs = v;
+      this.props.mem_top_procs = v;
       this.notify('mem-top-procs');
     }
 
     public get net_recv() {
-      return this._net_recv;
+      return this.props.net_recv;
     }
 
     private set net_recv(v: number) {
       if (this.net_recv === v) {
         return;
       }
-      this._net_recv = v;
+      this.props.net_recv = v;
       this.notify('net-recv');
     }
 
     public get net_sent() {
-      return this._net_sent;
+      return this.props.net_sent;
     }
 
     private set net_sent(v: number) {
       if (this.net_sent === v) {
         return;
       }
-      this._net_sent = v;
+      this.props.net_sent = v;
       this.notify('net-sent');
     }
 
     public get net_recv_total() {
-      return this._net_recv_total;
+      return this.props.net_recv_total;
     }
 
     private set net_recv_total(v: number) {
       if (this.net_recv_total === v) {
         return;
       }
-      this._net_recv_total = v;
+      this.props.net_recv_total = v;
       this.notify('net-recv-total');
     }
 
     public get net_sent_total() {
-      return this._net_sent_total;
+      return this.props.net_sent_total;
     }
 
     private set net_sent_total(v: number) {
       if (this.net_sent_total === v) {
         return;
       }
-      this._net_sent_total = v;
+      this.props.net_sent_total = v;
       this.notify('net-sent-total');
     }
 
     public get net_history() {
-      return this._net_history;
+      return this.props.net_history;
     }
 
     private set net_history(v: string) {
       if (this.net_history === v) {
         return;
       }
-      this._net_history = v;
+      this.props.net_history = v;
       this.notify('net-history');
     }
 
     public get disk_read() {
-      return this._disk_read;
+      return this.props.disk_read;
     }
 
     private set disk_read(v: number) {
       if (this.disk_read === v) {
         return;
       }
-      this._disk_read = v;
+      this.props.disk_read = v;
       this.notify('disk-read');
     }
 
     public get disk_wrote() {
-      return this._disk_wrote;
+      return this.props.disk_wrote;
     }
 
     private set disk_wrote(v: number) {
       if (this.disk_wrote === v) {
         return;
       }
-      this._disk_wrote = v;
+      this.props.disk_wrote = v;
       this.notify('disk-wrote');
     }
 
     public get disk_read_total() {
-      return this._disk_read_total;
+      return this.props.disk_read_total;
     }
 
     private set disk_read_total(v: number) {
       if (this.disk_read_total === v) {
         return;
       }
-      this._disk_read_total = v;
+      this.props.disk_read_total = v;
       this.notify('disk-read-total');
     }
 
     public get disk_wrote_total() {
-      return this._disk_wrote_total;
+      return this.props.disk_wrote_total;
     }
 
     private set disk_wrote_total(v: number) {
       if (this.disk_wrote_total === v) {
         return;
       }
-      this._disk_wrote_total = v;
+      this.props.disk_wrote_total = v;
       this.notify('disk-wrote-total');
     }
 
     public get disk_history() {
-      return this._disk_history;
+      return this.props.disk_history;
     }
 
     private set disk_history(v: string) {
       if (this.disk_history === v) {
         return;
       }
-      this._disk_history = v;
+      this.props.disk_history = v;
       this.notify('disk-history');
     }
 
     public get disk_top_procs() {
-      return this._disk_top_procs;
+      return this.props.disk_top_procs;
     }
 
     private set disk_top_procs(v: string) {
       if (this.disk_top_procs === v) {
         return;
       }
-      this._disk_top_procs = v;
+      this.props.disk_top_procs = v;
       this.notify('disk-top-procs');
     }
 
     public get uptime(): number {
-      return this._uptime;
+      return this.props.uptime;
     }
 
     private set uptime(v: number) {
       if (this.uptime === v) {
         return;
       }
-      this._uptime = v;
+      this.props.uptime = v;
       this.notify('uptime');
     }
 
     public get summary_interval() {
-      return this._summary_interval;
+      return this.props.summary_interval;
     }
 
     private set summary_interval(v: number) {
       if (this.summary_interval === v) {
         return;
       }
-      this._summary_interval = v;
+      this.props.summary_interval = v;
       this.notify('summary-interval');
     }
   }
 );
+
+class Properties {
+  uptime = 0;
+  cpu_usage = 0;
+  cpu_freq = 0;
+  cpu_temp = 0;
+  cpu_history = '';
+  cpu_top_procs = '';
+  ram_usage = 0;
+  ram_size = 0;
+  ram_size_free = 0;
+  swap_usage = -1;
+  swap_size = -1;
+  swap_size_free = 0;
+  mem_history = '';
+  mem_top_procs = '';
+  net_recv = -1;
+  net_sent = -1;
+  net_recv_total = 0;
+  net_sent_total = 0;
+  net_history = '';
+  disk_read = -1;
+  disk_wrote = -1;
+  disk_read_total = 0;
+  disk_wrote_total = 0;
+  disk_history = '';
+  disk_top_procs = '';
+  summary_interval = 0;
+}
 
 export type Vitals = InstanceType<typeof Vitals>;
 
