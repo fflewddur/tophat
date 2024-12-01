@@ -16,6 +16,7 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 import GObject from 'gi://GObject';
+import Cogl from 'gi://Cogl';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
@@ -29,7 +30,7 @@ export const TopHatMeter = GObject.registerClass(
     private bars: Array<St.Widget>;
     private orientation: Orientation;
     private scaleFactor;
-    private color: string; // as rgb(r,g,b)
+    private color: Cogl.Color;
     private barWidth: number; // in pixels
 
     constructor() {
@@ -39,7 +40,6 @@ export const TopHatMeter = GObject.registerClass(
         y_expand: true,
         name: 'TopHatMeter',
       });
-      this.add_style_class_name('tophat-meter');
       this.bars = new Array<St.Widget>(0);
       this.orientation = Orientation.Horizontal;
 
@@ -49,12 +49,10 @@ export const TopHatMeter = GObject.registerClass(
         this.scaleFactor = obj.get_scale_factor();
         this.barWidth = this.computeBarWidth(this.bars.length);
         for (const b of this.bars) {
-          b.set_style(
-            `background-color:${this.color};width:${this.barWidth}px;margin: 0 1px 0 0;`
-          );
+          b.set_width(this.barWidth);
         }
       });
-      this.color = '';
+      this.color = new Cogl.Color();
       this.barWidth = 8;
     }
 
@@ -74,14 +72,10 @@ export const TopHatMeter = GObject.registerClass(
           y_align: Clutter.ActorAlign.END,
           y_expand: false,
           style_class: 'meter-bar',
-          // width: this.barWidth,
+          width: this.barWidth * this.scaleFactor,
+          background_color: this.color,
           name: 'TopHatMeterBar',
         });
-        this.bars[i].set_style(
-          `background-color:${this.color};width:${this.barWidth}px;margin: 0 1px 0 0;`
-        );
-        this.bars[i].save_easing_state();
-        this.bars[i].set_easing_duration(300);
         this.add_child(this.bars[i]);
       }
     }
@@ -117,31 +111,34 @@ export const TopHatMeter = GObject.registerClass(
       }
       const h = this.get_height();
       for (let i = 0; i < n.length; i++) {
-        const fillSize = Math.ceil(n[i] * h) / this.scaleFactor;
-        let style = `height:${fillSize}px;background-color:${this.color};width:${this.barWidth}px;`;
-        if (i === this.bars.length - 1) {
-          style += 'margin:0;';
-        } else {
-          style += 'margin:0 1px 0 0;';
-        }
-        this.bars[i].set_style(style);
+        this.bars[i].save_easing_state();
+        this.bars[i].set_easing_duration(300);
+        this.bars[i].set_easing_mode(Clutter.AnimationMode.EASE_IN_OUT);
+        this.bars[i].set_height(n[i] * h);
+        this.bars[i].restore_easing_state();
       }
     }
 
     public setColor(c: string) {
-      if (this.color === c) {
+      const [ok, color] = Cogl.Color.from_string(c);
+      if (!ok) {
+        console.warn(`Error parsing ${c} to Cogl.Color`);
         return;
       }
 
-      this.color = c;
+      if (this.color === color) {
+        return;
+      }
+      this.color = color;
+
       for (const bar of this.bars) {
-        bar.set_style(
-          `background-color:${this.color};width:${this.barWidth}px;`
-        );
+        bar.set_background_color(this.color);
       }
     }
 
     public reorient() {
+      console.log('reorient()');
+      // FIXME: re-implement this without using stylesheets
       // This is to play nice with the dash-to-panel extension
       const wasVertical = this.vertical;
       this.set_vertical(false);
@@ -149,15 +146,15 @@ export const TopHatMeter = GObject.registerClass(
       this.set_x_align(Clutter.ActorAlign.CENTER);
       this.set_y_align(Clutter.ActorAlign.CENTER);
       this.barWidth = this.computeBarWidth(this.bars.length, wasVertical);
-      for (let i = 0; i < this.bars.length; i++) {
-        let style = `background-color:${this.color};width:${this.barWidth}px;`;
-        if (i === this.bars.length - 1) {
-          style += 'margin:0;';
-        } else {
-          style += 'margin:0 1px 0 0;';
-        }
-        this.bars[i].set_style(style);
-      }
+      // for (let i = 0; i < this.bars.length; i++) {
+      //   let style = `background-color:${this.color};width:${this.barWidth}px;`;
+      //   if (i === this.bars.length - 1) {
+      //     style += 'margin:0;';
+      //   } else {
+      //     style += 'margin:0 1px 0 0;';
+      //   }
+      //   this.bars[i].set_style(style);
+      // }
     }
   }
 );

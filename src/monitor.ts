@@ -109,6 +109,7 @@ export const TopHatMonitor = GObject.registerClass(
         [this.color, this.useAccentColor] = this.updateColor();
       });
 
+      // Listen for accent color changes
       const themeContext = St.ThemeContext.get_for_stage(global.get_stage());
       themeContext.connect('changed', () => {
         [this.color, this.useAccentColor] = this.updateColor();
