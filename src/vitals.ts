@@ -356,14 +356,14 @@ export const Vitals = GObject.registerClass(
       setTimeout(() => this.readSummaries(), 0);
       if (this.summaryLoop === 0) {
         this.summaryLoop = GLib.timeout_add_seconds(
-          GLib.PRIORITY_DEFAULT,
+          GLib.PRIORITY_LOW,
           this.summary_interval,
           () => this.readSummaries()
         );
       }
       if (this.detailsLoop === 0) {
         this.detailsLoop = GLib.timeout_add_seconds(
-          GLib.PRIORITY_DEFAULT,
+          GLib.PRIORITY_LOW,
           DetailsInterval,
           () => this.readDetails()
         );
@@ -890,7 +890,7 @@ export const Vitals = GObject.registerClass(
       let toHash = '';
       for (const u of this.memUsageHistory) {
         if (u) {
-          toHash += u.usedMem.toFixed(0);
+          toHash += u.usedMem.toFixed(3);
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
