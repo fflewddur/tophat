@@ -20,6 +20,10 @@ import Cogl from 'gi://Cogl';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
+import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
+
+export const AnimationDuration = 300;
+
 export enum Orientation {
   Horizontal,
   Vertical,
@@ -73,6 +77,7 @@ export const TopHatMeter = GObject.registerClass(
           y_expand: false,
           style_class: 'meter-bar',
           width: this.barWidth * this.scaleFactor,
+          height: 1 * this.scaleFactor,
           background_color: this.color,
           name: 'TopHatMeterBar',
         });
@@ -109,18 +114,45 @@ export const TopHatMeter = GObject.registerClass(
           `[TopHat] called setBarSizes() with ${n.length} values for ${this.bars.length} bars`
         );
       }
-      const h = this.get_height();
+      const meterHeight = this.get_height();
+      const duration = adjustAnimationTime(AnimationDuration);
       for (let i = 0; i < n.length; i++) {
-        this.bars[i].save_easing_state();
-        this.bars[i].set_easing_duration(300);
-        this.bars[i].set_easing_mode(Clutter.AnimationMode.EASE_IN_OUT);
-        this.bars[i].set_height(n[i] * h);
-        this.bars[i].restore_easing_state();
+        const height = Math.max(Math.floor(meterHeight * n[i]), 1);
+        const curHeight = this.bars[i].height;
+        if (height === curHeight) {
+          continue;
+        }
+        this.bars[i].remove_transition('scaleHeight');
+        // console.log(
+        //   `Update height of bar[${i}] from ${curHeight} to ${height}`
+        // );
+        if (duration > 0) {
+          const t = Clutter.PropertyTransition.new_for_actor(
+            this.bars[i],
+            'height'
+          );
+          t.set_duration(duration);
+          t.set_from(curHeight);
+          t.set_to(height);
+          t.set_remove_on_complete(true);
+          this.bars[i].add_transition('scaleHeight', t);
+          t.start();
+        } else {
+          this.bars[i].set_height(height);
+        }
       }
     }
 
     public setColor(c: string) {
-      const [ok, color] = Cogl.Color.from_string(c);
+      let ok;
+      let color;
+      if (Cogl.color_from_string) {
+        [ok, color] = Cogl.color_from_string(c);
+      } else {
+        // GNOME 46 and earlier
+        // @ts-expect-error property does not exist
+        [ok, color] = Clutter.color_from_string(c);
+      }
       if (!ok) {
         console.warn(`Error parsing ${c} to Cogl.Color`);
         return;
@@ -146,6 +178,9 @@ export const TopHatMeter = GObject.registerClass(
       this.set_x_align(Clutter.ActorAlign.CENTER);
       this.set_y_align(Clutter.ActorAlign.CENTER);
       this.barWidth = this.computeBarWidth(this.bars.length, wasVertical);
+      for (const b of this.bars) {
+        b.set_width(this.barWidth);
+      }
       // for (let i = 0; i < this.bars.length; i++) {
       //   let style = `background-color:${this.color};width:${this.barWidth}px;`;
       //   if (i === this.bars.length - 1) {

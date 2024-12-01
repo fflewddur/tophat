@@ -102,6 +102,7 @@ export const HistoryChart = GObject.registerClass(
     public update(usage: number) {
       const chartHeight = this.bars[0].get_parent()?.height;
       if (!chartHeight) {
+        console.warn('Could not get chart height');
         return;
       }
       for (let i = 0; i < this.bars.length - 1; i++) {
@@ -113,6 +114,7 @@ export const HistoryChart = GObject.registerClass(
     public updateAlt(usage: IActivity[], max: number) {
       const chartHeight = this.bars[0].get_parent()?.height;
       if (!chartHeight || !this.barsAlt) {
+        console.warn('Could not get chart height');
         return;
       }
       for (let i = 0; i < this.bars.length; i++) {
