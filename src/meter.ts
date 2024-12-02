@@ -76,7 +76,7 @@ export const TopHatMeter = GObject.registerClass(
           y_align: Clutter.ActorAlign.END,
           y_expand: false,
           style_class: 'meter-bar',
-          width: this.barWidth * this.scaleFactor,
+          width: this.barWidth,
           height: 1 * this.scaleFactor,
           background_color: this.color,
           name: 'TopHatMeterBar',
@@ -86,13 +86,19 @@ export const TopHatMeter = GObject.registerClass(
     }
 
     private computeBarWidth(n: number, wasVertical = false) {
+      console.log(`computeBarWidth(${n}, ${wasVertical})`);
       let width = 8;
 
       if (wasVertical) {
         // If we're in vertical panel mode, use narrower widths
-        width = 4;
-        if (n > 4) {
-          width = 2;
+        if (n > 12) {
+          n = 1;
+        } else if (n > 9) {
+          n = 2;
+        } else if (n > 6) {
+          width = 4;
+        } else if (n > 2) {
+          width = 6;
         }
       } else {
         if (n > 8) {
@@ -101,7 +107,7 @@ export const TopHatMeter = GObject.registerClass(
           width = 6; // Reduce bar width by 3/4 when there are a few bars
         }
       }
-      return width;
+      return width * this.scaleFactor;
     }
 
     public setOrientation(o: Orientation) {
@@ -123,9 +129,6 @@ export const TopHatMeter = GObject.registerClass(
           continue;
         }
         this.bars[i].remove_transition('scaleHeight');
-        // console.log(
-        //   `Update height of bar[${i}] from ${curHeight} to ${height}`
-        // );
         if (duration > 0) {
           const t = Clutter.PropertyTransition.new_for_actor(
             this.bars[i],
@@ -169,8 +172,6 @@ export const TopHatMeter = GObject.registerClass(
     }
 
     public reorient() {
-      console.log('reorient()');
-      // FIXME: re-implement this without using stylesheets
       // This is to play nice with the dash-to-panel extension
       const wasVertical = this.vertical;
       this.set_vertical(false);
@@ -181,15 +182,15 @@ export const TopHatMeter = GObject.registerClass(
       for (const b of this.bars) {
         b.set_width(this.barWidth);
       }
-      // for (let i = 0; i < this.bars.length; i++) {
-      //   let style = `background-color:${this.color};width:${this.barWidth}px;`;
-      //   if (i === this.bars.length - 1) {
-      //     style += 'margin:0;';
-      //   } else {
-      //     style += 'margin:0 1px 0 0;';
-      //   }
-      //   this.bars[i].set_style(style);
-      // }
+      for (let i = 0; i < this.bars.length; i++) {
+        let style = '';
+        if (i === this.bars.length - 1) {
+          style += 'margin:0;';
+        } else {
+          style += 'margin:0 1px 0 0;';
+        }
+        this.bars[i].set_style(style);
+      }
     }
   }
 );
