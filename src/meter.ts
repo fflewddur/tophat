@@ -117,7 +117,7 @@ export const TopHatMeter = GObject.registerClass(
       const meterHeight = this.get_height();
       const duration = adjustAnimationTime(AnimationDuration);
       for (let i = 0; i < n.length; i++) {
-        const height = Math.max(Math.floor(meterHeight * n[i]), 1);
+        const height = Math.max(Math.ceil(meterHeight * n[i]), 0.01);
         const curHeight = this.bars[i].height;
         if (height === curHeight) {
           continue;
