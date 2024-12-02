@@ -162,19 +162,15 @@ export const TopHatMonitor = GObject.registerClass(
 
       // System Monitor
       const appSys = Shell.AppSystem.get_default();
-      let app = appSys.lookup_app('gnome-system-monitor-kde.desktop');
+      let app = appSys.lookup_app('org.gnome.SystemMonitor.desktop');
       if (!app) {
-        log('kde app lookup failed');
         app = appSys.lookup_app('gnome-system-monitor.desktop');
-        if (!app) {
-          log('gnome app lookup failed');
-        }
       }
       if (app) {
         const button = new St.Button({ style_class: 'button' });
         button.child = new St.Icon({
-          icon_name: 'utilities-system-monitor-symbolic',
-          fallback_icon_name: 'org.gnome.SystemMonitor-symbolic',
+          icon_name: 'org.gnome.SystemMonitor-symbolic',
+          fallback_icon_name: 'utilities-system-monitor-symbolic',
         });
 
         button.connect('clicked', () => {
