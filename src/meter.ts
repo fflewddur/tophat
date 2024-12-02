@@ -86,7 +86,6 @@ export const TopHatMeter = GObject.registerClass(
     }
 
     private computeBarWidth(n: number, wasVertical = false) {
-      console.log(`computeBarWidth(${n}, ${wasVertical})`);
       let width = 8;
 
       if (wasVertical) {
