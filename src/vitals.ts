@@ -285,6 +285,8 @@ export const Vitals = GObject.registerClass(
     private showDisk;
     private netDev;
     private netDevs;
+    private settingSignals;
+    private nm: NM.Client | null;
 
     constructor(model: CpuModel, gsettings: Gio.Settings) {
       super();
@@ -293,6 +295,8 @@ export const Vitals = GObject.registerClass(
       this.cpuState = new CpuState(model.cores, model.tempMonitors.size);
       this.memInfo = new MemInfo();
       this.netState = new NetDevState();
+      this.nm = null;
+
       for (let i = 0; i < this.netActivityHistory.length; i++) {
         this.netActivityHistory[i] = new NetActivity();
       }
@@ -300,55 +304,71 @@ export const Vitals = GObject.registerClass(
       for (let i = 0; i < this.diskActivityHistory.length; i++) {
         this.diskActivityHistory[i] = new DiskActivity();
       }
+      this.settingSignals = new Array<number>(0);
       this.summary_interval =
         SummaryIntervalDefault * refreshRateModifier(this.gsettings);
-      this.gsettings.connect('changed::refresh-rate', (settings) => {
+      let id = this.gsettings.connect('changed::refresh-rate', (settings) => {
         this.summary_interval =
           SummaryIntervalDefault * refreshRateModifier(settings);
         this.stop();
         this.start();
       });
+      this.settingSignals.push(id);
+
       this.showCpu = gsettings.get_boolean('show-cpu');
-      this.gsettings.connect('changed::show-cpu', (settings: Gio.Settings) => {
-        this.showCpu = settings.get_boolean('show-cpu');
-      });
+      id = this.gsettings.connect(
+        'changed::show-cpu',
+        (settings: Gio.Settings) => {
+          this.showCpu = settings.get_boolean('show-cpu');
+        }
+      );
+      this.settingSignals.push(id);
+
       this.showMem = gsettings.get_boolean('show-mem');
-      this.gsettings.connect('changed::show-mem', (settings) => {
+      id = this.gsettings.connect('changed::show-mem', (settings) => {
         this.showMem = settings.get_boolean('show-mem');
       });
+      this.settingSignals.push(id);
+
       this.showNet = gsettings.get_boolean('show-net');
-      this.gsettings.connect('changed::show-net', (settings) => {
+      id = this.gsettings.connect('changed::show-net', (settings) => {
         this.showNet = settings.get_boolean('show-net');
       });
+      this.settingSignals.push(id);
+
       this.showDisk = gsettings.get_boolean('show-disk');
-      this.gsettings.connect('changed::show-disk', (settings) => {
+      id = this.gsettings.connect('changed::show-disk', (settings) => {
         this.showDisk = settings.get_boolean('show-disk');
       });
+      this.settingSignals.push(id);
+
       this.netDev = gsettings.get_string('network-device');
       if (this.netDev === _('Automatic')) {
         this.netDev = '';
       }
-      this.gsettings.connect('changed::network-device', (settings) => {
+      id = this.gsettings.connect('changed::network-device', (settings) => {
         this.netDev = settings.get_string('network-device');
         if (this.netDev === _('Automatic')) {
           this.netDev = '';
         }
       });
+      this.settingSignals.push(id);
+
       this.netDevs = new Array<string>();
       NM.Client.new_async(null, (obj, result) => {
         if (!obj) {
           console.error('[TopHat] obj is null');
           return;
         }
-        const client = NM.Client.new_finish(result);
-        if (!client) {
+        this.nm = NM.Client.new_finish(result);
+        if (!this.nm) {
           console.error('[TopHat] client is null');
           return;
         }
-        client.connect('notify::devices', () => {
-          this.updateNetDevices(client);
+        this.nm.connect('notify::devices', (nm: NM.Client) => {
+          this.updateNetDevices(nm);
         });
-        this.updateNetDevices(client);
+        this.updateNetDevices(this.nm);
       });
     }
 
@@ -1238,6 +1258,13 @@ export const Vitals = GObject.registerClass(
       }
       this.props.summary_interval = v;
       this.notify('summary-interval');
+    }
+
+    public override vfunc_dispose(): void {
+      for (const s of this.settingSignals) {
+        this.gsettings.disconnect(s);
+      }
+      super.vfunc_dispose();
     }
   }
 );

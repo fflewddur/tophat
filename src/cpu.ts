@@ -103,6 +103,7 @@ export const CpuMonitor = GObject.registerClass(
       this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
+      this.updateColor();
     }
 
     private updateDisplayType() {
@@ -194,7 +195,7 @@ export const CpuMonitor = GObject.registerClass(
     public override bindVitals(vitals: Vitals): void {
       super.bindVitals(vitals);
 
-      vitals.connect('notify::cpu-usage', () => {
+      let id = vitals.connect('notify::cpu-usage', () => {
         const percent = vitals.cpu_usage * 100;
         const s = percent.toFixed(0) + '%';
         this.usage.text = s;
@@ -213,19 +214,27 @@ export const CpuMonitor = GObject.registerClass(
           this.meter.setBarSizes([vitals.cpu_usage]);
         }
       });
-      vitals.connect('notify::cpu-model', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::cpu-model', () => {
         const s = vitals.cpu_model;
         this.menuCpuModel.text = s;
       });
-      vitals.connect('notify::cpu-freq', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::cpu-freq', () => {
         const s = (vitals.cpu_freq / 1000).toFixed(1) + ' GHz';
         this.menuCpuFreq.text = s;
       });
-      vitals.connect('notify::cpu-temp', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::cpu-temp', () => {
         const s = (vitals.cpu_temp / 1000).toFixed(0) + ' °C';
         this.menuCpuTemp.text = s;
       });
-      vitals.connect('notify::cpu-top-procs', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::cpu-top-procs', () => {
         const procs = vitals.getTopCpuProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
           let cpu = procs[i].cpuUsage();
@@ -245,13 +254,18 @@ export const CpuMonitor = GObject.registerClass(
           }
         }
       });
-      vitals.connect('notify::cpu-history', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::cpu-history', () => {
         this.historyChart?.update(vitals.cpu_usage);
       });
-      vitals.connect('notify::uptime', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::uptime', () => {
         const s = this.formatUptime(vitals.uptime);
         this.menuUptime.text = s;
       });
+      this.vitalsSignals.push(id);
     }
 
     private formatUptime(seconds: number): string {

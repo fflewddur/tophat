@@ -16,7 +16,6 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 import GObject from 'gi://GObject';
-// import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 
@@ -34,8 +33,8 @@ export const HistoryChart = GObject.registerClass(
     private chartStyle;
     private grid;
     private lm;
-    private bars;
-    private barsAlt?: Array<St.Widget>;
+    private bars: Array<St.Widget>;
+    private barsAlt: Array<St.Widget> | null;
     private yLabelTop;
     private yLabelMiddle;
     private yLabelBottom;
@@ -55,6 +54,7 @@ export const HistoryChart = GObject.registerClass(
       this.bars = new Array<St.Widget>(MaxHistoryLen);
       for (let i = 0; i < MaxHistoryLen; i++) {
         this.bars[i] = new St.Widget({
+          name: 'HistoryBar',
           x_expand: true,
           y_expand: false,
           y_align: Clutter.ActorAlign.END,
@@ -66,6 +66,7 @@ export const HistoryChart = GObject.registerClass(
         this.barsAlt = new Array<St.Widget>(MaxHistoryLen);
         for (let i = 0; i < MaxHistoryLen; i++) {
           this.barsAlt[i] = new St.Widget({
+            name: 'HistoryBarAlt',
             x_expand: true,
             y_expand: false,
             y_align: Clutter.ActorAlign.START,
@@ -73,7 +74,10 @@ export const HistoryChart = GObject.registerClass(
             height: 0,
           });
         }
+      } else {
+        this.barsAlt = null;
       }
+
       this.yLabelTop = new St.Label();
       this.yLabelMiddle = new St.Label();
       this.yLabelBottom = new St.Label();
@@ -188,6 +192,11 @@ export const HistoryChart = GObject.registerClass(
       this.xLabelNow.text = _('now');
       this.xLabelNow.add_style_class_name('chart-label-now');
       this.lm.attach(this.xLabelNow, 1, 2, 1, 1);
+    }
+
+    public override destroy() {
+      this.grid.destroy();
+      super.destroy();
     }
   }
 );

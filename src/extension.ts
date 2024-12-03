@@ -66,9 +66,9 @@ export default class TopHat extends Extension {
     this.signals.forEach((s) => {
       this.gsettings?.disconnect(s);
     });
+    this.signals.length = 0;
     this.gsettings = undefined;
     this.vitals?.stop();
-    this.vitals?.run_dispose();
     this.vitals = undefined;
     console.log('[TopHat] disabled');
   }

@@ -98,6 +98,7 @@ export const NetMonitor = GObject.registerClass(
       });
       this.buildMenu();
       this.addMenuButtons();
+      this.updateColor();
 
       NM.Client.new_async(null, (obj, result) => {
         if (!obj) {
@@ -197,7 +198,7 @@ export const NetMonitor = GObject.registerClass(
     public override bindVitals(vitals: Vitals): void {
       super.bindVitals(vitals);
 
-      vitals.connect('notify::net-sent', () => {
+      let id = vitals.connect('notify::net-sent', () => {
         if (this.connectivity === NM.ConnectivityState.NONE) {
           return;
         }
@@ -205,7 +206,9 @@ export const NetMonitor = GObject.registerClass(
         this.valueNetUp.text = s;
         this.menuNetUp.text = s;
       });
-      vitals.connect('notify::net-recv', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::net-recv', () => {
         if (this.connectivity === NM.ConnectivityState.NONE) {
           return;
         }
@@ -213,15 +216,21 @@ export const NetMonitor = GObject.registerClass(
         this.valueNetDown.text = s;
         this.menuNetDown.text = s;
       });
-      vitals.connect('notify::net-sent-total', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::net-sent-total', () => {
         const s = bytesToHumanString(vitals.net_sent_total);
         this.menuNetUpTotal.text = s;
       });
-      vitals.connect('notify::net-recv-total', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::net-recv-total', () => {
         const s = bytesToHumanString(vitals.net_recv_total);
         this.menuNetDownTotal.text = s;
       });
-      vitals.connect('notify::net-history', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::net-history', () => {
         const history = vitals.getNetActivity();
         let max = 0;
         for (const na of history) {
@@ -242,6 +251,7 @@ export const NetMonitor = GObject.registerClass(
         this.historyChart?.setYLabelTop(maxLabel);
         this.historyChart?.updateAlt(history, max);
       });
+      this.vitalsSignals.push(id);
     }
   }
 );

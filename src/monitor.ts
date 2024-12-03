@@ -63,11 +63,14 @@ export const TopHatMonitor = GObject.registerClass(
     private menuRow = 0;
     private menuCol = 0;
     protected menuNumCols = 0;
-    protected historyChart?: HistoryChart;
-    // protected histLabel;
+    protected historyChart: HistoryChart | null;
     protected metadata: ExtensionMetadata;
     protected color: string;
     protected useAccentColor: boolean;
+    protected themeContext;
+    protected themeContextChanged;
+    protected vitals?: Vitals;
+    protected vitalsSignals;
 
     constructor(
       nameText: string,
@@ -78,6 +81,7 @@ export const TopHatMonitor = GObject.registerClass(
       this.monitorName = nameText;
       this.metadata = metadata;
       this.gsettings = gsettings;
+      this.vitalsSignals = new Array<number>(0);
       this.add_style_class_name('tophat-monitor');
       // We need to add the box as a child to `this` before
       // assigning it to this.box
@@ -86,6 +90,7 @@ export const TopHatMonitor = GObject.registerClass(
       this.add_child(box);
       this.box = box;
       this.menuLayout = this.buildMenuBase();
+      this.historyChart = null;
 
       this.icon = new St.Icon({
         style_class: 'system-status-icon tophat-panel-icon',
@@ -110,8 +115,8 @@ export const TopHatMonitor = GObject.registerClass(
       });
 
       // Listen for accent color changes
-      const themeContext = St.ThemeContext.get_for_stage(global.get_stage());
-      themeContext.connect('changed', () => {
+      this.themeContext = St.ThemeContext.get_for_stage(global.get_stage());
+      this.themeContextChanged = this.themeContext.connect('changed', () => {
         [this.color, this.useAccentColor] = this.updateColor();
       });
 
@@ -214,11 +219,12 @@ export const TopHatMonitor = GObject.registerClass(
     }
 
     public bindVitals(vitals: Vitals) {
-      vitals.connect('notify::summary-interval', () => {
+      this.vitals = vitals;
+      const id = vitals.connect('notify::summary-interval', () => {
         const then = this.formatChartLimit(vitals.summary_interval);
         this.historyChart?.setThen(then);
-        // this.histLabel.text = then;
       });
+      this.vitalsSignals.push(id);
     }
 
     protected formatChartLimit(summaryInterval: number) {
@@ -231,7 +237,7 @@ export const TopHatMonitor = GObject.registerClass(
       return label;
     }
 
-    private updateColor(): [string, boolean] {
+    protected updateColor(): [string, boolean] {
       let fgColor = this.gsettings.get_string('meter-fg-color');
       const useAccentColor = this.gsettings.get_boolean('use-system-accent');
       if (useAccentColor && GnomeMajorVer >= 47) {
@@ -241,9 +247,22 @@ export const TopHatMonitor = GObject.registerClass(
           fgColor = `rgb(${color.red},${color.green},${color.blue})`;
         }
       }
-      this.meter.setColor(fgColor);
+      this.meter?.setColor(fgColor);
       this.historyChart?.setColor(fgColor);
       return [fgColor, useAccentColor];
+    }
+
+    public override destroy() {
+      for (const id of this.vitalsSignals) {
+        this.vitals?.disconnect(id);
+      }
+      this.vitalsSignals.length = 0;
+      this.box.destroy();
+      this.themeContext.disconnect(this.themeContextChanged);
+      this.themeContextChanged = 0;
+      this.historyChart?.destroy();
+      this.historyChart = null;
+      super.destroy();
     }
   }
 );

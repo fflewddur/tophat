@@ -90,6 +90,7 @@ export const DiskMonitor = GObject.registerClass(
 
       this.buildMenu();
       this.addMenuButtons();
+      this.updateColor();
     }
 
     private buildMenu() {
@@ -177,25 +178,33 @@ export const DiskMonitor = GObject.registerClass(
     public override bindVitals(vitals: Vitals): void {
       super.bindVitals(vitals);
 
-      vitals.connect('notify::disk-read', () => {
+      let id = vitals.connect('notify::disk-read', () => {
         const s = bytesToHumanString(vitals.disk_read) + '/s';
         this.valueRead.text = s;
         this.menuDiskReads.text = s;
       });
-      vitals.connect('notify::disk-wrote', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::disk-wrote', () => {
         const s = bytesToHumanString(vitals.disk_wrote) + '/s';
         this.valueWrite.text = s;
         this.menuDiskWrites.text = s;
       });
-      vitals.connect('notify::disk-read-total', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::disk-read-total', () => {
         const s = bytesToHumanString(vitals.disk_read_total);
         this.menuDiskReadsTotal.text = s;
       });
-      vitals.connect('notify::disk-wrote-total', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::disk-wrote-total', () => {
         const s = bytesToHumanString(vitals.disk_wrote_total);
         this.menuDiskWritesTotal.text = s;
       });
-      vitals.connect('notify::disk-history', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::disk-history', () => {
         const history = vitals.getDiskActivity();
         let max = 0.001; // A very small value to prevent division by 0
         for (const da of history) {
@@ -216,7 +225,9 @@ export const DiskMonitor = GObject.registerClass(
         this.historyChart?.setYLabelTop(maxLabel);
         this.historyChart?.updateAlt(history, max);
       });
-      vitals.connect('notify::disk-top-procs', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::disk-top-procs', () => {
         const procs = vitals.getTopDiskProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
           const w = procs[i].diskWrites();
@@ -232,6 +243,7 @@ export const DiskMonitor = GObject.registerClass(
           }
         }
       });
+      this.vitalsSignals.push(id);
     }
   }
 );

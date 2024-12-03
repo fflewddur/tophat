@@ -33,7 +33,7 @@ export const TopHatContainer = GObject.registerClass(
       dontCreateMenu?: boolean
     ) {
       super(menuAlignment, nameText, dontCreateMenu);
-      this.monitors = new Array<TopHatMonitor>();
+      this.monitors = new Array<TopHatMonitor>(0);
       this.box = new St.BoxLayout();
       this.add_child(this.box);
       this.remove_style_class_name('panel-button');
@@ -45,7 +45,12 @@ export const TopHatContainer = GObject.registerClass(
     }
 
     override destroy(): void {
+      this.box.remove_all_children();
       this.box.destroy();
+      while (this.monitors.length > 0) {
+        const m = this.monitors.pop();
+        m?.destroy();
+      }
       super.destroy();
     }
   }

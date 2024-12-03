@@ -87,6 +87,7 @@ export const MemMonitor = GObject.registerClass(
       this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
+      this.updateColor();
     }
 
     private updateDisplayType() {
@@ -166,27 +167,34 @@ export const MemMonitor = GObject.registerClass(
     public override bindVitals(vitals: Vitals): void {
       super.bindVitals(vitals);
 
-      vitals.connect('notify::ram-size', () => {
+      let id = vitals.connect('notify::ram-size', () => {
         const total = bytesToHumanString(vitals.ram_size);
         const free = bytesToHumanString(vitals.ram_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
       });
-      vitals.connect('notify::ram-size-free', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::ram-size-free', () => {
         const total = bytesToHumanString(vitals.ram_size);
         const free = bytesToHumanString(vitals.ram_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
       });
-      vitals.connect('notify::ram-usage', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::ram-usage', () => {
         const s = (vitals.ram_usage * 100).toFixed(0) + '%';
         this.usage.text = s;
         this.menuMemUsage.text = s;
         this.meter.setBarSizes([vitals.ram_usage]);
       });
-      vitals.connect('notify::swap-size', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::swap-size', () => {
         const total = bytesToHumanString(vitals.swap_size);
         const free = bytesToHumanString(vitals.swap_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
       });
+      this.vitalsSignals.push(id);
       vitals.connect('notify::swap-size-free', () => {
         const total = bytesToHumanString(vitals.swap_size);
         const free = bytesToHumanString(vitals.swap_size_free);

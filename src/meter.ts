@@ -190,6 +190,14 @@ export const TopHatMeter = GObject.registerClass(
         this.bars[i].set_style(style);
       }
     }
+
+    public override destroy() {
+      for (const b of this.bars) {
+        b.destroy();
+      }
+      this.bars.length = 0;
+      super.destroy();
+    }
   }
 );
 
