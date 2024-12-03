@@ -119,8 +119,9 @@ export const FileSystemMonitor = GObject.registerClass({
     _init(configHandler) {
         super._init('TopHat FS Monitor');
 
-        let gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/disk-icon-symbolic.svg`);
-        this.icon = new St.Icon({gicon, style_class: 'system-status-icon tophat-panel-icon'});
+        this.gicon = Gio.icon_new_for_string(`${configHandler.metadata.path}/icons/disk-icon-symbolic.svg`);
+        this.gicon_adwaita = new Gio.ThemedIcon({ name: "drive-harddisk-symbolic" })
+        this.icon = new St.Icon({ gicon: this.gicon, style_class: 'system-status-icon tophat-panel-icon' });
         this.add_child(this.icon);
 
         this.usage = new St.Label({
@@ -154,6 +155,7 @@ export const FileSystemMonitor = GObject.registerClass({
         configHandler.settings.bind('show-disk', this, 'visible', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('refresh-rate', this, 'refresh-rate', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('show-icons', this.icon, 'visible', Gio.SettingsBindFlags.GET);
+        configHandler.settings.bind('use-adwaita-icon', this, 'use-adwaita-icon', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('meter-fg-color', this, 'meter-fg-color', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('meter-bar-width', this, 'meter-bar-width', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('show-animations', this, 'show-animation', Gio.SettingsBindFlags.GET);
@@ -161,14 +163,20 @@ export const FileSystemMonitor = GObject.registerClass({
         configHandler.settings.bind('mount-to-monitor', this, 'mount', Gio.SettingsBindFlags.GET);
         configHandler.settings.bind('disk-monitor-mode', this, 'monitor-mode', Gio.SettingsBindFlags.GET);
 
-        let id = this.connect('notify::visible', () => {
-            if (this.visible) {
-                this._startTimers();
-            } else {
-                this._stopTimers();
-            }
-        });
-        this._signals.push(id);
+        this._set_icon();
+        let id;
+        for (const s of ["use-adwaita-icon", "visible"]) {
+             id = this.connect(`notify::${s}`, () => {
+                if (this.visible) {
+                    this._set_icon();
+                    this._startTimers();
+                } else {
+                    this._stopTimers();
+                }
+            });
+            this._signals.push(id);
+        }
+
         id = this.connect('notify::refresh-rate', () => {
             this._stopTimers();
             this._startTimers();
@@ -223,6 +231,14 @@ export const FileSystemMonitor = GObject.registerClass({
         case 'both':
             this.activityBox.visible = true;
             break;
+        }
+    }
+
+    _set_icon() {
+        if (this.use_adwaita_icon) {
+            this.icon.gicon = this.gicon_adwaita
+        } else {
+            this.icon.gicon = this.gicon
         }
     }
 

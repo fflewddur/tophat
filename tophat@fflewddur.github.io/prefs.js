@@ -49,7 +49,9 @@ export default class TopHatPrefs extends ExtensionPreferences {
         choices.append(_('Fast'));
         this.addComboRow(_('Refresh speed'), choices, 'refreshRate', group, configHandler);
         this.addColorRow(_('Meter color'), 'meterFGColor', group, configHandler);
+        this.addColorRow(_('Meter secondary color'), 'meterFGSecondayColor', group, configHandler);
         this.addActionRow(_('Show icons beside monitors'), 'show-icons', group, configHandler);
+        this.addActionRow(_("Use adwaita's built-in icons"), 'use-adwaita-icon', group, configHandler);
         this.addActionRow(_('Show animations'), 'show-animations', group, configHandler);
 
         group = new Adw.PreferencesGroup({title: _('Processor')});
@@ -98,6 +100,10 @@ export default class TopHatPrefs extends ExtensionPreferences {
         choices.append(_('Bytes'));
         choices.append(_('Bits'));
         this.addComboRow(_('Measurement unit'), choices, 'networkUnit', group, configHandler);
+        page.add(group);
+
+        group = new Adw.PreferencesGroup({ title: _('Battery') });
+        this.addActionRow(_('Show the battery monitor'), 'show-bat', group, configHandler);
         page.add(group);
 
         window.set_default_size(400, 0);
