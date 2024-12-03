@@ -50,7 +50,7 @@ export class File {
               reject('count not load file');
               return;
             }
-            // Somtimes the null terminator appears before bytes.length
+            // Sometimes the null terminator appears before bytes.length
             const end = bytes.indexOf(0);
             if (end >= 0) {
               bytes = bytes.slice(0, end);

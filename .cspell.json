@@ -6,12 +6,14 @@
     "bfree",
     "blockio",
     "cahya",
+    "cmdline",
     "Cogl",
     "coretemp",
     "diskstats",
     "dontCreateMenu",
     "enecciara",
     "esalvati",
+    "fflewddur",
     "flozz",
     "Freqs",
     "fsusage",
@@ -65,7 +67,9 @@
     "Tdie",
     "theizzer",
     "thenounproject",
+    "topbar",
     "tophat",
+    "Trixie",
     "tseslint",
     "txelu",
     "typelib",
@@ -87,5 +91,7 @@
     "yakushabb",
     "yuhldr"
   ],
-  "enableFiletypes": ["!yaml"]
+  "enableFiletypes": [
+    "!yaml"
+  ]
 }

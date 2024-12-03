@@ -5,11 +5,13 @@ based on [Keep a Changelog].
 
 ## Not yet released
 
-- Complete re-write in TypeScript
+- Complete re-write in TypeScript for improved reliability
 - Removed libgtop and clutter dependencies
-- Fixed crashes during some network file operations
+- Fixed crashes and freezes during some network file operations
 - More accurate per-process memory reporting
 - Visual refresh
+- Numerous bug fixes
+- Removed the file system usage monitor
 
 ## TopHat 15 - September 30, 2024
 
