@@ -195,25 +195,33 @@ export const MemMonitor = GObject.registerClass(
         this.menuMemSize.text = _(`${free} available of ${total}`);
       });
       this.vitalsSignals.push(id);
-      vitals.connect('notify::swap-size-free', () => {
+
+      id = vitals.connect('notify::swap-size-free', () => {
         const total = bytesToHumanString(vitals.swap_size);
         const free = bytesToHumanString(vitals.swap_size_free);
         this.menuSwapSize.text = _(`${free} available of ${total}`);
       });
-      vitals.connect('notify::swap-usage', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::swap-usage', () => {
         const s = (vitals.swap_usage * 100).toFixed(0) + '%';
         this.menuSwapUsage.text = s;
       });
-      vitals.connect('notify::mem-history', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::mem-history', () => {
         this.historyChart?.update(vitals.ram_usage);
       });
-      vitals.connect('notify::mem-top-procs', () => {
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::mem-top-procs', () => {
         const procs = vitals.getTopMemProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
           this.topProcs[i].cmd.text = procs[i].cmd;
           this.topProcs[i].usage.text = bytesToHumanString(procs[i].memUsage());
         }
       });
+      this.vitalsSignals.push(id);
     }
   }
 );

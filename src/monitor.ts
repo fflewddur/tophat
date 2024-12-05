@@ -252,6 +252,10 @@ export const TopHatMonitor = GObject.registerClass(
       return [fgColor, useAccentColor];
     }
 
+    public getMonitorName() {
+      return this.monitorName;
+    }
+
     public override destroy() {
       for (const id of this.vitalsSignals) {
         this.vitals?.disconnect(id);
