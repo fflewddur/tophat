@@ -45,7 +45,7 @@ export default class TopHat extends Extension {
   private container?: TopHatContainer;
 
   public enable() {
-    console.log(`[TopHat] enabling version ${this.metadata.version}`);
+    // console.log(`[TopHat] enabling version ${this.metadata.version}`);
     this.gsettings = this.getSettings();
     const f = new File('/proc/cpuinfo');
     const cpuModel = this.parseCpuOverview(f.readSync());
@@ -56,11 +56,11 @@ export default class TopHat extends Extension {
       this.addToPanel();
     });
     this.signals.push(id);
-    console.log('[TopHat] enabled');
+    // console.log('[TopHat] enabled');
   }
 
   public disable() {
-    console.log(`[TopHat] disabling version ${this.metadata.version}`);
+    // console.log(`[TopHat] disabling version ${this.metadata.version}`);
     this.container?.destroy();
     this.container = undefined;
     this.signals.forEach((s) => {
@@ -70,7 +70,7 @@ export default class TopHat extends Extension {
     this.gsettings = undefined;
     this.vitals?.stop();
     this.vitals = undefined;
-    console.log('[TopHat] disabled');
+    // console.log('[TopHat] disabled');
   }
 
   private parseCpuOverview(cpuinfo: string): CpuModel {

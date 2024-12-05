@@ -3,14 +3,14 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Not yet released
+## TopHat 16 - December 4, 2024
 
-- Complete re-write in TypeScript for improved reliability
-- Removed libgtop and clutter dependencies
-- Fixed crashes and freezes during some network file operations
-- More accurate per-process memory reporting
 - Visual refresh
+- Fixed crashes and freezes during network file operations
+- Increased accuracy of per-process memory reporting
 - Numerous bug fixes
+- Complete re-write in TypeScript for improved reliability
+- Removed libgtop and clutter dependencies for easier installation
 - Removed the file system usage monitor
 
 ## TopHat 15 - September 30, 2024

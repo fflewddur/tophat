@@ -6,18 +6,6 @@ displays CPU, memory, disk, and network activity in the GNOME top bar.
 <img src="./screenshots/tophat.png?raw=true" width="1080px" alt="Screenshot of
 TopHat">
 
-## News
-
-This is the current development branch of TopHat. I'm in the process of
-re-writing this extension with the following goals:
-
-- Port to TypeScript to improve reliability
-- Remove glibtop as a required dependency
-- Generally cleanup the code to improve maintainability
-
-As of today, this branch is mostly working, but not quite as customizable as
-the current stable release of TopHat.
-
 ## Release notes
 
 See [RELEASES.md](RELEASES.md) for the list of fixes and new functionality
@@ -76,14 +64,14 @@ issue doesn't already exist for your idea, please create one.
 TopHat uses Yarn to manage dependencies and define development tasks. Learn
 how to install Yarn at https://yarnpkg.com/getting-started/install.
 
-`yarn`: Install project dependencies.
-`yarn build`: Build the project.
-`yarn lint`: Check for common problems.
-`yarn lint:fix`: Fix common problems found by ESLint.
+`yarn`: Install project dependencies.  
+`yarn build`: Build the project.  
+`yarn lint`: Check for common problems.  
+`yarn lint:fix`: Fix common problems found by ESLint.  
 `yarn format`: Run Prettier to keep the project's coding style consistent.
 
 To keep the code format consistent, please use run `yarn lint && yarn format`
-before submitting a PR. If you use VS Code, I recommend installing the
+before submitting a PR. If you use VS Code, consider installing the
 ESLint and Prettier extensions to automatically run these tools for you.
 
 ### Useful development commands

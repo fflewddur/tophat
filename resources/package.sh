@@ -1,3 +1,3 @@
 #! /bin/sh
 
-gnome-extensions pack --force --extra-source=lib --extra-source=icons --extra-source=../LICENSE --extra-source=../README.md --extra-source=../RELEASES.md --extra-source=classic.css --podir=../po ./tophat@fflewddur.github.io && echo "Extension successfully packaged"
+gnome-extensions pack --force --extra-source=container.js --extra-source=cpu.js --extra-source=disk.js --extra-source=file.js --extra-source=helpers.js --extra-source=history.js --extra-source=mem.js --extra-source=meter.js --extra-source=monitor.js --extra-source=net.js --extra-source=vitals.js --extra-source=icons --extra-source=../LICENSE --extra-source=../README.md --extra-source=../RELEASES.md --extra-source=classic.css --schema=./schemas/gschemas.compiled --schema=../resources/schemas/org.gnome.shell.extensions.tophat.gschema.xml --podir=../po ./dist && echo "Extension successfully packaged"
