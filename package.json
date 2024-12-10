@@ -24,6 +24,6 @@
     "lint:fix": "eslint ./src --fix",
     "format": "prettier . --write",
     "translate": "./resources/translate.sh",
-    "pack": "./resources/package.sh"
+    "package": "./resources/package.sh"
   }
 }

@@ -3,6 +3,11 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## TopHat 17 - December 8, 2024
+
+- Fixed potential resource leaks
+- Updated Simplified Chinese translation (from [yuhldr](https://github.com/yuhldr))
+
 ## TopHat 16 - December 4, 2024
 
 - Visual refresh

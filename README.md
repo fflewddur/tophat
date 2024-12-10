@@ -28,7 +28,6 @@ The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
 - Debian Trixie
-- Fedora 40
 - Fedora 41
 - Ubuntu 24.04 LTS
 - Ubuntu 24.10

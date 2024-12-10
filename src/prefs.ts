@@ -31,11 +31,8 @@ import * as Config from 'resource:///org/gnome/Shell/Extensions/js/misc/config.j
 const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export default class TopHatPrefs extends ExtensionPreferences {
-  private gsettings?: Gio.Settings;
-
   fillPreferencesWindow(window: Adw.PreferencesWindow) {
     return new Promise<void>((resolve) => {
-      this.gsettings = this.getSettings();
       this.loadIconTheme();
 
       window.add(this.buildGeneralPage());
@@ -241,19 +238,15 @@ export default class TopHatPrefs extends ExtensionPreferences {
     setting: string,
     group: Adw.PreferencesGroup
   ) {
+    const settings = this.getSettings();
     const row = new Adw.ActionRow({ title: label });
     group.add(row);
 
     const toggle = new Gtk.Switch({
-      active: this.gsettings?.get_boolean(setting),
+      active: settings.get_boolean(setting),
       valign: Gtk.Align.CENTER,
     });
-    this.gsettings?.bind(
-      setting,
-      toggle,
-      'active',
-      Gio.SettingsBindFlags.DEFAULT
-    );
+    settings.bind(setting, toggle, 'active', Gio.SettingsBindFlags.DEFAULT);
     row.add_suffix(toggle);
     row.activatable_widget = toggle;
     return row;
@@ -265,18 +258,19 @@ export default class TopHatPrefs extends ExtensionPreferences {
     group: Adw.PreferencesGroup,
     control: Gtk.Switch | null
   ) {
+    const settings = this.getSettings();
     const row = new Adw.ActionRow({ title: label });
     group.add(row);
 
     const button = new Gtk.ColorButton();
-    const color = this.gsettings?.get_string(setting);
+    const color = settings.get_string(setting);
     if (color) {
       const rgba = new Gdk.RGBA();
       rgba.parse(color);
       button.set_rgba(rgba);
     }
     button.connect('color-set', (w) => {
-      this.gsettings?.set_string('meter-fg-color', w.get_rgba().to_string());
+      settings.set_string('meter-fg-color', w.get_rgba().to_string());
     });
 
     if (control) {
@@ -297,15 +291,12 @@ export default class TopHatPrefs extends ExtensionPreferences {
     group: Adw.PreferencesGroup,
     settingIsEnum = true
   ) {
-    if (!this.gsettings) {
-      console.warn('[TopHat] gsettings is null in addComboRow()');
-      return;
-    }
+    const settings = this.getSettings();
     let selected = 0;
     if (settingIsEnum) {
-      selected = this.gsettings.get_enum(setting);
+      selected = settings.get_enum(setting);
     } else {
-      const selectedVal = this.gsettings.get_string(setting);
+      const selectedVal = settings.get_string(setting);
       for (let i = 0; choices && i < choices.get_n_items(); i++) {
         if (selectedVal === choices.get_string(i)) {
           selected = i;
@@ -321,10 +312,10 @@ export default class TopHatPrefs extends ExtensionPreferences {
 
     row.connect('notify::selected', (widget: Adw.ComboRow) => {
       if (settingIsEnum) {
-        this.gsettings?.set_enum(setting, widget.selected);
+        settings.set_enum(setting, widget.selected);
       } else {
         const item = widget.selectedItem as Gtk.StringObject;
-        this.gsettings?.set_string(setting, item.string);
+        settings.set_string(setting, item.string);
       }
     });
 

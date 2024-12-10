@@ -373,7 +373,8 @@ export const Vitals = GObject.registerClass(
     }
 
     public start(): void {
-      setTimeout(() => this.readSummaries(), 0);
+      this.readSummaries();
+      this.readDetails();
       if (this.summaryLoop === 0) {
         this.summaryLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_LOW,
