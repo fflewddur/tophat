@@ -21,7 +21,7 @@ import St from 'gi://St';
 
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { IActivity, MaxHistoryLen } from './vitals.js';
+import { IActivity, IHistory, MaxHistoryLen } from './vitals.js';
 
 export enum HistoryStyle {
   SINGLE,
@@ -33,8 +33,13 @@ export const HistoryChart = GObject.registerClass(
     private chartStyle;
     private grid;
     private lm;
+    private chart: St.BoxLayout;
+    private chartAlt: St.BoxLayout | null;
     private bars: Array<St.Widget>;
     private barsAlt: Array<St.Widget> | null;
+    private priorActivity: IHistory[] | null;
+    private priorActivityAlt: IActivity[] | null;
+    private priorMax = 0;
     private yLabelTop;
     private yLabelMiddle;
     private yLabelBottom;
@@ -62,6 +67,7 @@ export const HistoryChart = GObject.registerClass(
           height: 0,
         });
       }
+      this.chart = new St.BoxLayout({ style_class: 'chart' });
       if (this.chartStyle === HistoryStyle.DUAL) {
         this.barsAlt = new Array<St.Widget>(MaxHistoryLen);
         for (let i = 0; i < MaxHistoryLen; i++) {
@@ -74,17 +80,45 @@ export const HistoryChart = GObject.registerClass(
             height: 0,
           });
         }
+        this.chartAlt = new St.BoxLayout({
+          style_class: 'chart chart-stacked-bottom',
+        });
       } else {
         this.barsAlt = null;
+        this.chartAlt = null;
       }
 
+      this.priorActivity = null;
+      this.priorActivityAlt = null;
       this.yLabelTop = new St.Label();
       this.yLabelMiddle = new St.Label();
       this.yLabelBottom = new St.Label();
       this.xLabelNow = new St.Label();
       this.xLabelThen = new St.Label();
 
+      // this.chart.connect('notify::height', (w, h) => {
+      //   console.log('height changed: ' + w.height + ' or ' + h);
+      //   if (this.chartStyle === HistoryStyle.SINGLE && this.priorActivity) {
+      //     console.log('updating from prior activity');
+      //     this.update(this.priorActivity);
+      //   } else if (this.priorActivityAlt) {
+      //     this.updateAlt(this.priorActivityAlt, this.priorMax);
+      //   }
+      // });
+
       this.build();
+    }
+
+    public refresh() {
+      console.log('refresh');
+      if (this.chartStyle === HistoryStyle.SINGLE && this.priorActivity) {
+        this.update(this.priorActivity);
+      } else if (
+        this.chartStyle === HistoryStyle.DUAL &&
+        this.priorActivityAlt
+      ) {
+        this.updateAlt(this.priorActivityAlt, this.priorMax);
+      }
     }
 
     public setYLabelTop(s: string) {
@@ -103,22 +137,27 @@ export const HistoryChart = GObject.registerClass(
       this.xLabelThen.text = s;
     }
 
-    public update(usage: number) {
-      const chartHeight = this.bars[0].get_parent()?.height;
+    public update(usage: IHistory[]) {
+      const chartHeight = this.chart.height;
       if (!chartHeight) {
         console.warn('Could not get chart height');
         return;
       }
-      for (let i = 0; i < this.bars.length - 1; i++) {
-        this.bars[i].height = this.bars[i + 1].height;
+      console.log(`chartHeight: ${chartHeight}`);
+      for (let i = 0; i < this.bars.length; i++) {
+        this.bars[i].height = chartHeight * usage[usage.length - i - 1].val();
       }
-      this.bars[this.bars.length - 1].height = Math.round(chartHeight * usage);
+      this.priorActivity = usage;
     }
 
     public updateAlt(usage: IActivity[], max: number) {
-      const chartHeight = this.bars[0].get_parent()?.height;
-      if (!chartHeight || !this.barsAlt) {
-        console.warn('Could not get chart height');
+      if (!this.chartAlt || !this.barsAlt) {
+        console.warn('[TopHat] chartAlt is null');
+        return;
+      }
+      const chartHeight = this.chartAlt.height;
+      if (!chartHeight) {
+        console.warn('[TopHat] Could not get chart height');
         return;
       }
       for (let i = 0; i < this.bars.length; i++) {
@@ -131,6 +170,8 @@ export const HistoryChart = GObject.registerClass(
         this.bars[i].height = height;
         this.barsAlt[i].height = heightAlt;
       }
+      this.priorActivityAlt = usage;
+      this.priorMax = max;
     }
 
     public setColor(color: string) {
@@ -149,20 +190,17 @@ export const HistoryChart = GObject.registerClass(
       if (this.barsAlt) {
         chartRowSpan = 1;
       }
-      const chart = new St.BoxLayout({ style_class: 'chart' });
-      this.lm.attach(chart, 0, 0, 2, chartRowSpan);
+
+      this.lm.attach(this.chart, 0, 0, 2, chartRowSpan);
       for (const bar of this.bars) {
-        chart.add_child(bar);
+        this.chart.add_child(bar);
       }
-      if (this.barsAlt) {
-        const chartAlt = new St.BoxLayout({
-          style_class: 'chart chart-stacked-bottom',
-        });
-        this.lm.attach(chartAlt, 0, 1, 2, chartRowSpan);
+      if (this.barsAlt && this.chartAlt) {
+        this.lm.attach(this.chartAlt, 0, 1, 2, chartRowSpan);
         for (const bar of this.barsAlt) {
-          chartAlt.add_child(bar);
+          this.chartAlt.add_child(bar);
         }
-        chart.add_style_class_name('chart-stacked-top');
+        this.chart.add_style_class_name('chart-stacked-top');
       }
 
       const vbox = new St.BoxLayout({ vertical: true, y_expand: true });
@@ -192,6 +230,9 @@ export const HistoryChart = GObject.registerClass(
       this.xLabelNow.text = _('now');
       this.xLabelNow.add_style_class_name('chart-label-now');
       this.lm.attach(this.xLabelNow, 1, 2, 1, 1);
+
+      const label = new St.Label({ text: '' });
+      this.lm.attach(label, 2, 2, 1, 1);
     }
 
     public override destroy() {

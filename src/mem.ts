@@ -210,7 +210,7 @@ export const MemMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::mem-history', () => {
-        this.historyChart?.update(vitals.ram_usage);
+        this.historyChart?.update(vitals.getMemHistory());
       });
       this.vitalsSignals.push(id);
 

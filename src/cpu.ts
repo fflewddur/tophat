@@ -257,7 +257,7 @@ export const CpuMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::cpu-history', () => {
-        this.historyChart?.update(vitals.cpu_usage);
+        this.historyChart?.update(vitals.getCpuHistory());
       });
       this.vitalsSignals.push(id);
 

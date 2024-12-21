@@ -123,6 +123,14 @@ export const TopHatMonitor = GObject.registerClass(
       this.meter.connect('notify::vertical', () => {
         this.meter.reorient();
       });
+      if (this.menu instanceof PopupMenu.PopupMenu) {
+        // @ts-expect-error type of never
+        this.menu.connect('open-state-changed', (menu, open) => {
+          if (open && this.historyChart) {
+            this.historyChart.refresh();
+          }
+        });
+      }
     }
 
     public override add_child(w: St.Widget) {

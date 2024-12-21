@@ -31,6 +31,10 @@ export interface IActivity {
   valAlt(): number;
 }
 
+export interface IHistory {
+  val(): number;
+}
+
 export const Vitals = GObject.registerClass(
   {
     GTypeName: 'Vitals',
@@ -297,6 +301,12 @@ export const Vitals = GObject.registerClass(
       this.netState = new NetDevState();
       this.nm = null;
 
+      for (let i = 0; i < this.cpuUsageHistory.length; i++) {
+        this.cpuUsageHistory[i] = new CpuUsage(model.cores);
+      }
+      for (let i = 0; i < this.memUsageHistory.length; i++) {
+        this.memUsageHistory[i] = new MemUsage();
+      }
       for (let i = 0; i < this.netActivityHistory.length; i++) {
         this.netActivityHistory[i] = new NetActivity();
       }
@@ -475,10 +485,10 @@ export const Vitals = GObject.registerClass(
                 usage.core[core] = this.cpuState.coreUsage(core);
               }
             }
-            if (this.cpuUsageHistory.unshift(usage) > MaxHistoryLen) {
-              this.cpuUsageHistory.pop();
-            }
           });
+          if (this.cpuUsageHistory.unshift(usage) > MaxHistoryLen) {
+            this.cpuUsageHistory.pop();
+          }
           this.cpu_usage = usage.aggregate;
           this.cpu_history = this.hashCpuHistory();
         })
@@ -885,6 +895,14 @@ export const Vitals = GObject.registerClass(
         usage[i] = this.cpuState.coreUsage(i);
       }
       return usage;
+    }
+
+    public getCpuHistory() {
+      return this.cpuUsageHistory;
+    }
+
+    public getMemHistory() {
+      return this.memUsageHistory;
     }
 
     public getNetActivity() {
@@ -1378,7 +1396,7 @@ class CpuState {
   }
 }
 
-class CpuUsage {
+class CpuUsage implements IHistory {
   public aggregate: number;
   public core: Array<number>;
 
@@ -1388,6 +1406,10 @@ class CpuUsage {
     for (let i = 0; i < cores; i++) {
       this.core[i] = 0;
     }
+  }
+
+  public val() {
+    return this.aggregate;
   }
 
   public toString(): string {
@@ -1425,9 +1447,13 @@ class MemInfo {
   public swapAvailable = 0;
 }
 
-class MemUsage {
+class MemUsage implements IHistory {
   public usedMem = 0;
   public usedSwap = 0;
+
+  public val() {
+    return this.usedMem;
+  }
 
   public toString(): string {
     return `Memory usage: ${this.usedMem.toFixed(2)} Swap usage: ${this.usedSwap.toFixed(2)}`;
