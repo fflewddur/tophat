@@ -40,6 +40,8 @@ export const HistoryChart = GObject.registerClass(
     private priorActivity: IHistory[] | null;
     private priorActivityAlt: IActivity[] | null;
     private priorMax = 0;
+    private chartHeight = 0;
+    private chartHeightAlt = 0;
     private yLabelTop;
     private yLabelMiddle;
     private yLabelBottom;
@@ -96,21 +98,34 @@ export const HistoryChart = GObject.registerClass(
       this.xLabelNow = new St.Label();
       this.xLabelThen = new St.Label();
 
-      // this.chart.connect('notify::height', (w, h) => {
-      //   console.log('height changed: ' + w.height + ' or ' + h);
-      //   if (this.chartStyle === HistoryStyle.SINGLE && this.priorActivity) {
-      //     console.log('updating from prior activity');
-      //     this.update(this.priorActivity);
-      //   } else if (this.priorActivityAlt) {
-      //     this.updateAlt(this.priorActivityAlt, this.priorMax);
-      //   }
-      // });
+      // When the menus are closed, the chart's height changes
+      // but no notify::height signal is emitted. We cache this
+      // value so we always know what the actual, visible height
+      // of the chart will be.
+      // TODO(fflewddur): Investigate if I'm just holding this wrong
+      this.chart.connect('notify::height', (w) => {
+        this.chartHeight = w.height;
+        if (this.chartStyle === HistoryStyle.SINGLE && this.priorActivity) {
+          this.update(this.priorActivity);
+        } else if (this.priorActivityAlt && this.chartAlt) {
+          this.chartHeightAlt = this.chartAlt.height;
+          this.updateAlt(this.priorActivityAlt, this.priorMax);
+        }
+      });
+      if (this.chartAlt) {
+        this.chartAlt.connect('notify::height', (w) => {
+          this.chartHeightAlt = w.height;
+          if (!this.priorActivityAlt) {
+            return;
+          }
+          this.updateAlt(this.priorActivityAlt, this.priorMax);
+        });
+      }
 
       this.build();
     }
 
     public refresh() {
-      console.log('refresh');
       if (this.chartStyle === HistoryStyle.SINGLE && this.priorActivity) {
         this.update(this.priorActivity);
       } else if (
@@ -138,14 +153,9 @@ export const HistoryChart = GObject.registerClass(
     }
 
     public update(usage: IHistory[]) {
-      const chartHeight = this.chart.height;
-      if (!chartHeight) {
-        console.warn('Could not get chart height');
-        return;
-      }
-      console.log(`chartHeight: ${chartHeight}`);
       for (let i = 0; i < this.bars.length; i++) {
-        this.bars[i].height = chartHeight * usage[usage.length - i - 1].val();
+        this.bars[i].height =
+          this.chartHeight * usage[usage.length - i - 1].val();
       }
       this.priorActivity = usage;
     }
@@ -155,17 +165,14 @@ export const HistoryChart = GObject.registerClass(
         console.warn('[TopHat] chartAlt is null');
         return;
       }
-      const chartHeight = this.chartAlt.height;
-      if (!chartHeight) {
-        console.warn('[TopHat] Could not get chart height');
-        return;
-      }
       for (let i = 0; i < this.bars.length; i++) {
         let height = 0;
         let heightAlt = 0;
         if (max) {
-          height = chartHeight * (usage[usage.length - i - 1].valAlt() / max);
-          heightAlt = chartHeight * (usage[usage.length - i - 1].val() / max);
+          height =
+            this.chartHeight * (usage[usage.length - i - 1].valAlt() / max);
+          heightAlt =
+            this.chartHeightAlt * (usage[usage.length - i - 1].val() / max);
         }
         this.bars[i].height = height;
         this.barsAlt[i].height = heightAlt;
