@@ -231,6 +231,10 @@ export const NetMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::net-history', () => {
+        if (!this.historyChart) {
+          console.warn('[TopHat] Network history chart does not exist');
+          return;
+        }
         const history = vitals.getNetActivity();
         let max = 0;
         for (const na of history) {
@@ -246,10 +250,10 @@ export const NetMonitor = GObject.registerClass(
         }
         max = roundMax(max);
         const maxLabel = bytesToHumanString(max, this.usageUnit) + '/s';
-        this.historyChart?.setYLabelBottom(maxLabel);
-        this.historyChart?.setYLabelMiddle('0');
-        this.historyChart?.setYLabelTop(maxLabel);
-        this.historyChart?.updateAlt(history, max);
+        this.historyChart.setYLabelBottom(maxLabel);
+        this.historyChart.setYLabelMiddle('0');
+        this.historyChart.setYLabelTop(maxLabel);
+        this.historyChart.updateAlt(history, max);
       });
       this.vitalsSignals.push(id);
     }

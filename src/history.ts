@@ -21,7 +21,7 @@ import St from 'gi://St';
 
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { IActivity, MaxHistoryLen } from './vitals.js';
+import { IActivity, IHistory, MaxHistoryLen } from './vitals.js';
 
 export enum HistoryStyle {
   SINGLE,
@@ -33,8 +33,15 @@ export const HistoryChart = GObject.registerClass(
     private chartStyle;
     private grid;
     private lm;
+    private chart: St.BoxLayout;
+    private chartAlt: St.BoxLayout | null;
     private bars: Array<St.Widget>;
     private barsAlt: Array<St.Widget> | null;
+    private priorActivity: IHistory[] | null;
+    private priorActivityAlt: IActivity[] | null;
+    private priorMax = 0;
+    private chartHeight = 0;
+    private chartHeightAlt = 0;
     private yLabelTop;
     private yLabelMiddle;
     private yLabelBottom;
@@ -62,6 +69,7 @@ export const HistoryChart = GObject.registerClass(
           height: 0,
         });
       }
+      this.chart = new St.BoxLayout({ style_class: 'chart' });
       if (this.chartStyle === HistoryStyle.DUAL) {
         this.barsAlt = new Array<St.Widget>(MaxHistoryLen);
         for (let i = 0; i < MaxHistoryLen; i++) {
@@ -74,17 +82,58 @@ export const HistoryChart = GObject.registerClass(
             height: 0,
           });
         }
+        this.chartAlt = new St.BoxLayout({
+          style_class: 'chart chart-stacked-bottom',
+        });
       } else {
         this.barsAlt = null;
+        this.chartAlt = null;
       }
 
+      this.priorActivity = null;
+      this.priorActivityAlt = null;
       this.yLabelTop = new St.Label();
       this.yLabelMiddle = new St.Label();
       this.yLabelBottom = new St.Label();
       this.xLabelNow = new St.Label();
       this.xLabelThen = new St.Label();
 
+      // When the menus are closed, the chart's height changes
+      // but no notify::height signal is emitted. We cache this
+      // value so we always know what the actual, visible height
+      // of the chart will be.
+      // TODO(fflewddur): Investigate if I'm just holding this wrong
+      this.chart.connect('notify::height', (w) => {
+        this.chartHeight = w.height;
+        if (this.chartStyle === HistoryStyle.SINGLE && this.priorActivity) {
+          this.update(this.priorActivity);
+        } else if (this.priorActivityAlt && this.chartAlt) {
+          this.chartHeightAlt = this.chartAlt.height;
+          this.updateAlt(this.priorActivityAlt, this.priorMax);
+        }
+      });
+      if (this.chartAlt) {
+        this.chartAlt.connect('notify::height', (w) => {
+          this.chartHeightAlt = w.height;
+          if (!this.priorActivityAlt) {
+            return;
+          }
+          this.updateAlt(this.priorActivityAlt, this.priorMax);
+        });
+      }
+
       this.build();
+    }
+
+    public refresh() {
+      if (this.chartStyle === HistoryStyle.SINGLE && this.priorActivity) {
+        this.update(this.priorActivity);
+      } else if (
+        this.chartStyle === HistoryStyle.DUAL &&
+        this.priorActivityAlt
+      ) {
+        this.updateAlt(this.priorActivityAlt, this.priorMax);
+      }
     }
 
     public setYLabelTop(s: string) {
@@ -103,34 +152,33 @@ export const HistoryChart = GObject.registerClass(
       this.xLabelThen.text = s;
     }
 
-    public update(usage: number) {
-      const chartHeight = this.bars[0].get_parent()?.height;
-      if (!chartHeight) {
-        console.warn('Could not get chart height');
-        return;
+    public update(usage: IHistory[]) {
+      for (let i = 0; i < this.bars.length; i++) {
+        this.bars[i].height =
+          this.chartHeight * usage[usage.length - i - 1].val();
       }
-      for (let i = 0; i < this.bars.length - 1; i++) {
-        this.bars[i].height = this.bars[i + 1].height;
-      }
-      this.bars[this.bars.length - 1].height = Math.round(chartHeight * usage);
+      this.priorActivity = usage;
     }
 
     public updateAlt(usage: IActivity[], max: number) {
-      const chartHeight = this.bars[0].get_parent()?.height;
-      if (!chartHeight || !this.barsAlt) {
-        console.warn('Could not get chart height');
+      if (!this.chartAlt || !this.barsAlt) {
+        console.warn('[TopHat] chartAlt is null');
         return;
       }
       for (let i = 0; i < this.bars.length; i++) {
         let height = 0;
         let heightAlt = 0;
         if (max) {
-          height = chartHeight * (usage[usage.length - i - 1].valAlt() / max);
-          heightAlt = chartHeight * (usage[usage.length - i - 1].val() / max);
+          height =
+            this.chartHeight * (usage[usage.length - i - 1].valAlt() / max);
+          heightAlt =
+            this.chartHeightAlt * (usage[usage.length - i - 1].val() / max);
         }
         this.bars[i].height = height;
         this.barsAlt[i].height = heightAlt;
       }
+      this.priorActivityAlt = usage;
+      this.priorMax = max;
     }
 
     public setColor(color: string) {
@@ -149,20 +197,17 @@ export const HistoryChart = GObject.registerClass(
       if (this.barsAlt) {
         chartRowSpan = 1;
       }
-      const chart = new St.BoxLayout({ style_class: 'chart' });
-      this.lm.attach(chart, 0, 0, 2, chartRowSpan);
+
+      this.lm.attach(this.chart, 0, 0, 2, chartRowSpan);
       for (const bar of this.bars) {
-        chart.add_child(bar);
+        this.chart.add_child(bar);
       }
-      if (this.barsAlt) {
-        const chartAlt = new St.BoxLayout({
-          style_class: 'chart chart-stacked-bottom',
-        });
-        this.lm.attach(chartAlt, 0, 1, 2, chartRowSpan);
+      if (this.barsAlt && this.chartAlt) {
+        this.lm.attach(this.chartAlt, 0, 1, 2, chartRowSpan);
         for (const bar of this.barsAlt) {
-          chartAlt.add_child(bar);
+          this.chartAlt.add_child(bar);
         }
-        chart.add_style_class_name('chart-stacked-top');
+        this.chart.add_style_class_name('chart-stacked-top');
       }
 
       const vbox = new St.BoxLayout({ vertical: true, y_expand: true });
@@ -192,6 +237,9 @@ export const HistoryChart = GObject.registerClass(
       this.xLabelNow.text = _('now');
       this.xLabelNow.add_style_class_name('chart-label-now');
       this.lm.attach(this.xLabelNow, 1, 2, 1, 1);
+
+      const label = new St.Label({ text: '' });
+      this.lm.attach(label, 2, 2, 1, 1);
     }
 
     public override destroy() {

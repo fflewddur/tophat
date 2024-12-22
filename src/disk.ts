@@ -205,8 +205,12 @@ export const DiskMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::disk-history', () => {
+        if (!this.historyChart) {
+          console.warn('[TopHat] Disk activity history chart does not exist');
+          return;
+        }
         const history = vitals.getDiskActivity();
-        let max = 0.001; // A very small value to prevent division by 0
+        let max = 0;
         for (const da of history) {
           if (!da) {
             break;
