@@ -692,7 +692,7 @@ export const Vitals = GObject.registerClass(
           .enumerate_children_async(
             Gio.FILE_ATTRIBUTE_STANDARD_NAME,
             Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-            GLib.PRIORITY_DEFAULT,
+            GLib.PRIORITY_LOW,
             null
           )
           .catch((e) => {
@@ -702,7 +702,7 @@ export const Vitals = GObject.registerClass(
           });
         while (iter) {
           const fileInfos = await iter
-            .next_files_async(10, GLib.PRIORITY_DEFAULT, null)
+            .next_files_async(100, GLib.PRIORITY_LOW, null)
             .catch((e) => {
               console.error(
                 `Error calling next_files_async() in loadProcessList(): ${e}`
