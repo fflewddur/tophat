@@ -91,7 +91,7 @@ export default class TopHat extends Extension {
     // Find the temperature sensor for each CPU
     const base = '/sys/class/hwmon/';
     const hwmon = new File(base);
-    hwmon.list().forEach((filename) => {
+    hwmon.listSync().forEach((filename) => {
       const name = new File(`${base}${filename}/name`).readSync();
       if (name === 'coretemp') {
         // Intel CPUs

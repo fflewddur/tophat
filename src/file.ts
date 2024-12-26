@@ -17,6 +17,8 @@
 
 import Gio from 'gi://Gio';
 
+Gio._promisify(Gio.File.prototype, 'load_contents_async');
+
 const decoder = new TextDecoder('utf-8');
 
 export class File {
@@ -26,11 +28,11 @@ export class File {
     this.file = Gio.File.new_for_path(path);
   }
 
-  name(): null | string {
+  public name(): null | string {
     return this.file.get_parse_name();
   }
 
-  exists() {
+  public exists() {
     let exists = false;
     try {
       exists = this.file.query_exists(null);
@@ -40,7 +42,7 @@ export class File {
     return exists;
   }
 
-  read(): Promise<string> {
+  public read(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
         this.file.load_contents_async(null, (file, res) => {
@@ -75,7 +77,7 @@ export class File {
     });
   }
 
-  readSync(reportErrs = true): string {
+  public readSync(reportErrs = true): string {
     let contents = '';
     try {
       const bytes = this.file.load_contents(null)[1];
@@ -88,7 +90,7 @@ export class File {
     return contents;
   }
 
-  list(): string[] {
+  public listSync(): string[] {
     const children = new Array<string>();
     const iter = this.file.enumerate_children(
       Gio.FILE_ATTRIBUTE_STANDARD_NAME,
