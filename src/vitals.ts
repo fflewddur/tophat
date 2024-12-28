@@ -700,6 +700,8 @@ export const Vitals = GObject.registerClass(
               `Error enumerating children in loadProcessList(): ${e}`
             );
           });
+
+        const psFiles = [];
         while (iter) {
           const fileInfos = await iter
             .next_files_async(100, GLib.PRIORITY_LOW, null)
@@ -725,22 +727,11 @@ export const Vitals = GObject.registerClass(
               name[0] == '8' ||
               name[0] == '9'
             ) {
-              const p = await this.loadProcessStat(name);
-              curProcs.set(p.id, p);
-              p.setTotalTime(
-                this.cpuState.totalTimeDetails -
-                  this.cpuState.totalTimeDetailsPrev
-              );
-              this.loadCmdForProcess(p);
-              if (this.showMem) {
-                await this.loadSmapsRollupForProcess(p);
-              }
-              if (this.showDisk) {
-                await this.loadIoForProcess(p);
-              }
+              psFiles.push(this.readProcFiles(name, curProcs));
             }
           }
         }
+        await Promise.all(psFiles);
         this.procs = curProcs;
         this.cpu_top_procs = this.hashTopCpuProcs();
         this.mem_top_procs = this.hashTopMemProcs();
@@ -748,6 +739,31 @@ export const Vitals = GObject.registerClass(
       } catch (e) {
         console.error(`[TopHat] Error in loadProcessList(): ${e}`);
       }
+    }
+
+    private async readProcFiles(
+      name: string,
+      curProcs: Map<string, Process>
+    ): Promise<void> {
+      return new Promise<void>((resolve) => {
+        this.loadProcessStat(name).then((p) => {
+          curProcs.set(p.id, p);
+          p.setTotalTime(
+            this.cpuState.totalTimeDetails - this.cpuState.totalTimeDetailsPrev
+          );
+          const actions = [];
+          actions.push(this.loadCmdForProcess(p));
+          if (this.showMem) {
+            actions.push(this.loadSmapsRollupForProcess(p));
+          }
+          if (this.showDisk) {
+            actions.push(this.loadIoForProcess(p));
+          }
+          Promise.all(actions).then(() => {
+            resolve();
+          });
+        });
+      });
     }
 
     private hashTopCpuProcs() {
@@ -835,18 +851,23 @@ export const Vitals = GObject.registerClass(
       });
     }
 
-    private loadCmdForProcess(p: Process): void {
-      if (p.cmdLoaded) {
-        return;
-      }
-      const f = new File('/proc/' + p.id + '/cmdline');
-      f.read()
-        .then((contents) => {
-          p.parseCmd(contents);
-        })
-        .catch(() => {
-          // We expect to be unable to read many of these
-        });
+    private loadCmdForProcess(p: Process): Promise<void> {
+      return new Promise<void>((resolve) => {
+        if (p.cmdLoaded) {
+          resolve();
+          return;
+        }
+        const f = new File('/proc/' + p.id + '/cmdline');
+        f.read()
+          .then((contents) => {
+            p.parseCmd(contents);
+            resolve();
+          })
+          .catch(() => {
+            // We expect to be unable to read many of these
+            resolve();
+          });
+      });
     }
 
     private updateNetDevices(client: NM.Client) {
