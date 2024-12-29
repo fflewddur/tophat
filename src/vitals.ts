@@ -276,6 +276,15 @@ export const Vitals = GObject.registerClass(
         GObject.ParamFlags.READWRITE,
         ''
       ),
+      'fs-usage': GObject.ParamSpec.int(
+        'fs-usage',
+        'Proportion of filesystem that is used',
+        'Proportion of filesystem that is used',
+        GObject.ParamFlags.READWRITE,
+        0,
+        100,
+        0
+      ),
       'summary-interval': GObject.ParamSpec.float(
         'summary-interval',
         'Refresh interval for the summary loop',
@@ -310,6 +319,7 @@ export const Vitals = GObject.registerClass(
     private showDisk;
     private netDev;
     private netDevs;
+    private fsMount;
     private settingSignals;
     private nm: NM.Client | null;
 
@@ -381,6 +391,18 @@ export const Vitals = GObject.registerClass(
         this.netDev = settings.get_string('network-device');
         if (this.netDev === _('Automatic')) {
           this.netDev = '';
+        }
+      });
+      this.settingSignals.push(id);
+
+      this.fsMount = gsettings.get_string('mount-to-monitor');
+      if (this.fsMount === _('Automatic')) {
+        this.fsMount = '';
+      }
+      id = this.gsettings.connect('changed::mount-to-monitor', (settings) => {
+        this.fsMount = settings.get_string('mount-to-monitor');
+        if (this.fsMount === _('Automatic')) {
+          this.fsMount = '';
         }
       });
       this.settingSignals.push(id);
@@ -924,7 +946,6 @@ export const Vitals = GObject.registerClass(
         GLib.SpawnFlags.SEARCH_PATH,
         null
       );
-      console.log(`ok: ${ok} pid: ${pid} stdout: ${stdout} stderr: ${stderr}`);
       const reader = new Gio.DataInputStream({
         base_stream: new GioUnix.InputStream({ fd: stdout, close_fd: true }),
       });
@@ -942,9 +963,6 @@ export const Vitals = GObject.registerClass(
               const used = parseInt(details[2]);
               const mount = details[5];
               let fileSystem = new FSUsage(dev, cap, used, mount);
-              console.log(
-                `dev: ${m[1]} mount: ${details[5]} cap: ${details[1]} used: ${details[2]}`
-              );
               if (fileSystems.has(dev)) {
                 const old = fileSystems.get(dev);
                 if (old && old.mount.length < mount.length) {
@@ -957,10 +975,26 @@ export const Vitals = GObject.registerClass(
           }
         }
         this.fileSystems = fileSystems;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, fs] of fileSystems) {
           console.log(
             `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
           );
+          if (!this.fsMount) {
+            this.fsMount = '/';
+            let hasHome = false;
+            for (const v of fileSystems.values()) {
+              if (v.mount === '/home') {
+                hasHome = true;
+              }
+            }
+            if (hasHome) {
+              this.fsMount = '/home';
+            }
+          }
+          if (this.fsMount === fs.mount) {
+            console.log('mount to monitor: ' + this.fsMount);
+          }
         }
       });
     }
@@ -1371,6 +1405,18 @@ export const Vitals = GObject.registerClass(
       this.notify('disk-top-procs');
     }
 
+    public get fs_usage() {
+      return this.props.fs_usage;
+    }
+
+    private set fs_usage(v: number) {
+      if (this.fs_usage === v) {
+        return;
+      }
+      this.props.fs_usage = v;
+      this.notify('fs-usage');
+    }
+
     public get uptime(): number {
       return this.props.uptime;
     }
@@ -1430,6 +1476,7 @@ class Properties {
   disk_wrote_total = 0;
   disk_history = '';
   disk_top_procs = '';
+  fs_usage = 0;
   summary_interval = 0;
 }
 
