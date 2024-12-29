@@ -19,6 +19,7 @@
     "fsusage",
     "Gettext",
     "gicon",
+    "giounix",
     "girs",
     "glibtop",
     "gobject",

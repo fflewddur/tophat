@@ -1,4 +1,6 @@
 import Gio from 'gi://Gio';
+// @ts-expect-error resource not found
+import GioUnix from 'gi://GioUnix';
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
 import NM from 'gi://NM';
@@ -13,6 +15,7 @@ Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
 
 export const SummaryIntervalDefault = 2.5; // in seconds
 export const DetailsInterval = 5; // in seconds
+export const FileSystemInterval = 60; // in seconds
 export const MaxHistoryLen = 50;
 
 const SECTOR_SIZE = 512; // in bytes
@@ -25,6 +28,8 @@ const RE_DISK_STATS =
 const RE_NVME_DEV = /^nvme\d+n\d+$/;
 const RE_BLOCK_DEV = /^[^\d]+$/;
 const RE_CMD = /\/*[^\s]*\/([^\s]*)/;
+const RE_DF_IS_DISK = /^\s*\/dev\/(\w+)(.*)$/;
+const RE_DF_DISK_USAGE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.*)$/;
 
 export interface IActivity {
   val(): number;
@@ -33,6 +38,20 @@ export interface IActivity {
 
 export interface IHistory {
   val(): number;
+}
+
+class FSUsage {
+  public dev;
+  public cap;
+  public used;
+  public mount;
+
+  constructor(dev = '', cap = 0, used = 0, mount = '') {
+    this.dev = dev;
+    this.cap = cap;
+    this.used = used;
+    this.mount = mount;
+  }
 }
 
 export const Vitals = GObject.registerClass(
@@ -280,9 +299,11 @@ export const Vitals = GObject.registerClass(
     private netActivityHistory = new Array<NetActivity>(MaxHistoryLen);
     private diskState: DiskState;
     private diskActivityHistory = new Array<DiskActivity>(MaxHistoryLen);
+    private fileSystems = new Map<string, FSUsage>();
     private props = new Properties();
     private summaryLoop = 0;
     private detailsLoop = 0;
+    private fsLoop = 0;
     private showCpu;
     private showMem;
     private showNet;
@@ -383,8 +404,12 @@ export const Vitals = GObject.registerClass(
     }
 
     public start(): void {
+      // Load our baseline immediately
       this.readSummaries();
       this.readDetails();
+      this.readFileSystemUsage();
+
+      // Regularly update from procfs and friends
       if (this.summaryLoop === 0) {
         this.summaryLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_LOW,
@@ -399,6 +424,13 @@ export const Vitals = GObject.registerClass(
           () => this.readDetails()
         );
       }
+      if (this.fsLoop === 0) {
+        this.fsLoop = GLib.timeout_add_seconds(
+          GLib.PRIORITY_LOW,
+          FileSystemInterval,
+          () => this.readFileSystemUsage()
+        );
+      }
     }
 
     public stop(): void {
@@ -409,6 +441,10 @@ export const Vitals = GObject.registerClass(
       if (this.detailsLoop > 0) {
         GLib.source_remove(this.detailsLoop);
         this.detailsLoop = 0;
+      }
+      if (this.fsLoop > 0) {
+        GLib.source_remove(this.fsLoop);
+        this.fsLoop = 0;
       }
     }
 
@@ -445,6 +481,14 @@ export const Vitals = GObject.registerClass(
         this.loadProcessList();
       }
       // console.timeEnd('readDetails()');
+      return true;
+    }
+
+    public readFileSystemUsage(): boolean {
+      console.log('readFileSystemUsage()');
+      console.time('readFileSystemUsage');
+      this.loadFS();
+      console.timeEnd('readFileSystemUsage');
       return true;
     }
 
@@ -867,6 +911,57 @@ export const Vitals = GObject.registerClass(
             // We expect to be unable to read many of these
             resolve();
           });
+      });
+    }
+
+    private loadFS(): void {
+      console.log('loadFS()');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [ok, pid, _, stdout, stderr] = GLib.spawn_async_with_pipes(
+        null,
+        ['df', '-P'],
+        null,
+        GLib.SpawnFlags.SEARCH_PATH,
+        null
+      );
+      console.log(`ok: ${ok} pid: ${pid} stdout: ${stdout} stderr: ${stderr}`);
+      const reader = new Gio.DataInputStream({
+        base_stream: new GioUnix.InputStream({ fd: stdout, close_fd: true }),
+      });
+      reader.read_upto_async('\0', 1, 0, null, (_, result) => {
+        const [output] = reader.read_upto_finish(result);
+        const lines = output.split('\n');
+        const fileSystems = new Map<string, FSUsage>();
+        for (const line of lines) {
+          const m = line.match(RE_DF_IS_DISK);
+          if (m) {
+            const details = m[2].match(RE_DF_DISK_USAGE);
+            if (details) {
+              const dev = m[1];
+              const cap = parseInt(details[1]);
+              const used = parseInt(details[2]);
+              const mount = details[5];
+              let fileSystem = new FSUsage(dev, cap, used, mount);
+              console.log(
+                `dev: ${m[1]} mount: ${details[5]} cap: ${details[1]} used: ${details[2]}`
+              );
+              if (fileSystems.has(dev)) {
+                const old = fileSystems.get(dev);
+                if (old && old.mount.length < mount.length) {
+                  // Only report one mount per device; use the shortest file path
+                  fileSystem = old;
+                }
+              }
+              fileSystems.set(dev, fileSystem);
+            }
+          }
+        }
+        this.fileSystems = fileSystems;
+        for (const [_, fs] of fileSystems) {
+          console.log(
+            `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
+          );
+        }
       });
     }
 
