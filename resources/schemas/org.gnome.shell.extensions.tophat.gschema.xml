@@ -63,6 +63,11 @@
       <summary>Show icons beside monitors</summary>
       <description>Display icons next to each monitor to help identify them.</description>
     </key>
+    <key name="show-menu-actions" type="b">
+      <default>true</default>
+      <summary>Show action buttons in menus</summary>
+      <description>Display action buttons for launching the system monitor, etc.</description>
+    </key>
     <key name="show-cpu" type="b">
       <default>true</default>
       <summary>Show the CPU monitor</summary>

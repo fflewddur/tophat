@@ -64,6 +64,7 @@ export const TopHatMonitor = GObject.registerClass(
     private menuRow = 0;
     private menuCol = 0;
     protected menuNumCols = 0;
+    private menuActionBox: St.BoxLayout;
     protected historyChart: HistoryChart | null;
     protected metadata: ExtensionMetadata;
     protected color: string;
@@ -101,10 +102,22 @@ export const TopHatMonitor = GObject.registerClass(
 
       this.meter = new TopHatMeter();
       [this.color, this.useAccentColor] = this.updateColor();
+      this.menuActionBox = new St.BoxLayout({
+        style_class: 'tophat-menu-button-box',
+        x_align: Clutter.ActorAlign.CENTER,
+        reactive: true,
+        x_expand: true,
+      });
 
       this.gsettings.bind(
         'show-icons',
         this.icon,
+        'visible',
+        Gio.SettingsBindFlags.GET
+      );
+      this.gsettings.bind(
+        'show-menu-actions',
+        this.menuActionBox,
         'visible',
         Gio.SettingsBindFlags.GET
       );
@@ -159,13 +172,6 @@ export const TopHatMonitor = GObject.registerClass(
         return;
       }
 
-      const box = new St.BoxLayout({
-        style_class: 'tophat-menu-button-box',
-        x_align: Clutter.ActorAlign.CENTER,
-        reactive: true,
-        x_expand: true,
-      });
-
       // System Monitor
       const appSys = Shell.AppSystem.get_default();
       let app = appSys.lookup_app('org.gnome.SystemMonitor.desktop');
@@ -183,7 +189,7 @@ export const TopHatMonitor = GObject.registerClass(
           this.menu.close(true);
           app.activate();
         });
-        box.add_child(button);
+        this.menuActionBox.add_child(button);
       }
 
       // TopHat preferences
@@ -200,9 +206,8 @@ export const TopHatMonitor = GObject.registerClass(
           console.error(`[TopHat] Error opening settings: ${err}`);
         }
       });
-      box.add_child(button);
-
-      this.addMenuRow(box, 0, this.menuNumCols, 1);
+      this.menuActionBox.add_child(button);
+      this.addMenuRow(this.menuActionBox, 0, this.menuNumCols, 1);
     }
 
     protected addMenuRow(
