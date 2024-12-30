@@ -3,6 +3,12 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## TopHat 18 - December 30, 2024
+
+- Restored the file system usage monitor
+- Improved performance when reading procfs
+- Fixed a display problem with history charts
+
 ## TopHat 17 - December 8, 2024
 
 - Fixed potential resource leaks

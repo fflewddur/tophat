@@ -26,7 +26,6 @@ page](https://extensions.gnome.org/extension/5219/tophat/).
 
 The latest release of TopHat has been tested on the following systems:
 
-- Arch Linux
 - Debian Trixie
 - Fedora 41
 - Ubuntu 24.04 LTS
@@ -52,7 +51,7 @@ utilities first.
    command `unzip [path-to-tophat.zip] -d
 ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io`
 4. Log out of your computer and log back in (or restart your system).
-5. Enable TopHat in the `gnome-extensions-app`.
+5. Enable TopHat with the command `gnome-extensions enable tophat@fflewddur.github.io`.
 
 ## Contributing
 

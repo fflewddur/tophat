@@ -79,7 +79,7 @@
       <description>Show the network monitor.</description>
     </key>
     <key name="show-disk" type="b">
-      <default>true</default>
+      <default>false</default>
       <summary>Show the disk activity monitor</summary>
       <description>Show the disk monitor.</description>
     </key>
