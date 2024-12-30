@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-30 10:47-0800\n"
+"POT-Creation-Date: 2024-12-30 15:08-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,7 +63,7 @@ msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/disk.ts:142 src/prefs.ts:173
+#: src/disk.ts:142 src/prefs.ts:180
 msgid "Disk activity"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgstr ""
 msgid "Reading"
 msgstr ""
 
-#: src/disk.ts:220 src/prefs.ts:179
+#: src/disk.ts:220 src/prefs.ts:186
 msgid "Filesystem usage"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Swap used:"
 msgstr ""
 
-#: src/monitor.ts:235
+#: src/monitor.ts:240
 #, javascript-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
@@ -194,87 +194,91 @@ msgstr ""
 msgid "Show icons beside monitors"
 msgstr ""
 
-#: src/prefs.ts:115 src/prefs.ts:119
+#: src/prefs.ts:112
+msgid "Show action buttons in menus"
+msgstr ""
+
+#: src/prefs.ts:122 src/prefs.ts:126
 msgid "CPU"
 msgstr ""
 
-#: src/prefs.ts:123
+#: src/prefs.ts:130
 msgid "Show the CPU monitor"
 msgstr ""
 
-#: src/prefs.ts:127 src/prefs.ts:159 src/prefs.ts:187
+#: src/prefs.ts:134 src/prefs.ts:166 src/prefs.ts:194
 msgid "Usage meter"
 msgstr ""
 
-#: src/prefs.ts:128 src/prefs.ts:160 src/prefs.ts:188
+#: src/prefs.ts:135 src/prefs.ts:167 src/prefs.ts:195
 msgid "Numeric value"
 msgstr ""
 
-#: src/prefs.ts:129 src/prefs.ts:161 src/prefs.ts:189
+#: src/prefs.ts:136 src/prefs.ts:168 src/prefs.ts:196
 msgid "Both meter and value"
 msgstr ""
 
-#: src/prefs.ts:130 src/prefs.ts:162 src/prefs.ts:190
+#: src/prefs.ts:137 src/prefs.ts:169 src/prefs.ts:197
 msgid "Show as"
 msgstr ""
 
-#: src/prefs.ts:133
+#: src/prefs.ts:140
 msgid "Show each core"
 msgstr ""
 
-#: src/prefs.ts:137
+#: src/prefs.ts:144
 msgid "Normalize per-process CPU usage by CPU cores"
 msgstr ""
 
-#: src/prefs.ts:147 src/prefs.ts:151
+#: src/prefs.ts:154 src/prefs.ts:158
 msgid "Memory"
 msgstr ""
 
-#: src/prefs.ts:155
+#: src/prefs.ts:162
 msgid "Show the memory monitor"
 msgstr ""
 
-#: src/prefs.ts:169
+#: src/prefs.ts:176
 msgid "Disk"
 msgstr ""
 
-#: src/prefs.ts:177
+#: src/prefs.ts:184
 msgid "Show the disk activity monitor"
 msgstr ""
 
-#: src/prefs.ts:183
+#: src/prefs.ts:190
 msgid "Show the filesystem monitor"
 msgstr ""
 
-#: src/prefs.ts:194 src/prefs.ts:225 src/vitals.ts:384 src/vitals.ts:389
+#: src/prefs.ts:201 src/prefs.ts:232 src/vitals.ts:384 src/vitals.ts:389
 #: src/vitals.ts:396 src/vitals.ts:401
 msgid "Automatic"
 msgstr ""
 
-#: src/prefs.ts:200
+#: src/prefs.ts:207
 msgid "Filesystem to monitor"
 msgstr ""
 
-#: src/prefs.ts:213 src/prefs.ts:217
+#: src/prefs.ts:220 src/prefs.ts:224
 msgid "Network"
 msgstr ""
 
-#: src/prefs.ts:221
+#: src/prefs.ts:228
 msgid "Show the network monitor"
 msgstr ""
 
-#: src/prefs.ts:245
+#: src/prefs.ts:252
 msgid "Network device"
 msgstr ""
 
-#: src/prefs.ts:255
+#: src/prefs.ts:262
 msgid "Bytes"
 msgstr ""
 
-#: src/prefs.ts:256
+#: src/prefs.ts:263
 msgid "Bits"
 msgstr ""
 
-#: src/prefs.ts:258
+#: src/prefs.ts:265
 msgid "Measurement unit"
 msgstr ""

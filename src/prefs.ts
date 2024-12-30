@@ -42,7 +42,7 @@ export default class TopHatPrefs extends ExtensionPreferences {
       window.add(this.buildMemPage());
       window.add(this.buildDiskPage());
       window.add(this.buildNetPage());
-      window.set_default_size(750, 410);
+      window.set_default_size(750, 475);
       resolve();
     });
   }
@@ -106,6 +106,13 @@ export default class TopHatPrefs extends ExtensionPreferences {
 
     // Show icons
     this.addActionRow(_('Show icons beside monitors'), 'show-icons', group);
+
+    // Show action buttons in menus
+    this.addActionRow(
+      _('Show action buttons in menus'),
+      'show-menu-actions',
+      group
+    );
 
     return page;
   }
