@@ -300,6 +300,7 @@ export const Vitals = GObject.registerClass(
     private showMem;
     private showNet;
     private showDisk;
+    private showFS;
     private netDev;
     private netDevs;
     private fsMount;
@@ -363,6 +364,12 @@ export const Vitals = GObject.registerClass(
       this.showDisk = gsettings.get_boolean('show-disk');
       id = this.gsettings.connect('changed::show-disk', (settings) => {
         this.showDisk = settings.get_boolean('show-disk');
+      });
+      this.settingSignals.push(id);
+
+      this.showFS = gsettings.get_boolean('show-fs');
+      id = this.gsettings.connect('changed::show-fs', (settings) => {
+        this.showFS = settings.get_boolean('show-fs');
       });
       this.settingSignals.push(id);
 
@@ -464,7 +471,7 @@ export const Vitals = GObject.registerClass(
       if (this.showNet) {
         this.loadNetDev();
       }
-      if (this.showDisk) {
+      if (this.showDisk || this.showFS) {
         this.loadDiskstats();
       }
       return true;
@@ -478,14 +485,17 @@ export const Vitals = GObject.registerClass(
         this.loadFreqs();
         this.loadStatDetails();
       }
-      if (this.showCpu || this.showMem || this.showDisk) {
+      if (this.showCpu || this.showMem || this.showDisk || this.showFS) {
         this.loadProcessList();
       }
       return true;
     }
 
+    // readFileSystemUsage runs the df command to monitor file system use
     public readFileSystemUsage(): boolean {
-      this.loadFS();
+      if (this.showFS || this.showDisk) {
+        this.loadFS();
+      }
       return true;
     }
 
