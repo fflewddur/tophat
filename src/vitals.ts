@@ -7,12 +7,14 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import { File } from './file.js';
 import { NumTopProcs } from './monitor.js';
+import { FSUsage, readFileSystems } from './helpers.js';
 
 Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
 Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
 
 export const SummaryIntervalDefault = 2.5; // in seconds
 export const DetailsInterval = 5; // in seconds
+export const FileSystemInterval = 60; // in seconds
 export const MaxHistoryLen = 50;
 
 const SECTOR_SIZE = 512; // in bytes
@@ -228,7 +230,7 @@ export const Vitals = GObject.registerClass(
       'disk-read-total': GObject.ParamSpec.int(
         'disk-read-total',
         'Total bytes read from disk',
-        'Number of bytes read from disk since system start',
+        'Number of bytes read from disk since system start.',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -237,7 +239,7 @@ export const Vitals = GObject.registerClass(
       'disk-wrote-total': GObject.ParamSpec.int(
         'disk-wrote-total',
         'Total bytes written to disk',
-        'Number of bytes written to disk since system start',
+        'Number of bytes written to disk since system start.',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -246,21 +248,37 @@ export const Vitals = GObject.registerClass(
       'disk-history': GObject.ParamSpec.string(
         'disk-history',
         'Disk activity history',
-        'Disk activity history',
+        'Disk activity history.',
         GObject.ParamFlags.READWRITE,
         ''
       ),
       'disk-top-procs': GObject.ParamSpec.string(
         'disk-top-procs',
         'Disk activity top processes',
-        'Top processes in terms of disk activity',
+        'Top processes in terms of disk activity.',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
+      'fs-usage': GObject.ParamSpec.int(
+        'fs-usage',
+        'Proportion of filesystem that is used',
+        'Proportion of filesystem that is used.',
+        GObject.ParamFlags.READWRITE,
+        0,
+        100,
+        0
+      ),
+      'fs-list': GObject.ParamSpec.string(
+        'fs-list',
+        'Usage of each mounted filesystem',
+        'Usage of each mounted filesystem.',
         GObject.ParamFlags.READWRITE,
         ''
       ),
       'summary-interval': GObject.ParamSpec.float(
         'summary-interval',
         'Refresh interval for the summary loop',
-        'Refresh interval for the summary loop, in seconds',
+        'Refresh interval for the summary loop, in seconds.',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -280,15 +298,19 @@ export const Vitals = GObject.registerClass(
     private netActivityHistory = new Array<NetActivity>(MaxHistoryLen);
     private diskState: DiskState;
     private diskActivityHistory = new Array<DiskActivity>(MaxHistoryLen);
+    private filesystems = new Array<FSUsage>();
     private props = new Properties();
     private summaryLoop = 0;
     private detailsLoop = 0;
+    private fsLoop = 0;
     private showCpu;
     private showMem;
     private showNet;
     private showDisk;
+    private showFS;
     private netDev;
     private netDevs;
+    private fsMount;
     private settingSignals;
     private nm: NM.Client | null;
 
@@ -352,6 +374,12 @@ export const Vitals = GObject.registerClass(
       });
       this.settingSignals.push(id);
 
+      this.showFS = gsettings.get_boolean('show-fs');
+      id = this.gsettings.connect('changed::show-fs', (settings) => {
+        this.showFS = settings.get_boolean('show-fs');
+      });
+      this.settingSignals.push(id);
+
       this.netDev = gsettings.get_string('network-device');
       if (this.netDev === _('Automatic')) {
         this.netDev = '';
@@ -360,6 +388,18 @@ export const Vitals = GObject.registerClass(
         this.netDev = settings.get_string('network-device');
         if (this.netDev === _('Automatic')) {
           this.netDev = '';
+        }
+      });
+      this.settingSignals.push(id);
+
+      this.fsMount = gsettings.get_string('mount-to-monitor');
+      if (this.fsMount === _('Automatic')) {
+        this.fsMount = '';
+      }
+      id = this.gsettings.connect('changed::mount-to-monitor', (settings) => {
+        this.fsMount = settings.get_string('mount-to-monitor');
+        if (this.fsMount === _('Automatic')) {
+          this.fsMount = '';
         }
       });
       this.settingSignals.push(id);
@@ -383,8 +423,12 @@ export const Vitals = GObject.registerClass(
     }
 
     public start(): void {
+      // Load our baseline immediately
       this.readSummaries();
       this.readDetails();
+      this.readFileSystemUsage();
+
+      // Regularly update from procfs and friends
       if (this.summaryLoop === 0) {
         this.summaryLoop = GLib.timeout_add_seconds(
           GLib.PRIORITY_LOW,
@@ -399,6 +443,13 @@ export const Vitals = GObject.registerClass(
           () => this.readDetails()
         );
       }
+      if (this.fsLoop === 0) {
+        this.fsLoop = GLib.timeout_add_seconds(
+          GLib.PRIORITY_LOW,
+          FileSystemInterval,
+          () => this.readFileSystemUsage()
+        );
+      }
     }
 
     public stop(): void {
@@ -410,12 +461,14 @@ export const Vitals = GObject.registerClass(
         GLib.source_remove(this.detailsLoop);
         this.detailsLoop = 0;
       }
+      if (this.fsLoop > 0) {
+        GLib.source_remove(this.fsLoop);
+        this.fsLoop = 0;
+      }
     }
 
     // readSummaries queries all of the info needed by the topbar widgets
     public readSummaries(): boolean {
-      // console.time('readSummaries()');
-
       if (this.showCpu) {
         this.loadStat();
       }
@@ -425,26 +478,31 @@ export const Vitals = GObject.registerClass(
       if (this.showNet) {
         this.loadNetDev();
       }
-      if (this.showDisk) {
+      if (this.showDisk || this.showFS) {
         this.loadDiskstats();
       }
-      // console.timeEnd('readSummaries()');
       return true;
     }
 
     // readDetails queries the info needed by the monitor menus
     public readDetails(): boolean {
-      // console.time('readDetails()');
       if (this.showCpu) {
         this.loadUptime();
         this.loadTemps();
         this.loadFreqs();
         this.loadStatDetails();
       }
-      if (this.showCpu || this.showMem || this.showDisk) {
+      if (this.showCpu || this.showMem || this.showDisk || this.showFS) {
         this.loadProcessList();
       }
-      // console.timeEnd('readDetails()');
+      return true;
+    }
+
+    // readFileSystemUsage runs the df command to monitor file system use
+    public readFileSystemUsage(): boolean {
+      if (this.showFS || this.showDisk) {
+        this.loadFS();
+      }
       return true;
     }
 
@@ -870,6 +928,36 @@ export const Vitals = GObject.registerClass(
       });
     }
 
+    private loadFS(): void {
+      // console.time('loadFS()');
+      readFileSystems().then((fileSystems) => {
+        this.filesystems = fileSystems;
+        for (const fs of this.filesystems) {
+          // console.log(
+          //   `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
+          // );
+          if (!this.fsMount) {
+            this.fsMount = '/';
+            let hasHome = false;
+            for (const v of this.filesystems) {
+              if (v.mount === '/home') {
+                hasHome = true;
+              }
+            }
+            if (hasHome) {
+              this.fsMount = '/home';
+            }
+            this.gsettings.set_string('mount-to-monitor', this.fsMount);
+          }
+          if (this.fsMount === fs.mount) {
+            this.fs_usage = (fs.used / fs.cap) * 100;
+          }
+        }
+        this.fs_list = this.hashFilesystems();
+        // console.timeEnd('loadFS()');
+      });
+    }
+
     private updateNetDevices(client: NM.Client) {
       const devices = client.get_devices();
       this.netDevs = new Array<string>();
@@ -934,6 +1022,10 @@ export const Vitals = GObject.registerClass(
       return this.diskActivityHistory;
     }
 
+    public getFilesystems() {
+      return this.filesystems;
+    }
+
     private hashCpuHistory() {
       let toHash = '';
       for (const u of this.cpuUsageHistory) {
@@ -975,6 +1067,18 @@ export const Vitals = GObject.registerClass(
       for (const u of this.diskActivityHistory) {
         if (u) {
           toHash += `${u.bytesRead.toFixed(0)};${u.bytesWritten.toFixed(0)};`;
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
+    }
+
+    private hashFilesystems() {
+      let toHash = '';
+      for (const fs of this.filesystems) {
+        if (fs) {
+          toHash += `${fs.mount}${fs.usage()};`;
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
@@ -1276,6 +1380,29 @@ export const Vitals = GObject.registerClass(
       this.notify('disk-top-procs');
     }
 
+    public get fs_usage() {
+      return this.props.fs_usage;
+    }
+
+    private set fs_usage(v: number) {
+      if (this.fs_usage === v) {
+        return;
+      }
+      this.props.fs_usage = v;
+      this.notify('fs-usage');
+    }
+
+    public get fs_list() {
+      return this.props.fs_list;
+    }
+
+    public set fs_list(v: string) {
+      if (this.fs_list === v) {
+        return;
+      }
+      this.props.fs_list = v;
+      this.notify('fs-list');
+    }
     public get uptime(): number {
       return this.props.uptime;
     }
@@ -1335,6 +1462,8 @@ class Properties {
   disk_wrote_total = 0;
   disk_history = '';
   disk_top_procs = '';
+  fs_usage = 0;
+  fs_list = '';
   summary_interval = 0;
 }
 

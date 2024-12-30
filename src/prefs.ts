@@ -15,10 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-import Gdk from 'gi://Gdk';
-import Gtk from 'gi://Gtk';
 import Adw from 'gi://Adw';
+import Gdk from 'gi://Gdk';
 import Gio from 'gi://Gio';
+import Gtk from 'gi://Gtk';
 import NM from 'gi://NM';
 
 import {
@@ -27,6 +27,8 @@ import {
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 // @ts-expect-error "Module exists"
 import * as Config from 'resource:///org/gnome/Shell/Extensions/js/misc/config.js';
+
+import { readFileSystems } from './helpers.js';
 
 const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
@@ -168,11 +170,40 @@ export default class TopHatPrefs extends ExtensionPreferences {
       iconName: 'disk-icon-symbolic',
     });
 
-    const group = new Adw.PreferencesGroup({ title: _('Disk') });
+    let group = new Adw.PreferencesGroup({ title: _('Disk activity') });
     page.add(group);
 
     // Enable
     this.addActionRow(_('Show the disk activity monitor'), 'show-disk', group);
+
+    group = new Adw.PreferencesGroup({ title: _('Filesystem usage') });
+    page.add(group);
+
+    // Enable
+    this.addActionRow(_('Show the filesystem monitor'), 'show-fs', group);
+
+    // Visualization
+    const choices = new Gtk.StringList();
+    choices.append(_('Usage meter'));
+    choices.append(_('Numeric value'));
+    choices.append(_('Both meter and value'));
+    this.addComboRow(_('Show as'), choices, 'fs-display', group);
+
+    // Filesystem mount to monitor
+    const fsMountChoices = new Gtk.StringList();
+    fsMountChoices.append(_('Automatic'));
+    readFileSystems().then((filesystems) => {
+      for (const fs of filesystems) {
+        fsMountChoices.append(fs.mount);
+      }
+      this.addComboRow(
+        _('Filesystem to monitor'),
+        fsMountChoices,
+        'mount-to-monitor',
+        group,
+        false
+      );
+    });
 
     return page;
   }

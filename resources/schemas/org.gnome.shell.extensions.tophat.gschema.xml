@@ -21,11 +21,11 @@
     <value value="1" nick="medium"/>
     <value value="2" nick="fast"/>
   </enum>
-  <enum id="org.gnome.shell.extensions.tophat.disk-monitor-mode">
+  <!-- <enum id="org.gnome.shell.extensions.tophat.disk-monitor-mode">
     <value value="0" nick="storage"/>
     <value value="1" nick="activity"/>
     <value value="2" nick="both"/>
-  </enum>
+  </enum> -->
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
     <key name="position-in-panel" enum="org.gnome.shell.extensions.tophat.position">
@@ -43,10 +43,15 @@
       <summary>How to visualize the memory monitor</summary>
       <description>How to visualize the memory monitor</description>
     </key>
-    <key name="disk-display" enum="org.gnome.shell.extensions.tophat.visualization">
+    <!-- <key name="disk-display" enum="org.gnome.shell.extensions.tophat.visualization">
       <default>'chart'</default>
       <summary>How to visualize the disk monitor</summary>
       <description>How to visualize the disk monitor</description>
+    </key> -->
+    <key name="fs-display" enum="org.gnome.shell.extensions.tophat.visualization">
+      <default>'chart'</default>
+      <summary>How to visualize the filesystem monitor</summary>
+      <description>How to visualize the filesystem monitor</description>
     </key>
     <!-- <key name="net-display" enum="org.gnome.shell.extensions.tophat.visualization">
       <default>'numeric'</default>
@@ -63,11 +68,6 @@
       <summary>Show the CPU monitor</summary>
       <description>Show the CPU monitor.</description>
     </key>
-    <key name="show-disk" type="b">
-      <default>true</default>
-      <summary>Show the filesystem monitor</summary>
-      <description>Show the filesystem monitor.</description>
-    </key>
     <key name="show-mem" type="b">
       <default>true</default>
       <summary>Show the memory monitor</summary>
@@ -78,11 +78,21 @@
       <summary>Show the network monitor</summary>
       <description>Show the network monitor.</description>
     </key>
-    <key name="show-animations" type="b">
+    <key name="show-disk" type="b">
+      <default>true</default>
+      <summary>Show the disk activity monitor</summary>
+      <description>Show the disk monitor.</description>
+    </key>
+    <key name="show-fs" type="b">
+      <default>true</default>
+      <summary>Show the filesystem monitor</summary>
+      <description>Show the filesystem monitor.</description>
+    </key>
+    <!-- <key name="show-animations" type="b">
       <default>true</default>
       <summary>Animate monitor changes</summary>
       <description>Use animations when the heights of meter bars change.</description>
-    </key>
+    </key> -->
     <key name="use-system-accent" type="b">
       <default>true</default>
       <summary>Use the system accent color</summary>
@@ -93,11 +103,11 @@
       <summary>Color of the meter bars and chart areas</summary>
       <description>The color of meter bars and chart areas, in either hex or RGBA format.</description>
     </key>
-    <key name="meter-bar-width" type="d">
+    <!-- <key name="meter-bar-width" type="d">
       <default>0.6</default>
       <summary>Width of the meter bars</summary>
-      <description>Width of the meter bars in 'em's. When a meter needs to show more than two bars, this value will be multiplied by .75; when a meter needs to show more than eight bars, this value will be multipled by .5.</description>
-    </key>
+      <description>Width of the meter bars in 'em's. When a meter needs to show more than two bars, this value will be multiplied by .75; when a meter needs to show more than eight bars, this value will be multiplied by .5.</description>
+    </key> -->
     <key name="refresh-rate" enum="org.gnome.shell.extensions.tophat.refresh-rate">
       <default>'medium'</default>
       <summary>How frequently TopHat will check system resource usage</summary>
@@ -111,7 +121,7 @@
     <key name="cpu-normalize-proc-use" type="b">
       <default>true</default>
       <summary>Divide process CPU usage by CPU core count</summary>
-      <description>CPU usage is computed so that full usage of one core yeilds 100%; full usage of multiple cores results in numbers greater than 100%. If this setting is enabled, divide that usage by core count, to ensure it's less than 100%.</description>
+      <description>CPU usage is computed so that full usage of one core yields 100%; full usage of multiple cores results in numbers greater than 100%. If this setting is enabled, divide that usage by core count, to ensure it's less than 100%.</description>
     </key>
     <key name="network-device" type="s">
       <default>''</default>
@@ -123,11 +133,11 @@
       <summary>Unit for showing network usage</summary>
       <description>Show network usage in bytes or bits.</description>
     </key>
-    <key name="disk-monitor-mode" enum="org.gnome.shell.extensions.tophat.disk-monitor-mode">
+    <!-- <key name="disk-monitor-mode" enum="org.gnome.shell.extensions.tophat.disk-monitor-mode">
       <default>'storage'</default>
       <summary>Monitor available storage, disk activity, or both</summary>
       <description>Sets the behavior of the disk monitor in the top panel to summarize available storage, disk activity, or both.</description>
-    </key>
+    </key> -->
     <key name="mount-to-monitor" type="s">
       <default>''</default>
       <summary>The mount to monitor in the top bar</summary>

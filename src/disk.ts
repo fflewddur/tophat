@@ -27,11 +27,18 @@ import {
 
 import { Vitals } from './vitals.js';
 import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
-import { bytesToHumanString, roundMax } from './helpers.js';
+import {
+  bytesToHumanString,
+  DisplayType,
+  getDisplayTypeSetting,
+  roundMax,
+} from './helpers.js';
 import { HistoryChart, HistoryStyle } from './history.js';
+import { Orientation } from './meter.js';
 
 export const DiskMonitor = GObject.registerClass(
   class DiskMonitor extends TopHatMonitor {
+    private usage;
     private valueRead;
     private valueWrite;
     private menuDiskWrites;
@@ -39,6 +46,7 @@ export const DiskMonitor = GObject.registerClass(
     private menuDiskWritesTotal;
     private menuDiskReadsTotal;
     private topProcs: TopProc[];
+    private menuFSDetails?: Clutter.GridLayout;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Disk Monitor', metadata, gsettings);
@@ -47,6 +55,17 @@ export const DiskMonitor = GObject.registerClass(
         `${this.metadata.path}/icons/hicolor/scalable/actions/disk-icon-symbolic.svg`
       );
       this.icon.set_gicon(gicon);
+
+      this.usage = new St.Label({
+        text: MeterNoVal,
+        style_class: 'tophat-panel-usage',
+        y_align: Clutter.ActorAlign.CENTER,
+      });
+      this.add_child(this.usage);
+
+      this.meter.setNumBars(1);
+      this.meter.setOrientation(Orientation.Vertical);
+      this.add_child(this.meter);
 
       const vbox = new St.BoxLayout({ vertical: true });
       vbox.connect('notify::vertical', (obj) => {
@@ -81,16 +100,39 @@ export const DiskMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
-      this.gsettings.bind(
-        'show-disk',
-        this,
-        'visible',
-        Gio.SettingsBindFlags.GET
-      );
+      this.updateVisibility(gsettings);
+      this.gsettings.connect('changed::show-disk', (settings) => {
+        this.updateVisibility(settings);
+      });
+      this.gsettings.connect('changed::show-fs', (settings) => {
+        this.updateVisibility(settings);
+      });
+      this.gsettings.connect('changed::fs-display', (settings) => {
+        this.updateVisibility(settings);
+      });
+      this.gsettings.connect('changed::mount-to-monitor', () => {
+        this.vitals?.readFileSystemUsage();
+      });
 
       this.buildMenu();
       this.addMenuButtons();
       this.updateColor();
+    }
+
+    private updateVisibility(settings: Gio.Settings) {
+      const showDisk = settings.get_boolean('show-disk');
+      const showFS = settings.get_boolean('show-fs');
+      const displayType = getDisplayTypeSetting(settings, 'fs-display');
+      this.valueRead.visible = showDisk;
+      this.valueWrite.visible = showDisk;
+      this.usage.visible =
+        showFS &&
+        (displayType === DisplayType.Both ||
+          displayType === DisplayType.Numeric);
+      this.meter.visible =
+        showFS &&
+        (displayType === DisplayType.Both || displayType === DisplayType.Chart);
+      this.visible = showDisk || showFS;
     }
 
     private buildMenu() {
@@ -173,6 +215,20 @@ export const DiskMonitor = GObject.registerClass(
         }
         this.addMenuRow(this.topProcs[i].out, 2, 1, 1);
       }
+
+      label = new St.Label({
+        text: _('Filesystem usage'),
+        style_class: 'menu-header',
+      });
+      this.addMenuRow(label, 0, 3, 1);
+
+      const grid = new St.Widget({
+        layout_manager: new Clutter.GridLayout({
+          orientation: Clutter.Orientation.VERTICAL,
+        }),
+      });
+      this.menuFSDetails = grid.layout_manager as Clutter.GridLayout;
+      this.addMenuRow(grid, 0, 3, 1);
     }
 
     public override bindVitals(vitals: Vitals): void {
@@ -248,6 +304,57 @@ export const DiskMonitor = GObject.registerClass(
         }
       });
       this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::fs-usage', () => {
+        this.meter.setBarSizes([vitals.fs_usage / 100]);
+        const s = `${vitals.fs_usage.toFixed(0)}%`;
+        this.usage.text = s;
+      });
+      this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::fs-list', () => {
+        if (!this.menuFSDetails) {
+          return;
+        }
+        const list = vitals.getFilesystems();
+        let row = 0;
+        for (const fs of list) {
+          // Remove existing rows
+          let label = this.menuFSDetails.get_child_at(0, row);
+          if (label !== null) {
+            label.destroy();
+          }
+          label = this.menuFSDetails.get_child_at(1, row);
+          if (label !== null) {
+            label.destroy();
+          }
+          label = this.menuFSDetails.get_child_at(0, row + 1);
+          if (label !== null) {
+            label.destroy();
+          }
+
+          // Create a row for each mount point with it's % usage
+          label = new St.Label({ text: fs.mount, style_class: 'menu-label' });
+          this.menuFSDetails.attach(label, 0, row, 1, 1);
+          label = new St.Label({
+            text: `${fs.usage()}%`,
+            style_class: 'menu-value',
+            x_expand: true,
+          });
+          this.menuFSDetails.attach(label, 1, row, 1, 1);
+          row++;
+
+          // Create a row showing free space and total disk size in absolute units
+          label = new St.Label({
+            text: _(
+              `${bytesToHumanString(fs.cap - fs.used)} available of ${bytesToHumanString(fs.cap)}`
+            ),
+            style_class: 'menu-details align-right menu-section-end',
+          });
+          this.menuFSDetails.attach(label, 0, row, 2, 1);
+          row++;
+        }
+      });
     }
   }
 );
