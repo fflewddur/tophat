@@ -230,7 +230,7 @@ export const Vitals = GObject.registerClass(
       'disk-read-total': GObject.ParamSpec.int(
         'disk-read-total',
         'Total bytes read from disk',
-        'Number of bytes read from disk since system start',
+        'Number of bytes read from disk since system start.',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -239,7 +239,7 @@ export const Vitals = GObject.registerClass(
       'disk-wrote-total': GObject.ParamSpec.int(
         'disk-wrote-total',
         'Total bytes written to disk',
-        'Number of bytes written to disk since system start',
+        'Number of bytes written to disk since system start.',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -248,30 +248,37 @@ export const Vitals = GObject.registerClass(
       'disk-history': GObject.ParamSpec.string(
         'disk-history',
         'Disk activity history',
-        'Disk activity history',
+        'Disk activity history.',
         GObject.ParamFlags.READWRITE,
         ''
       ),
       'disk-top-procs': GObject.ParamSpec.string(
         'disk-top-procs',
         'Disk activity top processes',
-        'Top processes in terms of disk activity',
+        'Top processes in terms of disk activity.',
         GObject.ParamFlags.READWRITE,
         ''
       ),
       'fs-usage': GObject.ParamSpec.int(
         'fs-usage',
         'Proportion of filesystem that is used',
-        'Proportion of filesystem that is used',
+        'Proportion of filesystem that is used.',
         GObject.ParamFlags.READWRITE,
         0,
         100,
         0
       ),
+      'fs-list': GObject.ParamSpec.string(
+        'fs-list',
+        'Usage of each mounted filesystem',
+        'Usage of each mounted filesystem.',
+        GObject.ParamFlags.READWRITE,
+        ''
+      ),
       'summary-interval': GObject.ParamSpec.float(
         'summary-interval',
         'Refresh interval for the summary loop',
-        'Refresh interval for the summary loop, in seconds',
+        'Refresh interval for the summary loop, in seconds.',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -291,7 +298,7 @@ export const Vitals = GObject.registerClass(
     private netActivityHistory = new Array<NetActivity>(MaxHistoryLen);
     private diskState: DiskState;
     private diskActivityHistory = new Array<DiskActivity>(MaxHistoryLen);
-    private fileSystems = new Array<FSUsage>();
+    private filesystems = new Array<FSUsage>();
     private props = new Properties();
     private summaryLoop = 0;
     private detailsLoop = 0;
@@ -924,15 +931,15 @@ export const Vitals = GObject.registerClass(
     private loadFS(): void {
       // console.time('loadFS()');
       readFileSystems().then((fileSystems) => {
-        this.fileSystems = fileSystems;
-        for (const fs of fileSystems) {
+        this.filesystems = fileSystems;
+        for (const fs of this.filesystems) {
           // console.log(
           //   `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
           // );
           if (!this.fsMount) {
             this.fsMount = '/';
             let hasHome = false;
-            for (const v of fileSystems) {
+            for (const v of this.filesystems) {
               if (v.mount === '/home') {
                 hasHome = true;
               }
@@ -946,6 +953,7 @@ export const Vitals = GObject.registerClass(
             this.fs_usage = (fs.used / fs.cap) * 100;
           }
         }
+        this.fs_list = this.hashFilesystems();
         // console.timeEnd('loadFS()');
       });
     }
@@ -1014,6 +1022,10 @@ export const Vitals = GObject.registerClass(
       return this.diskActivityHistory;
     }
 
+    public getFilesystems() {
+      return this.filesystems;
+    }
+
     private hashCpuHistory() {
       let toHash = '';
       for (const u of this.cpuUsageHistory) {
@@ -1055,6 +1067,18 @@ export const Vitals = GObject.registerClass(
       for (const u of this.diskActivityHistory) {
         if (u) {
           toHash += `${u.bytesRead.toFixed(0)};${u.bytesWritten.toFixed(0)};`;
+        }
+      }
+      const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
+      cs.update(toHash);
+      return cs.get_string();
+    }
+
+    private hashFilesystems() {
+      let toHash = '';
+      for (const fs of this.filesystems) {
+        if (fs) {
+          toHash += `${fs.mount}${fs.usage()};`;
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
@@ -1368,6 +1392,17 @@ export const Vitals = GObject.registerClass(
       this.notify('fs-usage');
     }
 
+    public get fs_list() {
+      return this.props.fs_list;
+    }
+
+    public set fs_list(v: string) {
+      if (this.fs_list === v) {
+        return;
+      }
+      this.props.fs_list = v;
+      this.notify('fs-list');
+    }
     public get uptime(): number {
       return this.props.uptime;
     }
@@ -1428,6 +1463,7 @@ class Properties {
   disk_history = '';
   disk_top_procs = '';
   fs_usage = 0;
+  fs_list = '';
   summary_interval = 0;
 }
 

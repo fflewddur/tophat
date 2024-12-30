@@ -122,6 +122,10 @@ export class FSUsage {
     this.used = used;
     this.mount = mount;
   }
+
+  public usage() {
+    return Math.round((this.used / this.cap) * 100);
+  }
 }
 
 export async function readFileSystems(): Promise<FSUsage[]> {
@@ -151,8 +155,8 @@ export async function readFileSystems(): Promise<FSUsage[]> {
           const details = m[2].match(RE_DF_DISK_USAGE);
           if (details) {
             const dev = m[1];
-            const cap = parseInt(details[1]);
-            const used = parseInt(details[2]);
+            const cap = parseInt(details[1]) * 1024;
+            const used = parseInt(details[2]) * 1024;
             const mount = details[5];
             let fileSystem = new FSUsage(dev, cap, used, mount);
             if (fileSystems.has(dev)) {

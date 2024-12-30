@@ -46,6 +46,7 @@ export const DiskMonitor = GObject.registerClass(
     private menuDiskWritesTotal;
     private menuDiskReadsTotal;
     private topProcs: TopProc[];
+    private menuFSDetails?: Clutter.GridLayout;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Disk Monitor', metadata, gsettings);
@@ -214,6 +215,20 @@ export const DiskMonitor = GObject.registerClass(
         }
         this.addMenuRow(this.topProcs[i].out, 2, 1, 1);
       }
+
+      label = new St.Label({
+        text: _('Filesystem usage'),
+        style_class: 'menu-header',
+      });
+      this.addMenuRow(label, 0, 3, 1);
+
+      const grid = new St.Widget({
+        layout_manager: new Clutter.GridLayout({
+          orientation: Clutter.Orientation.VERTICAL,
+        }),
+      });
+      this.menuFSDetails = grid.layout_manager as Clutter.GridLayout;
+      this.addMenuRow(grid, 0, 3, 1);
     }
 
     public override bindVitals(vitals: Vitals): void {
@@ -296,6 +311,50 @@ export const DiskMonitor = GObject.registerClass(
         this.usage.text = s;
       });
       this.vitalsSignals.push(id);
+
+      id = vitals.connect('notify::fs-list', () => {
+        if (!this.menuFSDetails) {
+          return;
+        }
+        const list = vitals.getFilesystems();
+        let row = 0;
+        for (const fs of list) {
+          // Remove existing rows
+          let label = this.menuFSDetails.get_child_at(0, row);
+          if (label !== null) {
+            label.destroy();
+          }
+          label = this.menuFSDetails.get_child_at(1, row);
+          if (label !== null) {
+            label.destroy();
+          }
+          label = this.menuFSDetails.get_child_at(0, row + 1);
+          if (label !== null) {
+            label.destroy();
+          }
+
+          // Create a row for each mount point with it's % usage
+          label = new St.Label({ text: fs.mount, style_class: 'menu-label' });
+          this.menuFSDetails.attach(label, 0, row, 1, 1);
+          label = new St.Label({
+            text: `${fs.usage()}%`,
+            style_class: 'menu-value',
+            x_expand: true,
+          });
+          this.menuFSDetails.attach(label, 1, row, 1, 1);
+          row++;
+
+          // Create a row showing free space and total disk size in absolute units
+          label = new St.Label({
+            text: _(
+              `${bytesToHumanString(fs.cap - fs.used)} available of ${bytesToHumanString(fs.cap)}`
+            ),
+            style_class: 'menu-details align-right menu-section-end',
+          });
+          this.menuFSDetails.attach(label, 0, row, 2, 1);
+          row++;
+        }
+      });
     }
   }
 );
