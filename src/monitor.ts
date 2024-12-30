@@ -28,8 +28,9 @@ import {
   ExtensionMetadata,
   ngettext,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
+const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
-import { GnomeMajorVer } from './helpers.js';
 import { MaxHistoryLen, Vitals } from './vitals.js';
 import { TopHatMeter } from './meter.js';
 import { HistoryChart } from './history.js';

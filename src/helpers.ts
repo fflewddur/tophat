@@ -16,9 +16,9 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 import Gio from 'gi://Gio';
-
-import * as Config from 'resource:///org/gnome/shell/misc/config.js';
-export const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
+// @ts-expect-error resource not found
+import GioUnix from 'gi://GioUnix';
+import GLib from 'gi://GLib';
 
 export enum DisplayType {
   Chart,
@@ -32,6 +32,9 @@ const ONE_GB_IN_B = 1000000000;
 const TEN_GB_IN_B = 10000000000;
 const ONE_TB_IN_B = 1000000000000;
 const TEN_TB_IN_B = 10000000000000;
+
+const RE_DF_IS_DISK = /^\s*\/dev\/(\w+)(.*)$/;
+const RE_DF_DISK_USAGE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.*)$/;
 
 /**
  * Convert a number of bytes to a more logical human-readable string (e.g., 1024 -> 1 K).
@@ -105,4 +108,66 @@ export function getDisplayTypeSetting(settings: Gio.Settings, key: string) {
       break;
   }
   return t;
+}
+
+export class FSUsage {
+  public dev;
+  public cap;
+  public used;
+  public mount;
+
+  constructor(dev = '', cap = 0, used = 0, mount = '') {
+    this.dev = dev;
+    this.cap = cap;
+    this.used = used;
+    this.mount = mount;
+  }
+}
+
+export async function readFileSystems(): Promise<FSUsage[]> {
+  return new Promise<FSUsage[]>((resolve, reject) => {
+    const fileSystems = new Map<string, FSUsage>();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [ok, _pid, _stdin, stdout] = GLib.spawn_async_with_pipes(
+      null,
+      ['df', '-P'],
+      null,
+      GLib.SpawnFlags.SEARCH_PATH,
+      null
+    );
+    const reader = new Gio.DataInputStream({
+      base_stream: new GioUnix.InputStream({ fd: stdout, close_fd: true }),
+    });
+    if (!ok) {
+      console.warn('[TopHat] Could not run df -P');
+      reject('Could not run df -P');
+    }
+    reader.read_upto_async('\0', 1, 0, null, (_, result) => {
+      const [output] = reader.read_upto_finish(result);
+      const lines = output.split('\n');
+      for (const line of lines) {
+        const m = line.match(RE_DF_IS_DISK);
+        if (m) {
+          const details = m[2].match(RE_DF_DISK_USAGE);
+          if (details) {
+            const dev = m[1];
+            const cap = parseInt(details[1]);
+            const used = parseInt(details[2]);
+            const mount = details[5];
+            let fileSystem = new FSUsage(dev, cap, used, mount);
+            if (fileSystems.has(dev)) {
+              const old = fileSystems.get(dev);
+              if (old && old.mount.length < mount.length) {
+                // Only report one mount per device; use the shortest file path
+                fileSystem = old;
+              }
+            }
+            fileSystems.set(dev, fileSystem);
+          }
+        }
+      }
+      resolve(Array.from(fileSystems.values()));
+      // console.timeEnd('loadFS()');
+    });
+  });
 }

@@ -1,6 +1,4 @@
 import Gio from 'gi://Gio';
-// @ts-expect-error resource not found
-import GioUnix from 'gi://GioUnix';
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
 import NM from 'gi://NM';
@@ -9,6 +7,7 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import { File } from './file.js';
 import { NumTopProcs } from './monitor.js';
+import { FSUsage, readFileSystems } from './helpers.js';
 
 Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
 Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
@@ -28,8 +27,6 @@ const RE_DISK_STATS =
 const RE_NVME_DEV = /^nvme\d+n\d+$/;
 const RE_BLOCK_DEV = /^[^\d]+$/;
 const RE_CMD = /\/*[^\s]*\/([^\s]*)/;
-const RE_DF_IS_DISK = /^\s*\/dev\/(\w+)(.*)$/;
-const RE_DF_DISK_USAGE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.*)$/;
 
 export interface IActivity {
   val(): number;
@@ -38,20 +35,6 @@ export interface IActivity {
 
 export interface IHistory {
   val(): number;
-}
-
-class FSUsage {
-  public dev;
-  public cap;
-  public used;
-  public mount;
-
-  constructor(dev = '', cap = 0, used = 0, mount = '') {
-    this.dev = dev;
-    this.cap = cap;
-    this.used = used;
-    this.mount = mount;
-  }
 }
 
 export const Vitals = GObject.registerClass(
@@ -308,7 +291,7 @@ export const Vitals = GObject.registerClass(
     private netActivityHistory = new Array<NetActivity>(MaxHistoryLen);
     private diskState: DiskState;
     private diskActivityHistory = new Array<DiskActivity>(MaxHistoryLen);
-    private fileSystems = new Map<string, FSUsage>();
+    private fileSystems = new Array<FSUsage>();
     private props = new Properties();
     private summaryLoop = 0;
     private detailsLoop = 0;
@@ -472,8 +455,6 @@ export const Vitals = GObject.registerClass(
 
     // readSummaries queries all of the info needed by the topbar widgets
     public readSummaries(): boolean {
-      // console.time('readSummaries()');
-
       if (this.showCpu) {
         this.loadStat();
       }
@@ -486,13 +467,11 @@ export const Vitals = GObject.registerClass(
       if (this.showDisk) {
         this.loadDiskstats();
       }
-      // console.timeEnd('readSummaries()');
       return true;
     }
 
     // readDetails queries the info needed by the monitor menus
     public readDetails(): boolean {
-      // console.time('readDetails()');
       if (this.showCpu) {
         this.loadUptime();
         this.loadTemps();
@@ -502,15 +481,11 @@ export const Vitals = GObject.registerClass(
       if (this.showCpu || this.showMem || this.showDisk) {
         this.loadProcessList();
       }
-      // console.timeEnd('readDetails()');
       return true;
     }
 
     public readFileSystemUsage(): boolean {
-      console.log('readFileSystemUsage()');
-      console.time('readFileSystemUsage');
       this.loadFS();
-      console.timeEnd('readFileSystemUsage');
       return true;
     }
 
@@ -937,53 +912,17 @@ export const Vitals = GObject.registerClass(
     }
 
     private loadFS(): void {
-      console.log('loadFS()');
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [ok, pid, _, stdout, stderr] = GLib.spawn_async_with_pipes(
-        null,
-        ['df', '-P'],
-        null,
-        GLib.SpawnFlags.SEARCH_PATH,
-        null
-      );
-      const reader = new Gio.DataInputStream({
-        base_stream: new GioUnix.InputStream({ fd: stdout, close_fd: true }),
-      });
-      reader.read_upto_async('\0', 1, 0, null, (_, result) => {
-        const [output] = reader.read_upto_finish(result);
-        const lines = output.split('\n');
-        const fileSystems = new Map<string, FSUsage>();
-        for (const line of lines) {
-          const m = line.match(RE_DF_IS_DISK);
-          if (m) {
-            const details = m[2].match(RE_DF_DISK_USAGE);
-            if (details) {
-              const dev = m[1];
-              const cap = parseInt(details[1]);
-              const used = parseInt(details[2]);
-              const mount = details[5];
-              let fileSystem = new FSUsage(dev, cap, used, mount);
-              if (fileSystems.has(dev)) {
-                const old = fileSystems.get(dev);
-                if (old && old.mount.length < mount.length) {
-                  // Only report one mount per device; use the shortest file path
-                  fileSystem = old;
-                }
-              }
-              fileSystems.set(dev, fileSystem);
-            }
-          }
-        }
+      // console.time('loadFS()');
+      readFileSystems().then((fileSystems) => {
         this.fileSystems = fileSystems;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [_, fs] of fileSystems) {
-          console.log(
-            `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
-          );
+        for (const fs of fileSystems) {
+          // console.log(
+          //   `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
+          // );
           if (!this.fsMount) {
             this.fsMount = '/';
             let hasHome = false;
-            for (const v of fileSystems.values()) {
+            for (const v of fileSystems) {
               if (v.mount === '/home') {
                 hasHome = true;
               }
@@ -991,11 +930,13 @@ export const Vitals = GObject.registerClass(
             if (hasHome) {
               this.fsMount = '/home';
             }
+            this.gsettings.set_string('mount-to-monitor', this.fsMount);
           }
           if (this.fsMount === fs.mount) {
-            console.log('mount to monitor: ' + this.fsMount);
+            this.fs_usage = (fs.used / fs.cap) * 100;
           }
         }
+        // console.timeEnd('loadFS()');
       });
     }
 
