@@ -33,7 +33,7 @@ const TEN_GB_IN_B = 10000000000;
 const ONE_TB_IN_B = 1000000000000;
 const TEN_TB_IN_B = 10000000000000;
 
-const RE_DF_IS_DISK = /^\s*\/dev\/(\w+)(.*)$/;
+const RE_DF_IS_DISK = /^\s*\/dev\/(\S+)(.*)$/;
 const RE_DF_DISK_USAGE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.*)$/;
 
 /**
@@ -45,8 +45,8 @@ const RE_DF_DISK_USAGE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.*)$/;
  */
 export function bytesToHumanString(
   bytes: number,
-  unit = 'bytes',
-  imprecise = false
+  unit: string = 'bytes',
+  imprecise: boolean = false
 ): string {
   let quantity = bytes;
   let precision = 1;
