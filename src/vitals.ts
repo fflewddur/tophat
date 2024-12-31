@@ -937,6 +937,7 @@ export const Vitals = GObject.registerClass(
           //   `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
           // );
           if (!this.fsMount) {
+            // Default to /home if it exists, / otherwise
             this.fsMount = '/';
             let hasHome = false;
             for (const v of this.filesystems) {
