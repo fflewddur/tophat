@@ -32,6 +32,7 @@ export enum Orientation {
 export const TopHatMeter = GObject.registerClass(
   class TopHatMeter extends St.BoxLayout {
     private bars: Array<St.Widget>;
+    private barUsage: Array<number>;
     private orientation: Orientation;
     private scaleFactor;
     private color: Cogl.Color;
@@ -45,7 +46,10 @@ export const TopHatMeter = GObject.registerClass(
         name: 'TopHatMeter',
       });
       this.bars = new Array<St.Widget>(0);
+      this.barUsage = new Array<number>(0);
       this.orientation = Orientation.Horizontal;
+      this.color = new Cogl.Color();
+      this.barWidth = 8;
 
       const themeContext = St.ThemeContext.get_for_stage(global.get_stage());
       this.scaleFactor = themeContext.get_scale_factor();
@@ -56,8 +60,10 @@ export const TopHatMeter = GObject.registerClass(
           b.set_width(this.barWidth);
         }
       });
-      this.color = new Cogl.Color();
-      this.barWidth = 8;
+
+      this.connect('notify::height', () => {
+        this.setBarSizes(this.barUsage);
+      });
     }
 
     public getNumBars(): number {
@@ -70,6 +76,7 @@ export const TopHatMeter = GObject.registerClass(
         b.destroy();
       }
       this.bars = new Array<St.Widget>(n);
+      this.barUsage = new Array<number>(n);
       this.barWidth = this.computeBarWidth(n);
       for (let i = 0; i < n; i++) {
         this.bars[i] = new St.Widget({
@@ -82,6 +89,7 @@ export const TopHatMeter = GObject.registerClass(
           name: 'TopHatMeterBar',
         });
         this.add_child(this.bars[i]);
+        this.barUsage[i] = 0;
       }
     }
 
@@ -141,6 +149,8 @@ export const TopHatMeter = GObject.registerClass(
         } else {
           this.bars[i].set_height(height);
         }
+        // cache this in case we need to re-scale the meter
+        this.barUsage[i] = n[i];
       }
     }
 

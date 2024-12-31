@@ -208,6 +208,8 @@ export const TopHatMonitor = GObject.registerClass(
       });
       this.menuActionBox.add_child(button);
       this.addMenuRow(this.menuActionBox, 0, this.menuNumCols, 1);
+      this.menuActionBox.visible =
+        this.gsettings.get_boolean('show-menu-actions');
     }
 
     protected addMenuRow(

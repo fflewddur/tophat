@@ -389,6 +389,7 @@ export const Vitals = GObject.registerClass(
         if (this.netDev === _('Automatic')) {
           this.netDev = '';
         }
+        this.readSummaries();
       });
       this.settingSignals.push(id);
 
@@ -401,6 +402,7 @@ export const Vitals = GObject.registerClass(
         if (this.fsMount === _('Automatic')) {
           this.fsMount = '';
         }
+        this.readFileSystemUsage();
       });
       this.settingSignals.push(id);
 
@@ -932,26 +934,26 @@ export const Vitals = GObject.registerClass(
       // console.time('loadFS()');
       readFileSystems().then((fileSystems) => {
         this.filesystems = fileSystems;
+        if (!this.fsMount) {
+          // Default to /home if it exists, / otherwise
+          this.fsMount = '/';
+          let hasHome = false;
+          for (const v of this.filesystems) {
+            if (v.mount === '/home') {
+              hasHome = true;
+            }
+          }
+          if (hasHome) {
+            this.fsMount = '/home';
+          }
+          this.gsettings.set_string('mount-to-monitor', this.fsMount);
+        }
         for (const fs of this.filesystems) {
           // console.log(
-          //   `device: ${fs.dev} mount point: ${fs.mount} usage: ${((fs.used / fs.cap) * 100).toFixed(0)}%`
+          //   `device: ${fs.dev} mount point: ${fs.mount} usage: ${fs.usage()}%`
           // );
-          if (!this.fsMount) {
-            // Default to /home if it exists, / otherwise
-            this.fsMount = '/';
-            let hasHome = false;
-            for (const v of this.filesystems) {
-              if (v.mount === '/home') {
-                hasHome = true;
-              }
-            }
-            if (hasHome) {
-              this.fsMount = '/home';
-            }
-            this.gsettings.set_string('mount-to-monitor', this.fsMount);
-          }
           if (this.fsMount === fs.mount) {
-            this.fs_usage = (fs.used / fs.cap) * 100;
+            this.fs_usage = fs.usage();
           }
         }
         this.fs_list = this.hashFilesystems();
