@@ -3,6 +3,11 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Unreleased
+
+- Improved filesystem detection
+- Added option to hide menu actions
+
 ## TopHat 18 - December 30, 2024
 
 - Restored the file system usage monitor
