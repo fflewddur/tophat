@@ -7,7 +7,7 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import { File } from './file.js';
 import { NumTopProcs } from './monitor.js';
-import { FSUsage, readFileSystems } from './helpers.js';
+import { FSUsage, ONE_GB_IN_B, readFileSystems } from './helpers.js';
 
 Gio._promisify(Gio.File.prototype, 'enumerate_children_async');
 Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
@@ -69,7 +69,7 @@ export const Vitals = GObject.registerClass(
       'cpu-freq': GObject.ParamSpec.int(
         'cpu-freq',
         'CPU frequency',
-        'Average CPU frequency across all cores',
+        'Average CPU frequency across all cores, in GHz',
         GObject.ParamFlags.READWRITE,
         0,
         0,
@@ -599,19 +599,34 @@ export const Vitals = GObject.registerClass(
             }
           });
           usage.usedMem =
-            (this.memInfo.total - this.memInfo.available) / this.memInfo.total;
+            Math.round(
+              ((this.memInfo.total - this.memInfo.available) /
+                this.memInfo.total) *
+                100
+            ) / 100;
           usage.usedSwap =
-            (this.memInfo.swapTotal - this.memInfo.swapAvailable) /
-            this.memInfo.swapTotal;
+            Math.round(
+              ((this.memInfo.swapTotal - this.memInfo.swapAvailable) /
+                this.memInfo.swapTotal) *
+                100
+            ) / 100;
           if (this.memUsageHistory.unshift(usage) > MaxHistoryLen) {
             this.memUsageHistory.pop();
           }
           this.ram_usage = usage.usedMem;
-          this.ram_size = this.memInfo.total * 1024;
-          this.ram_size_free = this.memInfo.available * 1024;
+          this.ram_size =
+            (Math.round((this.memInfo.total * 1024) / ONE_GB_IN_B) * 10) / 10;
+          this.ram_size_free =
+            Math.round(((this.memInfo.available * 1024) / ONE_GB_IN_B) * 10) /
+            10;
           this.swap_usage = usage.usedSwap;
-          this.swap_size = this.memInfo.swapTotal * 1024;
-          this.swap_size_free = this.memInfo.swapAvailable * 1024;
+          this.swap_size =
+            Math.round(((this.memInfo.swapTotal * 1024) / ONE_GB_IN_B) * 10) /
+            10;
+          this.swap_size_free =
+            Math.round(
+              ((this.memInfo.swapAvailable * 1024) / ONE_GB_IN_B) * 10
+            ) / 10;
           this.mem_history = this.hashMemHistory();
         })
         .catch((e) => {

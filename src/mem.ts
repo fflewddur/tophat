@@ -31,6 +31,7 @@ import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 import {
   bytesToHumanString,
   DisplayType,
+  GBytesToHumanString,
   getDisplayTypeSetting,
 } from './helpers.js';
 import { HistoryChart } from './history.js';
@@ -168,20 +169,23 @@ export const MemMonitor = GObject.registerClass(
       super.bindVitals(vitals);
 
       let id = vitals.connect('notify::ram-size', () => {
-        const total = bytesToHumanString(vitals.ram_size);
-        const free = bytesToHumanString(vitals.ram_size_free);
+        // console.log(`ram-size: ${vitals.ram_size}`);
+        const total = GBytesToHumanString(vitals.ram_size);
+        const free = GBytesToHumanString(vitals.ram_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::ram-size-free', () => {
-        const total = bytesToHumanString(vitals.ram_size);
-        const free = bytesToHumanString(vitals.ram_size_free);
+        // console.log(`ram-size-free: ${vitals.ram_size_free}`);
+        const total = GBytesToHumanString(vitals.ram_size);
+        const free = GBytesToHumanString(vitals.ram_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::ram-usage', () => {
+        // console.log(`ram-usage: ${vitals.ram_usage}`);
         const s = (vitals.ram_usage * 100).toFixed(0) + '%';
         this.usage.text = s;
         this.menuMemUsage.text = s;
@@ -190,20 +194,23 @@ export const MemMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::swap-size', () => {
-        const total = bytesToHumanString(vitals.swap_size);
-        const free = bytesToHumanString(vitals.swap_size_free);
+        // console.log(`swap-size: ${vitals.swap_size}`);
+        const total = GBytesToHumanString(vitals.swap_size);
+        const free = GBytesToHumanString(vitals.swap_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::swap-size-free', () => {
-        const total = bytesToHumanString(vitals.swap_size);
-        const free = bytesToHumanString(vitals.swap_size_free);
+        // console.log(`swap-size-free: ${vitals.swap_size_free}`);
+        const total = GBytesToHumanString(vitals.swap_size);
+        const free = GBytesToHumanString(vitals.swap_size_free);
         this.menuSwapSize.text = _(`${free} available of ${total}`);
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::swap-usage', () => {
+        // console.log(`swap-usage: ${vitals.swap_usage}`);
         const s = (vitals.swap_usage * 100).toFixed(0) + '%';
         this.menuSwapUsage.text = s;
       });

@@ -28,13 +28,17 @@ export enum DisplayType {
 
 const ONE_MB_IN_B = 1000000;
 const TEN_MB_IN_B = 10000000;
-const ONE_GB_IN_B = 1000000000;
+export const ONE_GB_IN_B = 1000000000;
 const TEN_GB_IN_B = 10000000000;
 const ONE_TB_IN_B = 1000000000000;
 const TEN_TB_IN_B = 10000000000000;
 
 const RE_DF_IS_DISK = /^\s*\/dev\/(\S+)(.*)$/;
 const RE_DF_DISK_USAGE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.*)$/;
+
+export function GBytesToHumanString(gb: number): string {
+  return bytesToHumanString(gb * ONE_GB_IN_B);
+}
 
 /**
  * Convert a number of bytes to a more logical human-readable string (e.g., 1024 -> 1 K).
