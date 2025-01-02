@@ -58,6 +58,7 @@
     "proclist",
     "procs",
     "rbytes",
+    "retval",
     "RGBA",
     "rightedge",
     "rtime",
