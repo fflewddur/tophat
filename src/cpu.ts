@@ -196,6 +196,7 @@ export const CpuMonitor = GObject.registerClass(
       super.bindVitals(vitals);
 
       let id = vitals.connect('notify::cpu-usage', () => {
+        // console.log(`cpu-usage: ${vitals.cpu_usage}`);
         const percent = vitals.cpu_usage * 100;
         const s = percent.toFixed(0) + '%';
         this.usage.text = s;
@@ -217,25 +218,29 @@ export const CpuMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::cpu-model', () => {
+        // console.log(`cpu-model: ${vitals.cpu_model}`);
         const s = vitals.cpu_model;
         this.menuCpuModel.text = s;
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::cpu-freq', () => {
-        const s = (vitals.cpu_freq / 1000).toFixed(1) + ' GHz';
+        // console.log(`cpu-freq: ${vitals.cpu_freq}`);
+        const s = vitals.cpu_freq.toFixed(1) + ' GHz';
         this.menuCpuFreq.text = s;
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::cpu-temp', () => {
-        const s = (vitals.cpu_temp / 1000).toFixed(0) + ' °C';
+        // console.log(`cpu-temp: ${vitals.cpu_temp}`);
+        const s = vitals.cpu_temp.toFixed(0) + ' °C';
         this.menuCpuTemp.text = s;
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::cpu-top-procs', () => {
         const procs = vitals.getTopCpuProcs(NumTopProcs);
+        // console.log(`cpu-top-procs: ${procs}`);
         for (let i = 0; i < NumTopProcs; i++) {
           let cpu = procs[i].cpuUsage();
           if (cpu > 0) {

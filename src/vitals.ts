@@ -432,23 +432,23 @@ export const Vitals = GObject.registerClass(
 
       // Regularly update from procfs and friends
       if (this.summaryLoop === 0) {
-        this.summaryLoop = GLib.timeout_add_seconds(
+        this.summaryLoop = GLib.timeout_add(
           GLib.PRIORITY_LOW,
-          this.summary_interval,
+          this.summary_interval * 1000,
           () => this.readSummaries()
         );
       }
       if (this.detailsLoop === 0) {
-        this.detailsLoop = GLib.timeout_add_seconds(
+        this.detailsLoop = GLib.timeout_add(
           GLib.PRIORITY_LOW,
-          DetailsInterval,
+          DetailsInterval * 1000,
           () => this.readDetails()
         );
       }
       if (this.fsLoop === 0) {
-        this.fsLoop = GLib.timeout_add_seconds(
+        this.fsLoop = GLib.timeout_add(
           GLib.PRIORITY_LOW,
-          FileSystemInterval,
+          FileSystemInterval * 1000,
           () => this.readFileSystemUsage()
         );
       }
@@ -716,7 +716,7 @@ export const Vitals = GObject.registerClass(
           .then((contents) => {
             this.cpuState.temps[i] = parseInt(contents);
             if (i === 0) {
-              this.cpu_temp = this.cpuState.temps[i];
+              this.cpu_temp = Math.round(this.cpuState.temps[i] / 1000);
             }
           })
           .catch((e) => {
@@ -737,7 +737,7 @@ export const Vitals = GObject.registerClass(
               freq += parseInt(m[1]);
             }
           }
-          this.cpu_freq = freq / this.cpuModel.cores;
+          this.cpu_freq = Math.round(freq / this.cpuModel.cores / 100) / 10;
         })
         .catch((e) => {
           console.warn(`[TopHat] error in loadFreqs(): ${e}`);
@@ -1030,63 +1030,85 @@ export const Vitals = GObject.registerClass(
     }
 
     private hashCpuHistory() {
+      // console.time('hashCpuHistory');
       let toHash = '';
       for (const u of this.cpuUsageHistory) {
         if (u) {
-          toHash += u.aggregate.toFixed(3);
+          toHash += (u.aggregate * 100).toFixed(0);
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
       cs.update(toHash);
-      return cs.get_string();
+      // console.log(`cpu toHash: ${toHash}`);
+      const hash = cs.get_string();
+      // console.timeEnd('hashCpuHistory');
+      return hash;
     }
 
     private hashMemHistory() {
+      // console.time('hashMemHistory');
       let toHash = '';
       for (const u of this.memUsageHistory) {
         if (u) {
-          toHash += u.usedMem.toFixed(3);
+          toHash += (u.usedMem * 100).toFixed(0);
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
       cs.update(toHash);
-      return cs.get_string();
+      // console.log(`mem toHash: ${toHash}`);
+      const hash = cs.get_string();
+      // console.timeEnd('hashMemHistory');
+      return hash;
     }
 
     private hashNetHistory() {
+      // console.time('hashNetHistory');
       let toHash = '';
       for (const u of this.netActivityHistory) {
         if (u) {
-          toHash += `${u.bytesRecv.toFixed(0)};${u.bytesSent.toFixed(0)};`;
+          // TODO: divide these vals by 1000 to avoid non-visible updates?
+          toHash += `${u.bytesRecv.toFixed(0)}${u.bytesSent.toFixed(0)}`;
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
       cs.update(toHash);
-      return cs.get_string();
+      // console.log(`net toHash: ${toHash}`);
+      const hash = cs.get_string();
+      // console.timeEnd('hashNetHistory');
+      return hash;
     }
 
     private hashDiskHistory() {
+      // console.time('hashDiskHistory');
       let toHash = '';
       for (const u of this.diskActivityHistory) {
         if (u) {
-          toHash += `${u.bytesRead.toFixed(0)};${u.bytesWritten.toFixed(0)};`;
+          // TODO: divide these vals by 1000 to avoid non-visible updates?
+          toHash += `${u.bytesRead.toFixed(0)}${u.bytesWritten.toFixed(0)}`;
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
       cs.update(toHash);
-      return cs.get_string();
+      // console.log(`disk toHash: ${toHash}`);
+      const hash = cs.get_string();
+      // console.timeEnd('hashDiskHistory');
+      return hash;
     }
 
     private hashFilesystems() {
+      // console.time('hashFS');
       let toHash = '';
       for (const fs of this.filesystems) {
         if (fs) {
-          toHash += `${fs.mount}${fs.usage()};`;
+          toHash += `${fs.mount}${fs.usage()}`;
         }
       }
       const cs = GLib.Checksum.new(GLib.ChecksumType.MD5);
       cs.update(toHash);
-      return cs.get_string();
+      // console.log(`fs toHash: ${toHash}`);
+      const hash = cs.get_string();
+      // console.timeEnd('hashFS');
+      return hash;
     }
 
     // Properties
@@ -1533,13 +1555,17 @@ class CpuState {
   public usage(): number {
     const usedTimeDelta = this.usedTime - this.usedTimePrev;
     const idleTimeDelta = this.idleTime - this.idleTimePrev;
-    return usedTimeDelta / (usedTimeDelta + idleTimeDelta);
+    return (
+      Math.round((usedTimeDelta / (usedTimeDelta + idleTimeDelta)) * 100) / 100
+    );
   }
 
   public coreUsage(core: number): number {
     const usedTimeDelta = this.coreUsedTime[core] - this.coreUsedTimePrev[core];
     const idleTimeDelta = this.coreIdleTime[core] - this.coreIdleTimePrev[core];
-    return usedTimeDelta / (usedTimeDelta + idleTimeDelta);
+    return (
+      Math.round((usedTimeDelta / (usedTimeDelta + idleTimeDelta)) * 100) / 100
+    );
   }
 
   public totalTime(): number {
@@ -1614,16 +1640,27 @@ class MemUsage implements IHistory {
 }
 
 class NetDevState {
-  public bytesRecv = -1;
-  public bytesRecvPrev = -1;
-  public bytesSent = -1;
-  public bytesSentPrev = -1;
+  private bytesRecv = -1;
+  private bytesRecvPrev = -1;
+  private bytesSent = -1;
+  private bytesSentPrev = -1;
+  private ts = 0; // timestamp in seconds
+  private tsPrev = 0;
 
-  public update(bytesRecv: number, bytesSent: number): void {
+  public update(bytesRecv: number, bytesSent: number, now = 0): void {
+    if (!now) {
+      now = Date.now();
+    }
+    if (now <= this.ts) {
+      // This update was processed too slowly and is out of date
+      return;
+    }
     this.bytesRecvPrev = this.bytesRecv;
     this.bytesRecv = bytesRecv;
     this.bytesSentPrev = this.bytesSent;
     this.bytesSent = bytesSent;
+    this.tsPrev = this.ts;
+    this.ts = now;
   }
 
   // recvActivity returns the number of bytes received per second
@@ -1632,7 +1669,14 @@ class NetDevState {
     if (this.bytesRecvPrev < 0) {
       return 0;
     }
-    return (this.bytesRecv - this.bytesRecvPrev) / SummaryIntervalDefault;
+    if (this.ts <= this.tsPrev) {
+      console.warn('recvActivity times are reversed!');
+    }
+    const retval = Math.round(
+      (this.bytesRecv - this.bytesRecvPrev) / ((this.ts - this.tsPrev) / 1000)
+    );
+    // console.log(`returning recvActivity: ${retval}`);
+    return retval;
   }
 
   // sentActivity return the number of bytes sent per second
@@ -1641,12 +1685,18 @@ class NetDevState {
     if (this.bytesSentPrev < 0) {
       return 0;
     }
-    return (this.bytesSent - this.bytesSentPrev) / SummaryIntervalDefault;
+    if (this.ts <= this.tsPrev) {
+      console.warn('sentActivity times are reversed!');
+    }
+    const retval = Math.round(
+      (this.bytesSent - this.bytesSentPrev) / ((this.ts - this.tsPrev) / 1000)
+    );
+    // console.log(`returning sentActivity: ${retval}`);
+    return retval;
   }
 }
 
 class NetActivity implements IActivity {
-  // TODO(fflewddur): Add a field for the duration of this measurement
   public bytesRecv = 0;
   public bytesSent = 0;
 
@@ -1660,16 +1710,27 @@ class NetActivity implements IActivity {
 }
 
 class DiskState {
-  public bytesRead = -1;
-  public bytesReadPrev = -1;
-  public bytesWritten = -1;
-  public bytesWrittenPrev = -1;
+  private bytesRead = -1;
+  private bytesReadPrev = -1;
+  private bytesWritten = -1;
+  private bytesWrittenPrev = -1;
+  private ts = 0; // timestamp in seconds
+  private tsPrev = 0;
 
-  public update(bytesRead: number, bytesWritten: number): void {
+  public update(bytesRead: number, bytesWritten: number, now = 0): void {
+    if (!now) {
+      now = Date.now();
+    }
+    if (now <= this.ts) {
+      // This update was processed too slowly and is out of date
+      return;
+    }
     this.bytesReadPrev = this.bytesRead;
     this.bytesRead = bytesRead;
     this.bytesWrittenPrev = this.bytesWritten;
     this.bytesWritten = bytesWritten;
+    this.tsPrev = this.ts;
+    this.ts = now;
   }
 
   // readActivity returns the number of bytes read per second
@@ -1678,7 +1739,14 @@ class DiskState {
     if (this.bytesReadPrev < 0) {
       return 0;
     }
-    return (this.bytesRead - this.bytesReadPrev) / SummaryIntervalDefault;
+    if (this.ts <= this.tsPrev) {
+      console.warn('readActivity times are reversed!');
+    }
+    const retval = Math.round(
+      (this.bytesRead - this.bytesReadPrev) / ((this.ts - this.tsPrev) / 1000)
+    );
+    // console.log(`returning readActivity: ${retval}`);
+    return retval;
   }
 
   // writeActivity return the number of bytes written per second
@@ -1687,12 +1755,19 @@ class DiskState {
     if (this.bytesWrittenPrev < 0) {
       return 0;
     }
-    return (this.bytesWritten - this.bytesWrittenPrev) / SummaryIntervalDefault;
+    if (this.ts <= this.tsPrev) {
+      console.warn('writeActivity times are reversed!');
+    }
+    const retval = Math.round(
+      (this.bytesWritten - this.bytesWrittenPrev) /
+        ((this.ts - this.tsPrev) / 1000)
+    );
+    // console.log(`returning writeActivity: ${retval}`);
+    return retval;
   }
 }
 
 class DiskActivity implements IActivity {
-  // TODO(fflewddur): Add a field for the duration of this measurement
   public bytesRead = 0;
   public bytesWritten = 0;
 
@@ -1709,8 +1784,8 @@ class Process {
   public id = '';
   public cmd = '';
   public cmdLoaded = false;
-  public utime = 0;
-  public stime = 0;
+  private utime = 0;
+  private stime = 0;
   public pss = 0;
   public cpu = -1;
   public cpuPrev = -1;
