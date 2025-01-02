@@ -22,7 +22,7 @@ import St from 'gi://St';
 
 import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
 
-export const AnimationDuration = 300;
+export const AnimationDuration = 500;
 
 export enum Orientation {
   Horizontal,
