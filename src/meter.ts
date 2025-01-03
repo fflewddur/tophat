@@ -34,7 +34,7 @@ export const TopHatMeter = GObject.registerClass(
     private bars: Array<St.Widget>;
     private barUsage: Array<number>;
     private orientation: Orientation;
-    private scaleFactor;
+    private scaleFactor = 1;
     private color: Cogl.Color;
     private barWidth: number; // in pixels
 

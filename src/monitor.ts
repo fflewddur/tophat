@@ -269,6 +269,7 @@ export const TopHatMonitor = GObject.registerClass(
         this.vitals?.disconnect(id);
       }
       this.vitalsSignals.length = 0;
+      this.meter.destroy();
       this.box.destroy();
       this.themeContext.disconnect(this.themeContextChanged);
       this.themeContextChanged = 0;
