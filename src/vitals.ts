@@ -779,7 +779,7 @@ export const Vitals = GObject.registerClass(
         const psFiles = [];
         while (iter) {
           const fileInfos = await iter
-            .next_files_async(100, GLib.PRIORITY_LOW, null)
+            .next_files_async(1000, GLib.PRIORITY_LOW, null)
             .catch((e) => {
               console.error(
                 `Error calling next_files_async() in loadProcessList(): ${e}`
@@ -806,11 +806,15 @@ export const Vitals = GObject.registerClass(
             }
           }
         }
+        // console.time('reading process details');
+        // Promise.all(psFiles).then(() => {
         await Promise.all(psFiles);
         this.procs = curProcs;
         this.cpu_top_procs = this.hashTopCpuProcs();
         this.mem_top_procs = this.hashTopMemProcs();
         this.disk_top_procs = this.hashTopDiskProcs();
+        // console.timeEnd('reading process details');
+        // });
       } catch (e) {
         console.error(`[TopHat] Error in loadProcessList(): ${e}`);
       }
@@ -831,7 +835,7 @@ export const Vitals = GObject.registerClass(
           if (this.showMem) {
             actions.push(this.loadSmapsRollupForProcess(p));
           }
-          if (this.showDisk) {
+          if (this.showDisk || this.showFS) {
             actions.push(this.loadIoForProcess(p));
           }
           Promise.all(actions).then(() => {
@@ -992,7 +996,12 @@ export const Vitals = GObject.registerClass(
       top = top.sort((x, y) => {
         return x.cpuUsage() - y.cpuUsage();
       });
-      top = top.reverse().slice(0, n);
+      top = top
+        .filter((p) => {
+          return p.cpuUsage();
+        })
+        .reverse()
+        .slice(0, n);
       return top;
     }
 
@@ -1001,6 +1010,7 @@ export const Vitals = GObject.registerClass(
       top = top.sort((x, y) => {
         return x.memUsage() - y.memUsage();
       });
+      // No need to filter this list; every proc always uses some memory
       top = top.reverse().slice(0, n);
       return top;
     }
@@ -1012,7 +1022,12 @@ export const Vitals = GObject.registerClass(
           x.diskReads() + x.diskWrites() - (y.diskReads() + y.diskWrites())
         );
       });
-      top = top.reverse().slice(0, n);
+      top = top
+        .reverse()
+        .slice(0, n)
+        .filter((p) => {
+          return p.diskReads() + p.diskWrites();
+        });
       return top;
     }
 
