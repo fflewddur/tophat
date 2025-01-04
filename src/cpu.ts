@@ -242,8 +242,8 @@ export const CpuMonitor = GObject.registerClass(
         const procs = vitals.getTopCpuProcs(NumTopProcs);
         // console.log(`cpu-top-procs: ${procs}`);
         for (let i = 0; i < NumTopProcs; i++) {
-          let cpu = procs[i].cpuUsage();
-          if (cpu > 0) {
+          if (procs[i]) {
+            let cpu = procs[i].cpuUsage();
             if (!this.normalizeProcUsage) {
               cpu *= vitals.cpuModel.cores;
             }

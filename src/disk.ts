@@ -290,9 +290,9 @@ export const DiskMonitor = GObject.registerClass(
       id = vitals.connect('notify::disk-top-procs', () => {
         const procs = vitals.getTopDiskProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
-          const w = procs[i].diskWrites();
-          const r = procs[i].diskReads();
-          if (w > 0 || r > 0) {
+          if (procs[i]) {
+            const w = procs[i].diskWrites();
+            const r = procs[i].diskReads();
             this.topProcs[i].cmd.text = procs[i].cmd;
             this.topProcs[i].in.text = bytesToHumanString(w) + '/s';
             this.topProcs[i].out.text = bytesToHumanString(r) + '/s';
