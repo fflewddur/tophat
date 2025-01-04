@@ -199,6 +199,7 @@ export const NetMonitor = GObject.registerClass(
       super.bindVitals(vitals);
 
       let id = vitals.connect('notify::net-sent', () => {
+        // console.log(`net-sent: ${vitals.net_sent}`);
         if (this.connectivity === NM.ConnectivityState.NONE) {
           return;
         }
@@ -209,6 +210,7 @@ export const NetMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::net-recv', () => {
+        // console.log(`net-recv: ${vitals.net_recv}`);
         if (this.connectivity === NM.ConnectivityState.NONE) {
           return;
         }
@@ -219,12 +221,14 @@ export const NetMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::net-sent-total', () => {
+        // console.log(`net-sent-total: ${vitals.net_sent_total}`);
         const s = bytesToHumanString(vitals.net_sent_total);
         this.menuNetUpTotal.text = s;
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::net-recv-total', () => {
+        // console.log(`net-recv-total: ${vitals.net_recv_total}`);
         const s = bytesToHumanString(vitals.net_recv_total);
         this.menuNetDownTotal.text = s;
       });
