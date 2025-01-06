@@ -354,6 +354,28 @@ export const DiskMonitor = GObject.registerClass(
           this.menuFSDetails.attach(label, 0, row, 2, 1);
           row++;
         }
+        // FIXME: rework this
+        let allNull = false;
+        while (!allNull) {
+          allNull = true;
+          let label = this.menuFSDetails.get_child_at(0, row);
+          if (label !== null) {
+            allNull = false;
+            label.destroy();
+          }
+          label = this.menuFSDetails.get_child_at(1, row);
+          if (label !== null) {
+            allNull = false;
+            label.destroy();
+          }
+          label = this.menuFSDetails.get_child_at(0, row + 1);
+          if (label !== null) {
+            allNull = false;
+            label.destroy();
+          }
+
+          row++;
+        }
       });
     }
   }

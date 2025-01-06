@@ -311,6 +311,7 @@ export const Vitals = GObject.registerClass(
     private netDev;
     private netDevs;
     private fsMount;
+    private fsToHide;
     private settingSignals;
     private nm: NM.Client | null;
 
@@ -380,6 +381,21 @@ export const Vitals = GObject.registerClass(
       });
       this.settingSignals.push(id);
 
+      this.fsToHide = gsettings
+        .get_string('fs-hide-in-menu')
+        .split(';')
+        .filter((s) => {
+          return s.length > 0;
+        });
+      id = this.gsettings.connect('changed::fs-hide-in-menu', (settings) => {
+        this.fsToHide = settings
+          .get_string('fs-hide-in-menu')
+          .split(';')
+          .filter((s: string) => {
+            return s.length > 0;
+          });
+        this.readFileSystemUsage();
+      });
       this.netDev = gsettings.get_string('network-device');
       if (this.netDev === _('Automatic')) {
         this.netDev = '';
@@ -952,7 +968,9 @@ export const Vitals = GObject.registerClass(
     private loadFS(): void {
       // console.time('loadFS()');
       readFileSystems().then((fileSystems) => {
-        this.filesystems = fileSystems;
+        this.filesystems = fileSystems.filter(
+          (fs) => !this.fsToHide.includes(fs.mount)
+        );
         if (!this.fsMount) {
           // Default to /home if it exists, / otherwise
           this.fsMount = '/';

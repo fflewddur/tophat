@@ -21,6 +21,7 @@ page](https://extensions.gnome.org/extension/5219/tophat/).
 - GNOME 45 or newer (older releases of TopHat are available for GNOME 3.32 -
   44 in the legacy branch at https://github.com/fflewddur/tophat/tree/legacy)
 - A modestly recent release of the Linux kernel (anything >= 5.0 should work)
+- NetworkManager (to monitor network devices)
 
 ### Compatibility
 

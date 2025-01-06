@@ -196,21 +196,80 @@ export default class TopHatPrefs extends ExtensionPreferences {
     choices.append(_('Both meter and value'));
     this.addComboRow(_('Show as'), choices, 'fs-display', group);
 
-    // Filesystem mount to monitor
+    // Filesystem mount to monitor in the topbar
     const fsMountChoices = new Gtk.StringList();
-    fsMountChoices.append(_('Automatic'));
-    readFileSystems().then((filesystems) => {
-      for (const fs of filesystems) {
-        fsMountChoices.append(fs.mount);
-      }
-      this.addComboRow(
-        _('Filesystem to monitor'),
-        fsMountChoices,
-        'mount-to-monitor',
-        group,
-        false
-      );
+    const monitorMountRow = this.addComboRow(
+      _('Filesystem to monitor in topbar'),
+      fsMountChoices,
+      'mount-to-monitor',
+      group,
+      false
+    );
+
+    // Filesystem mounts to monitor in the menu
+    const row = new Adw.ExpanderRow({
+      title: _('Filesystems to show in menu'),
     });
+    group.add(row);
+    // Find available filesystems and add them to our widgets
+    readFileSystems()
+      .then((filesystems) => {
+        const settings = this.getSettings();
+        const toHide = settings
+          .get_string('fs-hide-in-menu')
+          .split(';')
+          .filter((s) => {
+            return s.length > 0;
+          });
+        const mountToMonitor = settings.get_string('mount-to-monitor');
+        fsMountChoices.append(_('Automatic'));
+        let i = 1;
+        for (const fs of filesystems) {
+          fsMountChoices.append(fs.mount);
+          if (mountToMonitor === fs.mount) {
+            monitorMountRow.set_selected(i);
+          }
+          const fsRow = new Adw.ActionRow({ title: fs.mount });
+          const toggle = new Gtk.Switch({
+            active: !toHide.includes(fs.mount),
+            valign: Gtk.Align.CENTER,
+          });
+          //@ts-expect-error does not exist
+          toggle.fs = fs.mount;
+          toggle.connect('notify::active', (w) => {
+            const toHide = settings
+              .get_string('fs-hide-in-menu')
+              .split(';')
+              .filter((s) => {
+                return s.length > 0;
+              });
+            if (w.get_active() && toHide.includes(w.fs)) {
+              const i = toHide.indexOf(w.fs);
+              if (i > -1) {
+                toHide.splice(i, 1);
+              }
+            } else if (!w.get_active() && !toHide.includes(w.fs)) {
+              toHide.push(w.fs);
+            }
+            settings.set_string(
+              'fs-hide-in-menu',
+              toHide
+                .filter((s) => {
+                  return s.length > 0;
+                })
+                .join(';')
+            );
+          });
+          fsRow.add_suffix(toggle);
+          row.add_row(fsRow);
+          i++;
+        }
+      })
+      .catch((err) => {
+        console.error(
+          `[TopHat] Error building filesystem preference page: ${err}`
+        );
+      });
 
     return page;
   }
@@ -358,5 +417,6 @@ export default class TopHatPrefs extends ExtensionPreferences {
     });
 
     group.add(row);
+    return row;
   }
 }

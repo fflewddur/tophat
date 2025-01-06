@@ -148,5 +148,10 @@
       <summary>The mount to monitor in the top bar</summary>
       <description>The disk usage monitor will show the filesystem usage for this partition in the top bar.</description>
     </key>
+    <key name="fs-hide-in-menu" type="s">
+      <default>''</default>
+      <summary>List of mount points to hide in the disk activity menu</summary>
+      <description>List of mount points to hide in the disk activity menu.</description>
+    </key>
   </schema>
 </schemalist>
