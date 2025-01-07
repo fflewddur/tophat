@@ -22,7 +22,7 @@ import St from 'gi://St';
 
 import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
 
-export const AnimationDuration = 500;
+export const AnimationDuration = 200;
 
 export enum Orientation {
   Horizontal,
@@ -126,11 +126,14 @@ export const TopHatMeter = GObject.registerClass(
           `[TopHat] called setBarSizes() with ${n.length} values for ${this.bars.length} bars`
         );
       }
-      const meterHeight = this.get_height();
+      const meterHeight = this.get_height() - 2 * this.scaleFactor; // Subtract margin of 1px
       const duration = adjustAnimationTime(AnimationDuration);
       for (let i = 0; i < n.length; i++) {
-        const height = Math.max(Math.ceil(meterHeight * n[i]), 0.01);
+        const height = Math.ceil(meterHeight * n[i]);
         const curHeight = this.bars[i].height;
+        // console.log(
+        //   `meter: curHeight=${curHeight} height=${height} (meterHeight=${meterHeight} * usage=${n[i]})`
+        // );
         if (height === curHeight) {
           continue;
         }
