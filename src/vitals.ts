@@ -793,9 +793,10 @@ export const Vitals = GObject.registerClass(
           });
 
         const psFiles = [];
+        // Fetch files one at a time to avoid compositor stutters
         while (iter) {
           const fileInfos = await iter
-            .next_files_async(1000, GLib.PRIORITY_LOW, null)
+            .next_files_async(1, GLib.PRIORITY_LOW, null)
             .catch((e) => {
               console.error(
                 `Error calling next_files_async() in loadProcessList(): ${e}`
@@ -823,14 +824,12 @@ export const Vitals = GObject.registerClass(
           }
         }
         // console.time('reading process details');
-        // Promise.all(psFiles).then(() => {
         await Promise.all(psFiles);
         this.procs = curProcs;
         this.cpu_top_procs = this.hashTopCpuProcs();
         this.mem_top_procs = this.hashTopMemProcs();
         this.disk_top_procs = this.hashTopDiskProcs();
         // console.timeEnd('reading process details');
-        // });
       } catch (e) {
         console.error(`[TopHat] Error in loadProcessList(): ${e}`);
       }
