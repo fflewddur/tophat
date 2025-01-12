@@ -776,9 +776,11 @@ export const Vitals = GObject.registerClass(
     }
 
     private async loadProcessList() {
+      // This method needs to ensure it doesn't overwhelm the OS
       const curProcs = new Map<string, Process>();
       const directory = Gio.File.new_for_path('/proc/');
       try {
+        // console.time('ls procfs');
         const iter = await directory
           .enumerate_children_async(
             Gio.FILE_ATTRIBUTE_STANDARD_NAME,
@@ -793,10 +795,9 @@ export const Vitals = GObject.registerClass(
           });
 
         const psFiles = [];
-        // Fetch files one at a time to avoid compositor stutters
         while (iter) {
           const fileInfos = await iter
-            .next_files_async(1, GLib.PRIORITY_LOW, null)
+            .next_files_async(10, GLib.PRIORITY_LOW, null)
             .catch((e) => {
               console.error(
                 `Error calling next_files_async() in loadProcessList(): ${e}`
@@ -819,17 +820,35 @@ export const Vitals = GObject.registerClass(
               name[0] == '8' ||
               name[0] == '9'
             ) {
-              psFiles.push(this.readProcFiles(name, curProcs));
+              psFiles.push(name);
             }
           }
         }
+        // console.timeEnd('ls procfs');
         // console.time('reading process details');
-        await Promise.all(psFiles);
+        let promises = [];
+        let i = 0;
+        for (const name of psFiles) {
+          promises.push(this.readProcFiles(name, curProcs));
+          if (i >= 1) {
+            // console.log('run 2 procs');
+            await Promise.allSettled(promises);
+            // sleep for 2 ms
+            await new Promise((r) => setTimeout(r, 2));
+            promises = [];
+            i = 0;
+          } else {
+            i++;
+          }
+        }
+        // // await Promise.allSettled(promises);
         this.procs = curProcs;
+        // console.timeEnd('reading process details');
+        // console.time('hashing procs');
         this.cpu_top_procs = this.hashTopCpuProcs();
         this.mem_top_procs = this.hashTopMemProcs();
         this.disk_top_procs = this.hashTopDiskProcs();
-        // console.timeEnd('reading process details');
+        // console.timeEnd('hashing procs');
       } catch (e) {
         console.error(`[TopHat] Error in loadProcessList(): ${e}`);
       }
@@ -841,6 +860,7 @@ export const Vitals = GObject.registerClass(
     ): Promise<void> {
       return new Promise<void>((resolve) => {
         this.loadProcessStat(name).then((p) => {
+          // console.log('loadProcessStat()');
           curProcs.set(p.id, p);
           p.setTotalTime(
             this.cpuState.totalTimeDetails - this.cpuState.totalTimeDetailsPrev
@@ -853,7 +873,7 @@ export const Vitals = GObject.registerClass(
           if (this.showDisk || this.showFS) {
             actions.push(this.loadIoForProcess(p));
           }
-          Promise.all(actions).then(() => {
+          Promise.allSettled(actions).then(() => {
             resolve();
           });
         });
