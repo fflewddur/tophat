@@ -306,6 +306,7 @@ export const DiskMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::fs-usage', () => {
+        // console.log(`updated fs-usage: ${vitals.fs_usage}`);
         this.meter.setBarSizes([vitals.fs_usage / 100]);
         const s = `${vitals.fs_usage.toFixed(0)}%`;
         this.usage.text = s;

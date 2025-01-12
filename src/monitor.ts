@@ -265,6 +265,7 @@ export const TopHatMonitor = GObject.registerClass(
     }
 
     public override destroy() {
+      // console.log('Monitor.destroy()');
       for (const id of this.vitalsSignals) {
         this.vitals?.disconnect(id);
       }

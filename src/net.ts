@@ -40,6 +40,7 @@ export const NetMonitor = GObject.registerClass(
     private menuNetUpTotal: St.Label;
     private menuNetDownTotal: St.Label;
     private usageUnit;
+    private nmClient?: NM.Client;
     private connectivity?: NM.ConnectivityState;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
@@ -118,6 +119,7 @@ export const NetMonitor = GObject.registerClass(
             this.updateConnectivity(client, result);
           });
         });
+        this.nmClient = client;
       });
     }
 
@@ -260,6 +262,12 @@ export const NetMonitor = GObject.registerClass(
         this.historyChart.updateAlt(history, max);
       });
       this.vitalsSignals.push(id);
+    }
+
+    public override destroy() {
+      // console.log('NetMonitor.destroy()');
+      this.nmClient = undefined;
+      super.destroy();
     }
   }
 );
