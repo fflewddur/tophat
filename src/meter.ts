@@ -134,11 +134,9 @@ export const TopHatMeter = GObject.registerClass(
         // console.log(
         //   `meter: curHeight=${curHeight} height=${height} (meterHeight=${meterHeight} * usage=${n[i]})`
         // );
-        if (height === curHeight) {
-          continue;
-        }
+        const delta = Math.abs(height - curHeight);
         this.bars[i].remove_transition('scaleHeight');
-        if (duration > 0) {
+        if (duration > 0 && delta > 2) {
           const t = Clutter.PropertyTransition.new_for_actor(
             this.bars[i],
             'height'
