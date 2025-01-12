@@ -1603,7 +1603,8 @@ class CpuState {
     const usedTimeDelta = this.usedTime - this.usedTimePrev;
     const idleTimeDelta = this.idleTime - this.idleTimePrev;
     return (
-      Math.round((usedTimeDelta / (usedTimeDelta + idleTimeDelta)) * 100) / 100
+      Math.round((usedTimeDelta / (usedTimeDelta + idleTimeDelta)) * 1000) /
+      1000
     );
   }
 
