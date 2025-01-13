@@ -125,7 +125,3 @@ icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)
 All icons were edited to make them more legible at small sizes.
 
 [license]: LICENSE
-
-```
-
-```
