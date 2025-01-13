@@ -75,13 +75,18 @@ ESLint and Prettier extensions to automatically run these tools for you.
 
 ### Useful development commands
 
-To view logs for GNOME Shell: `journalctl -f /usr/bin/gnome-shell`
+To view logs for GNOME Shell:
 
-To view logs for extension preferences: `journalctl -f /usr/bin/gjs`
+    journalctl -f /usr/bin/gnome-shell
 
-To simulate heavy system load, use the `stress-ng` tool, e.g. `stress-ng
---timeout 10s --cpu 8` or `stress-ng --vm-bytes 80% --vm-populate -t 30 -vm
-4`.
+To view logs for extension preferences:
+
+    journalctl -f /usr/bin/gjs
+
+To simulate heavy system load, use the `stress-ng` tool, e.g.:
+
+    stress-ng --timeout 10s --cpu 8
+    stress-ng --vm-bytes 80% --vm-populate -t 30 -vm 4
 
 To test the development version:
 
@@ -110,13 +115,17 @@ The images in the 'icons' directory are derived works from
 Commons Attribution license](https://creativecommons.org/licenses/by/3.0/).
 The authors of each original work are:
 
-icons/cpu.svg: [jai](https://thenounproject.com/jairam.182/)  
-icons/disk.svg: [guntur cahya](https://thenounproject.com/gunturcahya05/)  
+icons/cpu.svg: [jai](https://thenounproject.com/jairam.182/)
+icons/disk.svg: [guntur cahya](https://thenounproject.com/gunturcahya05/)
 icons/logo.svg: [Sergey Krivoy](https://thenounproject.com/krivoydesigner/)
 icons/mem.svg: [Loudoun Design
-Co.](https://thenonproject.com/LoudounDesignCo/)  
+Co.](https://thenonproject.com/LoudounDesignCo/)
 icons/net.svg: [Pixel Bazaar](https://thenounproject.com/pixelbazaar/)
 
 All icons were edited to make them more legible at small sizes.
 
 [license]: LICENSE
+
+```
+
+```

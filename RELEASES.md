@@ -3,9 +3,12 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Unreleased
+## TopHat 19 - January 12, 2025
 
+- Fixed desktop stuttering on some systems
+- Improved performance
 - Improved filesystem detection
+- Added option to hide filesystems on the disk menu
 - Added option to hide menu actions
 
 ## TopHat 18 - December 30, 2024
