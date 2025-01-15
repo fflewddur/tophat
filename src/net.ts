@@ -42,6 +42,7 @@ export const NetMonitor = GObject.registerClass(
     private usageUnit;
     private nmClient?: NM.Client;
     private connectivity?: NM.ConnectivityState;
+    private connectivitySig = 0;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Net Monitor', metadata, gsettings);
@@ -114,7 +115,7 @@ export const NetMonitor = GObject.registerClass(
         client.check_connectivity_async(null, (client, result) => {
           this.updateConnectivity(client, result);
         });
-        client.connect('notify::connectivity', () => {
+        this.connectivitySig = client.connect('notify::connectivity', () => {
           client.check_connectivity_async(null, (client, result) => {
             this.updateConnectivity(client, result);
           });
@@ -266,6 +267,10 @@ export const NetMonitor = GObject.registerClass(
 
     public override destroy() {
       // console.log('NetMonitor.destroy()');
+      if (this.connectivitySig > 0) {
+        this.nmClient?.disconnect(this.connectivitySig);
+        this.connectivitySig = 0;
+      }
       this.nmClient = undefined;
       super.destroy();
     }
