@@ -22,7 +22,7 @@ import St from 'gi://St';
 
 import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
 
-export const AnimationDuration = 200;
+export const AnimationDuration = 300;
 
 export enum Orientation {
   Horizontal,
@@ -136,11 +136,12 @@ export const TopHatMeter = GObject.registerClass(
         // );
         const delta = Math.abs(height - curHeight);
         this.bars[i].remove_transition('scaleHeight');
-        if (duration > 0 && delta > 2) {
+        if (duration > 0 && delta > 1) {
           const t = Clutter.PropertyTransition.new_for_actor(
             this.bars[i],
             'height'
           );
+          t.set_progress_mode(Clutter.AnimationMode.EASE_IN_OUT_QUAD);
           t.set_duration(duration);
           t.set_from(curHeight);
           t.set_to(height);
