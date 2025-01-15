@@ -54,6 +54,20 @@ utilities first.
 4. Log out of your computer and log back in (or restart your system).
 5. Enable TopHat with the command `gnome-extensions enable tophat@fflewddur.github.io`.
 
+## Settings
+
+All of TopHat's settings are displayed in its preferences window, and this is the recommended approach for modifying them. If, however, you need to work with these from the command like, you can use the `gsettings` tools to read and modify them. To view all available settings and their current values, use the command:
+
+```
+gsettings --schemadir ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io/schemas list-recursively org.gnome.shell.extensions.tophat
+```
+
+Settings can be adjusted with the command:
+
+```
+gsettings --schemadir ~/.local/share/gnome-shell/extensions/tophat@fflewddur.github.io/schemas set org.gnome.shell.extensions.tophat [key] [value]
+```
+
 ## Contributing
 
 Contributions to improve TopHat are welcome! To avoid duplicate work, check
