@@ -210,6 +210,12 @@ export const TopHatMonitor = GObject.registerClass(
       this.addMenuRow(this.menuActionBox, 0, this.menuNumCols, 1);
       this.menuActionBox.visible =
         this.gsettings.get_boolean('show-menu-actions');
+      this.menu.connectObject(
+        'open-state-changed',
+        (_: PopupMenu.PopupMenuBase, open: boolean) => {
+          this.vitals?.detailsNeededInUI(open);
+        }
+      );
     }
 
     protected addMenuRow(
