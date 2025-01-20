@@ -913,7 +913,7 @@ export const Vitals = GObject.registerClass(
       name: string,
       curProcs: Map<string, Process>
     ): Promise<void> {
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<void>((resolve) => {
         this.loadProcessStat(name)
           .then((p) => {
             // console.log('loadProcessStat()');
@@ -934,9 +934,9 @@ export const Vitals = GObject.registerClass(
               resolve();
             });
           })
-          .catch((e) => {
+          .catch(() => {
             // We expect to be unable to read many of these
-            reject(e);
+            resolve();
           });
       });
     }
