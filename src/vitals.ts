@@ -507,15 +507,19 @@ export const Vitals = GObject.registerClass(
 
     // readDetails queries the info needed by the monitor menus
     public readDetails(): boolean {
+      const promises = new Array<Promise<void>>(0);
       if (this.showCpu) {
-        this.loadUptime();
-        this.loadTemps();
-        this.loadFreqs();
-        this.loadStatDetails();
+        promises.push(this.loadUptime());
+        promises.push(this.loadTemps());
+        promises.push(this.loadFreqs());
+        promises.push(this.loadStatDetails());
       }
-      if (this.showCpu || this.showMem || this.showDisk || this.showFS) {
-        this.loadProcessList();
-      }
+      Promise.allSettled(promises).then(() => {
+        if (this.showCpu || this.showMem || this.showDisk || this.showFS) {
+          this.loadProcessList();
+        }
+      });
+
       return true;
     }
 
@@ -557,16 +561,20 @@ export const Vitals = GObject.registerClass(
       }
     }
 
-    private loadUptime() {
-      const f = new File('/proc/uptime');
-      f.read()
-        .then((line) => {
-          this.uptime = parseInt(line.substring(0, line.indexOf(' ')));
-          // console.log(`[TopHat] uptime = ${this.uptime}`);
-        })
-        .catch((e) => {
-          console.warn(`[TopHat] error in loadUptime(): ${e}`);
-        });
+    private loadUptime(): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        const f = new File('/proc/uptime');
+        f.read()
+          .then((line) => {
+            this.uptime = parseInt(line.substring(0, line.indexOf(' ')));
+            // console.log(`[TopHat] uptime = ${this.uptime}`);
+            resolve();
+          })
+          .catch((e) => {
+            console.warn(`[TopHat] error in loadUptime(): ${e}`);
+            reject(e);
+          });
+      });
     }
 
     private loadStat() {
@@ -606,28 +614,32 @@ export const Vitals = GObject.registerClass(
         });
     }
 
-    private loadStatDetails() {
-      const f = new File('/proc/stat');
-      f.read()
-        .then((contents) => {
-          const lines = contents.split('\n');
-          for (const line of lines) {
-            if (line.startsWith('cpu')) {
-              const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
-              const m = line.match(re);
-              if (m && !m[1]) {
-                // These are aggregate CPU statistics
-                const usedTime = parseInt(m[2]) + parseInt(m[4]);
-                const idleTime = parseInt(m[5]);
-                this.cpuState.updateDetails(usedTime + idleTime);
-                break;
+    private loadStatDetails(): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        const f = new File('/proc/stat');
+        f.read()
+          .then((contents) => {
+            const lines = contents.split('\n');
+            for (const line of lines) {
+              if (line.startsWith('cpu')) {
+                const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+                const m = line.match(re);
+                if (m && !m[1]) {
+                  // These are aggregate CPU statistics
+                  const usedTime = parseInt(m[2]) + parseInt(m[4]);
+                  const idleTime = parseInt(m[5]);
+                  this.cpuState.updateDetails(usedTime + idleTime);
+                  break;
+                }
               }
             }
-          }
-        })
-        .catch((e) => {
-          console.warn(`[TopHat] error in loadStatDetails(): ${e}`);
-        });
+            resolve();
+          })
+          .catch((e) => {
+            console.warn(`[TopHat] error in loadStatDetails(): ${e}`);
+            reject(e);
+          });
+      });
     }
 
     private loadMeminfo() {
@@ -773,39 +785,51 @@ export const Vitals = GObject.registerClass(
         });
     }
 
-    private loadTemps() {
-      this.cpuModel.tempMonitors.forEach((file, i) => {
-        const f = new File(file);
-        f.read()
-          .then((contents) => {
-            this.cpuState.temps[i] = parseInt(contents);
-            if (i === 0) {
-              this.cpu_temp = Math.round(this.cpuState.temps[i] / 1000);
-            }
-          })
-          .catch((e) => {
-            console.warn(`[TopHat] error in loadTemp(): ${e}`);
-          });
+    private loadTemps(): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        if (this.cpuModel.tempMonitors.size === 0) {
+          resolve();
+          return;
+        }
+        this.cpuModel.tempMonitors.forEach((file, i) => {
+          const f = new File(file);
+          f.read()
+            .then((contents) => {
+              this.cpuState.temps[i] = parseInt(contents);
+              if (i === 0) {
+                this.cpu_temp = Math.round(this.cpuState.temps[i] / 1000);
+              }
+              resolve();
+            })
+            .catch((e) => {
+              console.warn(`[TopHat] error in loadTemp(): ${e}`);
+              reject(e);
+            });
+        });
       });
     }
 
-    private loadFreqs() {
-      const f = new File('/proc/cpuinfo');
-      f.read()
-        .then((contents) => {
-          const blocks = contents.split('\n\n');
-          let freq = 0;
-          for (const block of blocks) {
-            const m = block.match(/cpu MHz\s*:\s*(\d+)/);
-            if (m) {
-              freq += parseInt(m[1]);
+    private loadFreqs(): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        const f = new File('/proc/cpuinfo');
+        f.read()
+          .then((contents) => {
+            const blocks = contents.split('\n\n');
+            let freq = 0;
+            for (const block of blocks) {
+              const m = block.match(/cpu MHz\s*:\s*(\d+)/);
+              if (m) {
+                freq += parseInt(m[1]);
+              }
             }
-          }
-          this.cpu_freq = Math.round(freq / this.cpuModel.cores / 100) / 10;
-        })
-        .catch((e) => {
-          console.warn(`[TopHat] error in loadFreqs(): ${e}`);
-        });
+            this.cpu_freq = Math.round(freq / this.cpuModel.cores / 100) / 10;
+            resolve();
+          })
+          .catch((e) => {
+            console.warn(`[TopHat] error in loadFreqs(): ${e}`);
+            reject(e);
+          });
+      });
     }
 
     private async loadProcessList() {
@@ -863,8 +887,7 @@ export const Vitals = GObject.registerClass(
         let i = 0;
         for (const name of psFiles) {
           promises.push(this.readProcFiles(name, curProcs));
-          if (i >= 1) {
-            // console.log('run 2 procs');
+          if (i >= 3) {
             await Promise.allSettled(promises);
             // sleep for 2 ms
             await new Promise((r) => setTimeout(r, 2));
@@ -874,7 +897,6 @@ export const Vitals = GObject.registerClass(
             i++;
           }
         }
-        // // await Promise.allSettled(promises);
         this.procs = curProcs;
         // console.timeEnd('reading process details');
         // console.time('hashing procs');
@@ -891,25 +913,31 @@ export const Vitals = GObject.registerClass(
       name: string,
       curProcs: Map<string, Process>
     ): Promise<void> {
-      return new Promise<void>((resolve) => {
-        this.loadProcessStat(name).then((p) => {
-          // console.log('loadProcessStat()');
-          curProcs.set(p.id, p);
-          p.setTotalTime(
-            this.cpuState.totalTimeDetails - this.cpuState.totalTimeDetailsPrev
-          );
-          const actions = [];
-          actions.push(this.loadCmdForProcess(p));
-          if (this.showMem) {
-            actions.push(this.loadSmapsRollupForProcess(p));
-          }
-          if (this.showDisk || this.showFS) {
-            actions.push(this.loadIoForProcess(p));
-          }
-          Promise.allSettled(actions).then(() => {
-            resolve();
+      return new Promise<void>((resolve, reject) => {
+        this.loadProcessStat(name)
+          .then((p) => {
+            // console.log('loadProcessStat()');
+            curProcs.set(p.id, p);
+            p.setTotalTime(
+              this.cpuState.totalTimeDetails -
+                this.cpuState.totalTimeDetailsPrev
+            );
+            const actions = [];
+            actions.push(this.loadCmdForProcess(p));
+            if (this.showMem) {
+              actions.push(this.loadSmapsRollupForProcess(p));
+            }
+            if (this.showDisk || this.showFS) {
+              actions.push(this.loadIoForProcess(p));
+            }
+            Promise.allSettled(actions).then(() => {
+              resolve();
+            });
+          })
+          .catch((e) => {
+            // We expect to be unable to read many of these
+            reject(e);
           });
-        });
       });
     }
 
@@ -950,7 +978,7 @@ export const Vitals = GObject.registerClass(
     }
 
     private async loadProcessStat(name: string): Promise<Process> {
-      return new Promise<Process>((resolve) => {
+      return new Promise<Process>((resolve, reject) => {
         const f = new File('/proc/' + name + '/stat');
         f.read()
           .then((contents) => {
@@ -962,8 +990,9 @@ export const Vitals = GObject.registerClass(
             p.parseStat(contents);
             resolve(p);
           })
-          .catch(() => {
+          .catch((e) => {
             // We expect to be unable to read many of these
+            reject(e);
           });
       });
     }
