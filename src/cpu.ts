@@ -55,7 +55,7 @@ export const CpuMonitor = GObject.registerClass(
 
       this.usage = new St.Label({
         text: MeterNoVal,
-        style_class: 'tophat-panel-usage',
+        style_class: 'tophat-panel-usage tophat-panel-usage-wider',
         y_align: Clutter.ActorAlign.CENTER,
       });
       this.add_child(this.usage);
