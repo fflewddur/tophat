@@ -3,6 +3,10 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Unreleased
+
+- Limit reading from procfs when TopHat is in the background
+
 ## TopHat 19 - January 12, 2025
 
 - Fixed desktop stuttering on some systems
