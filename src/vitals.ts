@@ -14,7 +14,7 @@ Gio._promisify(Gio.FileEnumerator.prototype, 'next_files_async');
 
 const SummaryIntervalDefault = 2.5; // in seconds
 const DetailsInterval = 5; // in seconds
-const DetailsIntervalBackground = 30; // in seconds
+const DetailsIntervalBackground = 60; // in seconds
 const FileSystemInterval = 60; // in seconds
 export const MaxHistoryLen = 50;
 
@@ -316,6 +316,7 @@ export const Vitals = GObject.registerClass(
     private fsToHide;
     private settingSignals;
     private nm: NM.Client | null;
+    private detailsInterval = DetailsIntervalBackground;
     private detailsNeededCtr = 0;
 
     constructor(model: CpuModel, gsettings: Gio.Settings) {
@@ -460,7 +461,7 @@ export const Vitals = GObject.registerClass(
       if (this.detailsLoop === 0) {
         this.detailsLoop = GLib.timeout_add(
           GLib.PRIORITY_LOW,
-          DetailsIntervalBackground * MillisecondsPerSecond,
+          this.detailsInterval * MillisecondsPerSecond,
           () => this.readDetails()
         );
       }
@@ -514,9 +515,17 @@ export const Vitals = GObject.registerClass(
         promises.push(this.loadFreqs());
         promises.push(this.loadStatDetails());
       }
-      Promise.allSettled(promises).then(() => {
+      Promise.allSettled(promises).then(async () => {
         if (this.showCpu || this.showMem || this.showDisk || this.showFS) {
-          this.loadProcessList();
+          await this.loadProcessList();
+          if (this.detailsLoop > 0) {
+            GLib.source_remove(this.detailsLoop);
+            this.detailsLoop = GLib.timeout_add(
+              GLib.PRIORITY_LOW,
+              this.detailsInterval * MillisecondsPerSecond,
+              () => this.readDetails()
+            );
+          }
         }
       });
 
@@ -532,32 +541,31 @@ export const Vitals = GObject.registerClass(
     }
 
     public detailsNeededInUI(needed: boolean): void {
-      // Use a counter to avoid extra refreshes if the user
-      // moves from one monitor's menu to another's.
-      const inBackground = this.detailsNeededCtr === 0;
+      // Use a counter so that if the user is moving one menu
+      // to another, we don't interrupt the faster refresh cadence.
       if (needed) {
         this.detailsNeededCtr++;
       } else {
-        this.detailsNeededCtr = Math.max(this.detailsNeededCtr - 1, 0);
+        this.detailsNeededCtr--;
       }
-      let interval = DetailsIntervalBackground;
-      if (this.detailsNeededCtr == 1 && inBackground) {
-        this.readDetails(); // Kick off a refresh immediately
-        interval = DetailsInterval; // Use a shorter refresh interval
-      }
-      if (
-        this.detailsNeededCtr === 0 ||
-        (this.detailsNeededCtr === 1 && inBackground)
-      ) {
+
+      // If we're switching from background to interactive mode, schedule
+      // a quick refresh to fill the UI with recent data
+      if (needed && this.detailsInterval === DetailsIntervalBackground) {
         if (this.detailsLoop > 0) {
           GLib.source_remove(this.detailsLoop);
+          this.detailsLoop = GLib.timeout_add(
+            GLib.PRIORITY_LOW,
+            1.5 * MillisecondsPerSecond,
+            () => this.readDetails()
+          );
         }
-        console.log('starting new details loop with refresh rate ' + interval);
-        this.detailsLoop = GLib.timeout_add(
-          GLib.PRIORITY_LOW,
-          interval * MillisecondsPerSecond,
-          () => this.readDetails()
-        );
+      }
+      // readDetails() will use this value for it's next refresh interval
+      if (this.detailsNeededCtr > 0) {
+        this.detailsInterval = DetailsInterval;
+      } else {
+        this.detailsInterval = DetailsIntervalBackground;
       }
     }
 
