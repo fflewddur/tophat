@@ -101,7 +101,7 @@
 
 .menu-details {
   font-size: 0.8em;
-  padding: 0 0.5em;
+  padding: 0.25em 0.5em;
 }
 
 .menu-section-end {
@@ -178,6 +178,19 @@
 
 .chart-bar:last-child {
   margin-right: 0;
+}
+
+.cap-bar {
+  /* border: solid 1px rgb(151, 151, 220); */
+  margin: 6px;
+}
+
+.cap-bar-used {
+  height: 4px;
+}
+
+.cap-bar-total {
+  height: 1px;
 }
 
 .align-right {

@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
-import GObject from 'gi://GObject';
-import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
 import St from 'gi://St';
 
 import {
@@ -25,9 +25,7 @@ import {
   gettext as _,
 } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { Vitals } from './vitals.js';
-import { Orientation } from './meter.js';
-import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
+import { CapacityBar } from './capacity.js';
 import {
   bytesToHumanString,
   DisplayType,
@@ -35,13 +33,18 @@ import {
   getDisplayTypeSetting,
 } from './helpers.js';
 import { HistoryChart } from './history.js';
+import { Orientation } from './meter.js';
+import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
+import { Vitals } from './vitals.js';
 
 export const MemMonitor = GObject.registerClass(
   class MemMonitor extends TopHatMonitor {
     private usage;
     private menuMemUsage;
+    private menuMemCap;
     private menuMemSize;
     private menuSwapUsage;
+    private menuSwapCap;
     private menuSwapSize;
     private topProcs: TopProc[];
     private displayType: DisplayType;
@@ -66,8 +69,10 @@ export const MemMonitor = GObject.registerClass(
       this.add_child(this.meter);
 
       this.menuMemUsage = new St.Label();
+      this.menuMemCap = new CapacityBar();
       this.menuMemSize = new St.Label();
       this.menuSwapUsage = new St.Label();
+      this.menuSwapCap = new CapacityBar();
       this.menuSwapSize = new St.Label();
       this.historyChart = new HistoryChart();
       this.topProcs = new Array<TopProc>(NumTopProcs);
@@ -124,6 +129,8 @@ export const MemMonitor = GObject.registerClass(
       this.menuMemUsage.add_style_class_name('menu-value');
       this.addMenuRow(this.menuMemUsage, 1, 1, 1);
 
+      this.addMenuRow(this.menuMemCap, 0, 2, 1);
+
       this.menuMemSize.text = _(`size ${MeterNoVal}`);
       this.menuMemSize.add_style_class_name(
         'menu-details align-right menu-section-end'
@@ -138,6 +145,8 @@ export const MemMonitor = GObject.registerClass(
       this.menuSwapUsage.text = MeterNoVal;
       this.menuSwapUsage.add_style_class_name('menu-value');
       this.addMenuRow(this.menuSwapUsage, 1, 1, 1);
+
+      this.addMenuRow(this.menuSwapCap, 0, 2, 1);
 
       this.menuSwapSize.text = _(`size ${MeterNoVal}`);
       this.menuSwapSize.add_style_class_name(
@@ -190,6 +199,7 @@ export const MemMonitor = GObject.registerClass(
         this.usage.text = s;
         this.menuMemUsage.text = s;
         this.meter.setBarSizes([vitals.ram_usage]);
+        this.menuMemCap.setUsage(vitals.ram_usage);
       });
       this.vitalsSignals.push(id);
 
@@ -213,6 +223,7 @@ export const MemMonitor = GObject.registerClass(
         // console.log(`swap-usage: ${vitals.swap_usage}`);
         const s = (vitals.swap_usage * 100).toFixed(0) + '%';
         this.menuSwapUsage.text = s;
+        this.menuSwapCap.setUsage(vitals.swap_usage);
       });
       this.vitalsSignals.push(id);
 
@@ -229,6 +240,13 @@ export const MemMonitor = GObject.registerClass(
         }
       });
       this.vitalsSignals.push(id);
+    }
+
+    protected override updateColor(): [string, boolean] {
+      const [color, useAccent] = super.updateColor();
+      this.menuMemCap?.setColor(color);
+      this.menuSwapCap?.setColor(color);
+      return [color, useAccent];
     }
   }
 );
