@@ -382,6 +382,11 @@ export const Vitals = GObject.registerClass(
       this.showFS = gsettings.get_boolean('show-fs');
       id = this.gsettings.connect('changed::show-fs', (settings) => {
         this.showFS = settings.get_boolean('show-fs');
+        if (this.showFS) {
+          // The filesystem loop has a long refresh interval, so if the user enables this mid-session,
+          // kick this off an immediate refresh to avoid missing data in the UI.
+          this.loadFS();
+        }
       });
       this.settingSignals.push(id);
 
