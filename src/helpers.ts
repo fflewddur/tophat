@@ -140,15 +140,18 @@ export async function readFileSystems(): Promise<FSUsage[]> {
       null,
       ['df', '-P'],
       null,
-      GLib.SpawnFlags.SEARCH_PATH,
+      GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.CLOEXEC_PIPES,
       null
     );
     const reader = new Gio.DataInputStream({
       base_stream: new GioUnix.InputStream({ fd: stdout, close_fd: true }),
+      close_base_stream: true,
     });
     if (!ok) {
       console.warn('[TopHat] Could not run df -P');
+      reader.close(null);
       reject('Could not run df -P');
+      return;
     }
     reader.read_upto_async('\0', 1, 0, null, (_, result) => {
       const [output] = reader.read_upto_finish(result);
@@ -174,6 +177,7 @@ export async function readFileSystems(): Promise<FSUsage[]> {
           }
         }
       }
+      reader.close(null);
       resolve(Array.from(fileSystems.values()));
       // console.timeEnd('loadFS()');
     });
