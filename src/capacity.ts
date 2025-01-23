@@ -15,51 +15,33 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Atk from 'gi://Atk';
 import Clutter from 'gi://Clutter';
 import Cogl from 'gi://Cogl';
 import GObject from 'gi://GObject';
-import St from 'gi://St';
+
+import * as BarLevel from 'resource:///org/gnome/shell/ui/barLevel.js';
 
 export const CapacityBar = GObject.registerClass(
-  class CapacityBar extends St.BoxLayout {
-    private used = 0;
-    private hbox;
-    private barTotal;
-    private barUsed;
+  class CapacityBar extends BarLevel.BarLevel {
     private color: Cogl.Color;
 
     constructor() {
       super({
-        style_class: 'cap-bar',
-        name: 'CapacityBar',
-        vertical: true,
+        style_class: 'cap-bar slider',
+        can_focus: true,
+        reactive: false,
+        track_hover: true,
+        hover: false,
+        accessible_role: Atk.Role.SLIDER,
+        x_expand: true,
       });
+      this.value = 0;
       this.color = new Cogl.Color();
-      this.barTotal = new St.Widget({
-        style_class: 'cap-bar-total',
-        name: 'barTotal',
-      });
-      this.barUsed = new St.Widget({
-        x_expand: false,
-        style_class: 'cap-bar-used',
-        name: 'barUsed',
-      });
-      this.hbox = new St.BoxLayout();
-
-      this.add_child(this.hbox);
-      this.hbox.add_child(this.barUsed);
-      this.hbox.add_child(new St.Widget({ x_expand: true }));
-      this.add_child(this.barTotal);
-
-      this.connect('notify::width', () => {
-        this.setUsage(this.used);
-      });
     }
 
     public setUsage(usage: number) {
-      this.used = usage;
-      const w = this.barTotal.width;
-      this.barUsed.width = usage * w;
+      this.value = usage;
     }
 
     public setColor(c: string) {
@@ -81,17 +63,18 @@ export const CapacityBar = GObject.registerClass(
         return;
       }
       this.color = color;
-
-      this.barTotal.set_background_color(this.color);
-      this.barUsed.set_background_color(this.color);
     }
 
-    override destroy(): void {
-      console.log('CapacityBar.destroy()');
-      this.barTotal.destroy();
-      this.barUsed.destroy();
-      this.hbox.destroy();
-      super.destroy();
+    _getPreferredHeight() {
+      // @ts-expect-error does not exist
+      const barHeight = super._getPreferredHeight();
+      return barHeight;
+    }
+
+    _getPreferredWidth() {
+      // @ts-expect-error does not exist
+      const barWidth = super._getPreferredWidth();
+      return barWidth;
     }
   }
 );
