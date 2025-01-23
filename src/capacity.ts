@@ -35,10 +35,14 @@ export const CapacityBar = GObject.registerClass(
         vertical: true,
       });
       this.color = new Cogl.Color();
-      this.barTotal = new St.Widget({ style_class: 'cap-bar-total' });
+      this.barTotal = new St.Widget({
+        style_class: 'cap-bar-total',
+        name: 'barTotal',
+      });
       this.barUsed = new St.Widget({
         x_expand: false,
         style_class: 'cap-bar-used',
+        name: 'barUsed',
       });
       this.hbox = new St.BoxLayout();
 
@@ -83,6 +87,7 @@ export const CapacityBar = GObject.registerClass(
     }
 
     override destroy(): void {
+      console.log('CapacityBar.destroy()');
       this.barTotal.destroy();
       this.barUsed.destroy();
       this.hbox.destroy();

@@ -338,7 +338,8 @@ export const DiskMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::fs-list', () => {
-        if (!this.menuFSDetails) {
+        console.log('notify::fs-list');
+        if (!this.menuFSDetails || !this.menuFS) {
           return;
         }
         const list = vitals.getFilesystems();
@@ -347,6 +348,7 @@ export const DiskMonitor = GObject.registerClass(
           let widgets = this.menuFS.get(fs.mount);
           if (!widgets) {
             widgets = new FSWidgets(fs.mount);
+            console.log(`creating new widgets for '${fs.mount}' row=${row}`);
             this.menuFSDetails.attach(widgets.mount, 0, row, 1, 1);
             this.menuFSDetails.attach(widgets.usage, 1, row, 1, 1);
             row++;
@@ -354,16 +356,18 @@ export const DiskMonitor = GObject.registerClass(
             row++;
             this.menuFSDetails.attach(widgets.size, 0, row, 2, 1);
             row++;
+            this.menuFS.set(fs.mount, widgets);
           } else {
+            console.log(`found widgets for '${fs.mount}' row=${row}`);
             row += 3;
           }
+
           widgets.usage.text = `${fs.usage()}%`;
           widgets.capacity.setUsage(fs.usage() / 100);
           widgets.capacity.setColor(this.color);
           widgets.size.text = _(
             `${bytesToHumanString(fs.cap - fs.used)} available of ${bytesToHumanString(fs.cap)}`
           );
-          this.menuFS.set(fs.mount, widgets);
         }
       });
       this.vitalsSignals.push(id);
