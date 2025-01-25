@@ -181,16 +181,7 @@
 }
 
 .cap-bar {
-  /* border: solid 1px rgb(151, 151, 220); */
   margin: 6px;
-}
-
-.cap-bar-used {
-  height: 4px;
-}
-
-.cap-bar-total {
-  height: 1px;
 }
 
 .align-right {

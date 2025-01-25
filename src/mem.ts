@@ -51,7 +51,6 @@ export const MemMonitor = GObject.registerClass(
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Memory Monitor', metadata, gsettings);
-
       const gicon = Gio.icon_new_for_string(
         `${this.metadata.path}/icons/hicolor/scalable/actions/mem-icon-symbolic.svg`
       );

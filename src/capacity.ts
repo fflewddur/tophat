@@ -29,7 +29,7 @@ export const CapacityBar = GObject.registerClass(
     constructor() {
       super({
         style_class: 'cap-bar slider',
-        can_focus: true,
+        can_focus: false,
         reactive: false,
         track_hover: true,
         hover: false,
@@ -59,10 +59,26 @@ export const CapacityBar = GObject.registerClass(
         return;
       }
 
-      if (this.color === color) {
-        return;
-      }
       this.color = color;
+    }
+
+    vfunc_style_changed() {
+      const themeNode = this.get_theme_node();
+      // @ts-expect-error does not exist
+      this._barLevelHeight = themeNode.get_length('-barlevel-height');
+      // @ts-expect-error does not exist
+      this._barLevelColor = themeNode.get_color('-barlevel-background-color');
+      if (!this.color) {
+        this.color = themeNode.get_color('-barlevel-active-background-color');
+      }
+      // @ts-expect-error does not exist
+      this._barLevelActiveColor = this.color;
+
+      // The next two properties are for GNOME 46 and earlier
+      // @ts-expect-error does not exist
+      this._barLevelBorderColor = this.color;
+      // @ts-expect-error does not exist
+      this._barLevelActiveBorderColor = this.color;
     }
 
     _getPreferredHeight() {
