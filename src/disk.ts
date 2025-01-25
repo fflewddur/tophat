@@ -349,6 +349,7 @@ export const DiskMonitor = GObject.registerClass(
           if (!widgets) {
             widgets = new FSWidgets(fs.mount);
             console.log(`creating new widgets for '${fs.mount}' row=${row}`);
+            // FIXME: this doesn't work when drives are mounted / unmounted
             this.menuFSDetails.attach(widgets.mount, 0, row, 1, 1);
             this.menuFSDetails.attach(widgets.usage, 1, row, 1, 1);
             row++;

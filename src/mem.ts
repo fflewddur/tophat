@@ -127,9 +127,7 @@ export const MemMonitor = GObject.registerClass(
       this.menuMemUsage.text = MeterNoVal;
       this.menuMemUsage.add_style_class_name('menu-value');
       this.addMenuRow(this.menuMemUsage, 1, 1, 1);
-
       this.addMenuRow(this.menuMemCap, 0, 2, 1);
-
       this.menuMemSize.text = _(`size ${MeterNoVal}`);
       this.menuMemSize.add_style_class_name(
         'menu-details align-right menu-section-end'

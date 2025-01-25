@@ -31,11 +31,13 @@ import { TopHatMonitor, MeterNoVal, NumTopProcs, TopProc } from './monitor.js';
 import { Orientation } from './meter.js';
 import { HistoryChart } from './history.js';
 import { DisplayType, getDisplayTypeSetting } from './helpers.js';
+import { CapacityBar } from './capacity.js';
 
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMonitor {
     private usage;
     private menuCpuUsage;
+    private menuCpuCap;
     private menuCpuModel;
     private menuCpuFreq;
     private menuCpuTemp;
@@ -65,6 +67,7 @@ export const CpuMonitor = GObject.registerClass(
       this.add_child(this.meter);
 
       this.menuCpuUsage = new St.Label();
+      this.menuCpuCap = new CapacityBar();
       this.menuCpuModel = new St.Label();
       this.menuCpuFreq = new St.Label();
       this.menuCpuTemp = new St.Label();
@@ -136,12 +139,14 @@ export const CpuMonitor = GObject.registerClass(
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuCpuUsage.text = MeterNoVal;
-      this.menuCpuUsage.add_style_class_name('menu-value menu-section-end');
+      this.menuCpuUsage.add_style_class_name('menu-value');
       this.addMenuRow(this.menuCpuUsage, 1, 1, 1);
+      this.menuCpuCap.add_style_class_name('menu-section-end');
+      this.addMenuRow(this.menuCpuCap, 0, 2, 1);
 
       // TODO: if we have multiple sockets, create a section for each
       this.menuCpuModel.text = _(`model ${MeterNoVal}`);
-      this.menuCpuModel.add_style_class_name('menu-label menu-details');
+      this.menuCpuModel.add_style_class_name('menu-label');
       this.menuCpuModel.set_x_expand(true);
       this.addMenuRow(this.menuCpuModel, 0, 2, 1);
       label = new St.Label({
@@ -201,6 +206,7 @@ export const CpuMonitor = GObject.registerClass(
         const s = percent.toFixed(0) + '%';
         this.usage.text = s;
         this.menuCpuUsage.text = s;
+        this.menuCpuCap.setUsage(percent / 100);
         if (this.showCores) {
           if (this.meter.getNumBars() === 1) {
             this.meter.setNumBars(vitals.getCpuCoreUsage().length);
@@ -289,6 +295,12 @@ export const CpuMonitor = GObject.registerClass(
       }
       parts.push(ngettext('%d minute', '%d minutes', mins).format(mins));
       return parts.join(' ');
+    }
+
+    protected override updateColor(): [string, boolean] {
+      const [color, useAccent] = super.updateColor();
+      this.menuCpuCap?.setColor(color);
+      return [color, useAccent];
     }
   }
 );
