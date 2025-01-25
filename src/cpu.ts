@@ -146,7 +146,7 @@ export const CpuMonitor = GObject.registerClass(
 
       // TODO: if we have multiple sockets, create a section for each
       this.menuCpuModel.text = _(`model ${MeterNoVal}`);
-      this.menuCpuModel.add_style_class_name('menu-label');
+      this.menuCpuModel.add_style_class_name('menu-label menu-details');
       this.menuCpuModel.set_x_expand(true);
       this.addMenuRow(this.menuCpuModel, 0, 2, 1);
       label = new St.Label({

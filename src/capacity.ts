@@ -22,6 +22,9 @@ import GObject from 'gi://GObject';
 
 import * as BarLevel from 'resource:///org/gnome/shell/ui/barLevel.js';
 
+import { AnimationDuration } from './meter.js';
+import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
+
 export const CapacityBar = GObject.registerClass(
   class CapacityBar extends BarLevel.BarLevel {
     private color: Cogl.Color;
@@ -41,7 +44,19 @@ export const CapacityBar = GObject.registerClass(
     }
 
     public setUsage(usage: number) {
-      this.value = usage;
+      this.remove_transition('usage');
+      const duration = adjustAnimationTime(AnimationDuration);
+      if (duration > 0) {
+        const t = Clutter.PropertyTransition.new_for_actor(this, 'value');
+        t.set_progress_mode(Clutter.AnimationMode.EASE_IN_OUT_QUAD);
+        t.set_duration(duration);
+        t.set_to(usage);
+        t.set_remove_on_complete(true);
+        this.add_transition('usage', t);
+        t.start();
+      } else {
+        this.value = usage;
+      }
     }
 
     public setColor(c: string) {
