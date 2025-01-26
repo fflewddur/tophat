@@ -343,25 +343,27 @@ export const DiskMonitor = GObject.registerClass(
           return;
         }
         const list = vitals.getFilesystems();
+        const mountPoints = new Array<string>(0);
         let row = 0;
         for (const fs of list) {
+          mountPoints.push(fs.mount);
           let widgets = this.menuFS.get(fs.mount);
           if (!widgets) {
             widgets = new FSWidgets(fs.mount);
             console.log(`creating new widgets for '${fs.mount}' row=${row}`);
-            // FIXME: this doesn't work when drives are mounted / unmounted
-            this.menuFSDetails.attach(widgets.mount, 0, row, 1, 1);
-            this.menuFSDetails.attach(widgets.usage, 1, row, 1, 1);
-            row++;
-            this.menuFSDetails.attach(widgets.capacity, 0, row, 2, 1);
-            row++;
-            this.menuFSDetails.attach(widgets.size, 0, row, 2, 1);
-            row++;
             this.menuFS.set(fs.mount, widgets);
           } else {
             console.log(`found widgets for '${fs.mount}' row=${row}`);
-            row += 3;
+            // row += 3;
           }
+          // FIXME: this doesn't work when drives are mounted / unmounted
+          this.menuFSDetails.attach(widgets.mount, 0, row, 1, 1);
+          this.menuFSDetails.attach(widgets.usage, 1, row, 1, 1);
+          row++;
+          this.menuFSDetails.attach(widgets.capacity, 0, row, 2, 1);
+          row++;
+          this.menuFSDetails.attach(widgets.size, 0, row, 2, 1);
+          row++;
 
           widgets.usage.text = `${fs.usage()}%`;
           widgets.capacity.setUsage(fs.usage() / 100);
@@ -369,6 +371,22 @@ export const DiskMonitor = GObject.registerClass(
           widgets.size.text = _(
             `${bytesToHumanString(fs.cap - fs.used)} available of ${bytesToHumanString(fs.cap)}`
           );
+        }
+
+        // Remove rows for filesystems that we're no longer monitoring
+        console.log(`mountPoints: ${mountPoints}`);
+        for (const mountPoint of this.menuFS.keys()) {
+          if (!mountPoints.includes(mountPoint)) {
+            console.log(`mountPoint ${mountPoint} not in list`);
+            const widgets = this.menuFS.get(mountPoint);
+            if (widgets) {
+              widgets.mount.destroy();
+              widgets.usage.destroy();
+              widgets.capacity.destroy();
+              widgets.size.destroy();
+            }
+            this.menuFS.delete(mountPoint);
+          }
         }
       });
       this.vitalsSignals.push(id);
