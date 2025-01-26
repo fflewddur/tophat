@@ -338,7 +338,6 @@ export const DiskMonitor = GObject.registerClass(
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::fs-list', () => {
-        console.log('notify::fs-list');
         if (!this.menuFSDetails || !this.menuFS) {
           return;
         }
@@ -346,24 +345,37 @@ export const DiskMonitor = GObject.registerClass(
         const mountPoints = new Array<string>(0);
         let row = 0;
         for (const fs of list) {
+          let newRow = true;
           mountPoints.push(fs.mount);
           let widgets = this.menuFS.get(fs.mount);
           if (!widgets) {
             widgets = new FSWidgets(fs.mount);
-            console.log(`creating new widgets for '${fs.mount}' row=${row}`);
             this.menuFS.set(fs.mount, widgets);
+            // this.menuFSDetails.insert_row(row);
           } else {
-            console.log(`found widgets for '${fs.mount}' row=${row}`);
-            // row += 3;
+            if (this.menuFSDetails.get_child_at(0, row) === widgets.mount) {
+              // The widgets are staying in the same place; leave them alone
+              newRow = false;
+            } else {
+              // Remove existing widgets for this row
+              removeActor(widgets.mount);
+              removeActor(widgets.usage);
+              removeActor(widgets.capacity);
+              removeActor(widgets.size);
+            }
           }
-          // FIXME: this doesn't work when drives are mounted / unmounted
-          this.menuFSDetails.attach(widgets.mount, 0, row, 1, 1);
-          this.menuFSDetails.attach(widgets.usage, 1, row, 1, 1);
-          row++;
-          this.menuFSDetails.attach(widgets.capacity, 0, row, 2, 1);
-          row++;
-          this.menuFSDetails.attach(widgets.size, 0, row, 2, 1);
-          row++;
+
+          if (newRow) {
+            this.menuFSDetails.attach(widgets.mount, 0, row, 1, 1);
+            this.menuFSDetails.attach(widgets.usage, 1, row, 1, 1);
+            row++;
+            this.menuFSDetails.attach(widgets.capacity, 0, row, 2, 1);
+            row++;
+            this.menuFSDetails.attach(widgets.size, 0, row, 2, 1);
+            row++;
+          } else {
+            row += 3;
+          }
 
           widgets.usage.text = `${fs.usage()}%`;
           widgets.capacity.setUsage(fs.usage() / 100);
@@ -374,10 +386,8 @@ export const DiskMonitor = GObject.registerClass(
         }
 
         // Remove rows for filesystems that we're no longer monitoring
-        console.log(`mountPoints: ${mountPoints}`);
         for (const mountPoint of this.menuFS.keys()) {
           if (!mountPoints.includes(mountPoint)) {
-            console.log(`mountPoint ${mountPoint} not in list`);
             const widgets = this.menuFS.get(mountPoint);
             if (widgets) {
               widgets.mount.destroy();
@@ -406,3 +416,11 @@ export const DiskMonitor = GObject.registerClass(
 );
 
 export type DiskMonitor = InstanceType<typeof DiskMonitor>;
+
+function removeActor(actor: Clutter.Actor) {
+  if (!actor) {
+    return;
+  }
+  const p = actor.get_parent();
+  p?.remove_child(actor);
+}
