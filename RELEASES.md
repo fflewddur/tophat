@@ -5,7 +5,11 @@ based on [Keep a Changelog].
 
 ## Unreleased
 
-- Limit reading from procfs when TopHat is in the background
+- Added support for zenpower temperature sensors
+- Added capacity visualizations memory and disk monitor menus
+- Added a load visualization to the CPU monitor menu
+- Improved performance while TopHat is in the background
+- Fixed a file description leak when reading disk usage
 
 ## TopHat 19 - January 12, 2025
 
