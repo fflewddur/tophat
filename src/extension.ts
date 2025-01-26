@@ -115,8 +115,15 @@ export default class TopHat extends Extension {
         if (!f.exists()) {
           inputPath = `${base}${filename}/temp1_input`;
         }
-        // FIXME: Instead of key=0 here, try to figure out which physical CPU
-        // this monitor represents
+        tempMonitors.set(0, inputPath);
+      } else if (name === 'zenpower') {
+        // AMD CPUs w/ alternate kernel driver
+        // temp1 is Tdie, temp2 is Tctl
+        let inputPath = `${base}${filename}/temp1_input`;
+        const f = new File(inputPath);
+        if (!f.exists()) {
+          inputPath = `${base}${filename}/temp2_input`;
+        }
         tempMonitors.set(0, inputPath);
       }
     });

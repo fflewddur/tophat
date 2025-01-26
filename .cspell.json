@@ -98,7 +98,8 @@
     "xalign",
     "xcpu",
     "yakushabb",
-    "yuhldr"
+    "yuhldr",
+    "zenpower"
   ],
   "enableFiletypes": [
     "!yaml"
