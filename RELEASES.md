@@ -8,6 +8,7 @@ based on [Keep a Changelog].
 - Added support for zenpower temperature sensors
 - Added capacity visualizations to the memory and disk monitor menus
 - Added a load visualization to the CPU monitor menu
+- Improved legibility when using light themes
 - Improved performance while TopHat is in the background
 - Fixed a file description leak when reading disk usage
 
