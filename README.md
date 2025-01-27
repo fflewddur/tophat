@@ -27,6 +27,7 @@ page](https://extensions.gnome.org/extension/5219/tophat/).
 
 The latest release of TopHat has been tested on the following systems:
 
+- Arch Linux
 - Debian Trixie
 - Fedora 41
 - Ubuntu 24.04 LTS
