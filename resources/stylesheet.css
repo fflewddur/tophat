@@ -76,9 +76,11 @@
 
 .menu-header {
   text-align: center;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 0.9em;
+  letter-spacing: 0.7px;
   padding: 0.5em;
+  color: #bbb;
 }
 
 .menu-subheader {
@@ -153,19 +155,19 @@
 .chart-label {
   font-size: 0.8em;
   padding: 0.5em 0;
-  color: #999;
+  color: #ccc;
 }
 
 .chart-label-then {
   font-size: 0.7em;
-  color: #999;
+  color: #ccc;
   text-align: left;
   padding: 0 0.5em 1em 0.5em;
 }
 
 .chart-label-now {
   font-size: 0.7em;
-  color: #999;
+  color: #ccc;
   text-align: right;
   padding: 0 0.5em 1em 0.5em;
 }
