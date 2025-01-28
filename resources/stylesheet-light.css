@@ -1,8 +1,11 @@
 @import url('stylesheet.css');
 
+.cap-bar {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 .chart {
   background-color: rgba(0, 0, 0, 0.15);
-  border: solid 1px rgba(0, 0, 0, 0.3);
 }
 
 .chart-label,
@@ -12,6 +15,25 @@
 }
 
 .menu-header {
-  color: #666;
-  font-weight: 900;
+  color: #555;
+  font-weight: 600;
+}
+
+.tophat-meter {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tophat-monitor {
+  margin: 0;
+  padding: 0;
+}
+
+.tophat-panel-icon {
+  padding: 0;
+  margin: 0 6px 0 0;
+}
+
+.tophat-panel-usage {
+  padding: 0;
+  margin: 0 6px 0 0;
 }
