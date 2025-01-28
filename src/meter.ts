@@ -126,7 +126,7 @@ export const TopHatMeter = GObject.registerClass(
           `[TopHat] called setBarSizes() with ${n.length} values for ${this.bars.length} bars`
         );
       }
-      const meterHeight = this.get_height() - 2 * this.scaleFactor; // Subtract margin of 1px
+      const meterHeight = this.get_height(); //- 2 * this.scaleFactor; // Subtract margin of 1px
       const duration = adjustAnimationTime(AnimationDuration);
       for (let i = 0; i < n.length; i++) {
         const height = Math.ceil(meterHeight * n[i]);
