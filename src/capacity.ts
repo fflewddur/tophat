@@ -80,9 +80,9 @@ export const CapacityBar = GObject.registerClass(
     vfunc_style_changed() {
       const themeNode = this.get_theme_node();
       // @ts-expect-error does not exist
-      this._barLevelHeight = themeNode.get_length('-barlevel-height');
+      this._barLevelHeight = themeNode.get_height();
       // @ts-expect-error does not exist
-      this._barLevelColor = themeNode.get_color('-barlevel-background-color');
+      this._barLevelColor = themeNode.get_background_color();
       if (!this.color) {
         this.color = themeNode.get_color('-barlevel-active-background-color');
       }
