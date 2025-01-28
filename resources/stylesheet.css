@@ -5,6 +5,7 @@
 
 .tophat-panel-icon-net {
   margin: 0;
+  padding: 0;
 }
 
 .tophat-menu-button-box {
@@ -22,6 +23,7 @@
 
 .tophat-menu-button-box > StButton > StIcon {
   icon-size: 1.25em;
+  -st-icon-style: symbolic;
 }
 
 .tophat-panel-usage {
@@ -29,6 +31,7 @@
   min-width: 2.1em;
   font-size: 0.9em;
   margin: 0 6px 0 0;
+  padding: 0;
 }
 
 .tophat-panel-usage:last-child {
@@ -52,13 +55,10 @@
 }
 
 .tophat-meter {
-  background-color: rgba(51, 51, 51, 0.8);
-  border: solid 1px rgba(41, 41, 41, 0.8);
-  /* border: solid 1px rgba(0, 0, 0, 0.3); */
+  background-color: rgba(10, 10, 10, 0.2);
   height: 1.2em;
   margin: 0;
   padding: 0;
-  /* background-color: rgba(0, 0, 0, 0.1); */
 }
 
 .meter-bar {
@@ -80,7 +80,7 @@
   text-align: center;
   font-weight: 600;
   font-size: 0.9em;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.65px;
   padding: 0.5em;
   color: #bbb;
 }
@@ -138,8 +138,8 @@
 }
 
 .chart {
-  background-color: rgba(30, 30, 30, 0.25);
-  border: solid 1px rgba(30, 30, 30, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
   margin: 12px 6px;
   height: 6em;
 }
@@ -156,7 +156,7 @@
 
 .chart-label {
   font-size: 0.8em;
-  padding: 0.5em 0;
+  padding: 12px 0;
   color: #ccc;
 }
 
@@ -187,7 +187,7 @@
 .cap-bar {
   margin: 5px 6px 10px 6px;
   height: 5px;
-  background-color: rgba(30, 30, 30, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .align-right {
