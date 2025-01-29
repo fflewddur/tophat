@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-12 18:33-0800\n"
+"POT-Creation-Date: 2025-01-28 21:21-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,80 +18,80 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/cpu.ts:128
+#: src/cpu.ts:131
 msgid "Processor usage"
 msgstr ""
 
-#: src/cpu.ts:134
+#: src/cpu.ts:137
 msgid "Processor utilization:"
 msgstr ""
 
-#: src/cpu.ts:148
+#: src/cpu.ts:153
 msgid "Frequency:"
 msgstr ""
 
-#: src/cpu.ts:156
+#: src/cpu.ts:161
 msgid "Temperature:"
 msgstr ""
 
-#: src/cpu.ts:171 src/disk.ts:190 src/mem.ts:153
+#: src/cpu.ts:176 src/disk.ts:214 src/mem.ts:159
 msgid "Top processes"
 msgstr ""
 
-#: src/cpu.ts:186
+#: src/cpu.ts:191
 msgid "System uptime"
 msgstr ""
 
-#: src/cpu.ts:285
+#: src/cpu.ts:291
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/cpu.ts:288
+#: src/cpu.ts:294
 #, javascript-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/cpu.ts:290
+#: src/cpu.ts:296
 #, javascript-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/disk.ts:142 src/prefs.ts:180
+#: src/disk.ts:166 src/prefs.ts:180
 msgid "Disk activity"
 msgstr ""
 
-#: src/disk.ts:148
+#: src/disk.ts:172
 msgid "Reading:"
 msgstr ""
 
-#: src/disk.ts:157
+#: src/disk.ts:181
 msgid "Writing:"
 msgstr ""
 
-#: src/disk.ts:166
+#: src/disk.ts:190
 msgid "Total read:"
 msgstr ""
 
-#: src/disk.ts:175
+#: src/disk.ts:199
 msgid "Total written:"
 msgstr ""
 
-#: src/disk.ts:198
+#: src/disk.ts:222
 msgid "Writing"
 msgstr ""
 
-#: src/disk.ts:203
+#: src/disk.ts:227
 msgid "Reading"
 msgstr ""
 
-#: src/disk.ts:220 src/prefs.ts:186
+#: src/disk.ts:244 src/prefs.ts:186
 msgid "Filesystem usage"
 msgstr ""
 
@@ -99,42 +99,42 @@ msgstr ""
 msgid "now"
 msgstr ""
 
-#: src/mem.ts:113
+#: src/mem.ts:117
 msgid "Memory usage"
 msgstr ""
 
-#: src/mem.ts:119
+#: src/mem.ts:123
 msgid "RAM used:"
 msgstr ""
 
-#: src/mem.ts:134
+#: src/mem.ts:138
 msgid "Swap used:"
 msgstr ""
 
-#: src/monitor.ts:242
+#: src/monitor.ts:247
 #, javascript-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/net.ts:154
+#: src/net.ts:155
 msgid "Network activity"
 msgstr ""
 
-#: src/net.ts:160
+#: src/net.ts:161
 msgid "Sending:"
 msgstr ""
 
-#: src/net.ts:169
+#: src/net.ts:170
 msgid "Receiving:"
 msgstr ""
 
-#: src/net.ts:178
+#: src/net.ts:179
 msgid "Total sent:"
 msgstr ""
 
-#: src/net.ts:187
+#: src/net.ts:188
 msgid "Total received:"
 msgstr ""
 
@@ -258,8 +258,8 @@ msgstr ""
 msgid "Filesystems to show in menu"
 msgstr ""
 
-#: src/prefs.ts:225 src/prefs.ts:291 src/vitals.ts:400 src/vitals.ts:405
-#: src/vitals.ts:413 src/vitals.ts:418
+#: src/prefs.ts:225 src/prefs.ts:291 src/vitals.ts:409 src/vitals.ts:414
+#: src/vitals.ts:422 src/vitals.ts:427
 msgid "Automatic"
 msgstr ""
 

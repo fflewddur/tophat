@@ -3,14 +3,15 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
-## Unreleased
+## TopHat 20 - January 28, 2025
 
-- Added support for zenpower temperature sensors
 - Added capacity visualizations to the memory and disk monitor menus
 - Added a load visualization to the CPU monitor menu
+- Added support for zenpower temperature sensors
 - Improved legibility when using light themes
 - Improved performance while TopHat is in the background
 - Fixed a file description leak when reading disk usage
+- Adjusted visual appearance
 
 ## TopHat 19 - January 12, 2025
 
