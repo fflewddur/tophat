@@ -22,8 +22,8 @@ import St from 'gi://St';
 
 import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
 
-export const AnimationDuration = 300;
-
+export const AnimationDuration = 250;
+export const AnimationEasing = Clutter.AnimationMode.LINEAR;
 export enum Orientation {
   Horizontal,
   Vertical,
@@ -126,14 +126,11 @@ export const TopHatMeter = GObject.registerClass(
           `[TopHat] called setBarSizes() with ${n.length} values for ${this.bars.length} bars`
         );
       }
-      const meterHeight = this.get_height(); //- 2 * this.scaleFactor; // Subtract margin of 1px
+      const meterHeight = this.get_height();
       const duration = adjustAnimationTime(AnimationDuration);
       for (let i = 0; i < n.length; i++) {
         const height = Math.ceil(meterHeight * n[i]);
         const curHeight = this.bars[i].height;
-        // console.log(
-        //   `meter: curHeight=${curHeight} height=${height} (meterHeight=${meterHeight} * usage=${n[i]})`
-        // );
         const delta = Math.abs(height - curHeight);
         this.bars[i].remove_transition('scaleHeight');
         if (duration > 0 && delta > 1) {
@@ -141,9 +138,8 @@ export const TopHatMeter = GObject.registerClass(
             this.bars[i],
             'height'
           );
-          t.set_progress_mode(Clutter.AnimationMode.EASE_IN_OUT_QUAD);
+          t.set_progress_mode(AnimationEasing);
           t.set_duration(duration);
-          t.set_from(curHeight);
           t.set_to(height);
           t.set_remove_on_complete(true);
           this.bars[i].add_transition('scaleHeight', t);

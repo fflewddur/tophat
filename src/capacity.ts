@@ -22,7 +22,7 @@ import GObject from 'gi://GObject';
 
 import * as BarLevel from 'resource:///org/gnome/shell/ui/barLevel.js';
 
-import { AnimationDuration } from './meter.js';
+import { AnimationDuration, AnimationEasing } from './meter.js';
 import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
 
 export const CapacityBar = GObject.registerClass(
@@ -48,7 +48,7 @@ export const CapacityBar = GObject.registerClass(
       const duration = adjustAnimationTime(AnimationDuration);
       if (duration > 0) {
         const t = Clutter.PropertyTransition.new_for_actor(this, 'value');
-        t.set_progress_mode(Clutter.AnimationMode.EASE_IN_OUT_QUAD);
+        t.set_progress_mode(AnimationEasing);
         t.set_duration(duration);
         t.set_to(usage);
         t.set_remove_on_complete(true);

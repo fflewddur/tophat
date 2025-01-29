@@ -1080,9 +1080,6 @@ export const Vitals = GObject.registerClass(
           this.gsettings.set_string('mount-to-monitor', this.fsMount);
         }
         for (const fs of this.filesystems) {
-          // console.log(
-          //   `device: ${fs.dev} mount point: ${fs.mount} usage: ${fs.usage()}%`
-          // );
           if (this.fsMount === fs.mount) {
             this.fs_usage = fs.usage();
           }
