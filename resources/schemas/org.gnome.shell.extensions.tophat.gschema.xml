@@ -123,6 +123,11 @@
       <summary>Show a meter bar for each CPU core</summary>
       <description>When true, the CPU monitors will show a meter bar representing each CPU core. When false, one bar will represent all CPU usage.</description>
     </key>
+    <key name="cpu-sort-cores" type="b">
+      <default>true</default>
+      <summary>Sort CPU meter bars by usage</summary>
+      <description>When true, the CPU monitors will be sorted by usage.</description>
+    </key>
     <key name="cpu-normalize-proc-use" type="b">
       <default>true</default>
       <summary>Divide process CPU usage by CPU core count</summary>

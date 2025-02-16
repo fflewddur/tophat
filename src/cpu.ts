@@ -44,6 +44,7 @@ export const CpuMonitor = GObject.registerClass(
     private menuUptime;
     private topProcs: TopProc[];
     private showCores;
+    private sortCores;
     private normalizeProcUsage;
     private displayType: DisplayType;
 
@@ -90,6 +91,10 @@ export const CpuMonitor = GObject.registerClass(
         if (!this.showCores) {
           this.meter.setNumBars(1);
         }
+      });
+      this.sortCores = this.gsettings.get_boolean('cpu-sort-cores');
+      this.gsettings.connect('changed::cpu-sort-cores', (settings) => {
+        this.sortCores = settings.get_boolean('cpu-sort-cores');
       });
       this.normalizeProcUsage = this.gsettings.get_boolean(
         'cpu-normalize-proc-use'
@@ -211,9 +216,11 @@ export const CpuMonitor = GObject.registerClass(
           if (this.meter.getNumBars() === 1) {
             this.meter.setNumBars(vitals.getCpuCoreUsage().length);
           }
-          this.meter.setBarSizes(
-            vitals.getCpuCoreUsage().sort((a, b) => b - a)
-          );
+          let usage = vitals.getCpuCoreUsage();
+          if (this.sortCores) {
+            usage = usage.sort((a, b) => b - a);
+          }
+          this.meter.setBarSizes(usage);
         } else {
           if (this.meter.getNumBars() !== 1) {
             this.meter.setNumBars(1);
