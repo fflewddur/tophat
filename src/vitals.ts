@@ -602,14 +602,16 @@ export const Vitals = GObject.registerClass(
               const m = line.match(re);
               if (m && !m[1]) {
                 // These are aggregate CPU statistics
-                const usedTime = parseInt(m[2]) + parseInt(m[4]);
+                const usedTime =
+                  parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]);
                 const idleTime = parseInt(m[5]);
                 this.cpuState.update(usedTime, idleTime);
                 usage.aggregate = this.cpuState.usage();
               } else if (m) {
                 // These are per-core statistics
                 const core = parseInt(m[1]);
-                const usedTime = parseInt(m[2]) + parseInt(m[4]);
+                const usedTime =
+                  parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]);
                 const idleTime = parseInt(m[5]);
                 this.cpuState.updateCore(core, usedTime, idleTime);
                 usage.core[core] = this.cpuState.coreUsage(core);
@@ -639,7 +641,8 @@ export const Vitals = GObject.registerClass(
                 const m = line.match(re);
                 if (m && !m[1]) {
                   // These are aggregate CPU statistics
-                  const usedTime = parseInt(m[2]) + parseInt(m[4]);
+                  const usedTime =
+                    parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]);
                   const idleTime = parseInt(m[5]);
                   this.cpuState.updateDetails(usedTime + idleTime);
                   break;
