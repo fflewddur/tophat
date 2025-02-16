@@ -3,6 +3,13 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Unreleased
+
+- Added support for GNOME 48
+- Added option to disable sorting CPU meter by usage (from [SoMuchForSubtlety](https://github.com/SoMuchForSubtlety))
+- Fixed CPU usage calculation for nice'd processes
+- Fixed center-aligned labels in the top bar
+
 ## TopHat 20 - January 28, 2025
 
 - Added capacity visualizations to the memory and disk monitor menus
