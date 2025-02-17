@@ -87,6 +87,7 @@ export const TopHatMeter = GObject.registerClass(
           style_class: 'meter-bar',
           name: 'TopHatMeterBar',
         });
+        setBarColor(this.bars[i], this.color);
         this.add_child(this.bars[i]);
         this.barUsage[i] = 0;
       }
@@ -172,10 +173,7 @@ export const TopHatMeter = GObject.registerClass(
       this.color = color;
 
       for (const bar of this.bars) {
-        let style = bar.get_style() || '';
-        style = style.replaceAll(/background-color:[^;]*;\s*/g, '');
-        style += `background-color: rgb(${this.color.red}, ${this.color.green}, ${this.color.blue});`;
-        bar.set_style(style);
+        setBarColor(bar, this.color);
       }
     }
 
@@ -214,3 +212,10 @@ export const TopHatMeter = GObject.registerClass(
 );
 
 export type TopHatMeter = InstanceType<typeof TopHatMeter>;
+
+function setBarColor(bar: St.Widget, color: Cogl.Color) {
+  let style = bar.get_style() || '';
+  style = style.replaceAll(/background-color:[^;]*;\s*/g, '');
+  style += `background-color: rgb(${color.red}, ${color.green}, ${color.blue});`;
+  bar.set_style(style);
+}
