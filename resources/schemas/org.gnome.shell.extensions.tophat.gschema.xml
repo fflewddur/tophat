@@ -21,11 +21,6 @@
     <value value="1" nick="medium"/>
     <value value="2" nick="fast"/>
   </enum>
-  <!-- <enum id="org.gnome.shell.extensions.tophat.disk-monitor-mode">
-    <value value="0" nick="storage"/>
-    <value value="1" nick="activity"/>
-    <value value="2" nick="both"/>
-  </enum> -->
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
     <key name="position-in-panel" enum="org.gnome.shell.extensions.tophat.position">
@@ -92,6 +87,11 @@
       <default>true</default>
       <summary>Show the filesystem monitor</summary>
       <description>Show the filesystem monitor.</description>
+    </key>
+    <key name="group-procs" type="b">
+      <default>false</default>
+      <summary>Group processes with the same command</summary>
+      <description>Aggregate the usage metrics for all processes by their name.</description>
     </key>
     <!-- <key name="show-animations" type="b">
       <default>true</default>

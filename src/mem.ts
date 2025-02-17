@@ -233,6 +233,9 @@ export const MemMonitor = GObject.registerClass(
         const procs = vitals.getTopMemProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
           this.topProcs[i].cmd.text = procs[i].cmd;
+          if (procs[i].count > 1) {
+            this.topProcs[i].cmd.text += ` (x${procs[i].count})`;
+          }
           this.topProcs[i].usage.text = bytesToHumanString(procs[i].memUsage());
         }
       });

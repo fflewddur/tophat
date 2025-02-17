@@ -305,6 +305,7 @@ export const Vitals = GObject.registerClass(
     private summaryLoop = 0;
     private detailsLoop = 0;
     private fsLoop = 0;
+    private groupRelated;
     private showCpu;
     private showMem;
     private showNet;
@@ -352,6 +353,14 @@ export const Vitals = GObject.registerClass(
       });
       this.settingSignals.push(id);
 
+      this.groupRelated = gsettings.get_boolean('group-procs');
+      id = this.gsettings.connect(
+        'changed::group-procs',
+        (settings: Gio.Settings) => {
+          this.groupRelated = settings.get_boolean('group-procs');
+        }
+      );
+      this.settingSignals.push(id);
       this.showCpu = gsettings.get_boolean('show-cpu');
       id = this.gsettings.connect(
         'changed::show-cpu',
@@ -1105,6 +1114,9 @@ export const Vitals = GObject.registerClass(
 
     public getTopCpuProcs(n: number) {
       let top = Array.from(this.procs.values());
+      if (this.groupRelated) {
+        top = groupRelatedProcs(top);
+      }
       top = top.sort((x, y) => {
         return x.cpuUsage() - y.cpuUsage();
       });
@@ -1119,6 +1131,9 @@ export const Vitals = GObject.registerClass(
 
     public getTopMemProcs(n: number) {
       let top = Array.from(this.procs.values());
+      if (this.groupRelated) {
+        top = groupRelatedProcs(top);
+      }
       top = top.sort((x, y) => {
         return x.memUsage() - y.memUsage();
       });
@@ -1129,6 +1144,9 @@ export const Vitals = GObject.registerClass(
 
     public getTopDiskProcs(n: number) {
       let top = Array.from(this.procs.values());
+      if (this.groupRelated) {
+        top = groupRelatedProcs(top);
+      }
       top = top.sort((x, y) => {
         return (
           x.diskReads() + x.diskWrites() - (y.diskReads() + y.diskWrites())
@@ -1937,6 +1955,7 @@ class Process {
   public diskWrite = -1;
   public diskReadPrev = -1;
   public diskWritePrev = -1;
+  public count = 1;
 
   public cpuUsage(): number {
     if (this.cpuPrev < 0) {
@@ -2016,6 +2035,19 @@ class Process {
       this.cmdLoaded = true;
     }
   }
+
+  public groupWith(other: Process) {
+    this.utime += other.utime;
+    this.stime += other.stime;
+    this.pss += other.pss;
+    this.cpu += other.cpu;
+    this.cpuPrev += other.cpuPrev;
+    this.diskRead += other.diskRead;
+    this.diskReadPrev += other.diskReadPrev;
+    this.diskWrite += other.diskWrite;
+    this.diskWritePrev += other.diskWritePrev;
+    this.count += other.count;
+  }
 }
 
 function readKb(line: string): number {
@@ -2039,4 +2071,30 @@ function refreshRateModifier(settings: Gio.Settings): number {
       break;
   }
   return modifier;
+}
+
+// Take an array of processes and aggregate their statistics by their 'cmd' property
+function groupRelatedProcs(top: Process[]) {
+  const grouped = new Map<string, Process>();
+  for (const v of top) {
+    let p = grouped.get(v.cmd);
+    if (p) {
+      p.groupWith(v);
+    } else {
+      p = new Process();
+      p.cmd = v.cmd;
+      p.cmdLoaded = v.cmdLoaded;
+      p.cpu = v.cpu;
+      p.cpuPrev = v.cpuPrev;
+      p.cpuTotal = v.cpuTotal;
+      p.diskRead = v.diskRead;
+      p.diskReadPrev = v.diskReadPrev;
+      p.diskWrite = v.diskWrite;
+      p.diskWritePrev = v.diskWritePrev;
+      p.pss = v.pss;
+    }
+    grouped.set(p.cmd, p);
+  }
+  top = Array.from(grouped.values());
+  return top;
 }

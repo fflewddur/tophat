@@ -65,6 +65,7 @@
 .meter-bar {
   margin: 0 1px 0 0;
   padding: 0;
+  border-radius: 2px;
 }
 
 .meter-bar:last-child {
