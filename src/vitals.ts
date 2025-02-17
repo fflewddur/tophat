@@ -305,6 +305,7 @@ export const Vitals = GObject.registerClass(
     private summaryLoop = 0;
     private detailsLoop = 0;
     private fsLoop = 0;
+    private groupRelated = true;
     private showCpu;
     private showMem;
     private showNet;
@@ -1105,6 +1106,9 @@ export const Vitals = GObject.registerClass(
 
     public getTopCpuProcs(n: number) {
       let top = Array.from(this.procs.values());
+      if (this.groupRelated) {
+        top = groupRelatedProcs(top);
+      }
       top = top.sort((x, y) => {
         return x.cpuUsage() - y.cpuUsage();
       });
@@ -1119,6 +1123,9 @@ export const Vitals = GObject.registerClass(
 
     public getTopMemProcs(n: number) {
       let top = Array.from(this.procs.values());
+      if (this.groupRelated) {
+        top = groupRelatedProcs(top);
+      }
       top = top.sort((x, y) => {
         return x.memUsage() - y.memUsage();
       });
@@ -1129,6 +1136,9 @@ export const Vitals = GObject.registerClass(
 
     public getTopDiskProcs(n: number) {
       let top = Array.from(this.procs.values());
+      if (this.groupRelated) {
+        top = groupRelatedProcs(top);
+      }
       top = top.sort((x, y) => {
         return (
           x.diskReads() + x.diskWrites() - (y.diskReads() + y.diskWrites())
@@ -2016,6 +2026,18 @@ class Process {
       this.cmdLoaded = true;
     }
   }
+
+  public groupWith(other: Process) {
+    this.utime += other.utime;
+    this.stime += other.stime;
+    this.pss += other.pss;
+    this.cpu += other.cpu;
+    this.cpuPrev += other.cpuPrev;
+    this.diskRead += other.diskRead;
+    this.diskReadPrev += other.diskReadPrev;
+    this.diskWrite += other.diskWrite;
+    this.diskWritePrev += other.diskWritePrev;
+  }
 }
 
 function readKb(line: string): number {
@@ -2039,4 +2061,29 @@ function refreshRateModifier(settings: Gio.Settings): number {
       break;
   }
   return modifier;
+}
+
+function groupRelatedProcs(top: Process[]) {
+  const grouped = new Map<string, Process>();
+  for (const v of top) {
+    let p = grouped.get(v.cmd);
+    if (p) {
+      p.groupWith(v);
+    } else {
+      p = new Process();
+      p.cmd = v.cmd;
+      p.cmdLoaded = v.cmdLoaded;
+      p.cpu = v.cpu;
+      p.cpuPrev = v.cpuPrev;
+      p.cpuTotal = v.cpuTotal;
+      p.diskRead = v.diskRead;
+      p.diskReadPrev = v.diskReadPrev;
+      p.diskWrite = v.diskWrite;
+      p.diskWritePrev = v.diskWritePrev;
+      p.pss = v.pss;
+    }
+    grouped.set(p.cmd, p);
+  }
+  top = Array.from(grouped.values());
+  return top;
 }
