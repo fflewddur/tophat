@@ -305,7 +305,7 @@ export const Vitals = GObject.registerClass(
     private summaryLoop = 0;
     private detailsLoop = 0;
     private fsLoop = 0;
-    private groupRelated = true;
+    private groupRelated;
     private showCpu;
     private showMem;
     private showNet;
@@ -353,6 +353,14 @@ export const Vitals = GObject.registerClass(
       });
       this.settingSignals.push(id);
 
+      this.groupRelated = gsettings.get_boolean('group-procs');
+      id = this.gsettings.connect(
+        'changed::group-procs',
+        (settings: Gio.Settings) => {
+          this.groupRelated = settings.get_boolean('group-procs');
+        }
+      );
+      this.settingSignals.push(id);
       this.showCpu = gsettings.get_boolean('show-cpu');
       id = this.gsettings.connect(
         'changed::show-cpu',
@@ -2063,6 +2071,7 @@ function refreshRateModifier(settings: Gio.Settings): number {
   return modifier;
 }
 
+// Take an array of processes and aggregate their statistics by their 'cmd' property
 function groupRelatedProcs(top: Process[]) {
   const grouped = new Map<string, Process>();
   for (const v of top) {

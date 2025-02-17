@@ -114,6 +114,9 @@ export default class TopHatPrefs extends ExtensionPreferences {
       group
     );
 
+    // Group top processes by name
+    this.addActionRow(_('Group top processes by name'), 'group-procs', group);
+
     return page;
   }
 
