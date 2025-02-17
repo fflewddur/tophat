@@ -82,10 +82,9 @@ export const TopHatMeter = GObject.registerClass(
         this.bars[i] = new St.Widget({
           y_align: Clutter.ActorAlign.END,
           y_expand: false,
-          style_class: 'meter-bar',
           width: this.barWidth,
           height: 1 * this.scaleFactor,
-          background_color: this.color,
+          style_class: 'meter-bar',
           name: 'TopHatMeterBar',
         });
         this.add_child(this.bars[i]);
@@ -173,7 +172,10 @@ export const TopHatMeter = GObject.registerClass(
       this.color = color;
 
       for (const bar of this.bars) {
-        bar.set_background_color(this.color);
+        let style = bar.get_style() || '';
+        style = style.replaceAll(/background-color:[^;]*;\s*/g, '');
+        style += `background-color: rgb(${this.color.red}, ${this.color.green}, ${this.color.blue});`;
+        bar.set_style(style);
       }
     }
 
@@ -189,13 +191,15 @@ export const TopHatMeter = GObject.registerClass(
         b.set_width(this.barWidth);
       }
       for (let i = 0; i < this.bars.length; i++) {
-        let style = '';
-        if (i === this.bars.length - 1) {
-          style += 'margin:0;';
-        } else {
-          style += 'margin:0 1px 0 0;';
-        }
-        this.bars[i].set_style(style);
+        // let style = '';
+        // if (i === this.bars.length - 1) {
+        //   style += 'margin:0; padding: 0; border-radius: 2px;';
+        // } else {
+        //   style += 'margin:0 1px 0 0; padding: 0; border-radius: 2px;';
+        // }
+        // FIXME: testing this
+        this.bars[i].remove_style_class_name('meter-bar');
+        this.bars[i].set_style_class_name('meter-bar');
       }
     }
 
