@@ -115,7 +115,11 @@ export default class TopHatPrefs extends ExtensionPreferences {
     );
 
     // Group top processes by name
-    this.addActionRow(_('Group top processes by name'), 'group-procs', group);
+    this.addActionRow(
+      _('Group top processes by command'),
+      'group-procs',
+      group
+    );
 
     return page;
   }
