@@ -318,6 +318,9 @@ export const DiskMonitor = GObject.registerClass(
             const w = procs[i].diskWrites();
             const r = procs[i].diskReads();
             this.topProcs[i].cmd.text = procs[i].cmd;
+            if (procs[i].count > 1) {
+              this.topProcs[i].cmd.text += ` (x${procs[i].count})`;
+            }
             this.topProcs[i].in.text = bytesToHumanString(w) + '/s';
             this.topProcs[i].out.text = bytesToHumanString(r) + '/s';
           } else {

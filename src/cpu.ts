@@ -266,6 +266,9 @@ export const CpuMonitor = GObject.registerClass(
               this.topProcs[i].usage.text = '< 1%';
             }
             this.topProcs[i].cmd.text = procs[i].cmd;
+            if (procs[i].count > 1) {
+              this.topProcs[i].cmd.text += ` (x${procs[i].count})`;
+            }
           } else {
             this.topProcs[i].cmd.text = '';
             this.topProcs[i].usage.text = '';

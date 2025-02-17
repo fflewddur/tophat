@@ -1955,6 +1955,7 @@ class Process {
   public diskWrite = -1;
   public diskReadPrev = -1;
   public diskWritePrev = -1;
+  public count = 1;
 
   public cpuUsage(): number {
     if (this.cpuPrev < 0) {
@@ -2045,6 +2046,7 @@ class Process {
     this.diskReadPrev += other.diskReadPrev;
     this.diskWrite += other.diskWrite;
     this.diskWritePrev += other.diskWritePrev;
+    this.count += other.count;
   }
 }
 
