@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-28 21:21-0800\n"
+"POT-Creation-Date: 2025-02-17 11:14-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,52 +18,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/cpu.ts:131
+#: src/cpu.ts:136
 msgid "Processor usage"
 msgstr ""
 
-#: src/cpu.ts:137
+#: src/cpu.ts:142
 msgid "Processor utilization:"
 msgstr ""
 
-#: src/cpu.ts:153
+#: src/cpu.ts:158
 msgid "Frequency:"
 msgstr ""
 
-#: src/cpu.ts:161
+#: src/cpu.ts:166
 msgid "Temperature:"
 msgstr ""
 
-#: src/cpu.ts:176 src/disk.ts:214 src/mem.ts:159
+#: src/cpu.ts:181 src/disk.ts:214 src/mem.ts:159
 msgid "Top processes"
 msgstr ""
 
-#: src/cpu.ts:191
+#: src/cpu.ts:196
 msgid "System uptime"
 msgstr ""
 
-#: src/cpu.ts:291
+#: src/cpu.ts:298
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/cpu.ts:294
+#: src/cpu.ts:301
 #, javascript-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/cpu.ts:296
+#: src/cpu.ts:303
 #, javascript-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/disk.ts:166 src/prefs.ts:180
+#: src/disk.ts:166 src/prefs.ts:186
 msgid "Disk activity"
 msgstr ""
 
@@ -91,7 +91,7 @@ msgstr ""
 msgid "Reading"
 msgstr ""
 
-#: src/disk.ts:244 src/prefs.ts:186
+#: src/disk.ts:244 src/prefs.ts:192
 msgid "Filesystem usage"
 msgstr ""
 
@@ -198,91 +198,99 @@ msgstr ""
 msgid "Show action buttons in menus"
 msgstr ""
 
-#: src/prefs.ts:122 src/prefs.ts:126
+#: src/prefs.ts:118
+msgid "Group top processes by name"
+msgstr ""
+
+#: src/prefs.ts:125 src/prefs.ts:129
 msgid "CPU"
 msgstr ""
 
-#: src/prefs.ts:130
+#: src/prefs.ts:133
 msgid "Show the CPU monitor"
 msgstr ""
 
-#: src/prefs.ts:134 src/prefs.ts:166 src/prefs.ts:194
+#: src/prefs.ts:137 src/prefs.ts:172 src/prefs.ts:200
 msgid "Usage meter"
 msgstr ""
 
-#: src/prefs.ts:135 src/prefs.ts:167 src/prefs.ts:195
+#: src/prefs.ts:138 src/prefs.ts:173 src/prefs.ts:201
 msgid "Numeric value"
 msgstr ""
 
-#: src/prefs.ts:136 src/prefs.ts:168 src/prefs.ts:196
+#: src/prefs.ts:139 src/prefs.ts:174 src/prefs.ts:202
 msgid "Both meter and value"
 msgstr ""
 
-#: src/prefs.ts:137 src/prefs.ts:169 src/prefs.ts:197
+#: src/prefs.ts:140 src/prefs.ts:175 src/prefs.ts:203
 msgid "Show as"
 msgstr ""
 
-#: src/prefs.ts:140
+#: src/prefs.ts:143
 msgid "Show each core"
 msgstr ""
 
-#: src/prefs.ts:144
+#: src/prefs.ts:146
+msgid "Sort cores by usage"
+msgstr ""
+
+#: src/prefs.ts:150
 msgid "Normalize per-process CPU usage by CPU cores"
 msgstr ""
 
-#: src/prefs.ts:154 src/prefs.ts:158
+#: src/prefs.ts:160 src/prefs.ts:164
 msgid "Memory"
 msgstr ""
 
-#: src/prefs.ts:162
+#: src/prefs.ts:168
 msgid "Show the memory monitor"
 msgstr ""
 
-#: src/prefs.ts:176
+#: src/prefs.ts:182
 msgid "Disk"
 msgstr ""
 
-#: src/prefs.ts:184
+#: src/prefs.ts:190
 msgid "Show the disk activity monitor"
 msgstr ""
 
-#: src/prefs.ts:190
+#: src/prefs.ts:196
 msgid "Show the filesystem monitor"
 msgstr ""
 
-#: src/prefs.ts:202
+#: src/prefs.ts:208
 msgid "Filesystem to monitor in topbar"
 msgstr ""
 
-#: src/prefs.ts:211
+#: src/prefs.ts:217
 msgid "Filesystems to show in menu"
 msgstr ""
 
-#: src/prefs.ts:225 src/prefs.ts:291 src/vitals.ts:409 src/vitals.ts:414
-#: src/vitals.ts:422 src/vitals.ts:427
+#: src/prefs.ts:231 src/prefs.ts:297 src/vitals.ts:418 src/vitals.ts:423
+#: src/vitals.ts:431 src/vitals.ts:436
 msgid "Automatic"
 msgstr ""
 
-#: src/prefs.ts:279 src/prefs.ts:283
+#: src/prefs.ts:285 src/prefs.ts:289
 msgid "Network"
 msgstr ""
 
-#: src/prefs.ts:287
+#: src/prefs.ts:293
 msgid "Show the network monitor"
 msgstr ""
 
-#: src/prefs.ts:311
+#: src/prefs.ts:317
 msgid "Network device"
 msgstr ""
 
-#: src/prefs.ts:321
+#: src/prefs.ts:327
 msgid "Bytes"
 msgstr ""
 
-#: src/prefs.ts:322
+#: src/prefs.ts:328
 msgid "Bits"
 msgstr ""
 
-#: src/prefs.ts:324
+#: src/prefs.ts:330
 msgid "Measurement unit"
 msgstr ""
