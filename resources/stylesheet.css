@@ -186,6 +186,18 @@
   margin-right: 0;
 }
 
+.tophat-tooltip {
+  padding: 0;
+  margin: 0;
+}
+
+.tophat-tooltip > StLabel {
+  font-size: 0.8em;
+  text-align: center;
+  padding: 3px 6px;
+  margin: 0;
+}
+
 .cap-bar {
   margin: 5px 6px 10px 6px;
   height: 5px;

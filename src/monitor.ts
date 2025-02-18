@@ -21,6 +21,7 @@ import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
 
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import {
@@ -44,12 +45,53 @@ export class TopProc {
   public usage: St.Label;
   public in: St.Label;
   public out: St.Label;
+  public tooltip: PopupMenu.PopupMenu | null;
+  public tooltipLabel;
 
   constructor() {
-    this.cmd = new St.Label();
+    this.cmd = new St.Label({ reactive: true, track_hover: true });
     this.usage = new St.Label();
     this.in = new St.Label();
     this.out = new St.Label();
+    this.tooltip = null;
+    this.tooltipLabel = new PopupMenu.PopupMenuItem('', {
+      style_class: 'tophat-tooltip',
+    });
+    this.tooltipLabel.label.xExpand = true;
+  }
+
+  setCmd(cmd: string) {
+    this.cmd.text = cmd;
+    this.tooltipLabel.label.text = cmd;
+  }
+
+  setTooltip() {
+    if (this.tooltip) {
+      return;
+    }
+
+    this.tooltip = new PopupMenu.PopupMenu(this.cmd, 0.25, St.Side.TOP);
+    this.tooltip.addMenuItem(this.tooltipLabel);
+    Main.layoutManager.addChrome(this.tooltip.actor);
+    this.tooltip.actor.hide();
+
+    this.cmd.connect('event', (actor: Clutter.Actor, event: Clutter.Event) => {
+      if (event.type() === Clutter.EventType.ENTER) {
+        if (
+          this.tooltipLabel.label.text &&
+          this.tooltipLabel.label.text.length > 30
+        ) {
+          this.tooltip?.open(true);
+        }
+      } else if (event.type() === Clutter.EventType.LEAVE) {
+        this.tooltip?.close(true);
+      }
+    });
+
+    this.cmd.connect('destroy', () => {
+      this.tooltip?.destroy();
+      this.tooltip = null;
+    });
   }
 }
 
