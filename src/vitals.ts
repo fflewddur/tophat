@@ -29,6 +29,7 @@ const RE_DISK_STATS =
 const RE_NVME_DEV = /^nvme\d+n\d+$/;
 const RE_BLOCK_DEV = /^[^\d]+$/;
 const RE_CMD = /\/*[^\s]*\/([^\s]*)/;
+const RE_LAUNCHER = /[^\s]*(python\d*|gjs)\s+([.]*)$/;
 
 export interface IActivity {
   val(): number;
@@ -2025,11 +2026,16 @@ class Process {
     if (content) {
       this.cmd = content;
       // If this is an absolute cmd path, remove the path
-      if (content[0] === '/') {
-        const m = content.match(RE_CMD);
+      if (content[0] === '/' || content[0] === '.') {
+        let m = content.match(RE_CMD);
         if (m) {
-          // console.log(`parsing '${content}' to '${m[1]}'`);
-          this.cmd = m[1];
+          const cmd = m[1];
+          m = cmd.match(RE_LAUNCHER);
+          if (m && m[2]) {
+            this.parseCmd(m[2]);
+          } else {
+            this.cmd = cmd;
+          }
         }
       }
       this.cmdLoaded = true;
