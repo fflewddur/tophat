@@ -231,6 +231,7 @@ export const DiskMonitor = GObject.registerClass(
       for (let i = 0; i < NumTopProcs; i++) {
         this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
         this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
+        this.topProcs[i].setTooltip();
         this.topProcs[i].in.set_style_class_name('menu-cmd-activity');
         this.addMenuRow(this.topProcs[i].in, 1, 1, 1);
         this.topProcs[i].out.set_style_class_name('menu-cmd-activity');
@@ -318,8 +319,11 @@ export const DiskMonitor = GObject.registerClass(
             const w = procs[i].diskWrites();
             const r = procs[i].diskReads();
             this.topProcs[i].cmd.text = procs[i].cmd;
+            this.topProcs[i].setCmd(procs[i].cmd);
             if (procs[i].count > 1) {
-              this.topProcs[i].cmd.text += ` (x${procs[i].count})`;
+              this.topProcs[i].setCmd(
+                this.topProcs[i].cmd.text + ` (x${procs[i].count})`
+              );
             }
             this.topProcs[i].in.text = bytesToHumanString(w) + '/s';
             this.topProcs[i].out.text = bytesToHumanString(r) + '/s';

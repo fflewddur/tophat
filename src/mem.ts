@@ -163,6 +163,7 @@ export const MemMonitor = GObject.registerClass(
       for (let i = 0; i < NumTopProcs; i++) {
         this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
         this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
+        this.topProcs[i].setTooltip();
         this.topProcs[i].usage.set_style_class_name('menu-cmd-usage');
         if (i === NumTopProcs - 1) {
           this.topProcs[i].usage.add_style_class_name('menu-section-end');
@@ -232,9 +233,11 @@ export const MemMonitor = GObject.registerClass(
       id = vitals.connect('notify::mem-top-procs', () => {
         const procs = vitals.getTopMemProcs(NumTopProcs);
         for (let i = 0; i < NumTopProcs; i++) {
-          this.topProcs[i].cmd.text = procs[i].cmd;
+          this.topProcs[i].setCmd(procs[i].cmd);
           if (procs[i].count > 1) {
-            this.topProcs[i].cmd.text += ` (x${procs[i].count})`;
+            this.topProcs[i].setCmd(
+              this.topProcs[i].cmd.text + ` (x${procs[i].count})`
+            );
           }
           this.topProcs[i].usage.text = bytesToHumanString(procs[i].memUsage());
         }
