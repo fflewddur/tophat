@@ -79,7 +79,7 @@ export class TopProc {
       if (event.type() === Clutter.EventType.ENTER) {
         if (
           this.tooltipLabel.label.text &&
-          this.tooltipLabel.label.text.length > 30
+          this.tooltipLabel.label.text.length > 35
         ) {
           this.tooltip?.open(true);
         }
