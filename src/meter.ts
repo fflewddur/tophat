@@ -60,6 +60,9 @@ export const TopHatMeter = GObject.registerClass(
           b.set_width(this.barWidth);
         }
       });
+      // themeContext.connect('changed', (source: St.ThemeContext) => {
+      //   console.log('themeContext changed');
+      // });
 
       this.connect('notify::height', () => {
         this.setBarSizes(this.barUsage);
@@ -189,13 +192,6 @@ export const TopHatMeter = GObject.registerClass(
         b.set_width(this.barWidth);
       }
       for (let i = 0; i < this.bars.length; i++) {
-        // let style = '';
-        // if (i === this.bars.length - 1) {
-        //   style += 'margin:0; padding: 0; border-radius: 2px;';
-        // } else {
-        //   style += 'margin:0 1px 0 0; padding: 0; border-radius: 2px;';
-        // }
-        // FIXME: testing this
         this.bars[i].remove_style_class_name('meter-bar');
         this.bars[i].set_style_class_name('meter-bar');
       }

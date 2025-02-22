@@ -185,6 +185,7 @@ export const CpuMonitor = GObject.registerClass(
       for (let i = 0; i < NumTopProcs; i++) {
         this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
         this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
+        this.topProcs[i].setTooltip();
         this.topProcs[i].usage.set_style_class_name('menu-cmd-usage');
         if (i === NumTopProcs - 1) {
           this.topProcs[i].usage.add_style_class_name('menu-section-end');
@@ -265,12 +266,14 @@ export const CpuMonitor = GObject.registerClass(
             } else {
               this.topProcs[i].usage.text = '< 1%';
             }
-            this.topProcs[i].cmd.text = procs[i].cmd;
+            this.topProcs[i].setCmd(procs[i].cmd);
             if (procs[i].count > 1) {
-              this.topProcs[i].cmd.text += ` (x${procs[i].count})`;
+              this.topProcs[i].setCmd(
+                this.topProcs[i].cmd.text + ` (x${procs[i].count})`
+              );
             }
           } else {
-            this.topProcs[i].cmd.text = '';
+            this.topProcs[i].setCmd('');
             this.topProcs[i].usage.text = '';
           }
         }

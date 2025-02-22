@@ -21,6 +21,7 @@ import Clutter from 'gi://Clutter';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
 
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import {
@@ -44,12 +45,53 @@ export class TopProc {
   public usage: St.Label;
   public in: St.Label;
   public out: St.Label;
+  public tooltip: PopupMenu.PopupMenu | null;
+  public tooltipLabel;
 
   constructor() {
-    this.cmd = new St.Label();
+    this.cmd = new St.Label({ reactive: true, track_hover: true });
     this.usage = new St.Label();
     this.in = new St.Label();
     this.out = new St.Label();
+    this.tooltip = null;
+    this.tooltipLabel = new PopupMenu.PopupMenuItem('', {
+      style_class: 'tophat-tooltip',
+    });
+    this.tooltipLabel.label.xExpand = true;
+  }
+
+  setCmd(cmd: string) {
+    this.cmd.text = cmd;
+    this.tooltipLabel.label.text = cmd;
+  }
+
+  setTooltip() {
+    if (this.tooltip) {
+      return;
+    }
+
+    this.tooltip = new PopupMenu.PopupMenu(this.cmd, 0.25, St.Side.TOP);
+    this.tooltip.addMenuItem(this.tooltipLabel);
+    Main.layoutManager.addChrome(this.tooltip.actor);
+    this.tooltip.actor.hide();
+
+    this.cmd.connect('event', (actor: Clutter.Actor, event: Clutter.Event) => {
+      if (event.type() === Clutter.EventType.ENTER) {
+        if (
+          this.tooltipLabel.label.text &&
+          this.tooltipLabel.label.text.length > 35
+        ) {
+          this.tooltip?.open(true);
+        }
+      } else if (event.type() === Clutter.EventType.LEAVE) {
+        this.tooltip?.close(true);
+      }
+    });
+
+    this.cmd.connect('destroy', () => {
+      this.tooltip?.destroy();
+      this.tooltip = null;
+    });
   }
 }
 
@@ -73,6 +115,7 @@ export const TopHatMonitor = GObject.registerClass(
     protected themeContextChanged;
     protected vitals?: Vitals;
     protected vitalsSignals;
+    private panelStyleChanged;
 
     constructor(
       nameText: string,
@@ -106,6 +149,18 @@ export const TopHatMonitor = GObject.registerClass(
         x_align: Clutter.ActorAlign.CENTER,
         reactive: true,
         x_expand: true,
+      });
+
+      this.panelStyleChanged = Main.panel.connect('style-changed', (p) => {
+        if (p.has_style_class_name('transparent-top-bar')) {
+          if (this.meter) {
+            this.meter.add_style_class_name('transparent-meter');
+          }
+        } else {
+          if (this.meter) {
+            this.meter.remove_style_class_name('transparent-meter');
+          }
+        }
       });
 
       this.gsettings.bind(
@@ -275,6 +330,10 @@ export const TopHatMonitor = GObject.registerClass(
         this.vitals?.disconnect(id);
       }
       this.vitalsSignals.length = 0;
+      if (this.panelStyleChanged > 0) {
+        Main.panel.disconnect(this.panelStyleChanged);
+        this.panelStyleChanged = 0;
+      }
       this.meter.destroy();
       this.box.destroy();
       this.themeContext.disconnect(this.themeContextChanged);

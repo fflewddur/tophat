@@ -55,17 +55,21 @@
 }
 
 .tophat-meter {
-  background-color: rgba(10, 10, 10, 0.2);
-  height: 1.2em;
+  background-color: rgba(100, 100, 100, 0.2);
+  height: 1.3em;
   margin: 0;
   padding: 0;
   border-radius: 2px;
 }
 
+.transparent-meter {
+  background-color: rgba(10, 10, 10, 0.3);
+}
+
 .meter-bar {
   margin: 0 1px 0 0;
   padding: 0;
-  border-radius: 2px;
+  /* border-radius: 2px; */
 }
 
 .meter-bar:last-child {
@@ -184,6 +188,18 @@
 
 .chart-bar:last-child {
   margin-right: 0;
+}
+
+.tophat-tooltip {
+  padding: 0;
+  margin: 0;
+}
+
+.tophat-tooltip > StLabel {
+  font-size: 0.8em;
+  text-align: center;
+  padding: 3px 6px;
+  margin: 0;
 }
 
 .cap-bar {

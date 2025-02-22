@@ -89,7 +89,7 @@
       <description>Show the filesystem monitor.</description>
     </key>
     <key name="group-procs" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Group processes with the same command</summary>
       <description>Aggregate the usage metrics for all processes by their name.</description>
     </key>
