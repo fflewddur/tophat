@@ -115,6 +115,7 @@ export const TopHatMonitor = GObject.registerClass(
     protected themeContextChanged;
     protected vitals?: Vitals;
     protected vitalsSignals;
+    private panelStyleChanged;
 
     constructor(
       nameText: string,
@@ -148,6 +149,18 @@ export const TopHatMonitor = GObject.registerClass(
         x_align: Clutter.ActorAlign.CENTER,
         reactive: true,
         x_expand: true,
+      });
+
+      this.panelStyleChanged = Main.panel.connect('style-changed', (p) => {
+        if (p.has_style_class_name('transparent-top-bar')) {
+          if (this.meter) {
+            this.meter.add_style_class_name('transparent-meter');
+          }
+        } else {
+          if (this.meter) {
+            this.meter.remove_style_class_name('transparent-meter');
+          }
+        }
       });
 
       this.gsettings.bind(
@@ -317,6 +330,10 @@ export const TopHatMonitor = GObject.registerClass(
         this.vitals?.disconnect(id);
       }
       this.vitalsSignals.length = 0;
+      if (this.panelStyleChanged > 0) {
+        Main.panel.disconnect(this.panelStyleChanged);
+        this.panelStyleChanged = 0;
+      }
       this.meter.destroy();
       this.box.destroy();
       this.themeContext.disconnect(this.themeContextChanged);
