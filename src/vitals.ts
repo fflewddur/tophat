@@ -29,7 +29,7 @@ const RE_DISK_STATS =
 const RE_NVME_DEV = /^nvme\d+n\d+$/;
 const RE_BLOCK_DEV = /^[^\d]+$/;
 const RE_CMD = /\/*[^\s]*\/([^\s]*)/;
-const RE_LAUNCHER = /[^\s]*(python\d*|gjs)\s+([.]*)$/;
+const RE_LAUNCHER = /[^\s]*(python\d*|gjs)\b[^/]*(\/.*)$/;
 
 export interface IActivity {
   val(): number;
@@ -2030,7 +2030,7 @@ class Process {
         let m = content.match(RE_CMD);
         if (m) {
           const cmd = m[1];
-          m = cmd.match(RE_LAUNCHER);
+          m = content.match(RE_LAUNCHER);
           if (m && m[2]) {
             this.parseCmd(m[2]);
           } else {

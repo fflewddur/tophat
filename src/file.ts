@@ -47,15 +47,16 @@ export class File {
       try {
         this.file.load_contents_async(null, (file, res) => {
           try {
-            let bytes = file?.load_contents_finish(res)[1];
+            const bytes = file?.load_contents_finish(res)[1];
             if (!bytes) {
               reject('count not load file');
               return;
             }
-            // Sometimes the null terminator appears before bytes.length
-            const end = bytes.indexOf(0);
-            if (end >= 0) {
-              bytes = bytes.slice(0, end);
+            // Replace null separators with spaces (e.g., to read proc_pid_cmdline)
+            for (let i = 0; i < bytes.length; i++) {
+              if (bytes[i] === 0) {
+                bytes[i] = 0x20;
+              }
             }
             const contents = decoder.decode(bytes).trim();
             resolve(contents);
