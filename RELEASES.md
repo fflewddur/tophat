@@ -8,6 +8,7 @@ based on [Keep a Changelog].
 - Added support for GNOME 48
 - Added option to group top processes by command
 - Added option to disable sorting CPU meter by usage (from [SoMuchForSubtlety](https://github.com/SoMuchForSubtlety))
+- Improved process detection
 - Fixed CPU usage calculation for nice'd processes
 - Fixed center-aligned labels in the top bar
 
