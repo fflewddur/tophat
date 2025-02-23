@@ -913,16 +913,17 @@ export const Vitals = GObject.registerClass(
         let i = 0;
         for (const name of psFiles) {
           promises.push(this.readProcFiles(name, curProcs));
-          if (i >= 3) {
+          if (i >= 5) {
             await Promise.allSettled(promises);
-            // sleep for 2 ms
-            await new Promise((r) => setTimeout(r, 2));
+            // sleep for 1 ms
+            await new Promise((r) => setTimeout(r, 1));
             promises = [];
             i = 0;
           } else {
             i++;
           }
         }
+        await Promise.allSettled(promises);
         this.procs = curProcs;
         // console.timeEnd('reading process details');
         // console.time('hashing procs');
@@ -1944,24 +1945,26 @@ class DiskActivity implements IActivity {
 
 class Process {
   public id = '';
+  private iterationCpu = 0; // Number of times we've loaded CPU activity for this process
+  private iterationIo = 0; // Number of times we've loaded IO activity for this process
   public cmd = '';
   public cmdLoaded = false;
   private utime = 0;
   private stime = 0;
   public pss = 0;
-  public cpu = -1;
-  public cpuPrev = -1;
+  public cpu = 0;
+  public cpuPrev = 0;
   public cpuTotal = 0;
-  public diskRead = -1;
-  public diskWrite = -1;
-  public diskReadPrev = -1;
-  public diskWritePrev = -1;
+  public diskRead = 0;
+  public diskWrite = 0;
+  public diskReadPrev = 0;
+  public diskWritePrev = 0;
   public count = 1;
 
   public cpuUsage(): number {
-    if (this.cpuPrev < 0) {
-      return 0;
-    }
+    // if (this.cpuPrev < 0) {
+    // return 0;
+    // }
     return (this.cpu - this.cpuPrev) / this.cpuTotal;
   }
 
@@ -1970,16 +1973,16 @@ class Process {
   }
 
   public diskReads(): number {
-    if (this.diskReadPrev < 0) {
-      return 0;
-    }
+    // if (this.diskReadPrev < 0) {
+    //   return 0;
+    // }
     return (this.diskRead - this.diskReadPrev) / DetailsInterval;
   }
 
   public diskWrites(): number {
-    if (this.diskWritePrev < 0) {
-      return 0;
-    }
+    // if (this.diskWritePrev < 0) {
+    //   return 0;
+    // }
     return (this.diskWrite - this.diskWritePrev) / DetailsInterval;
   }
 
