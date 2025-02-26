@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-shell-extension-tophat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-27 13:44-0800\n"
-"PO-Revision-Date: 2022-12-29 14:02+0100\n"
+"POT-Creation-Date: 2025-02-23 18:04-0800\n"
+"PO-Revision-Date: 2025-02-26 14:29+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -15,154 +15,296 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.5\n"
 
-#: prefs.js:39 prefs.js:142 prefs.js:266
-msgid "General"
-msgstr "Algemeen"
-
-#: prefs.js:43 prefs.js:144 prefs.js:268
-msgid "Left edge"
-msgstr "Linkerrand"
-
-#: prefs.js:44 prefs.js:145 prefs.js:269
-msgid "Left"
-msgstr "Links"
-
-#: prefs.js:45 prefs.js:146 prefs.js:270
-msgid "Center"
-msgstr "Midden"
-
-#: prefs.js:46 prefs.js:147 prefs.js:271
-msgid "Right"
-msgstr "Rechts"
-
-#: prefs.js:47 prefs.js:148 prefs.js:272
-msgid "Right edge"
-msgstr "Rechterrand"
-
-#: prefs.js:48 prefs.js:149 prefs.js:273
-msgid "Position in panel"
-msgstr "Locatie op bovenbalk"
-
-#: prefs.js:49 prefs.js:150 prefs.js:274
-msgid "Meter color"
-msgstr "Meterkleur"
-
-#: prefs.js:50 prefs.js:151 prefs.js:275
-msgid "Show icons beside monitors"
-msgstr "Pictogrammen naast monitoren tonen"
-
-#: prefs.js:51 prefs.js:152 prefs.js:276
-msgid "Show animations"
-msgstr "Animaties gebruiken"
-
-#: prefs.js:53 prefs.js:159 prefs.js:283
-msgid "Processor"
-msgstr "Processor"
-
-#: prefs.js:54 prefs.js:160 prefs.js:284
-msgid "Show the CPU monitor"
-msgstr "Cpu-monitor tonen"
-
-#: prefs.js:55 prefs.js:161 prefs.js:285
-msgid "Show each core"
-msgstr "Afzonderlijke kernen tonen"
-
-#: prefs.js:58 prefs.js:168 prefs.js:292
-msgid "Memory"
-msgstr "Geheugen"
-
-#: prefs.js:59 prefs.js:169 prefs.js:293
-msgid "Show the memory monitor"
-msgstr "Geheugenmonitor tonen"
-
-#: prefs.js:62 prefs.js:176 prefs.js:300
-msgid "Network"
-msgstr "Netwerk"
-
-#: prefs.js:63 prefs.js:177 prefs.js:301
-msgid "Show the network monitor"
-msgstr "Netwerkmonitor tonen"
-
-#: prefs.js:65 prefs.js:179 prefs.js:303
-msgid "Bytes"
-msgstr "Bytes"
-
-#: prefs.js:66 prefs.js:180 prefs.js:304
-msgid "Bits"
-msgstr "Bits"
-
-#: prefs.js:67 prefs.js:181 prefs.js:305
-msgid "Measurement unit"
-msgstr "Meeteenheid"
-
-#: lib/cpu.js:163
+#: src/cpu.ts:136
 msgid "Processor usage"
 msgstr "Processorgebruik"
 
-#: lib/cpu.js:166
+#: src/cpu.ts:142
 msgid "Processor utilization:"
 msgstr "Processorgebruik:"
 
-#: lib/cpu.js:180 lib/mem.js:201 lib/net.js:129
-msgid "2 mins ago"
-msgstr "2 min. geleden"
-
-#: lib/cpu.js:182 lib/mem.js:203 lib/net.js:131
-msgid "now"
-msgstr "zojuist"
-
-#: lib/cpu.js:185 lib/mem.js:206
-msgid "Top processes"
-msgstr "Topprocessen"
-
-#: lib/cpu.js:323
-msgid "model n/a"
-msgstr "model n/b"
-
-#: lib/cpu.js:332
+#: src/cpu.ts:158
 msgid "Frequency:"
 msgstr "Frequentie:"
 
-#: lib/cpu.js:338 lib/cpu.js:352
-msgid "n/a"
-msgstr "n/b"
-
-#: lib/cpu.js:346
+#: src/cpu.ts:166
 msgid "Temperature:"
 msgstr "Temperatuur:"
 
-#: lib/mem.js:173
+#: src/cpu.ts:181 src/disk.ts:214 src/mem.ts:159
+msgid "Top processes"
+msgstr "Topprocessen"
+
+#: src/cpu.ts:197
+msgid "System uptime"
+msgstr "Systeem-uptime"
+
+#: src/cpu.ts:304
+#, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d dag"
+msgstr[1] "%d dagen"
+
+#: src/cpu.ts:307
+#, javascript-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d uur"
+msgstr[1] "%d uur"
+
+#: src/cpu.ts:309
+#, javascript-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minuut"
+msgstr[1] "%d minuten"
+
+#: src/disk.ts:166 src/prefs.ts:190
+msgid "Disk activity"
+msgstr "Schijfactiviteit"
+
+#: src/disk.ts:172
+msgid "Reading:"
+msgstr "Uitgelezen:"
+
+#: src/disk.ts:181
+msgid "Writing:"
+msgstr "Weggeschreven:"
+
+#: src/disk.ts:190
+msgid "Total read:"
+msgstr "Totaal uitgelezen:"
+
+#: src/disk.ts:199
+msgid "Total written:"
+msgstr "Totaal weggeschreven:"
+
+#: src/disk.ts:222
+msgid "Writing"
+msgstr "Weggeschreven"
+
+#: src/disk.ts:227
+msgid "Reading"
+msgstr "Uitgelezen"
+
+#: src/disk.ts:245 src/prefs.ts:196
+msgid "Filesystem usage"
+msgstr "Bestandssysteemgebruik"
+
+#: src/history.ts:237
+msgid "now"
+msgstr "zojuist"
+
+#: src/mem.ts:117
 msgid "Memory usage"
 msgstr "Geheugengebruik"
 
-#: lib/mem.js:176
+#: src/mem.ts:123
 msgid "RAM used:"
 msgstr "Ram-gebruik:"
 
-#: lib/mem.js:181 lib/mem.js:191
-msgid "size n/a"
-msgstr "omvang n/b"
-
-#: lib/mem.js:186
+#: src/mem.ts:138
 msgid "Swap used:"
 msgstr "Wisselgeheugengebruik:"
 
-#: lib/net.js:111
-msgid "Network usage"
-msgstr "Netwerkgebruik"
+#: src/monitor.ts:302
+#, javascript-format
+msgid "%d min ago"
+msgid_plural "%d mins ago"
+msgstr[0] "%d min. geleden"
+msgstr[1] "%d min. geleden"
 
-#: lib/net.js:114
+#: src/net.ts:155
+msgid "Network activity"
+msgstr "Netwerkactiviteit"
+
+#: src/net.ts:161
 msgid "Sending:"
 msgstr "Verstuurd:"
 
-#: lib/net.js:119
+#: src/net.ts:170
 msgid "Receiving:"
 msgstr "Ontvangen:"
 
-#~ msgid "Total CPU:"
-#~ msgstr "Totaal cpu-gebruik:"
+#: src/net.ts:179
+msgid "Total sent:"
+msgstr "Totaal verstuurd:"
+
+#: src/net.ts:188
+msgid "Total received:"
+msgstr "Totaal ontvangen:"
+
+#: src/prefs.ts:65 src/prefs.ts:69
+msgid "General"
+msgstr "Algemeen"
+
+#: src/prefs.ts:74
+msgid "Left edge"
+msgstr "Linkerrand"
+
+#: src/prefs.ts:75
+msgid "Left"
+msgstr "Links"
+
+#: src/prefs.ts:76
+msgid "Center"
+msgstr "Midden"
+
+#: src/prefs.ts:77
+msgid "Right"
+msgstr "Rechts"
+
+#: src/prefs.ts:78
+msgid "Right edge"
+msgstr "Rechterrand"
+
+#: src/prefs.ts:80
+msgid "Position in panel"
+msgstr "Locatie op bovenbalk"
+
+#: src/prefs.ts:88
+msgid "Slow"
+msgstr "Langzaam"
+
+#: src/prefs.ts:89
+msgid "Medium"
+msgstr "Gemiddeld"
+
+#: src/prefs.ts:90
+msgid "Fast"
+msgstr "Snel"
+
+#: src/prefs.ts:91
+msgid "Refresh speed"
+msgstr "Ververssnelheid"
+
+#: src/prefs.ts:99
+msgid "Use system accent color"
+msgstr "Systeemaccentkleur gebruiken"
+
+#: src/prefs.ts:105
+msgid "Meter color"
+msgstr "Meterkleur"
+
+#: src/prefs.ts:108
+msgid "Show icons beside monitors"
+msgstr "Pictogrammen naast monitoren tonen"
+
+#: src/prefs.ts:112
+msgid "Show action buttons in menus"
+msgstr "Actieknoppen tonen in menu's"
+
+#: src/prefs.ts:119
+msgid "Group top processes by command"
+msgstr "Topprocessen groeperen op opdracht"
+
+#: src/prefs.ts:129 src/prefs.ts:133
+msgid "CPU"
+msgstr "Cpu"
+
+#: src/prefs.ts:137
+msgid "Show the CPU monitor"
+msgstr "Cpu-monitor tonen"
+
+#: src/prefs.ts:141 src/prefs.ts:176 src/prefs.ts:204
+msgid "Usage meter"
+msgstr "Gebruiksmeter"
+
+#: src/prefs.ts:142 src/prefs.ts:177 src/prefs.ts:205
+msgid "Numeric value"
+msgstr "Numerieke waarde"
+
+#: src/prefs.ts:143 src/prefs.ts:178 src/prefs.ts:206
+msgid "Both meter and value"
+msgstr "Zowel meter als waarde"
+
+#: src/prefs.ts:144 src/prefs.ts:179 src/prefs.ts:207
+msgid "Show as"
+msgstr "Tonen als"
+
+#: src/prefs.ts:147
+msgid "Show each core"
+msgstr "Afzonderlijke kernen tonen"
+
+#: src/prefs.ts:150
+msgid "Sort cores by usage"
+msgstr "Kernen sorteren op belasting"
+
+#: src/prefs.ts:154
+msgid "Normalize per-process CPU usage by CPU cores"
+msgstr "Afzonderlijk cpu-procesgebruik per cpu-kern normaliseren"
+
+#: src/prefs.ts:164 src/prefs.ts:168
+msgid "Memory"
+msgstr "Geheugen"
+
+#: src/prefs.ts:172
+msgid "Show the memory monitor"
+msgstr "Geheugenmonitor tonen"
+
+#: src/prefs.ts:186
+msgid "Disk"
+msgstr "Schĳf"
+
+#: src/prefs.ts:194
+msgid "Show the disk activity monitor"
+msgstr "Schijfactiviteit tonen"
+
+#: src/prefs.ts:200
+msgid "Show the filesystem monitor"
+msgstr "Bestandssysteemactiviteit tonen"
+
+#: src/prefs.ts:212
+msgid "Filesystem to monitor in topbar"
+msgstr "Bestandssysteem op bovenbalk"
+
+#: src/prefs.ts:221
+msgid "Filesystems to show in menu"
+msgstr "Bestandssystemen in menu"
+
+#: src/prefs.ts:235 src/prefs.ts:301 src/vitals.ts:419 src/vitals.ts:424
+#: src/vitals.ts:432 src/vitals.ts:437
+msgid "Automatic"
+msgstr "Automatisch"
+
+#: src/prefs.ts:289 src/prefs.ts:293
+msgid "Network"
+msgstr "Netwerk"
+
+#: src/prefs.ts:297
+msgid "Show the network monitor"
+msgstr "Netwerkmonitor tonen"
+
+#: src/prefs.ts:321
+msgid "Network device"
+msgstr "Netwerkapparaat"
+
+#: src/prefs.ts:331
+msgid "Bytes"
+msgstr "Bytes"
+
+#: src/prefs.ts:332
+msgid "Bits"
+msgstr "Bits"
+
+#: src/prefs.ts:334
+msgid "Measurement unit"
+msgstr "Meeteenheid"
+
+#~ msgid "Processor"
+#~ msgstr "Processor"
+
+#~ msgid "model n/a"
+#~ msgstr "model n/b"
+
+#~ msgid "n/a"
+#~ msgstr "n/b"
+
+#~ msgid "size n/a"
+#~ msgstr "omvang n/b"
 
 #~ msgid "Show CPU monitor"
 #~ msgstr "Cpu-monitor tonen"
