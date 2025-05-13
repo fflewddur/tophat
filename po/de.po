@@ -1,0 +1,296 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Todd Kulesza
+# This file is distributed under the same license as the TopHat package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: TopHat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-23 18:04-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: src/cpu.ts:136
+msgid "Processor usage"
+msgstr "Prozessorgebrauch"
+
+#: src/cpu.ts:142
+msgid "Processor utilization:"
+msgstr "Prozessorbenutzung:"
+
+#: src/cpu.ts:158
+msgid "Frequency:"
+msgstr "Frequenz:"
+
+#: src/cpu.ts:166
+msgid "Temperature:"
+msgstr "Temperatur:"
+
+#: src/cpu.ts:181 src/disk.ts:214 src/mem.ts:159
+msgid "Top processes"
+msgstr "Top Prozesse"
+
+#: src/cpu.ts:197
+msgid "System uptime"
+msgstr "Systemlaufzeit"
+
+#: src/cpu.ts:304
+#, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d Tag"
+msgstr[1] "%d Tage"
+
+#: src/cpu.ts:307
+#, javascript-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d Stunde"
+msgstr[1] "%d Stunden"
+
+#: src/cpu.ts:309
+#, javascript-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d Minute"
+msgstr[1] "%d Minuten"
+
+#: src/disk.ts:166 src/prefs.ts:190
+msgid "Disk activity"
+msgstr "Speicheraktivitäten"
+
+#: src/disk.ts:172
+msgid "Reading:"
+msgstr "Lesen:"
+
+#: src/disk.ts:181
+msgid "Writing:"
+msgstr "Schreiben:"
+
+#: src/disk.ts:190
+msgid "Total read:"
+msgstr "Insgesamt gelesen:"
+
+#: src/disk.ts:199
+msgid "Total written:"
+msgstr "Insgesamt geschrieben:"
+
+#: src/disk.ts:222
+msgid "Writing"
+msgstr "Schreibt"
+
+#: src/disk.ts:227
+msgid "Reading"
+msgstr "Liest"
+
+#: src/disk.ts:245 src/prefs.ts:196
+msgid "Filesystem usage"
+msgstr "Datensystemgebrauch"
+
+#: src/history.ts:237
+msgid "now"
+msgstr "jetzt"
+
+#: src/mem.ts:117
+msgid "Memory usage"
+msgstr "Arbeitsspeichergebrauch"
+
+#: src/mem.ts:123
+msgid "RAM used:"
+msgstr "RAM Benutzt:"
+
+#: src/mem.ts:138
+msgid "Swap used:"
+msgstr "Swap Benutzt:"
+
+#: src/monitor.ts:302
+#, javascript-format
+msgid "%d min ago"
+msgid_plural "%d mins ago"
+msgstr[0] "vor %d Minute"
+msgstr[1] "vor %d Minuten"
+
+#: src/net.ts:155
+msgid "Network activity"
+msgstr "Netzwerkaktivitäten"
+
+#: src/net.ts:161
+msgid "Sending:"
+msgstr ""
+
+#: src/net.ts:170
+msgid "Receiving:"
+msgstr ""
+
+#: src/net.ts:179
+msgid "Total sent:"
+msgstr ""
+
+#: src/net.ts:188
+msgid "Total received:"
+msgstr ""
+
+#: src/prefs.ts:65 src/prefs.ts:69
+msgid "General"
+msgstr ""
+
+#: src/prefs.ts:74
+msgid "Left edge"
+msgstr ""
+
+#: src/prefs.ts:75
+msgid "Left"
+msgstr ""
+
+#: src/prefs.ts:76
+msgid "Center"
+msgstr ""
+
+#: src/prefs.ts:77
+msgid "Right"
+msgstr ""
+
+#: src/prefs.ts:78
+msgid "Right edge"
+msgstr ""
+
+#: src/prefs.ts:80
+msgid "Position in panel"
+msgstr ""
+
+#: src/prefs.ts:88
+msgid "Slow"
+msgstr ""
+
+#: src/prefs.ts:89
+msgid "Medium"
+msgstr ""
+
+#: src/prefs.ts:90
+msgid "Fast"
+msgstr ""
+
+#: src/prefs.ts:91
+msgid "Refresh speed"
+msgstr ""
+
+#: src/prefs.ts:99
+msgid "Use system accent color"
+msgstr ""
+
+#: src/prefs.ts:105
+msgid "Meter color"
+msgstr ""
+
+#: src/prefs.ts:108
+msgid "Show icons beside monitors"
+msgstr ""
+
+#: src/prefs.ts:112
+msgid "Show action buttons in menus"
+msgstr ""
+
+#: src/prefs.ts:119
+msgid "Group top processes by command"
+msgstr ""
+
+#: src/prefs.ts:129 src/prefs.ts:133
+msgid "CPU"
+msgstr ""
+
+#: src/prefs.ts:137
+msgid "Show the CPU monitor"
+msgstr ""
+
+#: src/prefs.ts:141 src/prefs.ts:176 src/prefs.ts:204
+msgid "Usage meter"
+msgstr ""
+
+#: src/prefs.ts:142 src/prefs.ts:177 src/prefs.ts:205
+msgid "Numeric value"
+msgstr ""
+
+#: src/prefs.ts:143 src/prefs.ts:178 src/prefs.ts:206
+msgid "Both meter and value"
+msgstr ""
+
+#: src/prefs.ts:144 src/prefs.ts:179 src/prefs.ts:207
+msgid "Show as"
+msgstr ""
+
+#: src/prefs.ts:147
+msgid "Show each core"
+msgstr ""
+
+#: src/prefs.ts:150
+msgid "Sort cores by usage"
+msgstr ""
+
+#: src/prefs.ts:154
+msgid "Normalize per-process CPU usage by CPU cores"
+msgstr ""
+
+#: src/prefs.ts:164 src/prefs.ts:168
+msgid "Memory"
+msgstr ""
+
+#: src/prefs.ts:172
+msgid "Show the memory monitor"
+msgstr ""
+
+#: src/prefs.ts:186
+msgid "Disk"
+msgstr ""
+
+#: src/prefs.ts:194
+msgid "Show the disk activity monitor"
+msgstr ""
+
+#: src/prefs.ts:200
+msgid "Show the filesystem monitor"
+msgstr ""
+
+#: src/prefs.ts:212
+msgid "Filesystem to monitor in topbar"
+msgstr ""
+
+#: src/prefs.ts:221
+msgid "Filesystems to show in menu"
+msgstr ""
+
+#: src/prefs.ts:235 src/prefs.ts:301 src/vitals.ts:419 src/vitals.ts:424
+#: src/vitals.ts:432 src/vitals.ts:437
+msgid "Automatic"
+msgstr ""
+
+#: src/prefs.ts:289 src/prefs.ts:293
+msgid "Network"
+msgstr ""
+
+#: src/prefs.ts:297
+msgid "Show the network monitor"
+msgstr ""
+
+#: src/prefs.ts:321
+msgid "Network device"
+msgstr ""
+
+#: src/prefs.ts:331
+msgid "Bytes"
+msgstr ""
+
+#: src/prefs.ts:332
+msgid "Bits"
+msgstr ""
+
+#: src/prefs.ts:334
+msgid "Measurement unit"
+msgstr ""
