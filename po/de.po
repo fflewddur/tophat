@@ -10,13 +10,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 18:04-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Benjamin Mueller <benjamin.mueler@bsstudios.org>\n"
+"Language-Team: Deutsch (Deutschland) <LL@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=(n!=1);\n"
 
 #: src/cpu.ts:136
 msgid "Processor usage"
@@ -140,27 +140,27 @@ msgstr ""
 
 #: src/prefs.ts:65 src/prefs.ts:69
 msgid "General"
-msgstr ""
+msgstr "Generell"
 
 #: src/prefs.ts:74
 msgid "Left edge"
-msgstr ""
+msgstr "Linke Seite"
 
 #: src/prefs.ts:75
 msgid "Left"
-msgstr ""
+msgstr "Links"
 
 #: src/prefs.ts:76
 msgid "Center"
-msgstr ""
+msgstr "Mitte"
 
 #: src/prefs.ts:77
 msgid "Right"
-msgstr ""
+msgstr "Rechts"
 
 #: src/prefs.ts:78
 msgid "Right edge"
-msgstr ""
+msgstr "Rechte Seite"
 
 #: src/prefs.ts:80
 msgid "Position in panel"
@@ -168,15 +168,15 @@ msgstr ""
 
 #: src/prefs.ts:88
 msgid "Slow"
-msgstr ""
+msgstr "Langsam"
 
 #: src/prefs.ts:89
 msgid "Medium"
-msgstr ""
+msgstr "Mittel"
 
 #: src/prefs.ts:90
 msgid "Fast"
-msgstr ""
+msgstr "Schnell"
 
 #: src/prefs.ts:91
 msgid "Refresh speed"
@@ -184,7 +184,7 @@ msgstr ""
 
 #: src/prefs.ts:99
 msgid "Use system accent color"
-msgstr ""
+msgstr "Systemakzentfarbe benutzen"
 
 #: src/prefs.ts:105
 msgid "Meter color"
@@ -204,7 +204,7 @@ msgstr ""
 
 #: src/prefs.ts:129 src/prefs.ts:133
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
 #: src/prefs.ts:137
 msgid "Show the CPU monitor"
@@ -216,7 +216,7 @@ msgstr ""
 
 #: src/prefs.ts:142 src/prefs.ts:177 src/prefs.ts:205
 msgid "Numeric value"
-msgstr ""
+msgstr "Zahl"
 
 #: src/prefs.ts:143 src/prefs.ts:178 src/prefs.ts:206
 msgid "Both meter and value"
@@ -224,11 +224,11 @@ msgstr ""
 
 #: src/prefs.ts:144 src/prefs.ts:179 src/prefs.ts:207
 msgid "Show as"
-msgstr ""
+msgstr "Zeigen als"
 
 #: src/prefs.ts:147
 msgid "Show each core"
-msgstr ""
+msgstr "Jeden Kern zeigen"
 
 #: src/prefs.ts:150
 msgid "Sort cores by usage"
@@ -240,7 +240,7 @@ msgstr ""
 
 #: src/prefs.ts:164 src/prefs.ts:168
 msgid "Memory"
-msgstr ""
+msgstr "Arbeitsspeicher"
 
 #: src/prefs.ts:172
 msgid "Show the memory monitor"
@@ -248,7 +248,7 @@ msgstr ""
 
 #: src/prefs.ts:186
 msgid "Disk"
-msgstr ""
+msgstr "Festplatte"
 
 #: src/prefs.ts:194
 msgid "Show the disk activity monitor"
@@ -256,7 +256,7 @@ msgstr ""
 
 #: src/prefs.ts:200
 msgid "Show the filesystem monitor"
-msgstr ""
+msgstr "Datensystemmonitor zeigen"
 
 #: src/prefs.ts:212
 msgid "Filesystem to monitor in topbar"
@@ -269,27 +269,27 @@ msgstr ""
 #: src/prefs.ts:235 src/prefs.ts:301 src/vitals.ts:419 src/vitals.ts:424
 #: src/vitals.ts:432 src/vitals.ts:437
 msgid "Automatic"
-msgstr ""
+msgstr "Automatisch"
 
 #: src/prefs.ts:289 src/prefs.ts:293
 msgid "Network"
-msgstr ""
+msgstr "Netzwerk"
 
 #: src/prefs.ts:297
 msgid "Show the network monitor"
-msgstr ""
+msgstr "Netzwerkmonitor zeigen"
 
 #: src/prefs.ts:321
 msgid "Network device"
 msgstr ""
 
-#: src/prefs.ts:331
+#: src/prefs.ts:331s
 msgid "Bytes"
-msgstr ""
+msgstr "Bytes"
 
 #: src/prefs.ts:332
 msgid "Bits"
-msgstr ""
+msgstr "Bits"
 
 #: src/prefs.ts:334
 msgid "Measurement unit"
