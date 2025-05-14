@@ -216,7 +216,7 @@ msgstr "Gebrauchsmeter"
 
 #: src/prefs.ts:142 src/prefs.ts:177 src/prefs.ts:205
 msgid "Numeric value"
-msgstr "Numerische Zahl"
+msgstr "Numerischer Wert"
 
 #: src/prefs.ts:143 src/prefs.ts:178 src/prefs.ts:206
 msgid "Both meter and value"
