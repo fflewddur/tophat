@@ -95,7 +95,18 @@ export default class TopHat extends Extension {
       const name = new File(`${base}${filename}/name`).readSync();
       if (name === 'coretemp') {
         // Intel CPUs
-        const prefix = new File(`${base}${filename}/temp1_label`).readSync();
+        let f = new File(`${base}${filename}/temp1_label`);
+        if (!f.exists()) {
+          // To support Intel Core systems pre-Sandybridge
+          f = new File(`${base}${filename}/temp2_label`);
+        }
+        if (!f.exists()) {
+          console.error(`[TopHat] Found coretemp but no sensor labels`);
+          return;
+        }
+        const prefix = f.readSync();
+
+        // const prefix = new File(`${base}${filename}/temp1_label`)
         let id = 0;
         if (prefix) {
           const m = prefix.match(/Package id\s*(\d+)/);
@@ -103,26 +114,41 @@ export default class TopHat extends Extension {
             id = parseInt(m[1]);
           }
         }
-        const inputPath = `${base}${filename}/temp1_input`;
+        let inputPath = `${base}${filename}/temp1_input`;
         if (new File(inputPath).exists()) {
           tempMonitors.set(id, inputPath);
+        } else {
+          // To support Intel Core systems pre-Sandybridge
+          inputPath = `${base}${filename}/temp2_input`;
+          if (new File(inputPath).exists()) {
+            tempMonitors.set(id, inputPath);
+          } else {
+            console.error(`[TopHat] Found coretemp but no sensor inputs`);
+            return;
+          }
         }
       } else if (name === 'k10temp') {
         // AMD CPUs
         // temp2 is Tdie, temp1 is Tctl
         let inputPath = `${base}${filename}/temp2_input`;
-        const f = new File(inputPath);
-        if (!f.exists()) {
+        if (!new File(inputPath).exists()) {
           inputPath = `${base}${filename}/temp1_input`;
+          if (!new File(inputPath).exists()) {
+            console.error(`[TopHat] Found k10temp but no sensor inputs`);
+            return;
+          }
         }
         tempMonitors.set(0, inputPath);
       } else if (name === 'zenpower') {
         // AMD CPUs w/ alternate kernel driver
         // temp1 is Tdie, temp2 is Tctl
         let inputPath = `${base}${filename}/temp1_input`;
-        const f = new File(inputPath);
-        if (!f.exists()) {
+        if (!new File(inputPath).exists()) {
           inputPath = `${base}${filename}/temp2_input`;
+          if (!new File(inputPath).exists()) {
+            console.error(`[TopHat] Found zenpower but no sensor inputs`);
+            return;
+          }
         }
         tempMonitors.set(0, inputPath);
       }
