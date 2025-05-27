@@ -5,6 +5,7 @@ based on [Keep a Changelog].
 
 ## TopHat vNext - Unreleased
 
+- Fixed temperature sensor detection on older Intel Core CPUs
 - Fixed disk monitor problem with sshfs mounts
 - Added German translation (from [theinfamousben](https://github.com/theinfamousben))
 
