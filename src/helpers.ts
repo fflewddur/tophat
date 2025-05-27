@@ -140,30 +140,36 @@ export async function readFileSystems(): Promise<FSUsage[]> {
         Gio.SubprocessFlags.STDOUT_PIPE
       );
       proc.communicate_utf8_async(null, null).then(([stdout]) => {
-        const output = stdout as unknown as string;
-        const lines = output.split('\n');
-        for (const line of lines) {
-          const m = line.match(RE_DF_IS_DISK);
-          if (m) {
-            const details = m[2].match(RE_DF_DISK_USAGE);
-            if (details) {
-              const dev = m[1];
-              const cap = parseInt(details[1]) * 1024;
-              const used = parseInt(details[2]) * 1024;
-              const mount = details[5];
-              let fileSystem = new FSUsage(dev, cap, used, mount);
-              if (fileSystems.has(dev)) {
-                const old = fileSystems.get(dev);
-                if (old && old.mount.length < mount.length) {
-                  // Only report one mount per device; use the shortest file path
-                  fileSystem = old;
+        // Try to process the output even if the exit status != 0
+        if (stdout) {
+          const output = stdout as unknown as string;
+          const lines = output.split('\n');
+          for (const line of lines) {
+            const m = line.match(RE_DF_IS_DISK);
+            if (m) {
+              const details = m[2].match(RE_DF_DISK_USAGE);
+              if (details) {
+                const dev = m[1];
+                const cap = parseInt(details[1]) * 1024;
+                const used = parseInt(details[2]) * 1024;
+                const mount = details[5];
+                let fileSystem = new FSUsage(dev, cap, used, mount);
+                if (fileSystems.has(dev)) {
+                  const old = fileSystems.get(dev);
+                  if (old && old.mount.length < mount.length) {
+                    // Only report one mount per device; use the shortest file path
+                    fileSystem = old;
+                  }
                 }
+                fileSystems.set(dev, fileSystem);
               }
-              fileSystems.set(dev, fileSystem);
             }
           }
-
           resolve(Array.from(fileSystems.values()));
+          return;
+        } else {
+          console.warn('[TopHat] Could not run df -P: ');
+          reject('Could not run df -P');
           return;
         }
       });

@@ -5,6 +5,7 @@ based on [Keep a Changelog].
 
 ## TopHat vNext - Unreleased
 
+- Fixed disk monitor problem with sshfs mounts
 - Added German translation (from [theinfamousben](https://github.com/theinfamousben))
 
 ## TopHat 21 - February 23, 2025
