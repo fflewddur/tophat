@@ -140,7 +140,8 @@ export async function readFileSystems(): Promise<FSUsage[]> {
         Gio.SubprocessFlags.STDOUT_PIPE
       );
       proc.communicate_utf8_async(null, null).then(([stdout]) => {
-        if (proc.get_successful()) {
+        // Try to process the output even if the exit status != 0
+        if (stdout) {
           const output = stdout as unknown as string;
           const lines = output.split('\n');
           for (const line of lines) {

@@ -92,6 +92,7 @@ export default class TopHat extends Extension {
     const base = '/sys/class/hwmon/';
     const hwmon = new File(base);
     hwmon.listSync().forEach((filename) => {
+      // TODO: Add unit tests for each known temperature sensor configuration
       const name = new File(`${base}${filename}/name`).readSync();
       if (name === 'coretemp') {
         // Intel CPUs
