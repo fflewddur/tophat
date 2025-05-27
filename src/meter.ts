@@ -33,7 +33,7 @@ export const TopHatMeter = GObject.registerClass(
   class TopHatMeter extends St.BoxLayout {
     private bars: Array<St.Widget>;
     private barUsage: Array<number>;
-    private orientation: Orientation;
+    private meterOrientation;
     private scaleFactor = 1;
     private color: Cogl.Color;
     private barWidth: number; // in pixels
@@ -47,7 +47,7 @@ export const TopHatMeter = GObject.registerClass(
       });
       this.bars = new Array<St.Widget>(0);
       this.barUsage = new Array<number>(0);
-      this.orientation = Orientation.Horizontal;
+      this.meterOrientation = Orientation.Horizontal;
       this.color = new Cogl.Color();
       this.barWidth = 8;
 
@@ -120,7 +120,7 @@ export const TopHatMeter = GObject.registerClass(
     }
 
     public setOrientation(o: Orientation) {
-      this.orientation = o;
+      this.meterOrientation = o;
     }
 
     public setBarSizes(n: number[]) {

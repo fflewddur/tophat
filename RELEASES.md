@@ -3,6 +3,10 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## TopHat vNext - Unreleased
+
+- Added German translation (from [theinfamousben](https://github.com/theinfamousben))
+
 ## TopHat 21 - February 23, 2025
 
 - Added support for GNOME 48
