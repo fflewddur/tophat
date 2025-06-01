@@ -115,39 +115,39 @@ export const MemMonitor = GObject.registerClass(
     private buildMenu() {
       let label = new St.Label({
         text: _('Memory usage'),
-        style_class: 'menu-header',
+        style_class: 'tophat-menu-header',
       });
       this.addMenuRow(label, 0, 2, 1);
 
       label = new St.Label({
         text: _('RAM used:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuMemUsage.text = MeterNoVal;
-      this.menuMemUsage.add_style_class_name('menu-value');
+      this.menuMemUsage.add_style_class_name('tophat-menu-value');
       this.addMenuRow(this.menuMemUsage, 1, 1, 1);
       this.addMenuRow(this.menuMemCap, 0, 2, 1);
       this.menuMemSize.text = _(`size ${MeterNoVal}`);
       this.menuMemSize.add_style_class_name(
-        'menu-details align-right menu-section-end'
+        'tophat-menu-details align-right tophat-menu-section-end'
       );
       this.addMenuRow(this.menuMemSize, 0, 2, 1);
 
       label = new St.Label({
         text: _('Swap used:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuSwapUsage.text = MeterNoVal;
-      this.menuSwapUsage.add_style_class_name('menu-value');
+      this.menuSwapUsage.add_style_class_name('tophat-menu-value');
       this.addMenuRow(this.menuSwapUsage, 1, 1, 1);
 
       this.addMenuRow(this.menuSwapCap, 0, 2, 1);
 
       this.menuSwapSize.text = _(`size ${MeterNoVal}`);
       this.menuSwapSize.add_style_class_name(
-        'menu-details align-right menu-section-end'
+        'tophat-menu-details align-right tophat-menu-section-end'
       );
       this.addMenuRow(this.menuSwapSize, 0, 2, 1);
 
@@ -157,16 +157,18 @@ export const MemMonitor = GObject.registerClass(
 
       label = new St.Label({
         text: _('Top processes'),
-        style_class: 'menu-header',
+        style_class: 'tophat-menu-header',
       });
       this.addMenuRow(label, 0, 2, 1);
       for (let i = 0; i < NumTopProcs; i++) {
-        this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
+        this.topProcs[i].cmd.set_style_class_name('tophat-menu-cmd-name');
         this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
         this.topProcs[i].setTooltip();
-        this.topProcs[i].usage.set_style_class_name('menu-cmd-usage');
+        this.topProcs[i].usage.set_style_class_name('tophat-menu-cmd-usage');
         if (i === NumTopProcs - 1) {
-          this.topProcs[i].usage.add_style_class_name('menu-section-end');
+          this.topProcs[i].usage.add_style_class_name(
+            'tophat-menu-section-end'
+          );
         }
         this.addMenuRow(this.topProcs[i].usage, 1, 1, 1);
       }

@@ -208,7 +208,7 @@ export const TopHatMonitor = GObject.registerClass(
 
       const statusMenu = new PopupMenu.PopupMenuSection();
       const grid = new St.Widget({
-        style_class: 'menu-grid',
+        style_class: 'tophat-menu-grid',
         layout_manager: new Clutter.GridLayout({
           orientation: Clutter.Orientation.VERTICAL,
         }),

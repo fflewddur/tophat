@@ -153,44 +153,48 @@ export const NetMonitor = GObject.registerClass(
     private buildMenu() {
       let label = new St.Label({
         text: _('Network activity'),
-        style_class: 'menu-header',
+        style_class: 'tophat-menu-header',
       });
       this.addMenuRow(label, 0, 2, 1);
 
       label = new St.Label({
         text: _('Sending:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuNetUp.text = MeterNoVal;
-      this.menuNetUp.add_style_class_name('menu-value');
+      this.menuNetUp.add_style_class_name('tophat-menu-value');
       this.addMenuRow(this.menuNetUp, 1, 1, 1);
 
       label = new St.Label({
         text: _('Receiving:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuNetDown.text = MeterNoVal;
-      this.menuNetDown.add_style_class_name('menu-value menu-section-end');
+      this.menuNetDown.add_style_class_name(
+        'tophat-menu-value tophat-menu-section-end'
+      );
       this.addMenuRow(this.menuNetDown, 1, 1, 1);
 
       label = new St.Label({
         text: _('Total sent:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuNetUpTotal.text = MeterNoVal;
-      this.menuNetUpTotal.add_style_class_name('menu-value');
+      this.menuNetUpTotal.add_style_class_name('tophat-menu-value');
       this.addMenuRow(this.menuNetUpTotal, 1, 1, 1);
 
       label = new St.Label({
         text: _('Total received:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 1, 1);
       this.menuNetDownTotal.text = MeterNoVal;
-      this.menuNetDownTotal.add_style_class_name('menu-value menu-section-end');
+      this.menuNetDownTotal.add_style_class_name(
+        'tophat-menu-value tophat-menu-section-end'
+      );
       this.addMenuRow(this.menuNetDownTotal, 1, 1, 1);
 
       if (this.historyChart) {

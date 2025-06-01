@@ -7,6 +7,7 @@ based on [Keep a Changelog].
 
 - Fixed temperature sensor detection on older Intel Core CPUs
 - Fixed disk monitor problem with sshfs mounts
+- Fixed potential CSS namespace clashes
 - Added German translation (from [theinfamousben](https://github.com/theinfamousben))
 
 ## TopHat 21 - February 23, 2025

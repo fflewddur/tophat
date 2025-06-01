@@ -31,7 +31,7 @@ export const CapacityBar = GObject.registerClass(
 
     constructor() {
       super({
-        style_class: 'cap-bar slider',
+        style_class: 'tophat-cap-bar slider',
         can_focus: false,
         reactive: false,
         track_hover: true,

@@ -65,11 +65,11 @@ export const HistoryChart = GObject.registerClass(
           x_expand: true,
           y_expand: false,
           y_align: Clutter.ActorAlign.END,
-          style_class: 'chart-bar',
+          style_class: 'tophat-chart-bar',
           height: 0,
         });
       }
-      this.chart = new St.BoxLayout({ style_class: 'chart' });
+      this.chart = new St.BoxLayout({ style_class: 'tophat-chart' });
       if (this.chartStyle === HistoryStyle.DUAL) {
         this.barsAlt = new Array<St.Widget>(MaxHistoryLen);
         for (let i = 0; i < MaxHistoryLen; i++) {
@@ -78,12 +78,12 @@ export const HistoryChart = GObject.registerClass(
             x_expand: true,
             y_expand: false,
             y_align: Clutter.ActorAlign.START,
-            style_class: 'chart-bar chart-bar-alt',
+            style_class: 'tophat-chart-bar tophat-chart-bar-alt',
             height: 0,
           });
         }
         this.chartAlt = new St.BoxLayout({
-          style_class: 'chart chart-stacked-bottom',
+          style_class: 'tophat-chart tophat-chart-stacked-bottom',
         });
       } else {
         this.barsAlt = null;
@@ -207,7 +207,7 @@ export const HistoryChart = GObject.registerClass(
         for (const bar of this.barsAlt) {
           this.chartAlt.add_child(bar);
         }
-        this.chart.add_style_class_name('chart-stacked-top');
+        this.chart.add_style_class_name('tophat-chart-stacked-top');
       }
 
       const vbox = new St.BoxLayout({ vertical: true, y_expand: true });
@@ -216,26 +216,26 @@ export const HistoryChart = GObject.registerClass(
       this.yLabelTop.text = '100%';
       this.yLabelTop.y_align = Clutter.ActorAlign.START;
       this.yLabelTop.y_expand = true;
-      this.yLabelTop.add_style_class_name('chart-label');
+      this.yLabelTop.add_style_class_name('tophat-chart-label');
       vbox.add_child(this.yLabelTop);
 
       this.yLabelMiddle.text = '50%';
       this.yLabelMiddle.y_align = Clutter.ActorAlign.CENTER;
       this.yLabelMiddle.y_expand = true;
-      this.yLabelMiddle.add_style_class_name('chart-label');
+      this.yLabelMiddle.add_style_class_name('tophat-chart-label');
       vbox.add_child(this.yLabelMiddle);
 
       this.yLabelBottom.text = '0%';
       this.yLabelBottom.y_align = Clutter.ActorAlign.END;
       this.yLabelBottom.y_expand = true;
-      this.yLabelBottom.add_style_class_name('chart-label');
+      this.yLabelBottom.add_style_class_name('tophat-chart-label');
       vbox.add_child(this.yLabelBottom);
 
-      this.xLabelThen.add_style_class_name('chart-label-then');
+      this.xLabelThen.add_style_class_name('tophat-chart-label-then');
       this.lm.attach(this.xLabelThen, 0, 2, 1, 1);
 
       this.xLabelNow.text = _('now');
-      this.xLabelNow.add_style_class_name('chart-label-now');
+      this.xLabelNow.add_style_class_name('tophat-chart-label-now');
       this.lm.attach(this.xLabelNow, 1, 2, 1, 1);
 
       const label = new St.Label({ text: '' });

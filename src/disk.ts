@@ -46,15 +46,15 @@ class FSWidgets {
   constructor(mount: string) {
     this.mount = new St.Label({
       text: mount,
-      style_class: 'menu-label',
+      style_class: 'tophat-menu-label',
     });
     this.usage = new St.Label({
-      style_class: 'menu-value',
+      style_class: 'tophat-menu-value',
       x_expand: true,
     });
     this.capacity = new CapacityBar();
     this.size = new St.Label({
-      style_class: 'menu-details align-right menu-section-end',
+      style_class: 'tophat-menu-details align-right tophat-menu-section-end',
     });
   }
 }
@@ -164,45 +164,47 @@ export const DiskMonitor = GObject.registerClass(
 
       let label = new St.Label({
         text: _('Disk activity'),
-        style_class: 'menu-header',
+        style_class: 'tophat-menu-header',
       });
       this.addMenuRow(label, 0, 3, 1);
 
       label = new St.Label({
         text: _('Reading:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 2, 1);
       this.menuDiskReads.text = MeterNoVal;
-      this.menuDiskReads.add_style_class_name('menu-value');
+      this.menuDiskReads.add_style_class_name('tophat-menu-value');
       this.addMenuRow(this.menuDiskReads, 2, 1, 1);
 
       label = new St.Label({
         text: _('Writing:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 2, 1);
       this.menuDiskWrites.text = MeterNoVal;
-      this.menuDiskWrites.add_style_class_name('menu-value menu-section-end');
+      this.menuDiskWrites.add_style_class_name(
+        'tophat-menu-value tophat-menu-section-end'
+      );
       this.addMenuRow(this.menuDiskWrites, 2, 1, 1);
 
       label = new St.Label({
         text: _('Total read:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 2, 1);
       this.menuDiskReadsTotal.text = MeterNoVal;
-      this.menuDiskReadsTotal.add_style_class_name('menu-value');
+      this.menuDiskReadsTotal.add_style_class_name('tophat-menu-value');
       this.addMenuRow(this.menuDiskReadsTotal, 2, 1, 1);
 
       label = new St.Label({
         text: _('Total written:'),
-        style_class: 'menu-label',
+        style_class: 'tophat-menu-label',
       });
       this.addMenuRow(label, 0, 2, 1);
       this.menuDiskWritesTotal.text = MeterNoVal;
       this.menuDiskWritesTotal.add_style_class_name(
-        'menu-value menu-section-end'
+        'tophat-menu-value tophat-menu-section-end'
       );
       this.addMenuRow(this.menuDiskWritesTotal, 2, 1, 1);
 
@@ -212,7 +214,7 @@ export const DiskMonitor = GObject.registerClass(
 
       label = new St.Label({
         text: _('Top processes'),
-        style_class: 'menu-header',
+        style_class: 'tophat-menu-header',
       });
       this.addMenuRow(label, 0, 3, 1);
 
@@ -220,30 +222,30 @@ export const DiskMonitor = GObject.registerClass(
       this.addMenuRow(label, 0, 1, 1);
       label = new St.Label({
         text: _('Writing'),
-        style_class: 'menu-subheader',
+        style_class: 'tophat-menu-subheader',
       });
       this.addMenuRow(label, 1, 1, 1);
       label = new St.Label({
         text: _('Reading'),
-        style_class: 'menu-subheader',
+        style_class: 'tophat-menu-subheader',
       });
       this.addMenuRow(label, 2, 1, 1);
       for (let i = 0; i < NumTopProcs; i++) {
-        this.topProcs[i].cmd.set_style_class_name('menu-cmd-name');
+        this.topProcs[i].cmd.set_style_class_name('tophat-menu-cmd-name');
         this.addMenuRow(this.topProcs[i].cmd, 0, 1, 1);
         this.topProcs[i].setTooltip();
-        this.topProcs[i].in.set_style_class_name('menu-cmd-activity');
+        this.topProcs[i].in.set_style_class_name('tophat-menu-cmd-activity');
         this.addMenuRow(this.topProcs[i].in, 1, 1, 1);
-        this.topProcs[i].out.set_style_class_name('menu-cmd-activity');
+        this.topProcs[i].out.set_style_class_name('tophat-menu-cmd-activity');
         if (i === NumTopProcs - 1) {
-          this.topProcs[i].out.add_style_class_name('menu-section-end');
+          this.topProcs[i].out.add_style_class_name('tophat-menu-section-end');
         }
         this.addMenuRow(this.topProcs[i].out, 2, 1, 1);
       }
 
       label = new St.Label({
         text: _('Filesystem usage'),
-        style_class: 'menu-header',
+        style_class: 'tophat-menu-header',
       });
       this.addMenuRow(label, 0, 3, 1);
 

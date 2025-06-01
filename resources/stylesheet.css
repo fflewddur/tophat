@@ -66,23 +66,22 @@
   background-color: rgba(10, 10, 10, 0.3);
 }
 
-.meter-bar {
+.tophat-meter-bar {
   margin: 0 1px 0 0;
   padding: 0;
-  /* border-radius: 2px; */
 }
 
-.meter-bar:last-child {
+.tophat-meter-bar:last-child {
   margin-right: 0;
 }
 
-.menu-grid {
+.tophat-menu-grid {
   margin: 0.25em 0.25em 1em 0.25em;
   padding: 0;
   min-width: 18em;
 }
 
-.menu-header {
+.tophat-menu-header {
   text-align: center;
   font-weight: 600;
   font-size: 0.9em;
@@ -91,102 +90,102 @@
   color: #bbb;
 }
 
-.menu-subheader {
+.tophat-menu-subheader {
   text-align: center;
   font-size: 0.8em;
 }
 
-.menu-label {
+.tophat-menu-label {
   font-size: 1em;
   padding: 0.25em 0.5em;
   text-align: left;
 }
 
-.menu-value {
+.tophat-menu-value {
   font-size: 0.9em;
   font-weight: bold;
   padding: 0.25em 0.5em;
   text-align: right;
 }
 
-.menu-details {
+.tophat-menu-details {
   font-size: 0.8em;
   padding: 0.25em 0.5em;
 }
 
-.menu-section-end {
+.tophat-menu-section-end {
   margin-bottom: 1em;
 }
 
-.menu-uptime {
+.tophat-menu-uptime {
   font-size: 0.8em;
   text-align: center;
 }
 
-.menu-cmd-name {
+.tophat-menu-cmd-name {
   font-size: 0.8em;
   text-align: left;
   padding: 0.25em 0.25em 0.25em 0.5em;
   width: 160px;
 }
 
-.menu-cmd-usage {
+.tophat-menu-cmd-usage {
   font-size: 0.8em;
   text-align: right;
   padding: 0.25em 0.5em 0.25em 0;
 }
 
-.menu-cmd-activity {
+.tophat-menu-cmd-activity {
   font-size: 0.8em;
   text-align: right;
   padding: 0.25em 0.5em 0.25em 0;
   width: 5em;
 }
 
-.chart {
+.tophat-chart {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   margin: 12px 6px;
   height: 6em;
 }
 
-.chart-stacked-top {
+.tophat-chart-stacked-top {
   margin-bottom: 1px;
   height: 3em;
 }
 
-.chart-stacked-bottom {
+.tophat-chart-stacked-bottom {
   margin-top: 0;
   height: 3em;
 }
 
-.chart-label {
+.tophat-chart-label {
   font-size: 0.8em;
   padding: 12px 0;
   color: #ccc;
 }
 
-.chart-label-then {
+.tophat-chart-label-then {
   font-size: 0.7em;
   color: #ccc;
   text-align: left;
   padding: 0 0.5em 1em 0.5em;
 }
 
-.chart-label-now {
+.tophat-chart-label-now {
   font-size: 0.7em;
   color: #ccc;
   text-align: right;
   padding: 0 0.5em 1em 0.5em;
 }
 
-.chart-bar {
+.tophat-chart-bar {
   min-width: 4px;
   min-height: 2px;
   margin-right: 1px;
 }
 
-.chart-bar:last-child {
+.tophat-chart-bar:last-child {
   margin-right: 0;
 }
 
@@ -202,7 +201,7 @@
   margin: 0;
 }
 
-.cap-bar {
+.tophat-cap-bar {
   margin: 5px 6px 10px 6px;
   height: 5px;
   background-color: rgba(0, 0, 0, 0.1);

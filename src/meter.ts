@@ -87,7 +87,7 @@ export const TopHatMeter = GObject.registerClass(
           y_expand: false,
           width: this.barWidth,
           height: 1 * this.scaleFactor,
-          style_class: 'meter-bar',
+          style_class: 'tophat-meter-bar',
           name: 'TopHatMeterBar',
         });
         setBarColor(this.bars[i], this.color);
@@ -192,8 +192,8 @@ export const TopHatMeter = GObject.registerClass(
         b.set_width(this.barWidth);
       }
       for (let i = 0; i < this.bars.length; i++) {
-        this.bars[i].remove_style_class_name('meter-bar');
-        this.bars[i].set_style_class_name('meter-bar');
+        this.bars[i].remove_style_class_name('tophat-meter-bar');
+        this.bars[i].set_style_class_name('tophat-meter-bar');
       }
     }
 
