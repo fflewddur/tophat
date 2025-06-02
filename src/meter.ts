@@ -61,7 +61,7 @@ export const TopHatMeter = GObject.registerClass(
         }
       });
       // themeContext.connect('changed', (source: St.ThemeContext) => {
-      //   console.log('themeContext changed');
+      //   console.debug('themeContext changed');
       // });
 
       this.connect('notify::height', () => {
@@ -132,6 +132,11 @@ export const TopHatMeter = GObject.registerClass(
       const meterHeight = this.get_height();
       const duration = adjustAnimationTime(AnimationDuration);
       for (let i = 0; i < n.length; i++) {
+        if (n[i] < 0) {
+          console.debug(`setBarSizes: n[${i}] < 0: ${n[i]}`);
+        } else if (n[i] > 1) {
+          console.debug(`setBarSizes: n[${i}] > 1: ${n[i]}`);
+        }
         const height = Math.ceil(meterHeight * n[i]);
         const curHeight = this.bars[i].height;
         const delta = Math.abs(height - curHeight);

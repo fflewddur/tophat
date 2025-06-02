@@ -44,6 +44,11 @@ export const CapacityBar = GObject.registerClass(
     }
 
     public setUsage(usage: number) {
+      if (usage < 0) {
+        console.debug('setUsage: usage < 0: ' + usage);
+      } else if (usage > 1) {
+        console.debug('setUsage: usage > 1: ' + usage);
+      }
       this.remove_transition('usage');
       const duration = adjustAnimationTime(AnimationDuration);
       if (duration > 0) {

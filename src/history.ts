@@ -154,8 +154,17 @@ export const HistoryChart = GObject.registerClass(
 
     public update(usage: IHistory[]) {
       for (let i = 0; i < this.bars.length; i++) {
-        this.bars[i].height =
-          this.chartHeight * usage[usage.length - i - 1].val();
+        const u = usage[usage.length - i - 1].val();
+        if (u < 0) {
+          console.log(
+            `update(usage): usage[${usage.length - i - 1}] < 0: ${u}`
+          );
+        } else if (u > 1) {
+          console.log(
+            `update(usage): usage[${usage.length - i - 1} > 1: ${u}]`
+          );
+        }
+        this.bars[i].height = this.chartHeight * u;
       }
       this.priorActivity = usage;
     }
@@ -166,6 +175,26 @@ export const HistoryChart = GObject.registerClass(
         return;
       }
       for (let i = 0; i < this.bars.length; i++) {
+        const u = usage[usage.length - i - 1].val() / max;
+        const uAlt = usage[usage.length - i - 1].valAlt() / max;
+        if (u < 0) {
+          console.log(
+            `updateAlt(usage, max): usage[${usage.length - i - 1}] < 0: ${u}`
+          );
+        } else if (u > 1) {
+          console.log(
+            `updateAlt(usage, max): usage[${usage.length - i - 1} > 1: ${u}]`
+          );
+        }
+        if (uAlt < 0) {
+          console.log(
+            `updateAlt(usage, max): usage[${usage.length - i - 1}] < 0: ${uAlt}`
+          );
+        } else if (u > 1) {
+          console.log(
+            `updateAlt(usage, max): usage[${usage.length - i - 1} > 1: ${uAlt}]`
+          );
+        }
         let height = 0;
         let heightAlt = 0;
         if (max) {
