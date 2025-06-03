@@ -156,15 +156,15 @@ export const HistoryChart = GObject.registerClass(
       for (let i = 0; i < this.bars.length; i++) {
         const u = usage[usage.length - i - 1].val();
         if (u < 0) {
-          console.log(
-            `update(usage): usage[${usage.length - i - 1}] < 0: ${u}`
-          );
+          console.warn(`update(): usage[${usage.length - i - 1}] < 0: ${u}`);
         } else if (u > 1) {
-          console.log(
-            `update(usage): usage[${usage.length - i - 1} > 1: ${u}]`
-          );
+          console.warn(`update(): usage[${usage.length - i - 1} > 1: ${u}]`);
         }
-        this.bars[i].height = this.chartHeight * u;
+        const h = this.chartHeight * u;
+        if (Number.isNaN(h)) {
+          console.warn(`update(): height is NaN`);
+        }
+        this.bars[i].height = h;
       }
       this.priorActivity = usage;
     }
@@ -175,33 +175,37 @@ export const HistoryChart = GObject.registerClass(
         return;
       }
       for (let i = 0; i < this.bars.length; i++) {
-        const u = usage[usage.length - i - 1].val() / max;
-        const uAlt = usage[usage.length - i - 1].valAlt() / max;
+        let u = usage[usage.length - i - 1].val() / max;
+        let uAlt = usage[usage.length - i - 1].valAlt() / max;
         if (u < 0) {
-          console.log(
-            `updateAlt(usage, max): usage[${usage.length - i - 1}] < 0: ${u}`
-          );
+          console.warn(`updateAlt(): usage[${usage.length - i - 1}] < 0: ${u}`);
+          u = 0;
         } else if (u > 1) {
-          console.log(
-            `updateAlt(usage, max): usage[${usage.length - i - 1} > 1: ${u}]`
-          );
+          console.warn(`updateAlt(): usage[${usage.length - i - 1} > 1: ${u}]`);
+          u = 1;
         }
         if (uAlt < 0) {
-          console.log(
-            `updateAlt(usage, max): usage[${usage.length - i - 1}] < 0: ${uAlt}`
+          console.warn(
+            `updateAlt(): usage[${usage.length - i - 1}] < 0: ${uAlt}`
           );
-        } else if (u > 1) {
-          console.log(
-            `updateAlt(usage, max): usage[${usage.length - i - 1} > 1: ${uAlt}]`
+          uAlt = 0;
+        } else if (uAlt > 1) {
+          console.warn(
+            `updateAlt(): usage[${usage.length - i - 1} > 1: ${uAlt}]`
           );
+          uAlt = 1;
         }
         let height = 0;
         let heightAlt = 0;
         if (max) {
-          height =
-            this.chartHeight * (usage[usage.length - i - 1].valAlt() / max);
-          heightAlt =
-            this.chartHeightAlt * (usage[usage.length - i - 1].val() / max);
+          height = this.chartHeight * uAlt;
+          heightAlt = this.chartHeightAlt * u;
+        }
+        if (Number.isNaN(height)) {
+          console.warn(`update(): height is NaN`);
+        }
+        if (Number.isNaN(heightAlt)) {
+          console.warn(`update(): heightAlt is NaN`);
         }
         this.bars[i].height = height;
         this.barsAlt[i].height = heightAlt;

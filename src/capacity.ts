@@ -44,10 +44,15 @@ export const CapacityBar = GObject.registerClass(
     }
 
     public setUsage(usage: number) {
-      if (usage < 0) {
-        console.debug('setUsage: usage < 0: ' + usage);
+      if (Number.isNaN(usage)) {
+        console.warn('setUsage(): usage is NaN');
+        return;
+      } else if (usage < 0) {
+        console.warn('setUsage(): usage < 0: ' + usage);
+        usage = 0;
       } else if (usage > 1) {
-        console.debug('setUsage: usage > 1: ' + usage);
+        console.warn('setUsage: usage > 1: ' + usage);
+        usage = 1;
       }
       this.remove_transition('usage');
       const duration = adjustAnimationTime(AnimationDuration);

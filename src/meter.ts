@@ -132,12 +132,22 @@ export const TopHatMeter = GObject.registerClass(
       const meterHeight = this.get_height();
       const duration = adjustAnimationTime(AnimationDuration);
       for (let i = 0; i < n.length; i++) {
+        if (Number.isNaN(n[i])) {
+          console.warn(`setBarSizes(): n[${i}] is NaN`);
+          return;
+        }
         if (n[i] < 0) {
-          console.debug(`setBarSizes: n[${i}] < 0: ${n[i]}`);
+          console.warn(`setBarSizes(): n[${i}] < 0: ${n[i]}`);
+          n[i] = 0;
         } else if (n[i] > 1) {
-          console.debug(`setBarSizes: n[${i}] > 1: ${n[i]}`);
+          console.warn(`setBarSizes(): n[${i}] > 1: ${n[i]}`);
+          n[i] = 1;
         }
         const height = Math.ceil(meterHeight * n[i]);
+        if (Number.isNaN(height)) {
+          console.warn(`setBarSizes(): height is NaN`);
+          return;
+        }
         const curHeight = this.bars[i].height;
         const delta = Math.abs(height - curHeight);
         this.bars[i].remove_transition('scaleHeight');
