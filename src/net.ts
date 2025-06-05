@@ -89,15 +89,19 @@ export const NetMonitor = GObject.registerClass(
         Gio.SettingsBindFlags.GET
       );
       this.usageUnit = this.gsettings.get_string('network-usage-unit');
-      this.gsettings.connect('changed::network-usage-unit', (settings) => {
-        this.usageUnit = settings.get_string('network-usage-unit');
-        let s = bytesToHumanString(0, this.usageUnit) + '/s';
-        this.valueNetUp.text = s;
-        this.menuNetUp.text = s;
-        s = bytesToHumanString(0, this.usageUnit) + '/s';
-        this.valueNetDown.text = s;
-        this.menuNetDown.text = s;
-      });
+      const id = this.gsettings.connect(
+        'changed::network-usage-unit',
+        (settings) => {
+          this.usageUnit = settings.get_string('network-usage-unit');
+          let s = bytesToHumanString(0, this.usageUnit) + '/s';
+          this.valueNetUp.text = s;
+          this.menuNetUp.text = s;
+          s = bytesToHumanString(0, this.usageUnit) + '/s';
+          this.valueNetDown.text = s;
+          this.menuNetDown.text = s;
+        }
+      );
+      this.settingsSignals.push(id);
       this.buildMenu();
       this.addMenuButtons();
       this.updateColor();

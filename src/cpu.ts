@@ -86,27 +86,34 @@ export const CpuMonitor = GObject.registerClass(
         Gio.SettingsBindFlags.GET
       );
       this.showCores = this.gsettings.get_boolean('cpu-show-cores');
-      this.gsettings.connect('changed::cpu-show-cores', (settings) => {
+      let id = this.gsettings.connect('changed::cpu-show-cores', (settings) => {
         this.showCores = settings.get_boolean('cpu-show-cores');
         if (!this.showCores) {
           this.meter.setNumBars(1);
         }
       });
+      this.settingsSignals.push(id);
       this.sortCores = this.gsettings.get_boolean('cpu-sort-cores');
-      this.gsettings.connect('changed::cpu-sort-cores', (settings) => {
+      id = this.gsettings.connect('changed::cpu-sort-cores', (settings) => {
         this.sortCores = settings.get_boolean('cpu-sort-cores');
       });
+      this.settingsSignals.push(id);
       this.normalizeProcUsage = this.gsettings.get_boolean(
         'cpu-normalize-proc-use'
       );
-      this.gsettings.connect('changed::cpu-normalize-proc-use', (settings) => {
-        this.normalizeProcUsage = settings.get_boolean(
-          'cpu-normalize-proc-use'
-        );
-      });
-      this.gsettings.connect('changed::cpu-display', () => {
+      id = this.gsettings.connect(
+        'changed::cpu-normalize-proc-use',
+        (settings) => {
+          this.normalizeProcUsage = settings.get_boolean(
+            'cpu-normalize-proc-use'
+          );
+        }
+      );
+      this.settingsSignals.push(id);
+      id = this.gsettings.connect('changed::cpu-display', () => {
         this.updateDisplayType();
       });
+      this.settingsSignals.push(id);
 
       this.displayType = this.updateDisplayType();
       this.buildMenu();

@@ -125,18 +125,22 @@ export const DiskMonitor = GObject.registerClass(
       }
 
       this.updateVisibility(gsettings);
-      this.gsettings.connect('changed::show-disk', (settings) => {
+      let id = this.gsettings.connect('changed::show-disk', (settings) => {
         this.updateVisibility(settings);
       });
-      this.gsettings.connect('changed::show-fs', (settings) => {
+      this.settingsSignals.push(id);
+      id = this.gsettings.connect('changed::show-fs', (settings) => {
         this.updateVisibility(settings);
       });
-      this.gsettings.connect('changed::fs-display', (settings) => {
+      this.settingsSignals.push(id);
+      id = this.gsettings.connect('changed::fs-display', (settings) => {
         this.updateVisibility(settings);
       });
-      this.gsettings.connect('changed::mount-to-monitor', () => {
+      this.settingsSignals.push(id);
+      id = this.gsettings.connect('changed::mount-to-monitor', () => {
         this.vitals?.readFileSystemUsage();
       });
+      this.settingsSignals.push(id);
 
       this.buildMenu();
       this.addMenuButtons();
