@@ -34,10 +34,12 @@ const RE_LAUNCHER = /[^\s]*(python\d*|gjs)\b[^/]*(\/.*)$/;
 export interface IActivity {
   val(): number;
   valAlt(): number;
+  copy(): IActivity;
 }
 
 export interface IHistory {
   val(): number;
+  copy(): IHistory;
 }
 
 export const Vitals = GObject.registerClass(
@@ -1754,6 +1756,15 @@ class CpuUsage implements IHistory {
     return this.aggregate;
   }
 
+  public copy() {
+    const c = new CpuUsage(this.core.length);
+    c.aggregate = this.aggregate;
+    for (const val of this.core) {
+      c.core.push(val);
+    }
+    return c;
+  }
+
   public toString(): string {
     let s = `aggregate: ${this.aggregate.toFixed(2)}`;
     this.core.forEach((usage, index) => {
@@ -1795,6 +1806,13 @@ class MemUsage implements IHistory {
 
   public val() {
     return this.usedMem;
+  }
+
+  public copy() {
+    const c = new MemUsage();
+    c.usedMem = this.usedMem;
+    c.usedSwap = this.usedSwap;
+    return c;
   }
 
   public toString(): string {
@@ -1870,6 +1888,13 @@ class NetActivity implements IActivity {
   public valAlt() {
     return this.bytesSent;
   }
+
+  public copy() {
+    const c = new NetActivity();
+    c.bytesRecv = this.bytesRecv;
+    c.bytesSent = this.bytesSent;
+    return c;
+  }
 }
 
 class DiskState {
@@ -1940,6 +1965,13 @@ class DiskActivity implements IActivity {
 
   public valAlt() {
     return this.bytesRead;
+  }
+
+  public copy() {
+    const c = new DiskActivity();
+    c.bytesRead = this.bytesRead;
+    c.bytesWritten = this.bytesWritten;
+    return c;
   }
 }
 

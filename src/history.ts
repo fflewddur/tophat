@@ -166,7 +166,11 @@ export const HistoryChart = GObject.registerClass(
         }
         this.bars[i].height = h;
       }
-      this.priorActivity = usage;
+      const priorActivity = new Array<IHistory>();
+      for (const u of usage) {
+        priorActivity.push(u.copy());
+      }
+      this.priorActivity = priorActivity;
     }
 
     public updateAlt(usage: IActivity[], max: number) {
@@ -186,12 +190,12 @@ export const HistoryChart = GObject.registerClass(
         }
         if (uAlt < 0) {
           console.warn(
-            `updateAlt(): usage[${usage.length - i - 1}] < 0: ${uAlt}`
+            `updateAlt(): usageAlt[${usage.length - i - 1}] < 0: ${uAlt}`
           );
           uAlt = 0;
         } else if (uAlt > 1) {
           console.warn(
-            `updateAlt(): usage[${usage.length - i - 1} > 1: ${uAlt}]`
+            `updateAlt(): usageAlt[${usage.length - i - 1} > 1: ${uAlt}]`
           );
           uAlt = 1;
         }
@@ -210,7 +214,11 @@ export const HistoryChart = GObject.registerClass(
         this.bars[i].height = height;
         this.barsAlt[i].height = heightAlt;
       }
-      this.priorActivityAlt = usage;
+      const priorActivityAlt = new Array<IActivity>();
+      for (const u of usage) {
+        priorActivityAlt.push(u.copy());
+      }
+      this.priorActivityAlt = priorActivityAlt;
       this.priorMax = max;
     }
 
