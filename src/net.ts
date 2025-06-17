@@ -81,15 +81,8 @@ export const NetMonitor = GObject.registerClass(
       this.menuNetUpTotal = new St.Label();
       this.menuNetDownTotal = new St.Label();
       this.historyChart = new HistoryChart(HistoryStyle.DUAL);
-
-      this.gsettings.bind(
-        'show-net',
-        this,
-        'visible',
-        Gio.SettingsBindFlags.GET
-      );
       this.usageUnit = this.gsettings.get_string('network-usage-unit');
-      const id = this.gsettings.connect(
+      let id = this.gsettings.connect(
         'changed::network-usage-unit',
         (settings) => {
           this.usageUnit = settings.get_string('network-usage-unit');
@@ -99,6 +92,13 @@ export const NetMonitor = GObject.registerClass(
           s = bytesToHumanString(0, this.usageUnit) + '/s';
           this.valueNetDown.text = s;
           this.menuNetDown.text = s;
+        }
+      );
+      this.settingsSignals.push(id);
+      id = this.gsettings.connect(
+        'changed::show-net',
+        (settings: Gio.Settings) => {
+          this.visible = settings.get_boolean('show-net');
         }
       );
       this.settingsSignals.push(id);

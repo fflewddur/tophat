@@ -79,12 +79,6 @@ export const CpuMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
-      this.gsettings.bind(
-        'show-cpu',
-        this,
-        'visible',
-        Gio.SettingsBindFlags.GET
-      );
       this.showCores = this.gsettings.get_boolean('cpu-show-cores');
       let id = this.gsettings.connect('changed::cpu-show-cores', (settings) => {
         this.showCores = settings.get_boolean('cpu-show-cores');
@@ -113,6 +107,13 @@ export const CpuMonitor = GObject.registerClass(
       id = this.gsettings.connect('changed::cpu-display', () => {
         this.updateDisplayType();
       });
+      this.settingsSignals.push(id);
+      id = this.gsettings.connect(
+        'changed::show-cpu',
+        (settings: Gio.Settings) => {
+          this.visible = settings.get_boolean('show-cpu');
+        }
+      );
       this.settingsSignals.push(id);
 
       this.displayType = this.updateDisplayType();

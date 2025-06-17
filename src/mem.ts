@@ -85,11 +85,17 @@ export const MemMonitor = GObject.registerClass(
         'visible',
         Gio.SettingsBindFlags.GET
       );
-      const id = this.gsettings.connect('changed::mem-display', () => {
+      let id = this.gsettings.connect('changed::mem-display', () => {
         this.updateDisplayType();
       });
       this.settingsSignals.push(id);
-
+      id = this.gsettings.connect(
+        'changed::show-mem',
+        (settings: Gio.Settings) => {
+          this.visible = settings.get_boolean('show-mem');
+        }
+      );
+      this.settingsSignals.push(id);
       this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
