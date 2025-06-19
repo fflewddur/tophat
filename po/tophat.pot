@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-23 18:04-0800\n"
+"POT-Creation-Date: 2025-06-18 19:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,123 +18,123 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/cpu.ts:136
+#: src/cpu.ts:145
 msgid "Processor usage"
 msgstr ""
 
-#: src/cpu.ts:142
+#: src/cpu.ts:151
 msgid "Processor utilization:"
 msgstr ""
 
-#: src/cpu.ts:158
+#: src/cpu.ts:169
 msgid "Frequency:"
 msgstr ""
 
-#: src/cpu.ts:166
+#: src/cpu.ts:179
 msgid "Temperature:"
 msgstr ""
 
-#: src/cpu.ts:181 src/disk.ts:214 src/mem.ts:159
+#: src/cpu.ts:195 src/disk.ts:220 src/mem.ts:172
 msgid "Top processes"
 msgstr ""
 
-#: src/cpu.ts:197
+#: src/cpu.ts:213
 msgid "System uptime"
 msgstr ""
 
-#: src/cpu.ts:304
+#: src/cpu.ts:322
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/cpu.ts:307
+#: src/cpu.ts:325
 #, javascript-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/cpu.ts:309
+#: src/cpu.ts:327
 #, javascript-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/disk.ts:166 src/prefs.ts:190
+#: src/disk.ts:170 src/prefs.ts:193
 msgid "Disk activity"
 msgstr ""
 
-#: src/disk.ts:172
+#: src/disk.ts:176
 msgid "Reading:"
 msgstr ""
 
-#: src/disk.ts:181
+#: src/disk.ts:185
 msgid "Writing:"
 msgstr ""
 
-#: src/disk.ts:190
+#: src/disk.ts:196
 msgid "Total read:"
 msgstr ""
 
-#: src/disk.ts:199
+#: src/disk.ts:205
 msgid "Total written:"
 msgstr ""
 
-#: src/disk.ts:222
+#: src/disk.ts:228
 msgid "Writing"
 msgstr ""
 
-#: src/disk.ts:227
+#: src/disk.ts:233
 msgid "Reading"
 msgstr ""
 
-#: src/disk.ts:245 src/prefs.ts:196
+#: src/disk.ts:251 src/prefs.ts:199
 msgid "Filesystem usage"
 msgstr ""
 
-#: src/history.ts:237
+#: src/history.ts:278
 msgid "now"
 msgstr ""
 
-#: src/mem.ts:117
+#: src/mem.ts:130
 msgid "Memory usage"
 msgstr ""
 
-#: src/mem.ts:123
+#: src/mem.ts:136
 msgid "RAM used:"
 msgstr ""
 
-#: src/mem.ts:138
+#: src/mem.ts:151
 msgid "Swap used:"
 msgstr ""
 
-#: src/monitor.ts:302
+#: src/monitor.ts:306
 #, javascript-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/net.ts:155
+#: src/net.ts:160
 msgid "Network activity"
 msgstr ""
 
-#: src/net.ts:161
+#: src/net.ts:166
 msgid "Sending:"
 msgstr ""
 
-#: src/net.ts:170
+#: src/net.ts:175
 msgid "Receiving:"
 msgstr ""
 
-#: src/net.ts:179
+#: src/net.ts:186
 msgid "Total sent:"
 msgstr ""
 
-#: src/net.ts:188
+#: src/net.ts:195
 msgid "Total received:"
 msgstr ""
 
@@ -210,19 +210,19 @@ msgstr ""
 msgid "Show the CPU monitor"
 msgstr ""
 
-#: src/prefs.ts:141 src/prefs.ts:176 src/prefs.ts:204
+#: src/prefs.ts:141 src/prefs.ts:176 src/prefs.ts:207
 msgid "Usage meter"
 msgstr ""
 
-#: src/prefs.ts:142 src/prefs.ts:177 src/prefs.ts:205
+#: src/prefs.ts:142 src/prefs.ts:177 src/prefs.ts:208
 msgid "Numeric value"
 msgstr ""
 
-#: src/prefs.ts:143 src/prefs.ts:178 src/prefs.ts:206
+#: src/prefs.ts:143 src/prefs.ts:178 src/prefs.ts:209
 msgid "Both meter and value"
 msgstr ""
 
-#: src/prefs.ts:144 src/prefs.ts:179 src/prefs.ts:207
+#: src/prefs.ts:144 src/prefs.ts:179 src/prefs.ts:210
 msgid "Show as"
 msgstr ""
 
@@ -246,51 +246,55 @@ msgstr ""
 msgid "Show the memory monitor"
 msgstr ""
 
-#: src/prefs.ts:186
+#: src/prefs.ts:182
+msgid "Show usage in GB"
+msgstr ""
+
+#: src/prefs.ts:189
 msgid "Disk"
 msgstr ""
 
-#: src/prefs.ts:194
+#: src/prefs.ts:197
 msgid "Show the disk activity monitor"
 msgstr ""
 
-#: src/prefs.ts:200
+#: src/prefs.ts:203
 msgid "Show the filesystem monitor"
 msgstr ""
 
-#: src/prefs.ts:212
+#: src/prefs.ts:215
 msgid "Filesystem to monitor in topbar"
 msgstr ""
 
-#: src/prefs.ts:221
+#: src/prefs.ts:224
 msgid "Filesystems to show in menu"
 msgstr ""
 
-#: src/prefs.ts:235 src/prefs.ts:301 src/vitals.ts:419 src/vitals.ts:424
-#: src/vitals.ts:432 src/vitals.ts:437
+#: src/prefs.ts:238 src/prefs.ts:304 src/vitals.ts:421 src/vitals.ts:426
+#: src/vitals.ts:434 src/vitals.ts:439
 msgid "Automatic"
 msgstr ""
 
-#: src/prefs.ts:289 src/prefs.ts:293
+#: src/prefs.ts:292 src/prefs.ts:296
 msgid "Network"
 msgstr ""
 
-#: src/prefs.ts:297
+#: src/prefs.ts:300
 msgid "Show the network monitor"
 msgstr ""
 
-#: src/prefs.ts:321
+#: src/prefs.ts:324
 msgid "Network device"
 msgstr ""
 
-#: src/prefs.ts:331
+#: src/prefs.ts:334
 msgid "Bytes"
 msgstr ""
 
-#: src/prefs.ts:332
+#: src/prefs.ts:335
 msgid "Bits"
 msgstr ""
 
-#: src/prefs.ts:334
+#: src/prefs.ts:337
 msgid "Measurement unit"
 msgstr ""
