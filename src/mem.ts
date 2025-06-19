@@ -48,6 +48,7 @@ export const MemMonitor = GObject.registerClass(
     private menuSwapSize;
     private topProcs: TopProc[];
     private displayType: DisplayType;
+    private absUnits;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Memory Monitor', metadata, gsettings);
@@ -79,16 +80,22 @@ export const MemMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
-      this.gsettings.bind(
-        'show-mem',
-        this,
-        'visible',
-        Gio.SettingsBindFlags.GET
-      );
+      this.displayType = this.updateDisplayType();
       let id = this.gsettings.connect('changed::mem-display', () => {
         this.updateDisplayType();
       });
       this.settingsSignals.push(id);
+      this.absUnits = gsettings.get_boolean('mem-abs-units');
+      id = this.gsettings.connect(
+        'changed::mem-abs-units',
+        (settings: Gio.Settings) => {
+          this.absUnits = settings.get_boolean('mem-abs-units');
+          this.vitals?.notify('ram-usage');
+          this.vitals?.notify('ram-size-free');
+        }
+      );
+      this.settingsSignals.push(id);
+      this.visible = gsettings.get_boolean('show-mem');
       id = this.gsettings.connect(
         'changed::show-mem',
         (settings: Gio.Settings) => {
@@ -96,7 +103,6 @@ export const MemMonitor = GObject.registerClass(
         }
       );
       this.settingsSignals.push(id);
-      this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
       this.updateColor();
@@ -197,13 +203,22 @@ export const MemMonitor = GObject.registerClass(
         const total = GBytesToHumanString(vitals.ram_size);
         const free = GBytesToHumanString(vitals.ram_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
+        if (this.absUnits) {
+          const used = GBytesToHumanString(
+            vitals.ram_size - vitals.ram_size_free
+          );
+          this.usage.text = used;
+        }
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::ram-usage', () => {
         // console.log(`ram-usage: ${vitals.ram_usage}`);
         const s = (vitals.ram_usage * 100).toFixed(0) + '%';
-        this.usage.text = s;
+        if (!this.absUnits) {
+          // If we're using absolute units, listen for ram-size-free instead
+          this.usage.text = s;
+        }
         this.menuMemUsage.text = s;
         this.meter.setBarSizes([vitals.ram_usage]);
         this.menuMemCap.setUsage(vitals.ram_usage);
