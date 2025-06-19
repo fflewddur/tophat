@@ -301,7 +301,12 @@ export const DiskMonitor = GObject.registerClass(
         for (const da of history) {
           if (!da) {
             break;
+          } else if (da.bytesRead < 0) {
+            console.warn(`da.bytesRead < 0: ${da.bytesRead}`);
+          } else if (da.bytesWritten < 0) {
+            console.warn(`da.bytesWritten < 0: ${da.bytesWritten}`);
           }
+
           if (da.bytesRead > max) {
             max = da.bytesRead;
           }

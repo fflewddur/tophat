@@ -256,6 +256,10 @@ export const NetMonitor = GObject.registerClass(
         for (const na of history) {
           if (!na) {
             break;
+          } else if (na.bytesRecv < 0) {
+            console.warn(`na.bytesRecv < 0: ${na.bytesRecv}`);
+          } else if (na.bytesSent < 0) {
+            console.warn(`na.bytesSent < 0: ${na.bytesRecv}`);
           }
           if (na.bytesRecv > max) {
             max = na.bytesRecv;
