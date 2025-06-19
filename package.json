@@ -5,16 +5,16 @@
   "sideEffects": false,
   "packageManager": "yarn@4.9.1",
   "devDependencies": {
-    "@eslint/js": "^9.27.0",
+    "@eslint/js": "^9.29.0",
     "@girs/gjs": "^4.0.0-beta.23",
     "@girs/gnome-shell": "^48.0.2",
-    "@tsconfig/recommended": "^1.0.8",
-    "eslint": "^9.27.0",
+    "@tsconfig/recommended": "^1.0.10",
+    "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-prettier": "^5.5.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1"
+    "typescript-eslint": "^8.34.1"
   },
   "scripts": {
     "build": "tsc && ./resources/dist.sh",
