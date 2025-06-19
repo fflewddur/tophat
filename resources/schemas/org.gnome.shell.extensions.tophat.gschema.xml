@@ -133,6 +133,11 @@
       <summary>Divide process CPU usage by CPU core count</summary>
       <description>CPU usage is computed so that full usage of one core yields 100%; full usage of multiple cores results in numbers greater than 100%. If this setting is enabled, divide that usage by core count, to ensure it's less than 100%.</description>
     </key>
+    <key name="mem-abs-units" type="b">
+      <default>false</default>
+      <summary>Display memory usage in absolute units</summary>
+      <description>Display memory usage in absolute units in the top bar, instead of as a percentage.</description>
+    </key>
     <key name="network-device" type="s">
       <default>''</default>
       <summary>Network device to monitor</summary>

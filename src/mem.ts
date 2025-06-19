@@ -48,6 +48,7 @@ export const MemMonitor = GObject.registerClass(
     private menuSwapSize;
     private topProcs: TopProc[];
     private displayType: DisplayType;
+    private absUnits;
 
     constructor(metadata: ExtensionMetadata, gsettings: Gio.Settings) {
       super('Memory Monitor', metadata, gsettings);
@@ -79,10 +80,20 @@ export const MemMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
+      this.displayType = this.updateDisplayType();
       let id = this.gsettings.connect('changed::mem-display', () => {
         this.updateDisplayType();
       });
       this.settingsSignals.push(id);
+      this.absUnits = gsettings.get_boolean('mem-abs-units');
+      id = this.gsettings.connect(
+        'changed::mem-abs-units',
+        (settings: Gio.Settings) => {
+          this.absUnits = settings.get_boolean('mem-abs-units');
+        }
+      );
+      this.settingsSignals.push(id);
+      this.visible = gsettings.get_boolean('show-mem');
       id = this.gsettings.connect(
         'changed::show-mem',
         (settings: Gio.Settings) => {
@@ -90,7 +101,6 @@ export const MemMonitor = GObject.registerClass(
         }
       );
       this.settingsSignals.push(id);
-      this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
       this.updateColor();
