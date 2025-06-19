@@ -79,12 +79,6 @@ export const MemMonitor = GObject.registerClass(
         this.topProcs[i] = new TopProc();
       }
 
-      this.gsettings.bind(
-        'show-mem',
-        this,
-        'visible',
-        Gio.SettingsBindFlags.GET
-      );
       let id = this.gsettings.connect('changed::mem-display', () => {
         this.updateDisplayType();
       });
