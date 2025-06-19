@@ -5,6 +5,7 @@ based on [Keep a Changelog].
 
 ## TopHat vNext - Unreleased
 
+- Added option to display memory usage in GB
 - Fixed temperature sensor detection on older Intel Core CPUs
 - Fixed disk monitor problem with sshfs mounts
 - Fixed scaling problems with history charts

@@ -90,6 +90,8 @@ export const MemMonitor = GObject.registerClass(
         'changed::mem-abs-units',
         (settings: Gio.Settings) => {
           this.absUnits = settings.get_boolean('mem-abs-units');
+          this.vitals?.notify('ram-usage');
+          this.vitals?.notify('ram-size-free');
         }
       );
       this.settingsSignals.push(id);
@@ -201,13 +203,22 @@ export const MemMonitor = GObject.registerClass(
         const total = GBytesToHumanString(vitals.ram_size);
         const free = GBytesToHumanString(vitals.ram_size_free);
         this.menuMemSize.text = _(`${free} available of ${total}`);
+        if (this.absUnits) {
+          const used = GBytesToHumanString(
+            vitals.ram_size - vitals.ram_size_free
+          );
+          this.usage.text = used;
+        }
       });
       this.vitalsSignals.push(id);
 
       id = vitals.connect('notify::ram-usage', () => {
         // console.log(`ram-usage: ${vitals.ram_usage}`);
         const s = (vitals.ram_usage * 100).toFixed(0) + '%';
-        this.usage.text = s;
+        if (!this.absUnits) {
+          // If we're using absolute units, listen for ram-size-free instead
+          this.usage.text = s;
+        }
         this.menuMemUsage.text = s;
         this.meter.setBarSizes([vitals.ram_usage]);
         this.menuMemCap.setUsage(vitals.ram_usage);
