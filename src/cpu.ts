@@ -104,10 +104,12 @@ export const CpuMonitor = GObject.registerClass(
         }
       );
       this.settingsSignals.push(id);
+      this.displayType = this.updateDisplayType();
       id = this.gsettings.connect('changed::cpu-display', () => {
         this.updateDisplayType();
       });
       this.settingsSignals.push(id);
+      this.visible = gsettings.get_boolean('show-cpu');
       id = this.gsettings.connect(
         'changed::show-cpu',
         (settings: Gio.Settings) => {
@@ -116,7 +118,6 @@ export const CpuMonitor = GObject.registerClass(
       );
       this.settingsSignals.push(id);
 
-      this.displayType = this.updateDisplayType();
       this.buildMenu();
       this.addMenuButtons();
       this.updateColor();

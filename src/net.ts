@@ -95,6 +95,7 @@ export const NetMonitor = GObject.registerClass(
         }
       );
       this.settingsSignals.push(id);
+      this.visible = gsettings.get_boolean('show-net');
       id = this.gsettings.connect(
         'changed::show-net',
         (settings: Gio.Settings) => {
