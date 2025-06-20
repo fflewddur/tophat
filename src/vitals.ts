@@ -1856,7 +1856,11 @@ class NetDevState {
     const retval = Math.round(
       (this.bytesRecv - this.bytesRecvPrev) / ((this.ts - this.tsPrev) / 1000)
     );
-    // console.log(`returning recvActivity: ${retval}`);
+    if (retval < 0) {
+      console.warn(
+        `negative value for network activity: bytesRecv=${this.bytesRecv}, bytesRecvPrev=${this.bytesRecvPrev}`
+      );
+    }
     return retval;
   }
 
@@ -1872,7 +1876,11 @@ class NetDevState {
     const retval = Math.round(
       (this.bytesSent - this.bytesSentPrev) / ((this.ts - this.tsPrev) / 1000)
     );
-    // console.log(`returning sentActivity: ${retval}`);
+    if (retval < 0) {
+      console.warn(
+        `negative value for network activity: bytesSent=${this.bytesSent}, bytesSentPrev=${this.bytesSentPrev}`
+      );
+    }
     return retval;
   }
 }
