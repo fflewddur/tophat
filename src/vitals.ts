@@ -687,35 +687,17 @@ export const Vitals = GObject.registerClass(
               this.memInfo.swapAvailable = readKb(line);
             }
           });
-          usage.usedMem =
-            Math.round(
-              ((this.memInfo.total - this.memInfo.available) /
-                this.memInfo.total) *
-                100
-            ) / 100;
-          usage.usedSwap =
-            Math.round(
-              ((this.memInfo.swapTotal - this.memInfo.swapAvailable) /
-                this.memInfo.swapTotal) *
-                100
-            ) / 100;
+          usage.usedMem = this.memInfo.usedMem();
+          usage.usedSwap = this.memInfo.usedSwap();
           if (this.memUsageHistory.unshift(usage) > MaxHistoryLen) {
             this.memUsageHistory.pop();
           }
           this.ram_usage = usage.usedMem;
-          this.ram_size =
-            (Math.round((this.memInfo.total * 1024) / ONE_GB_IN_B) * 10) / 10;
-          this.ram_size_free =
-            Math.round(((this.memInfo.available * 1024) / ONE_GB_IN_B) * 10) /
-            10;
+          this.ram_size = this.memInfo.memSize();
+          this.ram_size_free = this.memInfo.freeMem();
           this.swap_usage = usage.usedSwap;
-          this.swap_size =
-            Math.round(((this.memInfo.swapTotal * 1024) / ONE_GB_IN_B) * 10) /
-            10;
-          this.swap_size_free =
-            Math.round(
-              ((this.memInfo.swapAvailable * 1024) / ONE_GB_IN_B) * 10
-            ) / 10;
+          this.swap_size = this.memInfo.swapSize();
+          this.swap_size_free = this.memInfo.freeSwap();
           this.mem_history = this.hashMemHistory();
         })
         .catch((e) => {
@@ -1798,6 +1780,58 @@ class MemInfo {
   public available = 0;
   public swapTotal = 0;
   public swapAvailable = 0;
+
+  public usedMem(): number {
+    let u =
+      Math.round(((this.total - this.available) / this.total) * 100) / 100;
+    if (Number.isNaN(u)) {
+      u = 0;
+    }
+    return u;
+  }
+
+  public usedSwap(): number {
+    let u =
+      Math.round(
+        ((this.swapTotal - this.swapAvailable) / this.swapTotal) * 100
+      ) / 100;
+    if (Number.isNaN(u)) {
+      u = 0;
+    }
+    return u;
+  }
+
+  public memSize(): number {
+    let s = (Math.round((this.total * 1024) / ONE_GB_IN_B) * 10) / 10;
+    if (Number.isNaN(s)) {
+      s = 0;
+    }
+    return s;
+  }
+
+  public swapSize(): number {
+    let s = Math.round(((this.swapTotal * 1024) / ONE_GB_IN_B) * 10) / 10;
+    if (Number.isNaN(s)) {
+      s = 0;
+    }
+    return s;
+  }
+
+  public freeMem(): number {
+    let f = Math.round(((this.available * 1024) / ONE_GB_IN_B) * 10) / 10;
+    if (Number.isNaN(f)) {
+      f = 0;
+    }
+    return f;
+  }
+
+  public freeSwap(): number {
+    let f = Math.round(((this.swapAvailable * 1024) / ONE_GB_IN_B) * 10) / 10;
+    if (Number.isNaN(f)) {
+      f = 0;
+    }
+    return f;
+  }
 }
 
 class MemUsage implements IHistory {

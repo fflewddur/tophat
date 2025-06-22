@@ -46,7 +46,7 @@ export const CapacityBar = GObject.registerClass(
     public setUsage(usage: number) {
       if (Number.isNaN(usage)) {
         console.warn('setUsage(): usage is NaN');
-        return;
+        usage = 0;
       } else if (usage < 0) {
         console.warn('setUsage(): usage < 0: ' + usage);
         usage = 0;
