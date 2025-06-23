@@ -229,7 +229,7 @@ export const MemMonitor = GObject.registerClass(
         // console.log(`swap-size: ${vitals.swap_size}`);
         const total = GBytesToHumanString(vitals.swap_size);
         const free = GBytesToHumanString(vitals.swap_size_free);
-        this.menuMemSize.text = _(`${free} available of ${total}`);
+        this.menuSwapSize.text = _(`${free} available of ${total}`);
       });
       this.vitalsSignals.push(id);
 
