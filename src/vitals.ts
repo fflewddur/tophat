@@ -1782,8 +1782,10 @@ class MemInfo {
   public swapAvailable = 0;
 
   public usedMem(): number {
-    let u =
-      Math.round(((this.total - this.available) / this.total) * 100) / 100;
+    let u = 0;
+    if (this.total > 0) {
+      u = Math.round(((this.total - this.available) / this.total) * 100) / 100;
+    }
     if (Number.isNaN(u)) {
       u = 0;
     }
@@ -1791,10 +1793,13 @@ class MemInfo {
   }
 
   public usedSwap(): number {
-    let u =
-      Math.round(
-        ((this.swapTotal - this.swapAvailable) / this.swapTotal) * 100
-      ) / 100;
+    let u = 0;
+    if (this.swapTotal > 0) {
+      u =
+        Math.round(
+          ((this.swapTotal - this.swapAvailable) / this.swapTotal) * 100
+        ) / 100;
+    }
     if (Number.isNaN(u)) {
       u = 0;
     }
