@@ -29,9 +29,10 @@ The latest release of TopHat has been tested on the following systems:
 
 - Arch Linux
 - Debian Trixie
-- Fedora 41
+- Fedora 42
+- Red Hat Enterprise Linux 10
 - Ubuntu 24.04 LTS
-- Ubuntu 24.10
+- Ubuntu 25.04
 
 Even if your system is not in this list, as long as it meets the
 requirements mentioned above, you should be able to run TopHat. If not, please
