@@ -3,7 +3,7 @@
   "name": "TopHat",
   "description": "View CPU, memory, disk, and network activity in the GNOME top bar.",
   "version": 22,
-  "shell-version": ["45", "46", "47", "48"],
+  "shell-version": ["45", "46", "47", "48", "49"],
   "url": "https://github.com/fflewddur/tophat",
   "gettext-domain": "tophat@fflewddur.github.io",
   "settings-schema": "org.gnome.shell.extensions.tophat"
