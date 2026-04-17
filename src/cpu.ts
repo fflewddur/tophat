@@ -36,6 +36,8 @@ import { CapacityBar } from './capacity.js';
 export const CpuMonitor = GObject.registerClass(
   class CpuMonitor extends TopHatMonitor {
     private usage;
+    private temp;
+    private showTemp;
     private menuCpuUsage;
     private menuCpuCap;
     private menuCpuModel;
@@ -63,6 +65,37 @@ export const CpuMonitor = GObject.registerClass(
       });
       this.add_child(this.usage);
 
+      this.temp = new St.Label({
+        text: MeterNoVal,
+        style_class: 'tophat-panel-usage tophat-panel-usage-wider',
+        y_align: Clutter.ActorAlign.CENTER,
+      });
+
+      this.showTemp = gsettings.get_boolean('show-cpu-temp');
+      if (this.showTemp) {
+        this.add_child(this.temp);
+      }
+
+      let id = this.gsettings.connect('changed::show-cpu-temp', (settings) => {
+        this.showTemp = settings.get_boolean('show-cpu-temp');
+
+        if (this.showTemp) {
+          if (!this.temp.get_parent()) {
+            this.temp = new St.Label({  // recreate if destroyed
+              text: MeterNoVal,
+              style_class: 'tophat-panel-temp tophat-panel-usage-wider',
+              y_align: Clutter.ActorAlign.CENTER,
+            });
+            this.add_child(this.temp);
+          }
+        } else {
+          if (this.temp.get_parent()) {
+            this.temp.destroy();
+          }
+        }
+      });
+      this.settingsSignals.push(id);
+
       this.meter.setNumBars(1);
       this.meter.setOrientation(Orientation.Vertical);
       this.add_child(this.meter);
@@ -80,7 +113,7 @@ export const CpuMonitor = GObject.registerClass(
       }
 
       this.showCores = this.gsettings.get_boolean('cpu-show-cores');
-      let id = this.gsettings.connect('changed::cpu-show-cores', (settings) => {
+      id = this.gsettings.connect('changed::cpu-show-cores', (settings) => {
         this.showCores = settings.get_boolean('cpu-show-cores');
         if (!this.showCores) {
           this.meter.setNumBars(1);
@@ -266,6 +299,7 @@ export const CpuMonitor = GObject.registerClass(
       id = vitals.connect('notify::cpu-temp', () => {
         // console.log(`cpu-temp: ${vitals.cpu_temp}`);
         const s = vitals.cpu_temp.toFixed(0) + ' °C';
+        this.temp.text = s;
         this.menuCpuTemp.text = s;
       });
       this.vitalsSignals.push(id);

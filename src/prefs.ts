@@ -143,6 +143,9 @@ export default class TopHatPrefs extends ExtensionPreferences {
     choices.append(_('Both meter and value'));
     this.addComboRow(_('Show as'), choices, 'cpu-display', group);
 
+    // Show temps
+    this.addActionRow(_('Show temperature'), 'show-cpu-temp', group);
+
     // Show each core
     this.addActionRow(_('Show each core'), 'cpu-show-cores', group);
 

@@ -118,6 +118,11 @@
       <summary>How frequently TopHat will check system resource usage</summary>
       <description>This controls how frequently Tophat will check system resource usage. 'fast' will update more often but may negatively impact system performance. 'slow' will update less often and may improve system performance.</description>
     </key>
+    <key name="show-cpu-temp" type="b">
+      <default>true</default>
+      <summary>Display CPU temp on the top bar</summary>
+      <description>When true, the CPU temperature will be shown alongside the CPU usage in the top bar.</description>
+    </key>
     <key name="cpu-show-cores" type="b">
       <default>true</default>
       <summary>Show a meter bar for each CPU core</summary>

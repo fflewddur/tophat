@@ -310,6 +310,7 @@ export const Vitals = GObject.registerClass(
     private fsLoop = 0;
     private groupRelated;
     private showCpu;
+    private showCpuTemp;
     private showMem;
     private showNet;
     private showDisk;
@@ -369,6 +370,15 @@ export const Vitals = GObject.registerClass(
         'changed::show-cpu',
         (settings: Gio.Settings) => {
           this.showCpu = settings.get_boolean('show-cpu');
+        }
+      );
+      this.settingSignals.push(id);
+
+      this.showCpuTemp = gsettings.get_boolean('show-cpu-temp');
+      id = this.gsettings.connect(
+        'changed::show-cpu-temp',
+        (settings: Gio.Settings) => {
+          this.showCpuTemp = settings.get_boolean('show-cpu-temp');
         }
       );
       this.settingSignals.push(id);
@@ -510,6 +520,9 @@ export const Vitals = GObject.registerClass(
     public readSummaries(): boolean {
       if (this.showCpu) {
         this.loadStat();
+        if (this.showCpuTemp) {
+          this.loadTemps();
+        }
       }
       if (this.showMem) {
         this.loadMeminfo();
@@ -931,7 +944,7 @@ export const Vitals = GObject.registerClass(
             curProcs.set(p.id, p);
             p.setTotalTime(
               this.cpuState.totalTimeDetails -
-                this.cpuState.totalTimeDetailsPrev
+              this.cpuState.totalTimeDetailsPrev
             );
             const actions = [];
             actions.push(this.loadCmdForProcess(p));
@@ -1995,7 +2008,7 @@ class DiskState {
     }
     const retval = Math.round(
       (this.bytesWritten - this.bytesWrittenPrev) /
-        ((this.ts - this.tsPrev) / 1000)
+      ((this.ts - this.tsPrev) / 1000)
     );
     // console.log(`returning writeActivity: ${retval}`);
     return retval;

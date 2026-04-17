@@ -13,7 +13,7 @@
   spacing: 2em;
 }
 
-.tophat-menu-button-box > StButton {
+.tophat-menu-button-box>StButton {
   border-radius: 2em;
   margin: 0;
   padding: 0.7em;
@@ -21,16 +21,16 @@
   min-width: 0.5em;
 }
 
-.tophat-menu-button-box > StButton > StIcon {
+.tophat-menu-button-box>StButton>StIcon {
   icon-size: 1.25em;
   -st-icon-style: symbolic;
 }
 
 .tophat-panel-usage {
-  text-align: center;
+  text-align: left;
   min-width: 2.1em;
   font-size: 0.9em;
-  margin: 0 6px 0 0;
+  margin: 0 2px 0 2px;
   padding: 0;
 }
 
@@ -46,6 +46,14 @@
   font-size: 0.7em;
   text-align: right;
   min-width: 5em;
+}
+
+.tophat-panel-temp {
+  text-align: center;
+  min-width: 2.1em;
+  font-size: 0.9em;
+  margin: 0 2px 0 2px;
+  padding: 0;
 }
 
 .tophat-panel-inactive {
@@ -194,7 +202,7 @@
   margin: 0;
 }
 
-.tophat-tooltip > StLabel {
+.tophat-tooltip>StLabel {
   font-size: 0.8em;
   text-align: center;
   padding: 3px 6px;
