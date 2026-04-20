@@ -1,15 +1,15 @@
-# Copyright (C) 2022-2024 Todd Kulesza
+# Copyright (C) 2022-2025 Todd Kulesza
 # This file is distributed under the same license as the TopHat package.
 #
 # nxjoseph <nxjoseph@protonmail.com>, 2022.
-# Sabri Ünal <yakushabb@gmail.com>, 2024.
+# Sabri Ünal <yakushabb@gmail.com>, 2024, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: TopHat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-21 20:54-0800\n"
-"PO-Revision-Date: 2024-03-11 16:32+0300\n"
+"POT-Creation-Date: 2025-06-23 04:53+0300\n"
+"PO-Revision-Date: 2025-11-17 00:23+0300\n"
 "Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
 "Language: tr\n"
@@ -17,296 +17,285 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.8\n"
 
-#: tophat@fflewddur.github.io/prefs.js:36
-msgid "General"
-msgstr "Genel"
-
-#: tophat@fflewddur.github.io/prefs.js:40
-msgid "Left edge"
-msgstr "Sol kenar"
-
-#: tophat@fflewddur.github.io/prefs.js:41
-msgid "Left"
-msgstr "Sol"
-
-#: tophat@fflewddur.github.io/prefs.js:42
-msgid "Center"
-msgstr "Orta"
-
-#: tophat@fflewddur.github.io/prefs.js:43
-msgid "Right"
-msgstr "Sağ"
-
-#: tophat@fflewddur.github.io/prefs.js:44
-msgid "Right edge"
-msgstr "Sağ kenar"
-
-#: tophat@fflewddur.github.io/prefs.js:45
-msgid "Position in panel"
-msgstr "Paneldeki konum"
-
-#: tophat@fflewddur.github.io/prefs.js:47
-msgid "Slow"
-msgstr "Yavaş"
-
-#: tophat@fflewddur.github.io/prefs.js:48
-msgid "Medium"
-msgstr "Orta"
-
-#: tophat@fflewddur.github.io/prefs.js:49
-msgid "Fast"
-msgstr "Hızlı"
-
-#: tophat@fflewddur.github.io/prefs.js:50
-msgid "Refresh speed"
-msgstr "Yenileme hızı"
-
-#: tophat@fflewddur.github.io/prefs.js:51
-msgid "Meter color"
-msgstr "Ölçer rengi"
-
-#: tophat@fflewddur.github.io/prefs.js:52
-msgid "Show icons beside monitors"
-msgstr "Gözlemcilerin yanında simge göster"
-
-#: tophat@fflewddur.github.io/prefs.js:53
-msgid "Show animations"
-msgstr "Canlandırmaları göster"
-
-#: tophat@fflewddur.github.io/prefs.js:55
-msgid "Processor"
-msgstr "İşlemci"
-
-#: tophat@fflewddur.github.io/prefs.js:56
-msgid "Show the CPU monitor"
-msgstr "İşlemci gözlemcisini göster"
-
-#: tophat@fflewddur.github.io/prefs.js:58
-#: tophat@fflewddur.github.io/prefs.js:68
-#: tophat@fflewddur.github.io/prefs.js:82
-msgid "Usage meter"
-msgstr "Kullanım ölçer"
-
-#: tophat@fflewddur.github.io/prefs.js:59
-#: tophat@fflewddur.github.io/prefs.js:69
-#: tophat@fflewddur.github.io/prefs.js:83
-msgid "Numeric value"
-msgstr "Sayısal değer"
-
-#: tophat@fflewddur.github.io/prefs.js:60
-#: tophat@fflewddur.github.io/prefs.js:70
-#: tophat@fflewddur.github.io/prefs.js:84
-msgid "Both meter and value"
-msgstr "Ölçer ve değer birlikte"
-
-#: tophat@fflewddur.github.io/prefs.js:61
-#: tophat@fflewddur.github.io/prefs.js:71
-msgid "Show as"
-msgstr "Gösterim şekli"
-
-#: tophat@fflewddur.github.io/prefs.js:62
-msgid "Show each core"
-msgstr "Her bir çekirdeği göster"
-
-#: tophat@fflewddur.github.io/prefs.js:65
-msgid "Memory"
-msgstr "Bellek"
-
-#: tophat@fflewddur.github.io/prefs.js:66
-msgid "Show the memory monitor"
-msgstr "Bellek gözlemcisini göster"
-
-#: tophat@fflewddur.github.io/prefs.js:74
-msgid "Disk"
-msgstr "Disk"
-
-#: tophat@fflewddur.github.io/prefs.js:75
-msgid "Show the disk monitor"
-msgstr "Disk gözlemcisini göster"
-
-#: tophat@fflewddur.github.io/prefs.js:77
-msgid "Available storage"
-msgstr "Kullanılabilir depolama alanı"
-
-#: tophat@fflewddur.github.io/prefs.js:78
-#: tophat@fflewddur.github.io/lib/fs.js:268
-msgid "Disk activity"
-msgstr "Disk Etkinliği"
-
-#: tophat@fflewddur.github.io/prefs.js:79
-msgid "Storage and activity"
-msgstr "Depolama ve etkinlik"
-
-#: tophat@fflewddur.github.io/prefs.js:80
-msgid "Monitor shows"
-msgstr "Gözlemciler göstersin"
-
-#: tophat@fflewddur.github.io/prefs.js:85
-msgid "Show available storage as"
-msgstr "Kullanılabilir depolama alanını şu şekilde göster"
-
-#: tophat@fflewddur.github.io/prefs.js:92
-msgid "Filesystem to monitor"
-msgstr "Gözlenecek dosya sistemi"
-
-#: tophat@fflewddur.github.io/prefs.js:95
-msgid "Network"
-msgstr "Ağ"
-
-#: tophat@fflewddur.github.io/prefs.js:96
-msgid "Show the network monitor"
-msgstr "Ağ gözlemcisini göster"
-
-#: tophat@fflewddur.github.io/prefs.js:98
-msgid "Bytes"
-msgstr "Bayt"
-
-#: tophat@fflewddur.github.io/prefs.js:99
-msgid "Bits"
-msgstr "Bit"
-
-#: tophat@fflewddur.github.io/prefs.js:100
-msgid "Measurement unit"
-msgstr "Ölçüm birimi"
-
-#: tophat@fflewddur.github.io/lib/cpu.js:223
+#: src/cpu.ts:145
 msgid "Processor usage"
 msgstr "İşlemci Kullanımı"
 
-#: tophat@fflewddur.github.io/lib/cpu.js:226
+#: src/cpu.ts:151
 msgid "Processor utilization:"
 msgstr "İşlemci Kullanımı:"
 
-#: tophat@fflewddur.github.io/lib/cpu.js:254
-#: tophat@fflewddur.github.io/lib/fs.js:303
-#: tophat@fflewddur.github.io/lib/mem.js:272
-#: tophat@fflewddur.github.io/lib/net.js:180
-#, javascript-format
-msgid "%d min ago"
-msgid_plural "%d mins ago"
-msgstr[0] "%d dakika önce"
-msgstr[1] "%d dakika önce"
-
-#: tophat@fflewddur.github.io/lib/cpu.js:257
-#: tophat@fflewddur.github.io/lib/fs.js:306
-#: tophat@fflewddur.github.io/lib/mem.js:275
-#: tophat@fflewddur.github.io/lib/net.js:183
-msgid "now"
-msgstr "şimdi"
-
-#: tophat@fflewddur.github.io/lib/cpu.js:260
-#: tophat@fflewddur.github.io/lib/fs.js:309
-#: tophat@fflewddur.github.io/lib/mem.js:278
-msgid "Top processes"
-msgstr "Üst süreçler"
-
-#: tophat@fflewddur.github.io/lib/cpu.js:277
-msgid "System uptime"
-msgstr "Sistem çalışma süresi"
-
-#: tophat@fflewddur.github.io/lib/cpu.js:314
-msgid "model n/a"
-msgstr "model bilinmiyor"
-
-#: tophat@fflewddur.github.io/lib/cpu.js:323
+#: src/cpu.ts:169
 msgid "Frequency:"
 msgstr "Frekans:"
 
-#: tophat@fflewddur.github.io/lib/cpu.js:329
-#: tophat@fflewddur.github.io/lib/cpu.js:343
-#: tophat@fflewddur.github.io/lib/fs.js:273
-#: tophat@fflewddur.github.io/lib/fs.js:279
-msgid "n/a"
-msgstr "bilinmiyor"
-
-#: tophat@fflewddur.github.io/lib/cpu.js:337
+#: src/cpu.ts:179
 msgid "Temperature:"
 msgstr "Sıcaklık:"
 
-#: tophat@fflewddur.github.io/lib/cpu.js:598
+#: src/cpu.ts:195 src/disk.ts:220 src/mem.ts:172
+msgid "Top processes"
+msgstr "Üst süreçler"
+
+#: src/cpu.ts:213
+msgid "System uptime"
+msgstr "Sistem çalışma süresi"
+
+#: src/cpu.ts:322
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d gün"
 msgstr[1] "%d gün"
 
-#: tophat@fflewddur.github.io/lib/cpu.js:601
+#: src/cpu.ts:325
 #, javascript-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d saat"
 msgstr[1] "%d saat"
 
-#: tophat@fflewddur.github.io/lib/cpu.js:603
+#: src/cpu.ts:327
 #, javascript-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d dakika"
 msgstr[1] "%d dakika"
 
-#: tophat@fflewddur.github.io/lib/fs.js:271
-msgid "Writing:"
-msgstr "Yazma:"
+#: src/disk.ts:170 src/prefs.ts:193
+msgid "Disk activity"
+msgstr "Disk Etkinliği"
 
-#: tophat@fflewddur.github.io/lib/fs.js:277
+#: src/disk.ts:176
 msgid "Reading:"
 msgstr "Okuma:"
 
-#: tophat@fflewddur.github.io/lib/fs.js:294
-msgid "Write"
-msgstr "Yazma"
+#: src/disk.ts:185
+msgid "Writing:"
+msgstr "Yazma:"
 
-#: tophat@fflewddur.github.io/lib/fs.js:299
-msgid "Read"
-msgstr "Okuma"
+#: src/disk.ts:196
+msgid "Total read:"
+msgstr "Toplam okuma:"
 
-#: tophat@fflewddur.github.io/lib/fs.js:315
+#: src/disk.ts:205
+msgid "Total written:"
+msgstr "Toplam yazma:"
+
+#: src/disk.ts:228
 msgid "Writing"
 msgstr "Yazma"
 
-#: tophat@fflewddur.github.io/lib/fs.js:317
+#: src/disk.ts:233
 msgid "Reading"
 msgstr "Okuma"
 
-#: tophat@fflewddur.github.io/lib/fs.js:333
+#: src/disk.ts:251 src/prefs.ts:199
 msgid "Filesystem usage"
 msgstr "Dosya Sistemi Kullanımı"
 
-#: tophat@fflewddur.github.io/lib/mem.js:230
+#: src/history.ts:278
+msgid "now"
+msgstr "şimdi"
+
+#: src/mem.ts:130
 msgid "Memory usage"
 msgstr "Bellek Kullanımı"
 
-#: tophat@fflewddur.github.io/lib/mem.js:233
+#: src/mem.ts:136
 msgid "RAM used:"
 msgstr "Kullanılan bellek:"
 
-#: tophat@fflewddur.github.io/lib/mem.js:238
-#: tophat@fflewddur.github.io/lib/mem.js:248
-msgid "size n/a"
-msgstr "boyut bilinmiyor"
-
-#: tophat@fflewddur.github.io/lib/mem.js:243
+#: src/mem.ts:151
 msgid "Swap used:"
 msgstr "Kullanılan takas alanı:"
 
-#: tophat@fflewddur.github.io/lib/net.js:147
+#: src/monitor.ts:306
+#, javascript-format
+msgid "%d min ago"
+msgid_plural "%d mins ago"
+msgstr[0] "%d dakika önce"
+msgstr[1] "%d dakika önce"
+
+#: src/net.ts:160
 msgid "Network activity"
 msgstr "Ağ Etkinliği"
 
-#: tophat@fflewddur.github.io/lib/net.js:150
+#: src/net.ts:166
 msgid "Sending:"
 msgstr "Gönderilen:"
 
-#: tophat@fflewddur.github.io/lib/net.js:155
+#: src/net.ts:175
 msgid "Receiving:"
 msgstr "Alınan:"
 
-#: tophat@fflewddur.github.io/lib/net.js:171
-msgid "Send"
-msgstr "Gönderilen"
+#: src/net.ts:186
+msgid "Total sent:"
+msgstr "Toplam gönderilen:"
 
-#: tophat@fflewddur.github.io/lib/net.js:176
-msgid "Recv"
-msgstr "Alınan"
+#: src/net.ts:195
+msgid "Total received:"
+msgstr "Toplam alınan:"
+
+#: src/prefs.ts:65 src/prefs.ts:69
+msgid "General"
+msgstr "Genel"
+
+#: src/prefs.ts:74
+msgid "Left edge"
+msgstr "Sol kenar"
+
+#: src/prefs.ts:75
+msgid "Left"
+msgstr "Sol"
+
+#: src/prefs.ts:76
+msgid "Center"
+msgstr "Orta"
+
+#: src/prefs.ts:77
+msgid "Right"
+msgstr "Sağ"
+
+#: src/prefs.ts:78
+msgid "Right edge"
+msgstr "Sağ kenar"
+
+#: src/prefs.ts:80
+msgid "Position in panel"
+msgstr "Paneldeki konum"
+
+#: src/prefs.ts:88
+msgid "Slow"
+msgstr "Yavaş"
+
+#: src/prefs.ts:89
+msgid "Medium"
+msgstr "Orta"
+
+#: src/prefs.ts:90
+msgid "Fast"
+msgstr "Hızlı"
+
+#: src/prefs.ts:91
+msgid "Refresh speed"
+msgstr "Yenileme hızı"
+
+#: src/prefs.ts:99
+msgid "Use system accent color"
+msgstr "Sistem vurgu rengini kullan"
+
+#: src/prefs.ts:105
+msgid "Meter color"
+msgstr "Ölçer rengi"
+
+#: src/prefs.ts:108
+msgid "Show icons beside monitors"
+msgstr "Gözlemcilerin yanında simge göster"
+
+#: src/prefs.ts:112
+msgid "Show action buttons in menus"
+msgstr "Menüde eylem düğmelerini göster"
+
+#: src/prefs.ts:119
+msgid "Group top processes by command"
+msgstr "Üst süreçleri komutla kümele"
+
+#: src/prefs.ts:129 src/prefs.ts:133
+msgid "CPU"
+msgstr "İşlemci"
+
+#: src/prefs.ts:137
+msgid "Show the CPU monitor"
+msgstr "İşlemci gözlemcisini göster"
+
+#: src/prefs.ts:141 src/prefs.ts:176 src/prefs.ts:207
+msgid "Usage meter"
+msgstr "Kullanım ölçer"
+
+#: src/prefs.ts:142 src/prefs.ts:177 src/prefs.ts:208
+msgid "Numeric value"
+msgstr "Sayısal değer"
+
+#: src/prefs.ts:143 src/prefs.ts:178 src/prefs.ts:209
+msgid "Both meter and value"
+msgstr "Ölçer ve değer birlikte"
+
+#: src/prefs.ts:144 src/prefs.ts:179 src/prefs.ts:210
+msgid "Show as"
+msgstr "Gösterim şekli"
+
+#: src/prefs.ts:147
+msgid "Show each core"
+msgstr "Her bir çekirdeği göster"
+
+#: src/prefs.ts:150
+msgid "Sort cores by usage"
+msgstr "Çekirdekleri kullanıma göre sırala"
+
+#: src/prefs.ts:154
+msgid "Normalize per-process CPU usage by CPU cores"
+msgstr "Süreç başına işlemci kullanımını işlemci çekirdeklerine göre normalleştir"
+
+#: src/prefs.ts:164 src/prefs.ts:168
+msgid "Memory"
+msgstr "Bellek"
+
+#: src/prefs.ts:172
+msgid "Show the memory monitor"
+msgstr "Bellek gözlemcisini göster"
+
+#: src/prefs.ts:182
+msgid "Show usage in GB"
+msgstr "Kullanımı GB olarak göster"
+
+#: src/prefs.ts:189
+msgid "Disk"
+msgstr "Disk"
+
+#: src/prefs.ts:197
+msgid "Show the disk activity monitor"
+msgstr "Disk etkinlik gözlemcisini göster"
+
+#: src/prefs.ts:203
+msgid "Show the filesystem monitor"
+msgstr "Dosya sistemi gözlemcisini göster"
+
+#: src/prefs.ts:215
+msgid "Filesystem to monitor in topbar"
+msgstr "Üst çubukta gözlenecek dosya sistemi"
+
+#: src/prefs.ts:224
+msgid "Filesystems to show in menu"
+msgstr "Menüde gösterilecek dosya sistemi"
+
+#: src/prefs.ts:238 src/prefs.ts:304 src/vitals.ts:421 src/vitals.ts:426
+#: src/vitals.ts:434 src/vitals.ts:439
+msgid "Automatic"
+msgstr "Kendiliğinden"
+
+#: src/prefs.ts:292 src/prefs.ts:296
+msgid "Network"
+msgstr "Ağ"
+
+#: src/prefs.ts:300
+msgid "Show the network monitor"
+msgstr "Ağ gözlemcisini göster"
+
+#: src/prefs.ts:324
+msgid "Network device"
+msgstr "Ağ aygıtı"
+
+#: src/prefs.ts:334
+msgid "Bytes"
+msgstr "Bayt"
+
+#: src/prefs.ts:335
+msgid "Bits"
+msgstr "Bit"
+
+#: src/prefs.ts:337
+msgid "Measurement unit"
+msgstr "Ölçüm birimi"
