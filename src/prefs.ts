@@ -88,7 +88,29 @@ export default class TopHatPrefs extends ExtensionPreferences {
     choices.append(_('Slow'));
     choices.append(_('Medium'));
     choices.append(_('Fast'));
-    this.addComboRow(_('Refresh speed'), choices, 'refresh-rate', group);
+    choices.append(_('Custom'));
+    const refreshRateRow = this.addComboRow(
+      _('Refresh speed'),
+      choices,
+      'refresh-rate',
+      group
+    );
+    const customHzRow = this.addSpinRow(
+      _('Custom refresh rate (Hz)'),
+      'refresh-rate-custom-hz',
+      group,
+      0.1,
+      100.0,
+      0.1
+    );
+    const settings = this.getSettings();
+    customHzRow.set_visible(
+      settings.get_string('refresh-rate') === 'custom'
+    );
+    refreshRateRow.connect('notify::selected', () => {
+      const isCustom = settings.get_string('refresh-rate') === 'custom';
+      customHzRow.set_visible(isCustom);
+    });
 
     // Meter color
     let control: Gtk.Switch | null;
@@ -430,6 +452,37 @@ export default class TopHatPrefs extends ExtensionPreferences {
     });
 
     group.add(row);
+    return row;
+  }
+
+  private addSpinRow(
+    label: string,
+    setting: string,
+    group: Adw.PreferencesGroup,
+    min: number,
+    max: number,
+    step: number
+  ) {
+    const settings = this.getSettings();
+    const row = new Adw.ActionRow({ title: label });
+    group.add(row);
+
+    const spin = new Gtk.SpinButton({
+      adjustment: new Gtk.Adjustment({
+        lower: min,
+        upper: max,
+        step_increment: step,
+      }),
+      digits: 1,
+      value: settings.get_double(setting),
+      valign: Gtk.Align.CENTER,
+    });
+    spin.connect('value-changed', (w: Gtk.SpinButton) => {
+      settings.set_double(setting, w.value);
+    });
+
+    row.add_suffix(spin);
+    row.activatable_widget = spin;
     return row;
   }
 }

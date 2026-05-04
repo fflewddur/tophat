@@ -355,6 +355,18 @@ export const Vitals = GObject.registerClass(
         this.start();
       });
       this.settingSignals.push(id);
+      id = this.gsettings.connect(
+        'changed::refresh-rate-custom-hz',
+        (settings) => {
+          if (settings.get_string('refresh-rate') === 'custom') {
+            this.summary_interval =
+              SummaryIntervalDefault * refreshRateModifier(settings);
+            this.stop();
+            this.start();
+          }
+        }
+      );
+      this.settingSignals.push(id);
 
       this.groupRelated = gsettings.get_boolean('group-procs');
       id = this.gsettings.connect(
@@ -2149,16 +2161,19 @@ function readKb(line: string): number {
 
 function refreshRateModifier(settings: Gio.Settings): number {
   const val = settings.get_string('refresh-rate');
-  let modifier = 1.0;
   switch (val) {
     case 'slow':
-      modifier = 2.0;
-      break;
+      return 2.0;
     case 'fast':
-      modifier = 0.5;
-      break;
+      return 0.5;
+    case 'custom': {
+      const hz = settings.get_double('refresh-rate-custom-hz');
+      // modifier is relative to SummaryIntervalDefault (2.5s = 0.4 Hz)
+      return 0.4 / Math.max(0.1, hz);
+    }
+    default:
+      return 1.0;
   }
-  return modifier;
 }
 
 // Take an array of processes and aggregate their statistics by their 'cmd' property
