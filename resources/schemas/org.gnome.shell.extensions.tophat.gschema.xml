@@ -20,6 +20,7 @@
     <value value="0" nick="slow"/>
     <value value="1" nick="medium"/>
     <value value="2" nick="fast"/>
+    <value value="3" nick="custom"/>
   </enum>
   <schema id="org.gnome.shell.extensions.tophat" path="/org/gnome/shell/extensions/tophat/">
     <!-- See also: https://docs.gtk.org/glib/gvariant-format-strings.html -->
@@ -116,7 +117,13 @@
     <key name="refresh-rate" enum="org.gnome.shell.extensions.tophat.refresh-rate">
       <default>'medium'</default>
       <summary>How frequently TopHat will check system resource usage</summary>
-      <description>This controls how frequently Tophat will check system resource usage. 'fast' will update more often but may negatively impact system performance. 'slow' will update less often and may improve system performance.</description>
+      <description>This controls how frequently Tophat will check system resource usage. 'fast' will update more often but may negatively impact system performance. 'slow' will update less often and may improve system performance. 'custom' uses the refresh-rate-custom-hz value.</description>
+    </key>
+    <key name="refresh-rate-custom-hz" type="d">
+      <default>1.0</default>
+      <range min="0.1" max="100.0"/>
+      <summary>Custom refresh rate in Hz</summary>
+      <description>When refresh-rate is set to 'custom', this controls the update frequency in Hz (updates per second).</description>
     </key>
     <key name="cpu-show-cores" type="b">
       <default>true</default>
