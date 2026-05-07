@@ -117,6 +117,8 @@ export const TopHatMonitor = GObject.registerClass(
     protected vitalsSignals;
     protected settingsSignals;
     private panelStyleChanged;
+    private ifaceSettings: Gio.Settings;
+    private ifaceSettingsSignal: number;
 
     constructor(
       nameText: string,
@@ -136,6 +138,18 @@ export const TopHatMonitor = GObject.registerClass(
       const box = new St.BoxLayout();
       this.add_child(box);
       this.box = box;
+
+      this.ifaceSettings = new Gio.Settings({
+        schema_id: 'org.gnome.desktop.interface',
+      });
+      this.updateTextScaling();
+      this.ifaceSettingsSignal = this.ifaceSettings.connect(
+        'changed::text-scaling-factor',
+        () => {
+          this.updateTextScaling();
+        }
+      );
+
       this.menuLayout = this.buildMenuBase();
       this.historyChart = null;
 
@@ -324,6 +338,16 @@ export const TopHatMonitor = GObject.registerClass(
       return [fgColor, useAccentColor];
     }
 
+    private updateTextScaling(): void {
+      const factor = this.ifaceSettings.get_double('text-scaling-factor');
+      if (factor > 1.0) {
+        const compensated = 1.0 / factor;
+        this.box.set_style(`font-size: ${compensated}em;`);
+      } else {
+        this.box.set_style('');
+      }
+    }
+
     public getMonitorName() {
       return this.monitorName;
     }
@@ -340,6 +364,10 @@ export const TopHatMonitor = GObject.registerClass(
       if (this.panelStyleChanged > 0) {
         Main.panel.disconnect(this.panelStyleChanged);
         this.panelStyleChanged = 0;
+      }
+      if (this.ifaceSettingsSignal > 0) {
+        this.ifaceSettings.disconnect(this.ifaceSettingsSignal);
+        this.ifaceSettingsSignal = 0;
       }
       this.meter.destroy();
       this.box.destroy();
