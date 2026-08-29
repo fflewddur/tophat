@@ -419,6 +419,8 @@ export const Vitals = GObject.registerClass(
           });
         this.readFileSystemUsage();
       });
+      this.settingSignals.push(id);
+
       this.netDev = gsettings.get_string('network-device');
       if (this.netDev === _('Automatic')) {
         this.netDev = '';
