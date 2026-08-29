@@ -58,15 +58,22 @@ export default class TopHat extends Extension {
   }
 
   public disable() {
-    this.container?.destroy();
-    this.container = undefined;
-    this.signals.forEach((s) => {
-      this.gsettings?.disconnect(s);
-    });
-    this.signals.length = 0;
-    this.gsettings = undefined;
-    this.vitals?.stop();
-    this.vitals = undefined;
+    // Tear down in a finally so that a throw anywhere above cannot leave the
+    // polling loops armed or the settings handlers connected; the shell logs
+    // an exception from disable() and carries on, and on Wayland there is no
+    // shell restart to clean up after it.
+    try {
+      this.container?.destroy();
+      this.container = undefined;
+      this.signals.forEach((s) => {
+        this.gsettings?.disconnect(s);
+      });
+      this.signals.length = 0;
+      this.gsettings = undefined;
+    } finally {
+      this.vitals?.destroy();
+      this.vitals = undefined;
+    }
   }
 
   private parseCpuOverview(cpuinfo: string): CpuModel {
