@@ -320,6 +320,8 @@ export const Vitals = GObject.registerClass(
     private fsToHide;
     private settingSignals;
     private nm: NM.Client | null;
+    private nmSignal = 0;
+    private destroyed = false;
     private detailsInterval = DetailsIntervalBackground;
     private detailsNeededCtr = 0;
 
@@ -417,6 +419,8 @@ export const Vitals = GObject.registerClass(
           });
         this.readFileSystemUsage();
       });
+      this.settingSignals.push(id);
+
       this.netDev = gsettings.get_string('network-device');
       if (this.netDev === _('Automatic')) {
         this.netDev = '';
@@ -454,7 +458,13 @@ export const Vitals = GObject.registerClass(
           console.error('[TopHat] client is null');
           return;
         }
-        this.nm.connect('notify::devices', (nm: NM.Client) => {
+        if (this.destroyed) {
+          // destroy() ran while the client was still being constructed;
+          // connecting now would re-root this instance.
+          this.nm = null;
+          return;
+        }
+        this.nmSignal = this.nm.connect('notify::devices', (nm: NM.Client) => {
           this.updateNetDevices(nm);
         });
         this.updateNetDevices(this.nm);
@@ -504,6 +514,41 @@ export const Vitals = GObject.registerClass(
         GLib.source_remove(this.fsLoop);
         this.fsLoop = 0;
       }
+    }
+
+    // destroy releases every reference that outlives this instance. stop()
+    // only cancels the timers, which is what the refresh-rate handler wants
+    // when it restarts the loops, but it leaves the constructor's nine
+    // Gio.Settings handlers connected. Those are closures over `this`, and the
+    // settings object outlives the extension, so a stopped-but-not-destroyed
+    // instance stays reachable from it along with its process map, its
+    // histories and the monitors that reference it. The shell is never
+    // restarted under Wayland and extensions are disabled and re-enabled on
+    // every screen lock, so that is one full copy leaked per lock, each with
+    // its own view of every process on the system.
+    public destroy(): void {
+      this.destroyed = true;
+      this.stop();
+
+      for (const id of this.settingSignals) {
+        this.gsettings.disconnect(id);
+      }
+      this.settingSignals.length = 0;
+
+      if (this.nm && this.nmSignal > 0) {
+        this.nm.disconnect(this.nmSignal);
+      }
+      this.nmSignal = 0;
+      this.nm = null;
+
+      // Not needed once the references above are gone, but it means a stopped
+      // instance stops being large even if something else still holds one.
+      this.procs.clear();
+      this.cpuUsageHistory.length = 0;
+      this.memUsageHistory.length = 0;
+      this.netActivityHistory.length = 0;
+      this.diskActivityHistory.length = 0;
+      this.filesystems.length = 0;
     }
 
     // readSummaries queries all of the info needed by the topbar widgets

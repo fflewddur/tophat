@@ -334,6 +334,10 @@ export const TopHatMonitor = GObject.registerClass(
         this.vitals?.disconnect(id);
       }
       this.vitalsSignals.length = 0;
+      // Drop the reference too: a monitor that outlives its own destroy() --
+      // via a menu still held by the shell, say -- would otherwise keep the
+      // whole Vitals graph alive behind it.
+      this.vitals = undefined;
       for (const id of this.settingsSignals) {
         this.gsettings.disconnect(id);
       }
