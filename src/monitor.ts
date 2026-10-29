@@ -192,7 +192,7 @@ export const TopHatMonitor = GObject.registerClass(
         [this.color, this.useAccentColor] = this.updateColor();
       });
 
-      this.meter.connect('notify::vertical', () => {
+      this.meter.connect('notify::orientation', () => {
         this.meter.reorient();
       });
     }
