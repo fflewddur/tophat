@@ -15,12 +15,44 @@
 // You should have received a copy of the GNU General Public License
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
+import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
+import St from 'gi://St';
 
 export enum DisplayType {
   Chart,
   Numeric,
   Both,
+}
+
+// GNOME 48+ exposes St.BoxLayout:orientation; earlier versions use St.BoxLayout:vertical.
+// The vertical property was removed entirely in GNOME 51.
+export const HAS_BOXLAYOUT_ORIENTATION =
+  typeof St.BoxLayout.prototype.set_orientation === 'function';
+
+export function newVerticalBoxLayout(params = {}): St.BoxLayout {
+  const props = HAS_BOXLAYOUT_ORIENTATION
+    ? { orientation: Clutter.Orientation.VERTICAL, ...params }
+    : { vertical: true, ...params };
+  return new St.BoxLayout(props);
+}
+
+export function boxLayoutOrientationSignal(): string {
+  return HAS_BOXLAYOUT_ORIENTATION ? 'notify::orientation' : 'notify::vertical';
+}
+
+export function isBoxLayoutVertical(widget: St.BoxLayout): boolean {
+  return HAS_BOXLAYOUT_ORIENTATION
+    ? widget.orientation === Clutter.Orientation.VERTICAL
+    : widget.vertical;
+}
+
+export function setBoxLayoutHorizontal(widget: St.BoxLayout): void {
+  if (HAS_BOXLAYOUT_ORIENTATION) {
+    widget.set_orientation(Clutter.Orientation.HORIZONTAL);
+  } else {
+    widget.set_vertical(false);
+  }
 }
 
 const ONE_MB_IN_B = 1000000;

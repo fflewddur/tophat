@@ -22,6 +22,8 @@ import St from 'gi://St';
 
 import { adjustAnimationTime } from 'resource:///org/gnome/shell/misc/animationUtils.js';
 
+import { isBoxLayoutVertical, setBoxLayoutHorizontal } from './helpers.js';
+
 export const AnimationDuration = 250;
 export const AnimationEasing = Clutter.AnimationMode.LINEAR;
 export enum Orientation {
@@ -197,8 +199,8 @@ export const TopHatMeter = GObject.registerClass(
 
     public reorient() {
       // This is to play nice with the dash-to-panel extension
-      const wasVertical = this.vertical;
-      this.set_vertical(false);
+      const wasVertical = isBoxLayoutVertical(this);
+      setBoxLayoutHorizontal(this);
       this.set_x_expand(false);
       this.set_x_align(Clutter.ActorAlign.CENTER);
       this.set_y_align(Clutter.ActorAlign.CENTER);

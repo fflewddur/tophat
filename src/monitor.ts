@@ -35,6 +35,7 @@ const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 import { MaxHistoryLen, Vitals } from './vitals.js';
 import { TopHatMeter } from './meter.js';
 import { HistoryChart } from './history.js';
+import { boxLayoutOrientationSignal } from './helpers.js';
 
 const MENU_COLUMNS = 2;
 export const MeterNoVal = 'n/a';
@@ -192,7 +193,7 @@ export const TopHatMonitor = GObject.registerClass(
         [this.color, this.useAccentColor] = this.updateColor();
       });
 
-      this.meter.connect('notify::vertical', () => {
+      this.meter.connect(boxLayoutOrientationSignal(), () => {
         this.meter.reorient();
       });
     }

@@ -30,6 +30,9 @@ import {
   bytesToHumanString,
   DisplayType,
   getDisplayTypeSetting,
+  HAS_BOXLAYOUT_ORIENTATION,
+  boxLayoutOrientationSignal,
+  newVerticalBoxLayout,
   roundMax,
 } from './helpers.js';
 import { HistoryChart, HistoryStyle } from './history.js';
@@ -91,9 +94,13 @@ export const DiskMonitor = GObject.registerClass(
       this.meter.setOrientation(Orientation.Vertical);
       this.add_child(this.meter);
 
-      const vbox = new St.BoxLayout({ vertical: true });
-      vbox.connect('notify::vertical', (obj) => {
-        obj.vertical = true;
+      const vbox = newVerticalBoxLayout();
+      vbox.connect(boxLayoutOrientationSignal(), (obj) => {
+        if (HAS_BOXLAYOUT_ORIENTATION) {
+          obj.orientation = Clutter.Orientation.VERTICAL;
+        } else {
+          obj.vertical = true;
+        }
       });
       this.add_child(vbox);
 
