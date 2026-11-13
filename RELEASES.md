@@ -3,6 +3,10 @@
 All notable changes to [TopHat] are listed in this file. The format is loosely
 based on [Keep a Changelog].
 
+## Unreleased
+
+- Added support for GNOME 51 while retaining support for GNOME 45–50
+
 ## TopHat 24 - April 11, 2026
 
 - Added support for GNOME 50

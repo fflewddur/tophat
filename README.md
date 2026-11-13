@@ -30,6 +30,7 @@ The latest release of TopHat has been tested on the following systems:
 - Arch Linux
 - Debian Trixie
 - Fedora 42
+- Fedora 45 Workstation (GNOME 51.1)
 - Red Hat Enterprise Linux 10
 - Ubuntu 24.04 LTS
 - Ubuntu 25.04
@@ -75,6 +76,8 @@ gsettings --schemadir ~/.local/share/gnome-shell/extensions/tophat@fflewddur.git
 Contributions to improve TopHat are welcome! To avoid duplicate work, check
 [the issue tracker](https://github.com/fflewddur/tophat/issues) first. If an
 issue doesn't already exist for your idea, please create one.
+
+Development tooling requires Node.js 20.19+, 22.13+, or 24 and newer.
 
 TopHat uses Yarn to manage dependencies and define development tasks. Learn
 how to install Yarn at https://yarnpkg.com/getting-started/install.

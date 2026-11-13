@@ -1,3 +1,5 @@
+import { menuAnimation, orientationProperty } from './compat.js';
+
 // Copyright (C) 2022 Todd Kulesza <todd@dropline.net>
 
 // This file is part of TopHat.
@@ -81,10 +83,10 @@ export class TopProc {
           this.tooltipLabel.label.text &&
           this.tooltipLabel.label.text.length > 35
         ) {
-          this.tooltip?.open(true);
+          this.tooltip?.open(menuAnimation);
         }
       } else if (event.type() === Clutter.EventType.LEAVE) {
-        this.tooltip?.close(true);
+        this.tooltip?.close(menuAnimation);
       }
     });
 
@@ -192,7 +194,7 @@ export const TopHatMonitor = GObject.registerClass(
         [this.color, this.useAccentColor] = this.updateColor();
       });
 
-      this.meter.connect('notify::vertical', () => {
+      this.meter.connect(`notify::${orientationProperty}`, () => {
         this.meter.reorient();
       });
     }
@@ -244,7 +246,7 @@ export const TopHatMonitor = GObject.registerClass(
         });
 
         button.connect('clicked', () => {
-          this.menu.close(true);
+          this.menu.close(menuAnimation);
           app.activate();
         });
         this.menuActionBox.add_child(button);
@@ -256,7 +258,7 @@ export const TopHatMonitor = GObject.registerClass(
         icon_name: 'preferences-system-symbolic',
       });
       button.connect('clicked', () => {
-        this.menu.close(true);
+        this.menu.close(menuAnimation);
         try {
           const obj = Extension.lookupByUUID('tophat@fflewddur.github.io');
           obj?.openPreferences();

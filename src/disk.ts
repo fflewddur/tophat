@@ -20,6 +20,8 @@ import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
+import { boxOrientation, orientationProperty, setVertical } from './compat.js';
+
 import {
   ExtensionMetadata,
   gettext as _,
@@ -91,9 +93,9 @@ export const DiskMonitor = GObject.registerClass(
       this.meter.setOrientation(Orientation.Vertical);
       this.add_child(this.meter);
 
-      const vbox = new St.BoxLayout({ vertical: true });
-      vbox.connect('notify::vertical', (obj) => {
-        obj.vertical = true;
+      const vbox = new St.BoxLayout(boxOrientation(true));
+      vbox.connect(`notify::${orientationProperty}`, (obj) => {
+        setVertical(obj, true);
       });
       this.add_child(vbox);
 
