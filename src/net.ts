@@ -28,7 +28,13 @@ import {
 
 import { Vitals } from './vitals.js';
 import { TopHatMonitor, MeterNoVal } from './monitor.js';
-import { bytesToHumanString, roundMax } from './helpers.js';
+import {
+  bytesToHumanString,
+  HAS_BOXLAYOUT_ORIENTATION,
+  boxLayoutOrientationSignal,
+  newVerticalBoxLayout,
+  roundMax,
+} from './helpers.js';
 import { HistoryChart, HistoryStyle } from './history.js';
 
 export const NetMonitor = GObject.registerClass(
@@ -53,9 +59,13 @@ export const NetMonitor = GObject.registerClass(
       this.icon.set_gicon(gicon);
       this.icon.add_style_class_name('tophat-panel-icon-net');
 
-      const vbox = new St.BoxLayout({ vertical: true });
-      vbox.connect('notify::vertical', (obj) => {
-        obj.vertical = true;
+      const vbox = newVerticalBoxLayout();
+      vbox.connect(boxLayoutOrientationSignal(), (obj) => {
+        if (HAS_BOXLAYOUT_ORIENTATION) {
+          obj.orientation = Clutter.Orientation.VERTICAL;
+        } else {
+          obj.vertical = true;
+        }
       });
       this.add_child(vbox);
 
