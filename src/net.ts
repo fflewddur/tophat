@@ -19,6 +19,8 @@ import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
 import St from 'gi://St';
+
+import { boxOrientation, orientationProperty, setVertical } from './compat.js';
 import NM from 'gi://NM';
 
 import {
@@ -53,9 +55,9 @@ export const NetMonitor = GObject.registerClass(
       this.icon.set_gicon(gicon);
       this.icon.add_style_class_name('tophat-panel-icon-net');
 
-      const vbox = new St.BoxLayout({ vertical: true });
-      vbox.connect('notify::vertical', (obj) => {
-        obj.vertical = true;
+      const vbox = new St.BoxLayout(boxOrientation(true));
+      vbox.connect(`notify::${orientationProperty}`, (obj) => {
+        setVertical(obj, true);
       });
       this.add_child(vbox);
 

@@ -19,6 +19,8 @@ import Clutter from 'gi://Clutter';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
+import { boxOrientation } from './compat.js';
+
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { IActivity, IHistory, MaxHistoryLen } from './vitals.js';
@@ -251,7 +253,10 @@ export const HistoryChart = GObject.registerClass(
         this.chart.add_style_class_name('tophat-chart-stacked-top');
       }
 
-      const vbox = new St.BoxLayout({ vertical: true, y_expand: true });
+      const vbox = new St.BoxLayout({
+        ...boxOrientation(true),
+        y_expand: true,
+      });
       this.lm.attach(vbox, 2, 0, 1, 2);
 
       this.yLabelTop.text = '100%';

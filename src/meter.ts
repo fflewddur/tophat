@@ -1,3 +1,5 @@
+import { isVertical, setVertical } from './compat.js';
+
 // Copyright (C) 2024 Todd Kulesza <todd@dropline.net>
 
 // This file is part of TopHat.
@@ -197,8 +199,8 @@ export const TopHatMeter = GObject.registerClass(
 
     public reorient() {
       // This is to play nice with the dash-to-panel extension
-      const wasVertical = this.vertical;
-      this.set_vertical(false);
+      const wasVertical = isVertical(this);
+      setVertical(this, false);
       this.set_x_expand(false);
       this.set_x_align(Clutter.ActorAlign.CENTER);
       this.set_y_align(Clutter.ActorAlign.CENTER);
