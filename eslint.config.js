@@ -12,5 +12,8 @@ export default tseslint.config({
     ...tseslint.configs.strict,
     eslintPluginPrettierRecommended,
   ],
-  rules: {},
+  rules: {
+    // Preserve the existing rule set when upgrading ESLint 9 to 10.
+    'no-useless-assignment': 'off',
+  },
 });

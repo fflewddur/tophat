@@ -5,16 +5,16 @@
   "sideEffects": false,
   "packageManager": "yarn@4.9.2",
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
+    "@eslint/js": "^10.0.1",
     "@girs/gjs": "^4.0.0-beta.23",
     "@girs/gnome-shell": "^48.0.2",
     "@tsconfig/recommended": "^1.0.10",
-    "eslint": "^9.30.1",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.35.1"
+    "typescript-eslint": "^8.72.2"
   },
   "scripts": {
     "build": "tsc && ./resources/dist.sh",
@@ -24,5 +24,9 @@
     "format": "prettier . --write",
     "translate": "./resources/translate.sh",
     "package": "./resources/package.sh"
+  },
+  "resolutions": {
+    "minimatch@npm:^10.2.2": "npm:^11.0.5",
+    "minimatch@npm:^10.2.6": "npm:^11.0.5"
   }
 }

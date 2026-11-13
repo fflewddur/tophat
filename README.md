@@ -77,6 +77,8 @@ Contributions to improve TopHat are welcome! To avoid duplicate work, check
 [the issue tracker](https://github.com/fflewddur/tophat/issues) first. If an
 issue doesn't already exist for your idea, please create one.
 
+Development tooling requires Node.js 20.19+, 22.13+, or 24 and newer.
+
 TopHat uses Yarn to manage dependencies and define development tasks. Learn
 how to install Yarn at https://yarnpkg.com/getting-started/install.
 
