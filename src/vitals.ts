@@ -20,6 +20,9 @@ export const MaxHistoryLen = 50;
 
 const MillisecondsPerSecond = 1000;
 const SECTOR_SIZE = 512; // in bytes
+// cpuN user nice system idle iowait irq softirq steal
+const RE_CPU_STAT =
+  /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
 const RE_MEM_INFO = /:\s+(\d+)/;
 const RE_NET_DEV = /^\s*(\w+):/;
 const RE_NET_ACTIVITY =
@@ -610,22 +613,15 @@ export const Vitals = GObject.registerClass(
           const usage = new CpuUsage(this.cpuModel.cores);
           lines.forEach((line: string) => {
             if (line.startsWith('cpu')) {
-              const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
-              const m = line.match(re);
+              const m = line.match(RE_CPU_STAT);
               if (m && !m[1]) {
                 // These are aggregate CPU statistics
-                const usedTime =
-                  parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]);
-                const idleTime = parseInt(m[5]);
-                this.cpuState.update(usedTime, idleTime);
+                this.cpuState.update(busyTime(m), idleTime(m));
                 usage.aggregate = this.cpuState.usage();
               } else if (m) {
                 // These are per-core statistics
                 const core = parseInt(m[1]);
-                const usedTime =
-                  parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]);
-                const idleTime = parseInt(m[5]);
-                this.cpuState.updateCore(core, usedTime, idleTime);
+                this.cpuState.updateCore(core, busyTime(m), idleTime(m));
                 usage.core[core] = this.cpuState.coreUsage(core);
               }
             }
@@ -649,14 +645,10 @@ export const Vitals = GObject.registerClass(
             const lines = contents.split('\n');
             for (const line of lines) {
               if (line.startsWith('cpu')) {
-                const re = /^cpu(\d*)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
-                const m = line.match(re);
+                const m = line.match(RE_CPU_STAT);
                 if (m && !m[1]) {
                   // These are aggregate CPU statistics
-                  const usedTime =
-                    parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]);
-                  const idleTime = parseInt(m[5]);
-                  this.cpuState.updateDetails(usedTime + idleTime);
+                  this.cpuState.updateDetails(busyTime(m) + idleTime(m));
                   break;
                 }
               }
@@ -2185,4 +2177,17 @@ function groupRelatedProcs(top: Process[]) {
   }
   top = Array.from(grouped.values());
   return top;
+}
+
+// user + nice + system + irq + softirq + steal from a RE_CPU_STAT match
+function busyTime(m: RegExpMatchArray): number {
+  const [user, nice, system, irq, softirq, steal] = [2, 3, 4, 7, 8, 9].map(
+    (index) => parseInt(m[index])
+  );
+  return user + nice + system + irq + softirq + steal;
+}
+
+// idle + iowait from a RE_CPU_STAT match
+function idleTime(m: RegExpMatchArray): number {
+  return parseInt(m[5]) + parseInt(m[6]);
 }
