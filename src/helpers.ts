@@ -16,6 +16,7 @@
 // along with TopHat. If not, see <https://www.gnu.org/licenses/>.
 
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
 export enum DisplayType {
   Chart,
@@ -30,14 +31,18 @@ const TEN_GB_IN_B = 10000000000;
 const ONE_TB_IN_B = 1000000000000;
 const TEN_TB_IN_B = 10000000000000;
 
-const RE_DF_IS_DISK = /^\s*\/dev\/(\S+)(.*)$/;
-const RE_DF_DISK_USAGE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.*)$/;
+const MOUNTS_PATH = '/proc/self/mounts';
+const DEVICE_PREFIX = '/dev/';
+const RE_MOUNT_ESCAPE = /\\([0-7]{3})/g;
+const FS_SIZE = 'filesystem::size';
+const FS_USED = 'filesystem::used';
 
 export function GBytesToHumanString(gb: number): string {
   return bytesToHumanString(gb * ONE_GB_IN_B);
 }
 
-Gio._promisify(Gio.Subprocess.prototype, 'communicate_utf8_async');
+Gio._promisify(Gio.File.prototype, 'load_contents_async');
+Gio._promisify(Gio.File.prototype, 'query_filesystem_info_async');
 
 /**
  * Convert a number of bytes to a more logical human-readable string (e.g., 1024 -> 1 K).
@@ -131,52 +136,68 @@ export class FSUsage {
   }
 }
 
-export async function readFileSystems(): Promise<FSUsage[]> {
-  return new Promise<FSUsage[]>((resolve, reject) => {
-    const fileSystems = new Map<string, FSUsage>();
-    try {
-      const proc = Gio.Subprocess.new(
-        ['df', '-P'],
-        Gio.SubprocessFlags.STDOUT_PIPE
-      );
-      proc.communicate_utf8_async(null, null).then(([stdout]) => {
-        // Try to process the output even if the exit status != 0
-        if (stdout) {
-          const output = stdout as unknown as string;
-          const lines = output.split('\n');
-          for (const line of lines) {
-            const m = line.match(RE_DF_IS_DISK);
-            if (m) {
-              const details = m[2].match(RE_DF_DISK_USAGE);
-              if (details) {
-                const dev = m[1];
-                const cap = parseInt(details[1]) * 1024;
-                const used = parseInt(details[2]) * 1024;
-                const mount = details[5];
-                let fileSystem = new FSUsage(dev, cap, used, mount);
-                if (fileSystems.has(dev)) {
-                  const old = fileSystems.get(dev);
-                  if (old && old.mount.length < mount.length) {
-                    // Only report one mount per device; use the shortest file path
-                    fileSystem = old;
-                  }
-                }
-                fileSystems.set(dev, fileSystem);
-              }
-            }
-          }
-          resolve(Array.from(fileSystems.values()));
-          return;
-        } else {
-          console.warn('[TopHat] Could not run df -P: ');
-          reject('Could not run df -P');
-          return;
-        }
+interface DeviceMount {
+  dev: string;
+  mount: string;
+}
+
+function unescapeMountPath(path: string): string {
+  return path.replace(RE_MOUNT_ESCAPE, (_, octal: string) =>
+    String.fromCharCode(parseInt(octal, 8))
+  );
+}
+
+export function parseDeviceMounts(mountsText: string): DeviceMount[] {
+  const mounts: DeviceMount[] = [];
+  for (const line of mountsText.split('\n')) {
+    const [source, target] = line.split(' ');
+    if (source?.startsWith(DEVICE_PREFIX) && target) {
+      mounts.push({
+        dev: source.slice(DEVICE_PREFIX.length),
+        mount: unescapeMountPath(target),
       });
-    } catch (e) {
-      console.warn('[TopHat] Could not run df -P: ' + e);
-      reject('Could not run df -P');
-      return;
     }
-  });
+  }
+  return mounts;
+}
+
+async function readMountUsage({ dev, mount }: DeviceMount): Promise<FSUsage> {
+  const info = await Gio.File.new_for_path(mount).query_filesystem_info_async(
+    `${FS_SIZE},${FS_USED}`,
+    GLib.PRIORITY_LOW,
+    null
+  );
+  return new FSUsage(
+    dev,
+    info.get_attribute_uint64(FS_SIZE),
+    info.get_attribute_uint64(FS_USED),
+    mount
+  );
+}
+
+function shortestMountPerDevice(fileSystems: FSUsage[]): FSUsage[] {
+  const byDevice = new Map<string, FSUsage>();
+  for (const fileSystem of fileSystems) {
+    const existing = byDevice.get(fileSystem.dev);
+    if (!existing || fileSystem.mount.length < existing.mount.length) {
+      byDevice.set(fileSystem.dev, fileSystem);
+    }
+  }
+  return Array.from(byDevice.values());
+}
+
+export async function readFileSystems(): Promise<FSUsage[]> {
+  try {
+    const [contents] =
+      await Gio.File.new_for_path(MOUNTS_PATH).load_contents_async(null);
+    const mounts = parseDeviceMounts(new TextDecoder().decode(contents));
+    const results = await Promise.allSettled(mounts.map(readMountUsage));
+    const readable = results
+      .filter((r) => r.status === 'fulfilled')
+      .map((r) => r.value);
+    return shortestMountPerDevice(readable);
+  } catch (e) {
+    console.warn(`[TopHat] Could not read file systems: ${e}`);
+    throw e;
+  }
 }

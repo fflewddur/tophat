@@ -549,7 +549,6 @@ export const Vitals = GObject.registerClass(
       return true;
     }
 
-    // readFileSystemUsage runs the df command to monitor file system use
     public readFileSystemUsage(): boolean {
       if (this.showFS || this.showDisk) {
         this.loadFS();
