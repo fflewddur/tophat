@@ -32,6 +32,22 @@ import {
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 const GnomeMajorVer = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
+function openPopupMenu(menu: Pick<PopupMenu.PopupMenu, 'open'>): void {
+  if (GnomeMajorVer >= 51) {
+    menu.open({ animate: true } as unknown as boolean);
+  } else {
+    menu.open(true);
+  }
+}
+
+function closePopupMenu(menu: Pick<PopupMenu.PopupMenu, 'close'>): void {
+  if (GnomeMajorVer >= 51) {
+    menu.close({ animate: true } as unknown as boolean);
+  } else {
+    menu.close(true);
+  }
+}
+
 import { MaxHistoryLen, Vitals } from './vitals.js';
 import { TopHatMeter } from './meter.js';
 import { HistoryChart } from './history.js';
@@ -81,10 +97,10 @@ export class TopProc {
           this.tooltipLabel.label.text &&
           this.tooltipLabel.label.text.length > 35
         ) {
-          this.tooltip?.open(true);
+          if (this.tooltip) openPopupMenu(this.tooltip);
         }
       } else if (event.type() === Clutter.EventType.LEAVE) {
-        this.tooltip?.close(true);
+        if (this.tooltip) closePopupMenu(this.tooltip);
       }
     });
 
@@ -244,7 +260,7 @@ export const TopHatMonitor = GObject.registerClass(
         });
 
         button.connect('clicked', () => {
-          this.menu.close(true);
+          closePopupMenu(this.menu);
           app.activate();
         });
         this.menuActionBox.add_child(button);
@@ -256,7 +272,7 @@ export const TopHatMonitor = GObject.registerClass(
         icon_name: 'preferences-system-symbolic',
       });
       button.connect('clicked', () => {
-        this.menu.close(true);
+        closePopupMenu(this.menu);
         try {
           const obj = Extension.lookupByUUID('tophat@fflewddur.github.io');
           obj?.openPreferences();
