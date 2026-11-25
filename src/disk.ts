@@ -91,7 +91,9 @@ export const DiskMonitor = GObject.registerClass(
       this.meter.setOrientation(Orientation.Vertical);
       this.add_child(this.meter);
 
-      const vbox = new St.BoxLayout({ vertical: true });
+      const vbox = new St.BoxLayout({
+        orientation: Clutter.Orientation.VERTICAL,
+      });
       vbox.connect('notify::vertical', (obj) => {
         obj.vertical = true;
       });

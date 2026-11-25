@@ -251,7 +251,10 @@ export const HistoryChart = GObject.registerClass(
         this.chart.add_style_class_name('tophat-chart-stacked-top');
       }
 
-      const vbox = new St.BoxLayout({ vertical: true, y_expand: true });
+      const vbox = new St.BoxLayout({
+        orientation: Clutter.Orientation.VERTICAL,
+        y_expand: true,
+      });
       this.lm.attach(vbox, 2, 0, 1, 2);
 
       this.yLabelTop.text = '100%';

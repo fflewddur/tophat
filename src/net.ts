@@ -53,7 +53,9 @@ export const NetMonitor = GObject.registerClass(
       this.icon.set_gicon(gicon);
       this.icon.add_style_class_name('tophat-panel-icon-net');
 
-      const vbox = new St.BoxLayout({ vertical: true });
+      const vbox = new St.BoxLayout({
+        orientation: Clutter.Orientation.VERTICAL,
+      });
       vbox.connect('notify::vertical', (obj) => {
         obj.vertical = true;
       });
